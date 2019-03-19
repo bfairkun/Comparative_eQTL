@@ -1,0 +1,56 @@
+$schema: "http://json-schema.org/draft-06/schema#"
+
+description: snakemake configuration file
+
+type: object
+
+properties:
+  samples:
+    type: string
+  units:
+    type: string
+  adapter:
+    type: string
+    pattern: "^[ACGT]+$"
+
+  ref:
+    type: object
+    properties:
+      genome:
+        type: string
+      known-variants:
+        type: string
+    required:
+      - genome
+
+
+  params:
+    type: object
+    properties:
+      cutadapt:
+        type: object
+        properties:
+          se:
+            type: string
+          pe:
+            type: string
+        required:
+          - pe
+          - se
+      picard:
+        type: object
+        properties:
+          MarkDuplicates:
+            type: string
+        required:
+          - MarkDuplicates
+    required:
+      - cutadapt
+      - picard
+
+required:
+  - samples
+  - units
+  - adapter
+  - ref
+  - params

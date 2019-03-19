@@ -1,0 +1,37 @@
+include: "rules/common.smk"
+
+##### Target rules #####
+
+rule all:
+    input:
+        # "PopulationSubstructure/ReferencePanel.vcf.gz",
+        # expand("tstv_ratios/all.{region}.tstv.txt", region=genotypedregions),
+        "PopulationSubstructure/ReferencePanelMerged.vcf",
+        # "MiscOutput/LowComplexityRegions.bed",
+        "PopulationSubstructure/out.relatedness2",
+        "MiscOutput/filtered.bcftools.stats",
+        "MiscOutput/filtered.bcftools.smplstats",
+        # "MiscOutput/STAR_index/chrLength.txt",
+        expand("RNASeq/STAR/{sample}/Aligned.sortedByCoord.out.bam", sample=samples["sample"]),
+        "RNASeq/kallisto/MergedCountTable.tpm.txt",
+        #"annotated/all.vcf.gz",
+        # "qc/multiqc.html",
+        # "MiscOutput/CallableSites.bed",
+        # "genotyped/all.5.20000000-30000000.vcf",
+        # expand("dedup_merged/{sample}.sorted.bam.bai", sample=samples["sample"]),
+        "filtered/all.vcf.gz",
+        "filtered/all.vcf.gz.tbi",
+        #"tables/calls.tsv.gz",
+        #"plots/depths.svg",
+        #"plots/allele-freqs.svg"
+        expand ( "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.Q.pdf", K=config["PopulationSubstructure"]["AdmixtureK"] )
+
+##### Modules #####
+include: "rules/make_test_data.smk"
+include: "rules/mapping.smk"
+include: "rules/RNASeqMapping.smk"
+include: "rules/calling.smk"
+include: "rules/populationstructure.smk"
+#include: "rules/stats.smk"
+include: "rules/qc.smk"
+#include: "rules/annotation.smk"

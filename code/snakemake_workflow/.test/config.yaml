@@ -1,0 +1,61 @@
+samples: samples_test.tsv
+units: units_test.tsv
+
+# Temporary files will be prefixed with path/to/scratch/. Leave as empty string to use default snakemake working directory
+temp_files_prefix: /scratch/midway2/bjf79/TestResultsScratch/
+
+# the R1 sequencing adapter. #add -A parameter at bottom of config file for R2 adapter
+adapter: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+
+read_mapping:
+  # Prefix to add to all read group IDs (RGID=[ReadGroupID_prefix][SampleName])
+  ReadGroupID_prefix: Pan_troglodytes_ThisStudy-
+  # whether to map with bwa (mapped in chunks and chunks merged after mapping to decrease job time) or map with hisat2 (no chunking necessary)
+  bwa: true
+  # size (in number read pairs) of read chunks
+  chunksize: 4000
+
+# whether to remove PCR/optical duplicates
+rmdup: true
+
+ref:
+  # name used in snpeff database
+  name: Chimp
+
+  genome: /home/bjf79/myhome_gilad_rcc/genomes/Pan_tro_3.0_Ensembl/Sequence/DNA/Pan_troglodytes.Pan_tro_3.0.dna_sm.chromosome.fa
+
+  genomeindexbase: /home/bjf79/myhome_gilad_rcc/genomes/Pan_tro_3.0_Ensembl/Sequence/DNA/Pan_troglodytes.Pan_tro_3.0.dna_sm.chromosome.fa
+
+  #gtf must be unzipped
+  genomegtf: /home/bjf79/myhome_gilad_rcc/genomes/Pan_tro_3.0_Ensembl/GeneAnnotation/Pan_troglodytes.Pan_tro_3.0.94.chr.gtf
+
+  transcriptsfa: /home/bjf79/myhome_gilad_rcc/genomes/Pan_tro_3.0_Ensembl/Sequence/transcript/Pan_troglodytes.Pan_tro_3.0.cdna.all.fa.gz
+
+  # known variants (e.g. DBSNP) (Must by bgzip compressed and indexed with tabix command)
+  known-variants: /home/bjf79/myhome_gilad_rcc/genomes/Pan_tro_3.0_Ensembl/Variation/VCF/pan_troglodytes.vcf.gz
+
+  #reference population vcf (deManuel_2016 data) to study population structure
+  reference-population-vcf: /home/bjf79/myhome_gilad_rcc/projects/Chimp_eQTL/GenotypeData/deManuel_2016_data/Clean_Callable_Pan_troglodytes-paniscus_Concat_1M_HWE_gls_Hetexcess.vcf.gz
+
+  reference-population-callablesites-bed: /home/bjf79/myhome_gilad_rcc/projects/Chimp_eQTL/GenotypeData/deManuel_2016_data/Pan_troglodytes-paniscus_callable.bed
+
+
+  #deManuel_2016 data in PanTro4
+  reference-population-liftover-need: true
+
+  chain-file: /home/bjf79/myhome_gilad_rcc/genomes/Pan_tro_3.0_Ensembl/Liftover/panTro4ToPanTro5.over.chain.reformatted.gz
+
+variant_calling:
+  # whether to call variants in small chunks (chunks smaller than the size of contigs) to increase parralelization on cluster. Each chunk called on a node. If false, will call variants by contig. All calls get merged into single vcf by the end.
+  freebayes_in_chunks: true
+  # size in basepairs (if a contig is smaller than the chunksize, that contig will be called as a single chunk).
+  chunksize: 10000000
+  # number of threads to use for each chunk (node). Utilizes freebayes-parellel script to further break down each chunk into smaller chunks of single-threaded jobs
+  threads_per_chunk: 1
+
+params:
+  picard:
+    MarkDuplicates: "REMOVE_DUPLICATES=true -Xmx20g"
+  cutadapt:
+    pe: "-A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -m 20"
+    se: ""

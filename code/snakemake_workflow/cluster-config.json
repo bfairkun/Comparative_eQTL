@@ -1,0 +1,85 @@
+{
+  "__default__" :
+  {"partition" : "broadwl", "mem" : 4000, "n" : 1, "name" : "{rule}-{wildcards}", "logfile": "/dev/null"},
+
+  "split_fastqs_to_chunks":
+  {"partition" : "sandyb"},
+
+  "map_chunks_of_reads_bwa":
+  {"mem" : 16000, "tasks-per-node" : 8, "partition" : "broadwl"},
+
+  "merge_bams":
+  {"mem" : 24000, "partition" : "sandyb"},
+
+  "merge_bams_from_ancient":
+  {"mem" : 24000, "partition" : "sandyb"},
+
+  "map_reads_hisat":
+  {"mem" : 16000, "tasks-per-node" : 8},
+
+  "mark_duplicates":
+  {"mem" : 24000, "partition" : "sandyb"},
+
+  "recalibrate_base_qualities":
+  {"mem" : 10000},
+
+  "call_variants_freebayes_chunks":
+  {"mem" : 58000, "partition" : "broadwl"},
+
+  "call_variants_freebayes_multithreaded_chunks":
+  {"mem" : 58000, "tasks-per-node" : 16, "partition" : "broadwl"},
+
+  "qualimap":
+  {"mem" : 30000, "tasks-per-node" : 14, "partition" : "sandyb"},
+
+  "DetermineLowcomplexityRegions":
+  {"mem" : 16000, "partition" : "sandyb"},
+
+  "DetermineCallableSitesByCoverage_by_contig":
+  {"mem" : 16000, "tasks-per-node" : 2, "partition" : "sandyb"},
+
+  "STAR_make_index":
+  {"mem" : 64000, "tasks-per-node" : 5, "partition" : "bigmem"},
+
+  "STAR_alignment":
+  {"partition" : "broadwl", "mem": 58000, "tasks-per-node" : 14},
+
+  "kallisto_make_index":
+  {"partition" : "sandyb"},
+
+  "kallisto_quant":
+  {"partition" : "sandyb"},
+
+  "kallisto_quant_merge_into_count_table":
+  {"partition" : "sandyb"},
+
+  "MergeFilteredCalls":
+  {"mem" : 58000},
+
+  "merge_freebayes_chunks_by_contig":
+  {"mem": 24000},
+
+  "LiftoverReferencePopulationVcf":
+  {"mem" : 58000},
+
+  "FilterReadsAtUncallableSites":
+  {"mem" : 24000},
+
+  "Admixture":
+  {"mem" : 24000},
+
+  "REAP":
+  {"mem" : 24000},
+
+  "GetReferencePopulationVcfChromList":
+  {"mem" : 24000},
+
+  "SortLiftedReference":
+  {"mem" : 36000},
+
+  "FilterReadsAtUncallableSites":
+  {"mem" : 24000},
+
+  "FilterInitialCalls":
+  {"mem" : 24000}
+}
