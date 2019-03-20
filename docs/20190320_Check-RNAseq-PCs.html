@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Ben Fair" />
+
+
+<title>Check RNA-seq PCs</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Check RNA-seq PCs</h1>
+<h4 class="author"><em>Ben Fair</em></h4>
+<h4 class="date"><em>3/20/2019</em></h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-03-20
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.2.0). The <em>Report</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="report" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree6b34096a09a2c6f729e4b1418ee446e8333b5f4etargetblank6b34096a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/6b34096a09a2c6f729e4b1418ee446e8333b5f4e" target="_blank">6b34096</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree6b34096a09a2c6f729e4b1418ee446e8333b5f4etargetblank6b34096a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rproj.user/
+    Ignored:    code/snakemake_workflow/bahblah
+
+Untracked files:
+    Untracked:  ._workflowr.yml.swp
+    Untracked:  analysis/20190320_Check-RNAseq-PCs.Rmd
+    Untracked:  docs/figure/
+
+Unstaged changes:
+    Modified:   _workflowr.yml
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(corrplot)
+library(ggfortify)
+library(readxl)
+library(tidyverse)
+library(psych)
+library(ggrepel)
+library(knitr)
+library(reshape2)</code></pre>
+<pre class="r"><code># Read in count table, filtering for TPM&gt;1
+CountTable &lt;- read.table(&#39;../output/CountTable.tpm.txt&#39;, header=T, check.names=FALSE, row.names = 1) %&gt;%
+  filter(rowSums(.) &gt; 1)
+
+# Read in metadata
+Metadata &lt;- as.data.frame(read_excel(&quot;../data/Metadata.xlsx&quot;))</code></pre>
+<p>Now perform PCA, plot a few visualizations</p>
+<pre class="r"><code># pca with log-transformed count table (+ 0.1 pseudocount)
+pca_results &lt;- prcomp(t(log(CountTable+0.1)), center=T, scale. = T)
+
+# Plot PCs
+autoplot(pca_results)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/pca-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Merge with metadata
+Merged &lt;- merge(pca_results$x, Metadata, by.x = &quot;row.names&quot;, by.y = &quot;Individual.ID&quot;, all=TRUE)
+kable(head(Merged))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Row.names</th>
+<th align="right">PC1</th>
+<th align="right">PC2</th>
+<th align="right">PC3</th>
+<th align="right">PC4</th>
+<th align="right">PC5</th>
+<th align="right">PC6</th>
+<th align="right">PC7</th>
+<th align="right">PC8</th>
+<th align="right">PC9</th>
+<th align="right">PC10</th>
+<th align="right">PC11</th>
+<th align="right">PC12</th>
+<th align="right">PC13</th>
+<th align="right">PC14</th>
+<th align="right">PC15</th>
+<th align="right">PC16</th>
+<th align="right">PC17</th>
+<th align="right">PC18</th>
+<th align="right">PC19</th>
+<th align="right">PC20</th>
+<th align="right">PC21</th>
+<th align="right">PC22</th>
+<th align="right">PC23</th>
+<th align="right">PC24</th>
+<th align="right">PC25</th>
+<th align="right">PC26</th>
+<th align="right">PC27</th>
+<th align="right">PC28</th>
+<th align="right">PC29</th>
+<th align="right">PC30</th>
+<th align="right">PC31</th>
+<th align="right">PC32</th>
+<th align="right">PC33</th>
+<th align="right">PC34</th>
+<th align="right">PC35</th>
+<th align="right">PC36</th>
+<th align="right">PC37</th>
+<th align="right">PC38</th>
+<th align="right">PC39</th>
+<th align="left">Source</th>
+<th align="left">Individual.Name</th>
+<th align="right">Yerkes.ID</th>
+<th align="left">Label</th>
+<th align="left">Notes</th>
+<th align="left">FileID.(Library_Species_CellType_FlowCell)</th>
+<th align="left">SX</th>
+<th align="right">RNA.Library.prep.batch</th>
+<th align="right">RNA.Sequencing.Lane</th>
+<th align="right">Sequencing.Barcode</th>
+<th align="left">RNA.Extract_date</th>
+<th align="left">DNASeq_FastqIdentifier</th>
+<th align="right">DNA.library.prep.batch</th>
+<th align="right">DNA.Sequencing.Lane</th>
+<th align="left">DNA.Sequencin.Barcode</th>
+<th align="left">DNA.Extract_date</th>
+<th align="right">Age</th>
+<th align="left">X__1</th>
+<th align="left">Post.mortem.time.interval</th>
+<th align="right">RIN</th>
+<th align="left">Viral.status</th>
+<th align="right">RNA.total.reads.mapped.to.genome</th>
+<th align="right">RNA.total.reads.mapping.to.ortho.exons</th>
+<th align="left">Subspecies</th>
+<th align="left">DOB</th>
+<th align="left">DOD</th>
+<th align="left">DOB Estimated</th>
+<th align="right">Age (DOD-DOB)</th>
+<th align="left">OldLibInfo. RIN,RNA-extractdate,RNAbatch</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">295</td>
+<td align="right">-16.209924</td>
+<td align="right">-39.412051</td>
+<td align="right">-12.6609324</td>
+<td align="right">37.8823277</td>
+<td align="right">-31.0051139</td>
+<td align="right">-11.19556</td>
+<td align="right">-3.293419</td>
+<td align="right">6.914787</td>
+<td align="right">31.22802</td>
+<td align="right">9.387597</td>
+<td align="right">-18.921687</td>
+<td align="right">2.302928</td>
+<td align="right">6.658864</td>
+<td align="right">7.418947</td>
+<td align="right">-0.4551106</td>
+<td align="right">-7.1500666</td>
+<td align="right">-9.419899</td>
+<td align="right">-14.910621</td>
+<td align="right">5.729965</td>
+<td align="right">4.446016</td>
+<td align="right">-7.902738</td>
+<td align="right">4.4670507</td>
+<td align="right">-6.7363433</td>
+<td align="right">5.6427558</td>
+<td align="right">0.0628024</td>
+<td align="right">8.457065</td>
+<td align="right">16.643477</td>
+<td align="right">5.9641275</td>
+<td align="right">14.240850</td>
+<td align="right">8.746583</td>
+<td align="right">22.44346</td>
+<td align="right">8.1452946</td>
+<td align="right">-26.376143</td>
+<td align="right">-26.042034</td>
+<td align="right">1.411441</td>
+<td align="right">29.3035945</td>
+<td align="right">69.538376</td>
+<td align="right">-6.7226052</td>
+<td align="right">0</td>
+<td align="left">Yerkes</td>
+<td align="left">Duncan</td>
+<td align="right">295</td>
+<td align="left">295</td>
+<td align="left">NA</td>
+<td align="left">24_CM_3_L006.bam</td>
+<td align="left">M</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">18</td>
+<td align="left">2018-10-10</td>
+<td align="left">YG3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">40</td>
+<td align="left">NA</td>
+<td align="left">0.5</td>
+<td align="right">7.3</td>
+<td align="left">NA</td>
+<td align="right">45.67002</td>
+<td align="right">17.51562</td>
+<td align="left">verus/ellioti</td>
+<td align="left">24731</td>
+<td align="left">39386</td>
+<td align="left">NA</td>
+<td align="right">40</td>
+<td align="left">6.3,6/14/2016,2</td>
+</tr>
+<tr class="even">
+<td align="left">317</td>
+<td align="right">-77.598637</td>
+<td align="right">-7.285478</td>
+<td align="right">27.7851831</td>
+<td align="right">26.9782914</td>
+<td align="right">-50.5795688</td>
+<td align="right">35.50836</td>
+<td align="right">-38.647176</td>
+<td align="right">22.304682</td>
+<td align="right">29.24587</td>
+<td align="right">-7.972713</td>
+<td align="right">-4.291489</td>
+<td align="right">-10.836475</td>
+<td align="right">-27.736870</td>
+<td align="right">13.116081</td>
+<td align="right">-25.5213242</td>
+<td align="right">0.4864905</td>
+<td align="right">-23.591190</td>
+<td align="right">26.332198</td>
+<td align="right">-18.995956</td>
+<td align="right">79.950479</td>
+<td align="right">-25.880549</td>
+<td align="right">-7.0602532</td>
+<td align="right">-3.1543220</td>
+<td align="right">-32.1559370</td>
+<td align="right">0.1775541</td>
+<td align="right">23.843101</td>
+<td align="right">-4.452578</td>
+<td align="right">-0.5306732</td>
+<td align="right">3.358530</td>
+<td align="right">-8.339882</td>
+<td align="right">-17.73597</td>
+<td align="right">11.4968912</td>
+<td align="right">6.626615</td>
+<td align="right">5.764973</td>
+<td align="right">-1.359602</td>
+<td align="right">-7.6224544</td>
+<td align="right">-5.219604</td>
+<td align="right">0.6896142</td>
+<td align="right">0</td>
+<td align="left">Yerkes</td>
+<td align="left">Iyk</td>
+<td align="right">317</td>
+<td align="left">317</td>
+<td align="left">NA</td>
+<td align="left">11_CM_3_L004.bam</td>
+<td align="left">M</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="left">2016-06-07</td>
+<td align="left">YG2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">44</td>
+<td align="left">NA</td>
+<td align="left">2.5</td>
+<td align="right">7.6</td>
+<td align="left">NA</td>
+<td align="right">42.75617</td>
+<td align="right">17.18811</td>
+<td align="left">verus</td>
+<td align="left">22859</td>
+<td align="left">38832</td>
+<td align="left">NA</td>
+<td align="right">43</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">338</td>
+<td align="right">-76.811433</td>
+<td align="right">-23.588356</td>
+<td align="right">17.5616055</td>
+<td align="right">-6.1129203</td>
+<td align="right">30.3786753</td>
+<td align="right">-11.80251</td>
+<td align="right">-24.639145</td>
+<td align="right">-39.522681</td>
+<td align="right">-77.01271</td>
+<td align="right">-64.199910</td>
+<td align="right">11.431070</td>
+<td align="right">-6.266548</td>
+<td align="right">-35.178668</td>
+<td align="right">12.789184</td>
+<td align="right">-1.1044315</td>
+<td align="right">17.2460661</td>
+<td align="right">-28.688649</td>
+<td align="right">36.734930</td>
+<td align="right">1.741396</td>
+<td align="right">-25.663090</td>
+<td align="right">11.093598</td>
+<td align="right">-0.3704745</td>
+<td align="right">0.3318220</td>
+<td align="right">-15.7456145</td>
+<td align="right">21.5161869</td>
+<td align="right">17.545671</td>
+<td align="right">27.323194</td>
+<td align="right">26.9509079</td>
+<td align="right">16.720759</td>
+<td align="right">16.889667</td>
+<td align="right">-15.71704</td>
+<td align="right">0.7842111</td>
+<td align="right">-15.033587</td>
+<td align="right">-8.085853</td>
+<td align="right">2.586582</td>
+<td align="right">-0.0838811</td>
+<td align="right">5.268759</td>
+<td align="right">-2.5440612</td>
+<td align="right">0</td>
+<td align="left">Yerkes</td>
+<td align="left">Maxine</td>
+<td align="right">338</td>
+<td align="left">338</td>
+<td align="left">NA</td>
+<td align="left">8_CF_3_L008.bam</td>
+<td align="left">F</td>
+<td align="right">3</td>
+<td align="right">8</td>
+<td align="right">6</td>
+<td align="left">2016-06-07</td>
+<td align="left">YG1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">53</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">7.2</td>
+<td align="left">NA</td>
+<td align="right">50.52632</td>
+<td align="right">19.49295</td>
+<td align="left">verus</td>
+<td align="left">20821</td>
+<td align="left">40179</td>
+<td align="left">Yes</td>
+<td align="right">53</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">389</td>
+<td align="right">-9.035152</td>
+<td align="right">-42.472885</td>
+<td align="right">-14.1230302</td>
+<td align="right">3.7761863</td>
+<td align="right">-11.9413104</td>
+<td align="right">-10.59732</td>
+<td align="right">11.476496</td>
+<td align="right">-10.044294</td>
+<td align="right">-6.07530</td>
+<td align="right">13.302190</td>
+<td align="right">-10.716897</td>
+<td align="right">1.289022</td>
+<td align="right">-7.888694</td>
+<td align="right">39.244380</td>
+<td align="right">-0.0374953</td>
+<td align="right">-8.3470084</td>
+<td align="right">16.795318</td>
+<td align="right">-8.959853</td>
+<td align="right">2.707977</td>
+<td align="right">-11.564602</td>
+<td align="right">-7.719343</td>
+<td align="right">-2.4054566</td>
+<td align="right">12.2189964</td>
+<td align="right">16.7895009</td>
+<td align="right">11.8680602</td>
+<td align="right">29.733060</td>
+<td align="right">-7.317870</td>
+<td align="right">35.2784335</td>
+<td align="right">-12.768171</td>
+<td align="right">-25.159829</td>
+<td align="right">-23.31646</td>
+<td align="right">-34.5523828</td>
+<td align="right">55.254399</td>
+<td align="right">7.193322</td>
+<td align="right">-27.242167</td>
+<td align="right">23.2062388</td>
+<td align="right">10.060393</td>
+<td align="right">-10.4575831</td>
+<td align="right">0</td>
+<td align="left">Yerkes</td>
+<td align="left">Rogger</td>
+<td align="right">389</td>
+<td align="left">389</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">M</td>
+<td align="right">4</td>
+<td align="right">NA</td>
+<td align="right">23</td>
+<td align="left">2018-10-10</td>
+<td align="left">YG39</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="left">NA</td>
+<td align="left">2018-10-01</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.7</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">verus</td>
+<td align="left">25204</td>
+<td align="left">41656</td>
+<td align="left">NA</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">438</td>
+<td align="right">38.737750</td>
+<td align="right">-98.961705</td>
+<td align="right">-6.4241994</td>
+<td align="right">-0.4050236</td>
+<td align="right">0.0487974</td>
+<td align="right">-29.96134</td>
+<td align="right">-7.819097</td>
+<td align="right">4.098805</td>
+<td align="right">-5.33942</td>
+<td align="right">-3.408825</td>
+<td align="right">23.913235</td>
+<td align="right">-1.116522</td>
+<td align="right">-4.059425</td>
+<td align="right">4.850208</td>
+<td align="right">16.2480355</td>
+<td align="right">0.8583629</td>
+<td align="right">-14.200342</td>
+<td align="right">17.044620</td>
+<td align="right">-4.688113</td>
+<td align="right">-12.955579</td>
+<td align="right">-5.267388</td>
+<td align="right">-1.6547045</td>
+<td align="right">0.7736846</td>
+<td align="right">1.7292019</td>
+<td align="right">-2.0160545</td>
+<td align="right">-3.909655</td>
+<td align="right">10.519180</td>
+<td align="right">-24.5084626</td>
+<td align="right">5.336721</td>
+<td align="right">-36.539790</td>
+<td align="right">25.37062</td>
+<td align="right">34.8222446</td>
+<td align="right">28.385570</td>
+<td align="right">31.514002</td>
+<td align="right">46.684492</td>
+<td align="right">19.9919029</td>
+<td align="right">-3.156439</td>
+<td align="right">-22.8509246</td>
+<td align="right">0</td>
+<td align="left">Yerkes</td>
+<td align="left">Cheeta</td>
+<td align="right">438</td>
+<td align="left">438</td>
+<td align="left">NA</td>
+<td align="left">155_CF_3_L004.bam</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">8</td>
+<td align="left">2016-06-22</td>
+<td align="left">YG22</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">55</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.6</td>
+<td align="left">NA</td>
+<td align="right">55.30614</td>
+<td align="right">18.06375</td>
+<td align="left">verus</td>
+<td align="left">20821</td>
+<td align="left">40909</td>
+<td align="left">Yes</td>
+<td align="right">55</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">456</td>
+<td align="right">-6.639290</td>
+<td align="right">-80.557052</td>
+<td align="right">-0.5099719</td>
+<td align="right">2.1557191</td>
+<td align="right">15.4551016</td>
+<td align="right">-10.15878</td>
+<td align="right">2.904520</td>
+<td align="right">-4.162599</td>
+<td align="right">-13.39653</td>
+<td align="right">8.948876</td>
+<td align="right">28.547391</td>
+<td align="right">-4.611110</td>
+<td align="right">-11.118889</td>
+<td align="right">-25.646718</td>
+<td align="right">13.9431546</td>
+<td align="right">-10.9218697</td>
+<td align="right">-10.988095</td>
+<td align="right">2.564652</td>
+<td align="right">-3.315330</td>
+<td align="right">-12.427946</td>
+<td align="right">-23.478718</td>
+<td align="right">9.9509073</td>
+<td align="right">10.4812892</td>
+<td align="right">-0.7515643</td>
+<td align="right">-5.7613917</td>
+<td align="right">-4.340921</td>
+<td align="right">-3.857019</td>
+<td align="right">-31.4583272</td>
+<td align="right">8.353572</td>
+<td align="right">-1.643735</td>
+<td align="right">6.45784</td>
+<td align="right">41.0405598</td>
+<td align="right">11.636251</td>
+<td align="right">-17.878808</td>
+<td align="right">-70.401404</td>
+<td align="right">-11.3465290</td>
+<td align="right">-1.876168</td>
+<td align="right">-3.7437993</td>
+<td align="right">0</td>
+<td align="left">Yerkes</td>
+<td align="left">Mai</td>
+<td align="right">456</td>
+<td align="left">456</td>
+<td align="left">NA</td>
+<td align="left">156_CF_3_L001.bam</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">15</td>
+<td align="left">2016-06-22</td>
+<td align="left">YG23</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">49</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.5</td>
+<td align="left">NA</td>
+<td align="right">54.00665</td>
+<td align="right">20.13760</td>
+<td align="left">verus</td>
+<td align="left">23377</td>
+<td align="left">41275</td>
+<td align="left">Yes</td>
+<td align="right">49</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Plot a couple PCs with a couple potential covariates
+ggplot(Merged, aes(x=PC2, y=PC1, color=factor(RNA.Extract_date), label=Row.names)) + 
+  geom_point() +
+  geom_text_repel(size=2.5)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/pca-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(Merged, aes(x=PC2, y=PC1, color=RIN, label=Row.names)) + 
+  geom_point() +
+  geom_text_repel(size=2.5)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/pca-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now I am going to look more systematically for significant correlations between potential observed confounders in the Metadata and the first 10 PCs. Will use Spearman’s correlation to test continuous continuous confounders, will use anova for categorical confounders.</p>
+<pre class="r"><code># Grab first 10 PCs
+PCs_to_test &lt;- Merged[,2:11]
+kable(head(PCs_to_test))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">PC1</th>
+<th align="right">PC2</th>
+<th align="right">PC3</th>
+<th align="right">PC4</th>
+<th align="right">PC5</th>
+<th align="right">PC6</th>
+<th align="right">PC7</th>
+<th align="right">PC8</th>
+<th align="right">PC9</th>
+<th align="right">PC10</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">-16.209924</td>
+<td align="right">-39.412051</td>
+<td align="right">-12.6609324</td>
+<td align="right">37.8823277</td>
+<td align="right">-31.0051139</td>
+<td align="right">-11.19556</td>
+<td align="right">-3.293419</td>
+<td align="right">6.914787</td>
+<td align="right">31.22802</td>
+<td align="right">9.387597</td>
+</tr>
+<tr class="even">
+<td align="right">-77.598637</td>
+<td align="right">-7.285478</td>
+<td align="right">27.7851831</td>
+<td align="right">26.9782914</td>
+<td align="right">-50.5795688</td>
+<td align="right">35.50836</td>
+<td align="right">-38.647176</td>
+<td align="right">22.304682</td>
+<td align="right">29.24587</td>
+<td align="right">-7.972713</td>
+</tr>
+<tr class="odd">
+<td align="right">-76.811433</td>
+<td align="right">-23.588356</td>
+<td align="right">17.5616055</td>
+<td align="right">-6.1129203</td>
+<td align="right">30.3786753</td>
+<td align="right">-11.80251</td>
+<td align="right">-24.639145</td>
+<td align="right">-39.522681</td>
+<td align="right">-77.01271</td>
+<td align="right">-64.199910</td>
+</tr>
+<tr class="even">
+<td align="right">-9.035152</td>
+<td align="right">-42.472885</td>
+<td align="right">-14.1230302</td>
+<td align="right">3.7761863</td>
+<td align="right">-11.9413104</td>
+<td align="right">-10.59732</td>
+<td align="right">11.476496</td>
+<td align="right">-10.044294</td>
+<td align="right">-6.07530</td>
+<td align="right">13.302190</td>
+</tr>
+<tr class="odd">
+<td align="right">38.737750</td>
+<td align="right">-98.961705</td>
+<td align="right">-6.4241994</td>
+<td align="right">-0.4050236</td>
+<td align="right">0.0487974</td>
+<td align="right">-29.96134</td>
+<td align="right">-7.819097</td>
+<td align="right">4.098805</td>
+<td align="right">-5.33942</td>
+<td align="right">-3.408825</td>
+</tr>
+<tr class="even">
+<td align="right">-6.639290</td>
+<td align="right">-80.557052</td>
+<td align="right">-0.5099719</td>
+<td align="right">2.1557191</td>
+<td align="right">15.4551016</td>
+<td align="right">-10.15878</td>
+<td align="right">2.904520</td>
+<td align="right">-4.162599</td>
+<td align="right">-13.39653</td>
+<td align="right">8.948876</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Grab potential continuous confounders that make sense to test
+Continuous_confounders_to_test &lt;- Merged[, c(&quot;RIN&quot;, &quot;Age&quot;)]
+kable(head(Continuous_confounders_to_test))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">RIN</th>
+<th align="right">Age</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">7.3</td>
+<td align="right">40</td>
+</tr>
+<tr class="even">
+<td align="right">7.6</td>
+<td align="right">44</td>
+</tr>
+<tr class="odd">
+<td align="right">7.2</td>
+<td align="right">53</td>
+</tr>
+<tr class="even">
+<td align="right">5.7</td>
+<td align="right">45</td>
+</tr>
+<tr class="odd">
+<td align="right">5.6</td>
+<td align="right">55</td>
+</tr>
+<tr class="even">
+<td align="right">5.5</td>
+<td align="right">49</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Test
+Spearman_test_results &lt;- corr.test(Continuous_confounders_to_test, PCs_to_test, adjust=&quot;none&quot;, method=&quot;spearman&quot;)
+
+# Plot
+Spearman_test_results$p %&gt;%
+  melt() %&gt;%
+  rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %&gt;%
+  ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
+    geom_tile() +
+    geom_text(aes(label = signif(Pvalue, 1))) +
+    scale_fill_gradient(limits=c(0.001, 1), breaks=c(0.001,0.01,0.1,1), trans = &#39;log&#39;, high=&quot;white&quot;, low=&quot;red&quot; ) +
+    theme_classic()</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/test_potential_confounders-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Grab potential categorical confounders that make sense to test
+Categorical_confounders_to_test &lt;- Merged[,c(&quot;Viral.status&quot;, &quot;SX&quot;,&quot;RNA.Extract_date&quot;, &quot;RNA.Library.prep.batch&quot;, &quot;Source&quot;)]
+kable(head(Categorical_confounders_to_test))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Viral.status</th>
+<th align="left">SX</th>
+<th align="left">RNA.Extract_date</th>
+<th align="right">RNA.Library.prep.batch</th>
+<th align="left">Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">M</td>
+<td align="left">2018-10-10</td>
+<td align="right">5</td>
+<td align="left">Yerkes</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">M</td>
+<td align="left">2016-06-07</td>
+<td align="right">3</td>
+<td align="left">Yerkes</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">F</td>
+<td align="left">2016-06-07</td>
+<td align="right">3</td>
+<td align="left">Yerkes</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">M</td>
+<td align="left">2018-10-10</td>
+<td align="right">4</td>
+<td align="left">Yerkes</td>
+</tr>
+<tr class="odd">
+<td align="left">NA</td>
+<td align="left">F</td>
+<td align="left">2016-06-22</td>
+<td align="right">2</td>
+<td align="left">Yerkes</td>
+</tr>
+<tr class="even">
+<td align="left">NA</td>
+<td align="left">F</td>
+<td align="left">2016-06-22</td>
+<td align="right">2</td>
+<td align="left">Yerkes</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Viral status will need to be reformatted to make factors that make sense for testing (example: HBV+, HBV- HCV+, HCV- are factors that make sense). Let&#39;s assume that NA means negative status.
+Categorical_confounders_to_test$HBV_status &lt;- grepl(&quot;HBV+&quot;, Categorical_confounders_to_test$Viral.status)
+Categorical_confounders_to_test$HCV_status &lt;- grepl(&quot;HCV+&quot;, Categorical_confounders_to_test$Viral.status)
+Categorical_confounders_to_test &lt;- Categorical_confounders_to_test[, -1 ]
+kable(head(Categorical_confounders_to_test))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SX</th>
+<th align="left">RNA.Extract_date</th>
+<th align="right">RNA.Library.prep.batch</th>
+<th align="left">Source</th>
+<th align="left">HBV_status</th>
+<th align="left">HCV_status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">M</td>
+<td align="left">2018-10-10</td>
+<td align="right">5</td>
+<td align="left">Yerkes</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">2016-06-07</td>
+<td align="right">3</td>
+<td align="left">Yerkes</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">2016-06-07</td>
+<td align="right">3</td>
+<td align="left">Yerkes</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">M</td>
+<td align="left">2018-10-10</td>
+<td align="right">4</td>
+<td align="left">Yerkes</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">F</td>
+<td align="left">2016-06-22</td>
+<td align="right">2</td>
+<td align="left">Yerkes</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">F</td>
+<td align="left">2016-06-22</td>
+<td align="right">2</td>
+<td align="left">Yerkes</td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Do one-way anova test as a loop.
+# First initialize results matrix
+Pvalues &lt;- matrix(ncol = dim(PCs_to_test)[2], nrow = dim(Categorical_confounders_to_test)[2])
+colnames(Pvalues) &lt;- colnames(PCs_to_test)
+rownames(Pvalues) &lt;- colnames(Categorical_confounders_to_test)
+for (confounder in seq_along(Categorical_confounders_to_test)) {
+    for (PC in seq_along(PCs_to_test)) {
+      res.aov &lt;- aov(PCs_to_test[[PC]] ~ Categorical_confounders_to_test[[confounder]])
+      pval &lt;- summary(res.aov)[[1]][[&quot;Pr(&gt;F)&quot;]][1]
+      Pvalues[confounder, PC] &lt;- pval
+    }
+}
+# Plot
+Pvalues %&gt;%
+  melt() %&gt;%
+  rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %&gt;%
+  ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
+    geom_tile() +
+    geom_text(aes(label = signif(Pvalue, 1))) +
+    scale_fill_gradient( trans = &#39;log&#39;, high=&quot;white&quot;, low=&quot;red&quot; ) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/test_potential_confounders-2.png" width="672" style="display: block; margin: auto;" /></p>
+<br> <br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.14
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] bindrcpp_0.2.2  reshape2_1.4.3  knitr_1.21      ggrepel_0.8.0  
+ [5] psych_1.8.10    forcats_0.4.0   stringr_1.3.1   dplyr_0.7.8    
+ [9] purrr_0.2.5     readr_1.3.1     tidyr_0.8.2     tibble_1.4.2   
+[13] tidyverse_1.2.1 readxl_1.1.0    ggfortify_0.4.5 ggplot2_3.1.0  
+[17] corrplot_0.84  
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_0.2.5 xfun_0.4         haven_2.1.0      lattice_0.20-38 
+ [5] colorspace_1.3-2 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
+ [9] rlang_0.3.0.1    pillar_1.3.1     foreign_0.8-71   glue_1.3.0      
+[13] withr_2.1.2      modelr_0.1.4     bindr_0.1.1      plyr_1.8.4      
+[17] munsell_0.5.0    gtable_0.2.0     workflowr_1.2.0  cellranger_1.1.0
+[21] rvest_0.3.2      evaluate_0.12    labeling_0.3     parallel_3.5.1  
+[25] highr_0.7        broom_0.5.1      Rcpp_1.0.0       scales_1.0.0    
+[29] backports_1.1.3  jsonlite_1.6     fs_1.2.6         gridExtra_2.3   
+[33] mnormt_1.5-5     hms_0.4.2        digest_0.6.18    stringi_1.2.4   
+[37] grid_3.5.1       rprojroot_1.3-2  cli_1.0.1        tools_3.5.1     
+[41] magrittr_1.5     lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2 
+[45] xml2_1.2.0       lubridate_1.7.4  rstudioapi_0.8   assertthat_0.2.0
+[49] rmarkdown_1.11   httr_1.4.0       R6_2.3.0         nlme_3.1-137    
+[53] git2r_0.24.0     compiler_3.5.1  </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

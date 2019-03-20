@@ -1,0 +1,114 @@
+---
+title: "Check RNA-seq PCs"
+author: "Ben Fair"
+date: "3/20/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load-libraries, message=F, warning=F}
+library(corrplot)
+library(ggfortify)
+library(readxl)
+library(tidyverse)
+library(psych)
+library(ggrepel)
+library(knitr)
+library(reshape2)
+```
+
+```{r make-tidy-data}
+# Read in count table, filtering for TPM>1
+CountTable <- read.table('../output/CountTable.tpm.txt', header=T, check.names=FALSE, row.names = 1) %>%
+  filter(rowSums(.) > 1)
+
+# Read in metadata
+Metadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+
+```
+
+Now perform PCA, plot a few visualizations
+```{r pca}
+# pca with log-transformed count table (+ 0.1 pseudocount)
+pca_results <- prcomp(t(log(CountTable+0.1)), center=T, scale. = T)
+
+# Plot PCs
+autoplot(pca_results)
+
+# Merge with metadata
+Merged <- merge(pca_results$x, Metadata, by.x = "row.names", by.y = "Individual.ID", all=TRUE)
+kable(head(Merged))
+
+# Plot a couple PCs with a couple potential covariates
+ggplot(Merged, aes(x=PC2, y=PC1, color=factor(RNA.Extract_date), label=Row.names)) + 
+  geom_point() +
+  geom_text_repel(size=2.5)
+ggplot(Merged, aes(x=PC2, y=PC1, color=RIN, label=Row.names)) + 
+  geom_point() +
+  geom_text_repel(size=2.5)
+
+```
+
+Now I am going to look more systematically for significant correlations between potential observed confounders in the Metadata and the first 10 PCs. Will use Spearman's correlation to test continuous continuous confounders, will use anova for categorical confounders.
+
+```{r test_potential_confounders}
+
+# Grab first 10 PCs
+PCs_to_test <- Merged[,2:11]
+kable(head(PCs_to_test))
+
+# Grab potential continuous confounders that make sense to test
+Continuous_confounders_to_test <- Merged[, c("RIN", "Age")]
+kable(head(Continuous_confounders_to_test))
+
+# Test
+Spearman_test_results <- corr.test(Continuous_confounders_to_test, PCs_to_test, adjust="none", method="spearman")
+
+# Plot
+Spearman_test_results$p %>%
+  melt() %>%
+  rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
+  ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
+    geom_tile() +
+    geom_text(aes(label = signif(Pvalue, 1))) +
+    scale_fill_gradient(limits=c(0.001, 1), breaks=c(0.001,0.01,0.1,1), trans = 'log', high="white", low="red" ) +
+    theme_classic()
+
+# Grab potential categorical confounders that make sense to test
+Categorical_confounders_to_test <- Merged[,c("Viral.status", "SX","RNA.Extract_date", "RNA.Library.prep.batch", "Source")]
+kable(head(Categorical_confounders_to_test))
+
+# Viral status will need to be reformatted to make factors that make sense for testing (example: HBV+, HBV- HCV+, HCV- are factors that make sense). Let's assume that NA means negative status.
+Categorical_confounders_to_test$HBV_status <- grepl("HBV+", Categorical_confounders_to_test$Viral.status)
+Categorical_confounders_to_test$HCV_status <- grepl("HCV+", Categorical_confounders_to_test$Viral.status)
+Categorical_confounders_to_test <- Categorical_confounders_to_test[, -1 ]
+kable(head(Categorical_confounders_to_test))
+
+# Do one-way anova test as a loop.
+# First initialize results matrix
+Pvalues <- matrix(ncol = dim(PCs_to_test)[2], nrow = dim(Categorical_confounders_to_test)[2])
+colnames(Pvalues) <- colnames(PCs_to_test)
+rownames(Pvalues) <- colnames(Categorical_confounders_to_test)
+for (confounder in seq_along(Categorical_confounders_to_test)) {
+    for (PC in seq_along(PCs_to_test)) {
+      res.aov <- aov(PCs_to_test[[PC]] ~ Categorical_confounders_to_test[[confounder]])
+      pval <- summary(res.aov)[[1]][["Pr(>F)"]][1]
+      Pvalues[confounder, PC] <- pval
+    }
+}
+# Plot
+Pvalues %>%
+  melt() %>%
+  rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
+  ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
+    geom_tile() +
+    geom_text(aes(label = signif(Pvalue, 1))) +
+    scale_fill_gradient( trans = 'log', high="white", low="red" ) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
