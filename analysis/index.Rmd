@@ -9,4 +9,4 @@ output:
 Welcome to my research website.
 
 ## QC
-- [Checking RNA-seq data for covariates](20190320_Check-RNAseq-PCs.Rmd)
+- [Checking RNA-seq data for covariates](20190320_Check-RNAseq-PCs.html)
