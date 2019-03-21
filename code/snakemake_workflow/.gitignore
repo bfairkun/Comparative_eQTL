@@ -40,3 +40,5 @@ scripts/.snakemake*
 !samples_RNAseq.tsv
 !RNASeqFileList.tsv
 !.test.snakemake.sbatch
+!MockDataSampleList.tsv
+!EditRules.vim

@@ -5,6 +5,9 @@ RNASeqFileList: RNASeqFileList.tsv
 # Temporary files will be prefixed with path/to/scratch/. Leave as empty string to use default snakemake working directory
 temp_files_prefix: /scratch/midway2/bjf79/TestResultsScratch/
 
+# Prefix for valuable, small output that is not ignored by git (CountTable for example)
+gitinclude_output: ../../output/
+
 # the R1 sequencing adapter. #add -A parameter at bottom of config file for R2 adapter
 adapter: AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
 

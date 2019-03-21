@@ -108,7 +108,7 @@ rule MakePlinkBed:
     bed is required for for admixture. tped is for REAP. geno 0 parameter to include snps with 0% missing genotypes
     """
     input:
-        vcf = "PopulationSubstructure/ReferencePanelMerged.vcf",
+        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.vcf"),
     output:
         bed =  "PopulationSubstructure/plink/Merged.bed",
         fam = "PopulationSubstructure/plink/Merged.fam",
@@ -127,7 +127,7 @@ rule MakePlinkTped:
     bed is required for for admixture. tped is for REAP. geno 0 parameter to include snps with 0% missing genotypes
     """
     input:
-        vcf = "PopulationSubstructure/ReferencePanelMerged.vcf",
+        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.vcf"),
     output:
         tfam = "PopulationSubstructure/plink/Merged.tfam",
         tped =  "PopulationSubstructure/plink/Merged.tped",
@@ -186,7 +186,7 @@ rule ReformatAdmixture:
     output:
         P = "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.P",
         Q = "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.Q",
-        Q_labelled = "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.Q.labelled"
+        Q_labelled = config["gitinclude_output"] + "PopulationStructure/Admixture/MergedForAdmixture.{K}.Q.labelled"
     log:
         "logs/Misc/ReformatAdmixture.{K}.log"
     shell:

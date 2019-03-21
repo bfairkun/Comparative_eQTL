@@ -148,8 +148,8 @@ rule FilterInitialCalls:
 
 rule MergeFilteredCalls:
     input:
-        FilteredCalls=expand("filtered/{contig}.vcf.gz", contig=contigs),
-        Tabix=expand("filtered/{contig}.vcf.gz.tbi", contig=contigs),
+        FilteredCalls=ancient(expand("filtered/{contig}.vcf.gz", contig=contigs)),
+        Tabix=ancient(expand("filtered/{contig}.vcf.gz.tbi", contig=contigs)),
     output:
         vcf = "filtered/all.vcf.gz",
         tbi = "filtered/all.vcf.gz.tbi"

@@ -68,7 +68,7 @@ rule kallisto_quant_merge_into_count_table:
     input:
         quant=expand("RNASeq/kallisto/{sample}/abundance.tsv", sample=RNASeqSampleToFastq_dict.keys()),
     output:
-        "RNASeq/kallisto/MergedCountTable.tpm.txt"
+        config["gitinclude_output"] + "CountTable.tpm.txt"
     shell:
         """
         paste <(awk '{{print $1}}' {input.quant[0]}) \
