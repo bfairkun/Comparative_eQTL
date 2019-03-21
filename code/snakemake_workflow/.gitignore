@@ -42,3 +42,5 @@ scripts/.snakemake*
 !.test.snakemake.sbatch
 !MockDataSampleList.tsv
 !EditRules.vim
+*.swp
+*.swo
