@@ -2,6 +2,7 @@ import pandas as pd
 import os
 from snakemake.utils import validate
 from collections import defaultdict
+from itertools import chain
 
 report: "../report/workflow.rst"
 
@@ -31,13 +32,13 @@ else:
 
 RNASeqFastqList = pd.read_table(config["RNASeqFileList"], squeeze=True, dtype=str).set_index(["sample"])
 RNASeqSampleToFastq_dict = defaultdict(list)
+RNASeqBasenameToFastq = dict()
 with open(config["RNASeqFileList"]) as RNASeqFileList_fh:
     RNASeqFileList_fh.readline()
     for line in RNASeqFileList_fh:
         samplename, filepath = line.strip('\n').split('\t')
         RNASeqSampleToFastq_dict[samplename].append(filepath)
-
-
+        RNASeqBasenameToFastq[os.path.basename(filepath)] = filepath
 
 ##### Wildcard constraints #####
 wildcard_constraints:
@@ -54,6 +55,9 @@ wildcard_constraints:
 def get_fastq(wildcards):
     """Get fastq files of given sample-unit."""
     return + units.loc[(wildcards.sample, wildcards.unit), ["fq1", "fq2"]].dropna()
+
+def getFastqFromBase(wildcards):
+    return(RNASeqBasenameToFastq[wildcards.fastq_basename])
 
 def get_RNASeq_merged_fastq(wildcards):
     """Get merged RNA fastq file for a given {sample} wildcard"""

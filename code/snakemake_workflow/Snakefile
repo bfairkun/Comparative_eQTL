@@ -4,6 +4,7 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "../../output/RNA_seq_FlowCellInfo.txt",
         # "PopulationSubstructure/ReferencePanel.vcf.gz",
         # "PopulationSubstructure/ReferencePanelMerged.vcf",
         # "MiscOutput/LowComplexityRegions.bed",
@@ -13,6 +14,7 @@ rule all:
         # "MiscOutput/STAR_index/chrLength.txt",
         # expand("RNASeq/STAR/{sample}/Aligned.sortedByCoord.out.bam", sample=samples["sample"]),
         #"annotated/all.vcf.gz",
+        config["gitinclude_output"] + "CountTable.SeparatedByFastq.tpm.txt",
         config["gitinclude_output"] + "CountTable.tpm.txt",
         # "qc/multiqc.html",
         # "MiscOutput/CallableSites.bed",

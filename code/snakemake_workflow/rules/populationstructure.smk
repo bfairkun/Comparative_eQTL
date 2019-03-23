@@ -119,26 +119,11 @@ rule MakePlinkBed:
         config["PopulationSubstructure"]["AdmixturePlinkFilters"]
     shell:
         """
-        plink --vcf {input.vcf} --vcf-half-call m --allow-extra-chr --out PopulationSubstructure/plink/Merged --geno 0 -recode12 {params} --make-bed &> {log}
+        # bcftools annotate -x ID -I +'%CHROM:%POS:%REF:%ALT' ../ReferencePanelMerged.vcf.gz | plink --vcf /dev/stdin --vcf-half-call m --allow-extra-chr --out Test_WG --geno 0 -recode12 --id-delim "-" --remove-fam ../../Pan_paniscus.fam --make-bed
+        plink --vcf {input.vcf} --set-missing-var-ids @:#:\$1,\$2 --vcf-half-call m --allow-extra-chr --out PopulationSubstructure/plink/Merged --geno 0 -recode12 {params} --make-bed &> {log}
         """
 
-rule MakePlinkTped:
-    """
-    bed is required for for admixture. tped is for REAP. geno 0 parameter to include snps with 0% missing genotypes
-    """
-    input:
-        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.vcf"),
-    output:
-        tfam = "PopulationSubstructure/plink/Merged.tfam",
-        tped =  "PopulationSubstructure/plink/Merged.tped",
-    log:
-        "logs/plink/PopulationSubstructureMakeTped"
-    params:
-        config["PopulationSubstructure"]["AdmixturePlinkFilters"]
-    shell:
-        """
-        plink --vcf {input.vcf}  --vcf-half-call m --allow-extra-chr --out {output.base}  --geno 0 -recode12 {params} --transpose &> {log}
-        """
+
 
 rule FixChromsomeNamesForAdmixtureHack:
     """
@@ -208,23 +193,6 @@ rule PlotAdmixture:
         """
         Rscript scripts/plotAdmixture.R {input.Q} {input.fam} {output} &> {log}
         """
-
-# rule REAP:
-#     input:
-#         P = "PopulationSubstructure/plink/Merged." + config["PopulationSubstructure"]["AdmixtureK"] + "P",
-#         Q_labelled = "PopulationSubstructure/plink/Merged." + config["PopulationSubstructure"]["AdmixtureK"] + "Q.labelled",
-#         tped =  "PopulationSubstructure/plink/Merged.tped",
-#         tfam = "PopulationSubstructure/plink/Merged.tfam",
-#     output:
-#         "MyOutput"
-#     log:
-#         ""
-#     params:
-#         ""
-#     shell:
-#         """
-#         ./REAP -g {input.tped} -p {input.tfam} -a {input.Q_labelled} -f {input.P} -r 1 -k {config[PopulationSubstructure][AdmixtureK]}
-#         """
 
 rule vcftools_relatedness2:
     input:

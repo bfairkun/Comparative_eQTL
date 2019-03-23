@@ -75,7 +75,33 @@ rule kallisto_quant_merge_into_count_table:
         <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/kallisto\///g' | sed 's/\/abundance.tsv//g' | sed 's/[[:blank:]]+/\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $5 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) | awk -v OFS='\t' 'NR>1')) > {output}
         """
 
+rule kallisto_quant_each_fastq:
+    input:
+        index = "MiscOutput/kallisto.idx",
+        # fastq = lambda(wildcards): RNASeqBasenameToFastq[wildcards.fastq_basename]
+        fastq = getFastqFromBase
+    output:
+        "RNASeq/kallisto_per_fastq/{fastq_basename}/abundance.tsv"
+    log:
+        "logs/kallisto_per_fastq/{fastq_basename}.log"
+    shell:
+        "kallisto quant -i {input.index} -o RNASeq/kallisto_per_fastq/{wildcards.fastq_basename}/ --single -l 180 -s 50 {input.fastq} &> {log}"
 
+rule kallisto_quant_merge_into_count_table_each_fastq:
+    input:
+        quant=expand("RNASeq/kallisto_per_fastq/{fastq_basename}/abundance.tsv", fastq_basename=RNASeqBasenameToFastq.keys())
+    output:
+        config["gitinclude_output"] + "CountTable.SeparatedByFastq.tpm.txt"
+    shell:
+        """
+        paste <(awk '{{print $1}}' {input.quant[0]}) \
+        <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/kallisto\///g' | sed 's/\/abundance.tsv//g' | sed 's/[[:blank:]]+/\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $5 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) | awk -v OFS='\t' 'NR>1')) > {output}
+        """
+rule Gather_RNA_seq_FlowCellInfo:
+    input: expand("{myfiles}", myfiles=RNASeqBasenameToFastq.values())
+    output: "../../output/RNA_seq_FlowCellInfo.txt"
+    log: "logs/Gather_RNA_seq_FlowCellInfo"
+    shell: "bash scripts/GetFastqIdentifierInfo.sh {input}"
 # rule feature_counts:
 #     input:
 #         bam=expand("RNASeq/STAR/{sample}/Aligned.sortedByCoord.out.bam", sample=RNASeqSampleToFastq_dict.keys())

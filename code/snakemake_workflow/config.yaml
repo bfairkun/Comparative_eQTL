@@ -64,7 +64,7 @@ params:
     se: ""
 
 PopulationSubstructure:
-    AdmixturePlinkFilters: '--id-delim "-" --remove-fam Pan_paniscus.fam --maf 0.05'
+    AdmixturePlinkFilters: '--id-delim "-" --remove-fam <(echo Pan_paniscus) --maf 0.05'
     AdmixtureK:
         - "4"
         - "5"
