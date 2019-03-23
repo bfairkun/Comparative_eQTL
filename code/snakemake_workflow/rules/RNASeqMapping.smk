@@ -68,11 +68,11 @@ rule kallisto_quant_merge_into_count_table:
     input:
         quant=expand("RNASeq/kallisto/{sample}/abundance.tsv", sample=RNASeqSampleToFastq_dict.keys()),
     output:
-        config["gitinclude_output"] + "CountTable.tpm.txt"
+        config["gitinclude_output"] + "CountTable.tpm.txt.gz"
     shell:
         """
         paste <(awk '{{print $1}}' {input.quant[0]}) \
-        <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/kallisto\///g' | sed 's/\/abundance.tsv//g' | sed 's/[[:blank:]]+/\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $5 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) | awk -v OFS='\t' 'NR>1')) > {output}
+        <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/kallisto\///g' | sed 's/\/abundance.tsv//g' | sed 's/[[:blank:]]+/\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $5 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) | awk -v OFS='\t' 'NR>1')) | gzip - > {output}
         """
 
 rule kallisto_quant_each_fastq:
@@ -91,17 +91,17 @@ rule kallisto_quant_merge_into_count_table_each_fastq:
     input:
         quant=expand("RNASeq/kallisto_per_fastq/{fastq_basename}/abundance.tsv", fastq_basename=RNASeqBasenameToFastq.keys())
     output:
-        config["gitinclude_output"] + "CountTable.SeparatedByFastq.tpm.txt"
+        config["gitinclude_output"] + "CountTable.SeparatedByFastq.tpm.txt.gz"
     shell:
         """
         paste <(awk '{{print $1}}' {input.quant[0]}) \
-        <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/kallisto\///g' | sed 's/\/abundance.tsv//g' | sed 's/[[:blank:]]+/\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $5 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) | awk -v OFS='\t' 'NR>1')) > {output}
+        <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/kallisto\///g' | sed 's/\/abundance.tsv//g' | sed 's/[[:blank:]]+/\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $5 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) | awk -v OFS='\t' 'NR>1')) | gzip - > {output}
         """
 rule Gather_RNA_seq_FlowCellInfo:
     input: expand("{myfiles}", myfiles=RNASeqBasenameToFastq.values())
     output: "../../output/RNA_seq_FlowCellInfo.txt"
     log: "logs/Gather_RNA_seq_FlowCellInfo"
-    shell: "bash scripts/GetFastqIdentifierInfo.sh {input}"
+    shell: "bash scripts/GetFastqIdentifierInfo.sh {input} > {output} 2> {log}"
 # rule feature_counts:
 #     input:
 #         bam=expand("RNASeq/STAR/{sample}/Aligned.sortedByCoord.out.bam", sample=RNASeqSampleToFastq_dict.keys())

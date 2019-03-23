@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit rules/RNASeqMapping.smk
+edit Snakefile
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -31,16 +31,16 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 104 - ((33 * winheight(0) + 25) / 50)
+let s:l = 18 - ((17 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-104
-normal! 057|
+18
+normal! 060|
 tabnext 1
+badd +103 rules/RNASeqMapping.smk
+badd +1 Snakefile
 badd +44 .gitignore
-badd +9 Snakefile
-badd +102 rules/RNASeqMapping.smk
 badd +123 rules/populationstructure.smk
 badd +67 config.yaml
 badd +154 rules/calling.smk
