@@ -69,6 +69,22 @@ PopulationSubstructure:
         - "4"
         - "5"
 
+eQTL_mapping:
+    # 6 column UCSC bed file of genes. Fourth column is gene name. Used to
+    # determine cis-SNPs to test. Best to create or download this file to match
+    # the annotations used for RNA-seq gene quantification.
+    # I used the following command to get this file.
+    # zcat /project2/gilad/bjf79/genomes/Pan_tro_3.0_Ensembl/Sequence/transcript/Pan_troglodytes.Pan_tro_3.0.cdna.all.fa.gz | grep '>' | awk -v OFS='\t' '{split($3,":"); if(a[6]==1){strand="+"} else if(a[6]==-1){strand="-"} else{strand="."} print a[3], a[4], a[5], substr($1,2), ".", strand}' | awk -F'\t' -v OFS='\t' '$1 ~ /^[0-9]+$/ || $1 ~ /^2A$/ || $1 ~ /^2B$/ || $1 ~ /^X$/ || $1 ~ /^Y$/  ' | bedtools sort -i - -faidx /project2/gilad/bjf79/genomes/Pan_tro_3.0_Ensembl/Sequence/DNA/Pan_troglodytes.Pan_tro_3.0.dna_sm.chromosome.fa.fai | > /project2/gilad/bjf79/genomes/Pan_tro_3.0_Ensembl/GeneAnnotation/cDNA.all.chromosomal.bed)}'
+    genes: /project2/gilad/bjf79/genomes/Pan_tro_3.0_Ensembl/GeneAnnotation/cDNA.all.chromosomal.bed
+    # cis-SNPs definied as SNPs within this many bp from a gene's TSS
+    TSS_flanking_snp_width: 1000000
+    # To control eQTL modeling parrallelization... Set how many calls to gemma
+    # (1 gemma call for each gene, unless permutation testing) to lump into
+    # each batch script
+    gemma_batch_size: 1000
+
+# Extract DNA-seq and RNA-seq reads from this region to make mock data for
+# testing purposes.
 MockDataMaker:
     MakeMockData: True
     SampleListForMockData: "MockDataSampleList.tsv"

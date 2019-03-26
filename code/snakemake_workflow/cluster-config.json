@@ -81,5 +81,8 @@
   {"mem" : 24000},
 
   "FilterInitialCalls":
-  {"mem" : 24000}
+  {"mem" : 24000},
+
+  "MakePlinkBed":
+  {"mem" : 36000}
 }

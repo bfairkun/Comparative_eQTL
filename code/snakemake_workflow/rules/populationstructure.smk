@@ -93,8 +93,8 @@ rule AddReferencePopulationToVCF:
         Refvcf = "PopulationSubstructure/ReferencePanel.vcf.gz",
         Reftbi = "PopulationSubstructure/ReferencePanel.vcf.gz.tbi",
     output:
-        vcf = "PopulationSubstructure/ReferencePanelMerged.vcf",
-        tbi = "PopulationSubstructure/ReferencePanelMerged.vcf.tbi",
+        vcf = "PopulationSubstructure/ReferencePanelMerged.vcf.gz",
+        tbi = "PopulationSubstructure/ReferencePanelMerged.vcf.gz.tbi",
     log:
         "logs/populationsubstructure/AddRefPopulationToVcf.log"
     shell:
@@ -103,12 +103,26 @@ rule AddReferencePopulationToVCF:
         tabix -p vcf {output.vcf} &>> {log}
         """
 
+rule Annotate_vcf:
+    input:
+        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.vcf.gz"),
+    output:
+        vcf = "PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz",
+        tbi = "PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz.tbi"
+    log:
+        "logs/populationsubstructure/Annotate_vcf.log"
+    shell:
+        """
+        bcftools annotate -O z -x ID -I +'%CHROM:%POS:%REF:%ALT' {input.vcf} > {output.vcf} 2> {log}
+        tabix -p vcf {output.vcf} 2>> {log}
+        """
+
 rule MakePlinkBed:
     """
     bed is required for for admixture. tped is for REAP. geno 0 parameter to include snps with 0% missing genotypes
     """
     input:
-        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.vcf"),
+        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz"),
     output:
         bed =  "PopulationSubstructure/plink/Merged.bed",
         fam = "PopulationSubstructure/plink/Merged.fam",
@@ -119,11 +133,41 @@ rule MakePlinkBed:
         config["PopulationSubstructure"]["AdmixturePlinkFilters"]
     shell:
         """
-        # bcftools annotate -x ID -I +'%CHROM:%POS:%REF:%ALT' ../ReferencePanelMerged.vcf.gz | plink --vcf /dev/stdin --vcf-half-call m --allow-extra-chr --out Test_WG --geno 0 -recode12 --id-delim "-" --remove-fam ../../Pan_paniscus.fam --make-bed
-        plink --vcf {input.vcf} --set-missing-var-ids @:#:\$1,\$2 --vcf-half-call m --allow-extra-chr --out PopulationSubstructure/plink/Merged --geno 0 -recode12 {params} --make-bed &> {log}
+        plink --vcf {input.vcf} --vcf-half-call m --allow-extra-chr --geno 0 -recode12 --make-bed --out PopulationSubstructure/plink/Merged {params} &> {log}
         """
 
 
+rule prune_plink_files:
+    input:
+        bed =  "PopulationSubstructure/plink/Merged.bed",
+        fam = "PopulationSubstructure/plink/Merged.fam",
+        bim = "PopulationSubstructure/plink/Merged.bim"
+    output:
+        bed =  "PopulationSubstructure/plink/Merged.pruned.bed",
+        fam = "PopulationSubstructure/plink/Merged.pruned.fam",
+        bim = "PopulationSubstructure/plink/Merged.pruned.bim"
+    log:
+        "logs/populationsubstructure/prune_plink_files.log"
+    shell:
+        """
+        plink --bfile PopulationSubstructure/plink/Merged --allow-extra-chr --indep-pairwise 50 5 0.5 &> {log}
+        plink --bfile PopulationSubstructure/plink/Merged --allow-extra-chr --extract plink.prune.in --make-bed --out PopulationSubstructure/plink/Merged.pruned &> {log}
+        """
+
+rule PCA:
+    input:
+        bed =  "PopulationSubstructure/plink/Merged.pruned.bed",
+        fam = "PopulationSubstructure/plink/Merged.pruned.fam",
+        bim = "PopulationSubstructure/plink/Merged.pruned.bim"
+    output:
+        eigenval = "PopulationSubstructure/plink/plink.eigenval",
+        eigenvec = "PopulationSubstructure/plink/plink.eigenvec"
+    log:
+        "logs/populationsubstructure/pca.log"
+    shell:
+        """
+        plink --bfile {input.bed} --pca 'header' 'var-wts'
+        """
 
 rule FixChromsomeNamesForAdmixtureHack:
     """
@@ -132,13 +176,13 @@ rule FixChromsomeNamesForAdmixtureHack:
     files to a matching prefix, since Admixture searches for matching prefixes.
     """
     input:
-        bim = "PopulationSubstructure/plink/Merged.bim",
-        bed = "PopulationSubstructure/plink/Merged.bed",
-        fam = "PopulationSubstructure/plink/Merged.fam",
+        bim = "PopulationSubstructure/plink/Merged.pruned.bim",
+        bed = "PopulationSubstructure/plink/Merged.pruned.bed",
+        fam = "PopulationSubstructure/plink/Merged.pruned.fam",
     output:
-        bim = "PopulationSubstructure/plink/MergedForAdmixture.bim",
-        bed = "PopulationSubstructure/plink/MergedForAdmixture.bed",
-        fam = "PopulationSubstructure/plink/MergedForAdmixture.fam",
+        bim = "PopulationSubstructure/plink/MergedForAdmixture.pruned.bim",
+        bed = "PopulationSubstructure/plink/MergedForAdmixture.pruned.bed",
+        fam = "PopulationSubstructure/plink/MergedForAdmixture.pruned.fam",
     log:
         "logs/Misc/FixChromsomeNamesForAdmixtureHack.log"
     shell:
@@ -151,10 +195,10 @@ rule FixChromsomeNamesForAdmixtureHack:
 rule Admixture:
     "admixture does not allow you to change default output filepaths, so output must be renamed manually"
     input:
-        bed =  "PopulationSubstructure/plink/MergedForAdmixture.bed",
+        bed =  "PopulationSubstructure/plink/MergedForAdmixture.pruned.bed",
     output:
-        P = "MergedForAdmixture.{K}.P",
-        Q = "MergedForAdmixture.{K}.Q",
+        P = "MergedForAdmixture.pruned.{K}.P",
+        Q = "MergedForAdmixture.pruned.{K}.Q",
     log:
         "logs/Admixture/Admixture.{K}.log"
     params:
@@ -165,9 +209,9 @@ rule Admixture:
 
 rule ReformatAdmixture:
     input:
-        P = "MergedForAdmixture.{K}.P",
-        Q = "MergedForAdmixture.{K}.Q",
-        fam = "PopulationSubstructure/plink/MergedForAdmixture.fam",
+        P = "MergedForAdmixture.pruned.{K}.P",
+        Q = "MergedForAdmixture.pruned.{K}.Q",
+        fam = "PopulationSubstructure/plink/MergedForAdmixture.pruned.fam",
     output:
         P = "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.P",
         Q = "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.Q",
@@ -183,7 +227,7 @@ rule ReformatAdmixture:
 
 rule PlotAdmixture:
     input:
-        fam = "PopulationSubstructure/plink/MergedForAdmixture.fam",
+        fam = "PopulationSubstructure/plink/MergedForAdmixture.pruned.fam",
         Q = "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.Q"
     output:
         "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.pdf"

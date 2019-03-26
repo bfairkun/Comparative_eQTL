@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit Snakefile
+edit rules/eqtl_calling.smk
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -31,21 +31,23 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 18 - ((17 * winheight(0) + 25) / 50)
+let s:l = 43 - ((32 * winheight(0) + 24) / 49)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-18
-normal! 060|
+43
+normal! 011|
 tabnext 1
-badd +103 rules/RNASeqMapping.smk
-badd +1 Snakefile
-badd +44 .gitignore
-badd +123 rules/populationstructure.smk
-badd +67 config.yaml
+badd +1 rules/eqtl_calling.smk
+badd +7 Snakefile
+badd +232 rules/populationstructure.smk
+badd +11 rules/RNASeqMapping.smk
+badd +2 .gitignore
+badd +15 config.yaml
 badd +154 rules/calling.smk
-badd +64 rules/common.smk
-badd +85 cluster-config.json
+badd +81 rules/common.smk
+badd +87 cluster-config.json
+badd +53 rules/mapping.smk
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif
