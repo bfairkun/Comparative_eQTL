@@ -160,13 +160,17 @@ rule PCA:
         fam = "PopulationSubstructure/plink/Merged.pruned.fam",
         bim = "PopulationSubstructure/plink/Merged.pruned.bim"
     output:
-        eigenval = "PopulationSubstructure/plink/plink.eigenval",
-        eigenvec = "PopulationSubstructure/plink/plink.eigenvec"
+        eigenval = config["gitinclude_output"] + "PopulationStructure/pca.eigenval",
+        eigenvec = config["gitinclude_output"] + "PopulationStructure/pca.eigenvec",
+        loadings = "PopulationSubstructure/plink/plink.eigenvec.var"
     log:
         "logs/populationsubstructure/pca.log"
     shell:
         """
-        plink --bfile {input.bed} --pca 'header' 'var-wts'
+        plink --bfile PopulationSubstructure/plink/Merged.pruned --pca 'header' 'var-wts' --allow-extra-chr &> {log}
+        mv plink.eigenval {output.eigenval} &>> {log}
+        mv plink.eigenvec {output.eigenvec} &>> {log}
+        mv plink.eigenvec.var {output.loadings} &>> {log}
         """
 
 rule FixChromsomeNamesForAdmixtureHack:
@@ -215,7 +219,7 @@ rule ReformatAdmixture:
     output:
         P = "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.P",
         Q = "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.Q",
-        Q_labelled = config["gitinclude_output"] + "PopulationStructure/Admixture/MergedForAdmixture.{K}.Q.labelled"
+        Q_labelled = config["gitinclude_output"] + "PopulationStructure/Admixture/MergedForAdmixture.{K}.Q.labelled",
     log:
         "logs/Misc/ReformatAdmixture.{K}.log"
     shell:
