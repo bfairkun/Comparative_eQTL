@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit .gitignore
+edit Snakefile
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -38,16 +38,16 @@ normal! zt
 1
 normal! 0
 tabnext 1
+badd +1 Snakefile
 badd +173 rules/populationstructure.smk
-badd +35 Snakefile
-badd +42 rules/eqtl_calling.smk
+badd +51 rules/eqtl_calling.smk
 badd +11 rules/RNASeqMapping.smk
-badd +1 .gitignore
-badd +1 config.yaml
+badd +42 .gitignore
+badd +4 config.yaml
 badd +96 rules/calling.smk
 badd +81 rules/common.smk
 badd +87 cluster-config.json
-badd +53 rules/mapping.smk
+badd +159 rules/mapping.smk
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

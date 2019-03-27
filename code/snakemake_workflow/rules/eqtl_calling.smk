@@ -26,7 +26,7 @@ rule make_cis_gene_windows:
         faidx = config["ref"]["genome"] + ".fai",
     shell:
         """
-        bedtools sort -i {input.genes_bed} | bedtools flank -l 1 -r 0 -s -g {params.faidx} | bedtools slop -b {params.MaxDistFromTSS} -g {params.faidx} | bedtools sort -i - > {output}
+        (bedtools sort -i {input.genes_bed} | bedtools flank -l 1 -r 0 -s -g {params.faidx} | bedtools slop -b {params.MaxDistFromTSS} -g {params.faidx} | bedtools sort -i - > {output}) &> {log}
         """
 
 rule make_snp_bed:
@@ -48,7 +48,7 @@ rule make_plink_file_for_gemma:
         vcf = ancient("PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz"),
     output:
         bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
-        fam = "eQTL_mapping/plink/ForAssociationTesting.temp.fam",
+        fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
         bim = "eQTL_mapping/plink/ForAssociationTesting.bim"
     log:
         "logs/eQTL_mapping/make_plink_file_for_gemma.log"
@@ -59,6 +59,7 @@ rule make_plink_file_for_gemma:
         plink --id-delim '-' --vcf {input.vcf} --vcf-half-call m --allow-extra-chr --make-bed --out eQTL_mapping/plink/ForAssociationTesting.temp {params} &> {log}
         mv eQTL_mapping/plink/ForAssociationTesting.temp.bed {output.bed}
         mv eQTL_mapping/plink/ForAssociationTesting.temp.bim {output.bim}
+        mv eQTL_mapping/plink/ForAssociationTesting.temp.fam {output.fam}
         """
 
 # rule make_filtered_phenotype_matrix:

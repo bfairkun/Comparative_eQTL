@@ -34,7 +34,7 @@ rule all:
         "eQTL_mapping/Misc/cis_gene_windows.bed",
         "eQTL_mapping/plink/ForAssociationTesting.snps.bed",
         "eQTL_mapping/plink/ForAssociationTesting.bed",
-        "eQTL_mapping/plink/ForAssociationTesting.temp.fam",
+        config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
         "eQTL_mapping/plink/ForAssociationTesting.bim",
 
 ##### Modules #####
