@@ -30,7 +30,12 @@ rule all:
         #"plots/depths.svg",
         #"plots/allele-freqs.svg"
         # expand ( "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.Q.pdf", K=config["PopulationSubstructure"]["AdmixtureK"] ),
-        expand(config["gitinclude_output"] + "PopulationStructure/Admixture/MergedForAdmixture.{K}.Q.labelled", K=config["PopulationSubstructure"]["AdmixtureK"])
+        expand(config["gitinclude_output"] + "PopulationStructure/Admixture/MergedForAdmixture.{K}.Q.labelled", K=config["PopulationSubstructure"]["AdmixtureK"]),
+        "eQTL_mapping/Misc/cis_gene_windows.bed",
+        "eQTL_mapping/plink/ForAssociationTesting.snps.bed",
+        "eQTL_mapping/plink/ForAssociationTesting.bed",
+        "eQTL_mapping/plink/ForAssociationTesting.temp.fam",
+        "eQTL_mapping/plink/ForAssociationTesting.bim",
 
 ##### Modules #####
 include: "rules/make_test_data.smk"
@@ -39,5 +44,6 @@ include: "rules/RNASeqMapping.smk"
 include: "rules/calling.smk"
 include: "rules/populationstructure.smk"
 #include: "rules/stats.smk"
+include: "rules/eqtl_calling.smk"
 include: "rules/qc.smk"
 #include: "rules/annotation.smk"

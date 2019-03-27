@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit rules/populationstructure.smk
+edit .gitignore
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -38,13 +38,13 @@ normal! zt
 1
 normal! 0
 tabnext 1
-badd +163 rules/populationstructure.smk
-badd +21 Snakefile
-badd +82 rules/eqtl_calling.smk
+badd +173 rules/populationstructure.smk
+badd +35 Snakefile
+badd +42 rules/eqtl_calling.smk
 badd +11 rules/RNASeqMapping.smk
-badd +2 .gitignore
-badd +15 config.yaml
-badd +154 rules/calling.smk
+badd +1 .gitignore
+badd +1 config.yaml
+badd +96 rules/calling.smk
 badd +81 rules/common.smk
 badd +87 cluster-config.json
 badd +53 rules/mapping.smk

@@ -84,5 +84,8 @@
   {"mem" : 24000},
 
   "MakePlinkBed":
+  {"mem" : 36000},
+
+  "make_plink_file_for_gemma":
   {"mem" : 36000}
 }

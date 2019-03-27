@@ -41,6 +41,7 @@ scripts/.snakemake*
 !RNASeqFileList.tsv
 !.test.snakemake.sbatch
 !MockDataSampleList.tsv
+!eQTL_mapping/plink/ForAssociationTesting.temp.fam
 !Session.vim
 *.swp
 *.swo
