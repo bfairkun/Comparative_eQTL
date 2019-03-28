@@ -6,7 +6,7 @@ library(tidyverse)
 library(knitr)
 
 ## ------------------------------------------------------------------------
-#knitr::purl(input="../analysis/20190327_MakeFamPhenotypeFile.Rmd", output="../analysis/20190327_MakeFamPhenotypeFile.R")
+# knitr::purl(input="../analysis/20190327_MakeFamPhenotypeFile.Rmd", output="../analysis/20190327_MakeFamPhenotypeFile.R")
 
 ## ----Set-filepaths-------------------------------------------------------
 # Use command line input to specify input and output if this is the Rscript version of this file (as opposed to Rmarkdown).
@@ -15,6 +15,7 @@ if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
   CountFilepath <- args[1]
   EmptyFamFilepath <- args[2]
   PhenotypeOutFilepath <- args[3]
+  PhenotypeListOutFilepath <- args[4]
 } else {
   CountFilepath <- '../output/CountTable.tpm.txt.gz'
   EmptyFamFilepath <- '../output/ForAssociationTesting.temp.fam'
@@ -66,10 +67,13 @@ Output.df <- EmptyFamFile %>%
   merge(PhenotypesToOutput, all.x=T, by.x="IID", by.y=0) %>% as.tibble()
 Output.df
 
+GeneList <- data.frame(GeneList=colnames(Output.df)[-1:-5])
+
 ## ----write-table-if-script-----------------------------------------------
 
 if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
   write.table(Output.df, col.names = F, sep='\t', file=PhenotypeOutFilepath, row.names=F, quote=F)
+  write.table(GeneList, col.names = F, sep='\t', file=PhenotypeListOutFilepath, row.names=F, quote=F)
 }
 
 
