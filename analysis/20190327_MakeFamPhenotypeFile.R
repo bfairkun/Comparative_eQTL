@@ -5,6 +5,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(knitr)
 
+## ------------------------------------------------------------------------
+# knitr::purl(input="../analysis/20190327_MakeFamPhenotypeFile.Rmd", output="../analysis/20190327_MakeFamPhenotypeFile.R")
+
 ## ----Set-filepaths-------------------------------------------------------
 # Use command line input to specify input and output if this is the Rscript version of this file (as opposed to Rmarkdown).
 if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
@@ -19,7 +22,6 @@ if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
 
 ## ----make-tidy-data, warning=F-------------------------------------------
 CountTable <- read.table(gzfile(CountFilepath), header=T, check.names=FALSE, row.names = 1)
-
 
 # dimensions of count table
 CountTable %>% dim()
@@ -67,7 +69,7 @@ Output.df
 ## ----write-table-if-script-----------------------------------------------
 
 if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
-  write.table(Output.df, col.names = F, sep='\t', output=PhenotypeOutFilepath)
+  write.table(Output.df, col.names = F, sep='\t', file=PhenotypeOutFilepath)
 }
 
 
