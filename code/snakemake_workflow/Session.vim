@@ -31,21 +31,22 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 25) / 50)
+let s:l = 19 - ((18 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+19
 normal! 0
 tabnext 1
+badd +15 FixRNASeqFileList.py
 badd +1 Snakefile
+badd +1 rules/common.smk
 badd +173 rules/populationstructure.smk
 badd +51 rules/eqtl_calling.smk
-badd +11 rules/RNASeqMapping.smk
+badd +48 rules/RNASeqMapping.smk
 badd +42 .gitignore
-badd +4 config.yaml
+badd +1 config.yaml
 badd +96 rules/calling.smk
-badd +81 rules/common.smk
 badd +87 cluster-config.json
 badd +159 rules/mapping.smk
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
