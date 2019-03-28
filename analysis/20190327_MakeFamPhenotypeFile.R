@@ -6,7 +6,7 @@ library(tidyverse)
 library(knitr)
 
 ## ------------------------------------------------------------------------
-# knitr::purl(input="../analysis/20190327_MakeFamPhenotypeFile.Rmd", output="../analysis/20190327_MakeFamPhenotypeFile.R")
+#knitr::purl(input="../analysis/20190327_MakeFamPhenotypeFile.Rmd", output="../analysis/20190327_MakeFamPhenotypeFile.R")
 
 ## ----Set-filepaths-------------------------------------------------------
 # Use command line input to specify input and output if this is the Rscript version of this file (as opposed to Rmarkdown).
@@ -69,7 +69,7 @@ Output.df
 ## ----write-table-if-script-----------------------------------------------
 
 if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
-  write.table(Output.df, col.names = F, sep='\t', file=PhenotypeOutFilepath)
+  write.table(Output.df, col.names = F, sep='\t', file=PhenotypeOutFilepath, row.names=F, quote=F)
 }
 
 
