@@ -5,6 +5,7 @@ include: "rules/common.smk"
 rule all:
     input:
         "../../output/RNA_seq_FlowCellInfo.txt",
+        "logs/eQTL_mapping/collect_GetCisSNPs_batchlogs.log",
         # "PopulationSubstructure/ReferencePanel.vcf.gz",
         # "PopulationSubstructure/ReferencePanelMerged.vcf",
         # "MiscOutput/LowComplexityRegions.bed",
@@ -15,6 +16,7 @@ rule all:
         # expand("RNASeq/STAR/{sample}/Aligned.sortedByCoord.out.bam", sample=samples["sample"]),
         #"annotated/all.vcf.gz",
         config["gitinclude_output"] + "CountTable.SeparatedByFastq.tpm.txt.gz",
+        "eQTL_mapping/plink/ForAssociationTesting.fam",
         config["gitinclude_output"] + "CountTable.tpm.txt.gz",
         config["gitinclude_output"] + "PopulationStructure/pca.eigenval",
         config["gitinclude_output"] + "PopulationStructure/pca.eigenvec",
@@ -32,7 +34,6 @@ rule all:
         # expand ( "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.Q.pdf", K=config["PopulationSubstructure"]["AdmixtureK"] ),
         expand(config["gitinclude_output"] + "PopulationStructure/Admixture/MergedForAdmixture.{K}.Q.labelled", K=config["PopulationSubstructure"]["AdmixtureK"]),
         "eQTL_mapping/Misc/cis_gene_windows.bed",
-        "eQTL_mapping/plink/ForAssociationTesting.snps.bed",
         "eQTL_mapping/plink/ForAssociationTesting.bed",
         config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
         "eQTL_mapping/plink/ForAssociationTesting.bim",
