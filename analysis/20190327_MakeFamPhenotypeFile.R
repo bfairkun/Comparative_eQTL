@@ -16,9 +16,11 @@ if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
   EmptyFamFilepath <- args[2]
   PhenotypeOutFilepath <- args[3]
   PhenotypeListOutFilepath <- args[4]
+  GenesBedFile <- args[5]
 } else {
   CountFilepath <- '../output/CountTable.tpm.txt.gz'
   EmptyFamFilepath <- '../output/ForAssociationTesting.temp.fam'
+  GenesBedFile <- '../data/cDNA.all.chromosomal.bed'
 }
 
 ## ----make-tidy-data, warning=F-------------------------------------------
@@ -31,6 +33,11 @@ kable(head(CountTable))
 
 EmptyFamFile <- read.table(EmptyFamFilepath, col.names=c("FID", "IID", "Father", "Mother", "SX", "Pheno"), stringsAsFactors = F) %>%
   select(-Pheno)
+
+# Will use GeneRegions to filter out non-autosomal genes
+GeneChromosomes <- read.table(GenesBedFile, col.names=c("chromosome", "start", "stop", "gene", "score", "strand"), stringsAsFactors = F) %>%
+  select(gene, chromosome)
+kable(head(GeneChromosomes))
 
 ## ------------------------------------------------------------------------
 GeneSet1 <- CountTable %>%
@@ -57,11 +64,15 @@ length(intersect(GeneSet1, GeneSet2))
 PhenotypesToOutput <- CountTable %>%
   rownames_to_column('gene') %>%
   filter_if(is.numeric, all_vars(.>0)) %>%
+  merge(GeneChromosomes, by="gene", all.x=T) %>%
+  filter(!chromosome %in% c("X", "Y", "MT")) %>%
+  select(-chromosome) %>%
   column_to_rownames('gene') %>%
   log() %>%
   t()
 
 row.names(PhenotypesToOutput) <- colnames(CountTable)
+
 
 Output.df <- EmptyFamFile %>%
   merge(PhenotypesToOutput, all.x=T, by.x="IID", by.y=0) %>% as.tibble()
