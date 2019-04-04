@@ -1,0 +1,61 @@
+---
+title: "20190326_PCA"
+author: "Ben Fair"
+date: "3/26/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+genotype data from this study (as vcf-files) was merged with that from deManuel et al 2016 (after LiftOver to PanTro5) which contains 65 chimp whole-genome genotype data spanning all of 4 recognized sub-species. Snps were pruned to get variants in approximate equilibrium. Genotype matrix was PCA transformed and plotted below. See [Admixture results](20190326_Admixture.html) for a different analysis from the same pruned genotype matrix.
+
+```{r load-libraries, message=F, warning=F}
+library(plyr)
+library(tidyverse)
+library(knitr)
+library(reshape2)
+library(ggrepel)
+```
+
+```{r make-tidy-data, warning=F}
+PCs <- read.table("../output/PopulationStructure/pca.eigenvec", header=T)
+kable(head(PCs))
+
+PCs$Subspecies <- mapvalues(PCs$FID, from=c("Pan_troglodytes_schweinfurthii", "Pan_troglodytes_ellioti", "Pan_troglodytes_ThisStudy", "Pan_troglodytes", "Pan_troglodytes_troglodytes", "Pan_troglodytes_verus"), to=c("Eastern", "Nigeria\nCameroon", "This Study", "Eastern", "Central", "Western"))
+
+kable(head(PCs))
+
+eigenvals <- read.table("../output/PopulationStructure/pca.eigenval", header=F)
+kable(head(eigenvals))
+
+
+```
+
+```{r plotresults}
+
+#Get rid of clutter by only labeling individuals in this study
+PCs$Label <- PCs$IID
+PCs$Label[PCs$FID != "Pan_troglodytes_ThisStudy"] <- ""
+
+ggplot(PCs, aes(x=PC1, y=PC2, label=Label, color=Subspecies)) +
+  geom_point() +
+  geom_text_repel(size=2)
+
+ggplot(PCs, aes(x=PC2, y=PC3, label=Label, color=Subspecies)) +
+  geom_point() +
+  geom_text_repel(size=2)
+
+ggplot(PCs, aes(x=PC4, y=PC5, label=Label, color=Subspecies)) +
+  geom_point() +
+  geom_text_repel(size=2)
+
+ggplot(PCs, aes(x=PC6, y=PC7, label=Label, color=Subspecies)) +
+  geom_point() +
+  geom_text_repel(size=2)
+```
+
+Conclusion from this (and admixture analysis) is that most individuals in this cohort are Western chimps, and a fair number have recent admixture with Central chimp. Will include this population structure information in modeling.
+
+Subspecies admixture seems to be captured in the first 3 PCs. Looking at the smaller PCs, samples are not seperated by subspecies, but I notice a few samples still cluster tightly together, which seem to correspond to closely related samples as plotted in kinship analysis.
+

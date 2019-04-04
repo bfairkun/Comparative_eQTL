@@ -9,4 +9,18 @@ output:
 Welcome to my research website.
 
 ## QC
+- [fastqc](../output/multiqc.html)
+
+### Genotype data
+- [Genotype call rates]()
+- [kinship](20190321_Check-Kinship-And-PopulationStructure.html)
+- [PCA](20190326_PCA.html)
+- [Admixture](20190326_Admixture.html)
+
+### Expression data
+- [Check that RNA-seq data segregates by biological sample over sequencing flow cell](20190325_MergingRNASeqLanes.html)
 - [Checking RNA-seq data for covariates](20190320_Check-RNAseq-PCs.html)
+
+### Prepare data for eQTL testing
+- [Make phenotype table for gemma](20190327_MakeFamAndCovariateFiles.html)
+- [Make covariate table for gemma](20190327_MakeFamAndCovariateFiles.html)

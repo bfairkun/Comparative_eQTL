@@ -1,0 +1,69 @@
+---
+title: "20190325_MergingRNASeqLanes"
+author: "Ben Fair"
+date: "3/25/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load-libraries, message=F, warning=F}
+library(corrplot)
+library(ggfortify)
+library(readxl)
+library(tidyverse)
+library(psych)
+library(ggrepel)
+library(knitr)
+library(reshape2)
+library(gplots)
+```
+The RNA-seq libraries were sequenced across many sequencing lanes on a few different flow cells. Here want to check that the data clusters by RNA-seq library (biological sample) rather than flow cell or sequencing lane. This is just a QC-check before I merge fastq files by biological sample, which is perhaps the most straightforward way to process the data.
+
+The data below were processed by individual fastq file (1 file for every individual:flowcell:lane). Gene expression was quantified with kallisto for each fastq and merged into a single matrix of TPM values.
+
+```{r make-tidy-data, warning=F}
+# Read in count table, filtering out rows that are all zeros
+CountTable <- read.table(gzfile('../output/CountTable.SeparatedByFastq.tpm.txt.gz'), header=T, check.names=FALSE, row.names = 1) %>%
+  filter_all(any_vars(.>0)) %>% rename_all(funs(basename(.)))
+
+# Read in metadata
+Metadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+
+# Read in lane info
+LaneInfo <- read.table('../output/RNA_seq_FlowCellInfo.txt', header=T, stringsAsFactors = F, sep='\t' )
+LaneInfo$basename <- basename(LaneInfo$file)
+
+# Read in fastq to sample dictionary
+FastqToSample <- read.table('../code/snakemake_workflow/RNASeqFileList.tsv', header=T, stringsAsFactors = F)
+FastqToSample$basename <- basename(FastqToSample$fastq)
+```
+
+In total I had `r length(unique(FastqToSample$fastq))` fastq files from `r length(unique(FastqToSample$sample))` libraries (1 per biological sample/ individual) which were collectively spread across `r length(unique(paste(LaneInfo$flowcelllane, LaneInfo$flowcellid)))` lanes across `r length(unique(LaneInfo$flowcellid))` HiSeq flow cells.
+
+
+```{r}
+# Create spearman correlation matrix of log(TPM) for top 1000 expressed genes.
+CorMatrix <- CountTable %>%
+  +0.1 %>%
+  mutate(sumVar = rowSums(.)) %>%
+  arrange(desc(sumVar)) %>%
+  head(1000) %>%
+  select(-sumVar) %>%
+  log() %>%
+  scale() %>%
+  cor(method = c("spearman"))
+
+BiologicalSample <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=FastqToSample$basename, to=FastqToSample$sample))))
+
+FlowCell <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=LaneInfo$basename, to=LaneInfo$flowcellid))))
+
+# Biological samples colored columns. FlowCell colored as rows.
+heatmap.2(CorMatrix, trace="none", ColSideColors=BiologicalSample, RowSideColors = FlowCell)
+```
+
+The samples segregate by biological sample rather than flow cell or lane. For downstream processing, I simply combined fastq files from different flow cells and lanes by biological sample and remapped the combined-by-sample fastq files to make new count table.
+

@@ -1,0 +1,46 @@
+---
+title: "20190326_Admixture"
+author: "Ben Fair"
+date: "3/26/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+genotype data from this study (as vcf-files) was merged with that from deManuel et al 2016 (after LiftOver to PanTro5) which contains 65 chimp whole-genome genotype data spanning all of 4 recognized sub-species. Snps were pruned to get variants in approximate equilibrium. Admixture algoroithm was used to examine population substructure and admixture. Results for K=4 is plotted below. See [PCA](20190326_PCA.html) of genotypes for a different look at the same set of samples based on the same set of snps.
+
+```{r load-libraries, message=F, warning=F}
+library(plyr)
+library(tidyverse)
+library(knitr)
+library(reshape2)
+```
+
+```{r make-tidy-data, warning=F}
+AdmixtureResults <- read.table("../output/PopulationStructure/Admixture/MergedForAdmixture.4.Q.labelled") %>% 
+  mutate(id=paste(V1, V2)) %>%
+  select( fam = 1, ind=2, everything() ) %>%
+  select(-V3, -V4, -V5, -V6)
+
+kable(head(AdmixtureResults))
+```
+Columns 3 to end represent admixed membership among K sub-populations.
+```{r plotresults}
+
+# Reordering samples makes admixture plots prettier
+AdmixtureResults$ind <- reorder(AdmixtureResults$ind, AdmixtureResults$V8)
+
+# Rename species (fam-ID) to common name
+AdmixtureResults$fam <- mapvalues(AdmixtureResults$fam, from=c("Pan_troglodytes_schweinfurthii", "Pan_troglodytes_ellioti", "Pan_troglodytes_ThisStudy", "Pan_troglodytes", "Pan_troglodytes_troglodytes", "Pan_troglodytes_verus"), to=c("Eastern", "Nigeria\nCameroon", "This Study", "Eastern", "Central", "Western"))
+
+# plot
+melt(AdmixtureResults) %>%
+ggplot(aes(x = ind, y = value, fill = variable)) +
+    geom_bar(stat = "identity") +
+    scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+    facet_grid(~fam, scales="free_x", space="free_x") +
+    theme(legend.position="none") +
+    theme(axis.title.y=element_blank(), axis.title.x=element_blank(), axis.ticks.x=element_blank(), axis.text.x=element_text(size=rel(0.5), angle=70, hjust=1))
+```
+

@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Ben Fair" />
+
+
+<title>20190327_MakeFamAndCovariateFiles</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">20190327_MakeFamAndCovariateFiles</h1>
+<h4 class="author"><em>Ben Fair</em></h4>
+<h4 class="date"><em>3/27/2019</em></h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-04-03
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.2.0). The <em>Report</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="report" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreefc37682444bda6468e6954c8273d93fdca385897targetblankfc37682a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/fc37682444bda6468e6954c8273d93fdca385897" target="_blank">fc37682</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreefc37682444bda6468e6954c8273d93fdca385897targetblankfc37682a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  analysis/20190321_Check-Kinship-And-PopulationStructure.Rmd
+    Untracked:  analysis/20190325_MergingRNASeqLanes.Rmd
+    Untracked:  analysis/20190326_Admixture.Rmd
+    Untracked:  analysis/20190326_PCA.Rmd
+    Untracked:  analysis/20190327_MakeFamAndCovariateFiles.Rmd
+    Untracked:  analysis/20190327_MakeFamPhenotypeFile.Rmd
+    Untracked:  docs/figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/
+    Untracked:  docs/figure/20190325_MergingRNASeqLanes.Rmd/
+    Untracked:  docs/figure/20190326_Admixture.Rmd/
+    Untracked:  docs/figure/20190326_PCA.Rmd/
+
+Unstaged changes:
+    Deleted:    ._workflowr.yml.swp
+    Modified:   analysis/20190320_Check-RNAseq-PCs.Rmd
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<p>this shows how I will output a plink [.fam] file containing phenotypes for eQTL association testing with gemma. The phenotypes (expresion matrix) which will be log-transformed TPM values, filtering for genes which have non-zero TPM values for all samples. The Rscript version of this R code is included in the snakemake workflow to generate the [.fam] file using the <code>knitr::purl()</code> function.</p>
+<pre class="r"><code>library(tidyverse)
+library(knitr)</code></pre>
+<p>Run this command to write this [.Rmd] into a [.R] that is included in the snakemake workflow for eQTL mapping:</p>
+<pre class="r"><code># knitr::purl(input=&quot;../analysis/20190327_MakeFamPhenotypeFile.Rmd&quot;, output=&quot;../analysis/20190327_MakeFamPhenotypeFile.R&quot;)</code></pre>
+<pre class="r"><code># Use command line input to specify input and output if this is the Rscript version of this file (as opposed to Rmarkdown).
+if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeFamPhenotypeFile.R&quot;){
+  args &lt;- commandArgs(trailingOnly = T)
+  CountFilepath &lt;- args[1]
+  EmptyFamFilepath &lt;- args[2]
+  PhenotypeOutFilepath &lt;- args[3]
+  PhenotypeListOutFilepath &lt;- args[4]
+  GenesBedFile &lt;- args[5]
+} else {
+  CountFilepath &lt;- &#39;../output/CountTable.tpm.txt.gz&#39;
+  EmptyFamFilepath &lt;- &#39;../output/ForAssociationTesting.temp.fam&#39;
+  GenesBedFile &lt;- &#39;../data/cDNA.all.chromosomal.bed&#39;
+}</code></pre>
+<pre class="r"><code>CountTable &lt;- read.table(gzfile(CountFilepath), header=T, check.names=FALSE, row.names = 1)
+
+# dimensions of count table
+CountTable %&gt;% dim()</code></pre>
+<pre><code>[1] 50434    39</code></pre>
+<pre class="r"><code>kable(head(CountTable))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">4X0095</th>
+<th align="right">4X0212</th>
+<th align="right">4X0267</th>
+<th align="right">4X0333</th>
+<th align="right">4X0339</th>
+<th align="right">4X0354</th>
+<th align="right">4X0357</th>
+<th align="right">4X0550</th>
+<th align="right">4x0025</th>
+<th align="right">4x0043</th>
+<th align="right">4x373</th>
+<th align="right">4x0430</th>
+<th align="right">4x0519</th>
+<th align="right">4x523</th>
+<th align="right">88A020</th>
+<th align="right">95A014</th>
+<th align="right">295</th>
+<th align="right">317</th>
+<th align="right">338</th>
+<th align="right">389</th>
+<th align="right">438</th>
+<th align="right">456</th>
+<th align="right">462</th>
+<th align="right">476</th>
+<th align="right">495</th>
+<th align="right">503</th>
+<th align="right">522</th>
+<th align="right">529</th>
+<th align="right">537</th>
+<th align="right">549</th>
+<th align="right">554</th>
+<th align="right">554_2</th>
+<th align="right">558</th>
+<th align="right">570</th>
+<th align="right">623</th>
+<th align="right">676</th>
+<th align="right">724</th>
+<th align="right">Little_R</th>
+<th align="right">MD_And</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ENSPTRT00000098376.1</td>
+<td align="right">0.0377317</td>
+<td align="right">0.272220</td>
+<td align="right">0.283268</td>
+<td align="right">0.0768681</td>
+<td align="right">0.0241551</td>
+<td align="right">0.489356</td>
+<td align="right">0.149515</td>
+<td align="right">0.0338373</td>
+<td align="right">0.159397</td>
+<td align="right">0.2715600</td>
+<td align="right">0.0718747</td>
+<td align="right">0.508540</td>
+<td align="right">0.487206</td>
+<td align="right">0.4750030</td>
+<td align="right">0.0341022</td>
+<td align="right">0.138268</td>
+<td align="right">0.2475900</td>
+<td align="right">0.0435386</td>
+<td align="right">0.299943</td>
+<td align="right">0.0288987</td>
+<td align="right">0.0332317</td>
+<td align="right">0.0316096</td>
+<td align="right">0.0338501</td>
+<td align="right">0.153948</td>
+<td align="right">0</td>
+<td align="right">0.1674910</td>
+<td align="right">0.2284390</td>
+<td align="right">0.245499</td>
+<td align="right">0.258301</td>
+<td align="right">0.1090800</td>
+<td align="right">0.0415181</td>
+<td align="right">0.1853400</td>
+<td align="right">0.034166</td>
+<td align="right">0.10919</td>
+<td align="right">0.0405918</td>
+<td align="right">0.0690902</td>
+<td align="right">0.0339912</td>
+<td align="right">0.0376673</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSPTRT00000091526.1</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0279624</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.1664070</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.3142130</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0</td>
+<td align="right">0.0553974</td>
+<td align="right">0.0000000</td>
+<td align="right">0.243596</td>
+<td align="right">0.108732</td>
+<td align="right">0.1894100</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>ENSPTRT00000091354.1</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0741825</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.2960420</td>
+<td align="right">0.149597</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0713518</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0596237</td>
+<td align="right">0.0907759</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0755299</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSPTRT00000080032.1</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.1268190</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.4753460</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0495538</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.196541</td>
+<td align="right">0.000000</td>
+<td align="right">0.0764113</td>
+<td align="right">0.0000000</td>
+<td align="right">0.2077310</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>ENSPTRT00000096913.1</td>
+<td align="right">0.0781316</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0937206</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.2810280</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0337880</td>
+<td align="right">0.145246</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSPTRT00000079752.1</td>
+<td align="right">0.0873579</td>
+<td align="right">0.236346</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.7335140</td>
+<td align="right">0.0000000</td>
+<td align="right">0.098116</td>
+<td align="right">0.000000</td>
+<td align="right">0.1571070</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0409451</td>
+<td align="right">0.0000000</td>
+<td align="right">0.173610</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0769393</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.2266680</td>
+<td align="right">1.055580</td>
+<td align="right">0.000000</td>
+<td align="right">0.0631367</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0858213</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>EmptyFamFile &lt;- read.table(EmptyFamFilepath, col.names=c(&quot;FID&quot;, &quot;IID&quot;, &quot;Father&quot;, &quot;Mother&quot;, &quot;SX&quot;, &quot;Pheno&quot;), stringsAsFactors = F) %&gt;%
+  select(-Pheno)
+
+# Will use GeneRegions to filter out non-autosomal genes
+GeneChromosomes &lt;- read.table(GenesBedFile, col.names=c(&quot;chromosome&quot;, &quot;start&quot;, &quot;stop&quot;, &quot;gene&quot;, &quot;score&quot;, &quot;strand&quot;), stringsAsFactors = F) %&gt;%
+  select(gene, chromosome)
+kable(head(GeneChromosomes))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">gene</th>
+<th align="left">chromosome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSPTRT00000082924.1</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">ENSPTRT00000003967.6</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSPTRT00000101968.1</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">ENSPTRT00000004081.5</td>
+<td align="left">10</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSPTRT00000107469.1</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="left">ENSPTRT00000081834.1</td>
+<td align="left">10</td>
+</tr>
+</tbody>
+</table>
+<p>Here I will consider how to filter genes for association testing</p>
+<pre class="r"><code>GeneSet1 &lt;- CountTable %&gt;%
+  rownames_to_column(&#39;gene&#39;) %&gt;%
+  mutate(Mean = rowMeans(select(., -gene))) %&gt;%
+  filter(Mean&gt;1) %&gt;%
+  pull(gene)
+
+GeneSet2 &lt;- CountTable %&gt;%
+  rownames_to_column(&#39;gene&#39;) %&gt;%
+  filter_if(is.numeric, all_vars(.&gt;0)) %&gt;%
+  pull(gene)
+
+#Number genes left after filter method1
+length(GeneSet1)</code></pre>
+<pre><code>[1] 15696</code></pre>
+<pre class="r"><code>#Number genes left after filter method2
+length(GeneSet2)</code></pre>
+<pre><code>[1] 18924</code></pre>
+<pre class="r"><code>#Number genes left after intersection of both methods
+length(intersect(GeneSet1, GeneSet2))</code></pre>
+<pre><code>[1] 13852</code></pre>
+<p>Seems like a reasonable (and inclusive) way to filter genes (rather than eQTL testing all ~50000 transcripts, many of which contain mostly 0’s) is to just choose the genes with no 0 TPM values in any samples.</p>
+<p>For now I will also filter out non-autosomal genes.</p>
+<pre class="r"><code>PhenotypesToOutput &lt;- CountTable %&gt;%
+  rownames_to_column(&#39;gene&#39;) %&gt;%
+  filter_if(is.numeric, all_vars(.&gt;0)) %&gt;%
+  merge(GeneChromosomes, by=&quot;gene&quot;, all.x=T) %&gt;%
+  filter(!chromosome %in% c(&quot;X&quot;, &quot;Y&quot;, &quot;MT&quot;)) %&gt;%
+  select(-chromosome) %&gt;%
+  column_to_rownames(&#39;gene&#39;) %&gt;%
+  log() %&gt;%
+  t()
+
+row.names(PhenotypesToOutput) &lt;- colnames(CountTable)
+
+
+Output.df &lt;- EmptyFamFile %&gt;%
+  merge(PhenotypesToOutput, all.x=T, by.x=&quot;IID&quot;, by.y=0) %&gt;% as.tibble()</code></pre>
+<pre><code>Warning: `as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
+This warning is displayed once per session.</code></pre>
+<pre class="r"><code>Output.df</code></pre>
+<pre><code># A tibble: 39 x 18,287
+   IID   FID   Father Mother    SX ENSPTRT00000000… ENSPTRT00000000…
+   &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;  &lt;int&gt; &lt;int&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+ 1 295   Pan_…      0      0     0           -0.503            0.709
+ 2 317   Pan_…      0      0     0           -0.933            0.598
+ 3 338   Pan_…      0      0     0           -1.08             1.37 
+ 4 389   Pan_…      0      0     0           -0.779            0.648
+ 5 438   Pan_…      0      0     0           -0.871            0.778
+ 6 456   Pan_…      0      0     0           -0.516            0.791
+ 7 462   Pan_…      0      0     0           -0.674            1.06 
+ 8 476   Pan_…      0      0     0           -1.09             0.668
+ 9 495   Pan_…      0      0     0            0.221            0.852
+10 4x00… Pan_…      0      0     0           -0.797            1.36 
+# … with 29 more rows, and 18,280 more variables:
+#   ENSPTRT00000000050.4 &lt;dbl&gt;, ENSPTRT00000000057.4 &lt;dbl&gt;,
+#   ENSPTRT00000000060.3 &lt;dbl&gt;, ENSPTRT00000000069.4 &lt;dbl&gt;,
+#   ENSPTRT00000000071.5 &lt;dbl&gt;, ENSPTRT00000000083.6 &lt;dbl&gt;,
+#   ENSPTRT00000000093.4 &lt;dbl&gt;, ENSPTRT00000000100.4 &lt;dbl&gt;,
+#   ENSPTRT00000000105.6 &lt;dbl&gt;, ENSPTRT00000000106.3 &lt;dbl&gt;,
+#   ENSPTRT00000000114.4 &lt;dbl&gt;, ENSPTRT00000000116.4 &lt;dbl&gt;,
+#   ENSPTRT00000000118.6 &lt;dbl&gt;, ENSPTRT00000000144.6 &lt;dbl&gt;,
+#   ENSPTRT00000000145.7 &lt;dbl&gt;, ENSPTRT00000000149.3 &lt;dbl&gt;,
+#   ENSPTRT00000000152.5 &lt;dbl&gt;, ENSPTRT00000000172.4 &lt;dbl&gt;,
+#   ENSPTRT00000000176.6 &lt;dbl&gt;, ENSPTRT00000000180.5 &lt;dbl&gt;,
+#   ENSPTRT00000000188.6 &lt;dbl&gt;, ENSPTRT00000000207.3 &lt;dbl&gt;,
+#   ENSPTRT00000000210.3 &lt;dbl&gt;, ENSPTRT00000000215.6 &lt;dbl&gt;,
+#   ENSPTRT00000000216.4 &lt;dbl&gt;, ENSPTRT00000000219.6 &lt;dbl&gt;,
+#   ENSPTRT00000000222.5 &lt;dbl&gt;, ENSPTRT00000000227.5 &lt;dbl&gt;,
+#   ENSPTRT00000000229.3 &lt;dbl&gt;, ENSPTRT00000000234.5 &lt;dbl&gt;,
+#   ENSPTRT00000000237.5 &lt;dbl&gt;, ENSPTRT00000000238.4 &lt;dbl&gt;,
+#   ENSPTRT00000000243.6 &lt;dbl&gt;, ENSPTRT00000000247.4 &lt;dbl&gt;,
+#   ENSPTRT00000000254.4 &lt;dbl&gt;, ENSPTRT00000000258.6 &lt;dbl&gt;,
+#   ENSPTRT00000000260.4 &lt;dbl&gt;, ENSPTRT00000000270.4 &lt;dbl&gt;,
+#   ENSPTRT00000000275.3 &lt;dbl&gt;, ENSPTRT00000000278.5 &lt;dbl&gt;,
+#   ENSPTRT00000000279.6 &lt;dbl&gt;, ENSPTRT00000000298.3 &lt;dbl&gt;,
+#   ENSPTRT00000000302.7 &lt;dbl&gt;, ENSPTRT00000000303.5 &lt;dbl&gt;,
+#   ENSPTRT00000000306.5 &lt;dbl&gt;, ENSPTRT00000000310.5 &lt;dbl&gt;,
+#   ENSPTRT00000000316.4 &lt;dbl&gt;, ENSPTRT00000000323.4 &lt;dbl&gt;,
+#   ENSPTRT00000000324.4 &lt;dbl&gt;, ENSPTRT00000000329.4 &lt;dbl&gt;,
+#   ENSPTRT00000000334.4 &lt;dbl&gt;, ENSPTRT00000000335.3 &lt;dbl&gt;,
+#   ENSPTRT00000000336.5 &lt;dbl&gt;, ENSPTRT00000000339.4 &lt;dbl&gt;,
+#   ENSPTRT00000000341.6 &lt;dbl&gt;, ENSPTRT00000000343.4 &lt;dbl&gt;,
+#   ENSPTRT00000000348.3 &lt;dbl&gt;, ENSPTRT00000000349.4 &lt;dbl&gt;,
+#   ENSPTRT00000000351.3 &lt;dbl&gt;, ENSPTRT00000000352.5 &lt;dbl&gt;,
+#   ENSPTRT00000000354.6 &lt;dbl&gt;, ENSPTRT00000000355.4 &lt;dbl&gt;,
+#   ENSPTRT00000000357.4 &lt;dbl&gt;, ENSPTRT00000000361.5 &lt;dbl&gt;,
+#   ENSPTRT00000000369.4 &lt;dbl&gt;, ENSPTRT00000000395.4 &lt;dbl&gt;,
+#   ENSPTRT00000000411.6 &lt;dbl&gt;, ENSPTRT00000000424.4 &lt;dbl&gt;,
+#   ENSPTRT00000000431.5 &lt;dbl&gt;, ENSPTRT00000000435.3 &lt;dbl&gt;,
+#   ENSPTRT00000000438.4 &lt;dbl&gt;, ENSPTRT00000000439.4 &lt;dbl&gt;,
+#   ENSPTRT00000000441.5 &lt;dbl&gt;, ENSPTRT00000000444.5 &lt;dbl&gt;,
+#   ENSPTRT00000000445.4 &lt;dbl&gt;, ENSPTRT00000000459.3 &lt;dbl&gt;,
+#   ENSPTRT00000000462.4 &lt;dbl&gt;, ENSPTRT00000000464.4 &lt;dbl&gt;,
+#   ENSPTRT00000000465.4 &lt;dbl&gt;, ENSPTRT00000000466.6 &lt;dbl&gt;,
+#   ENSPTRT00000000494.5 &lt;dbl&gt;, ENSPTRT00000000499.4 &lt;dbl&gt;,
+#   ENSPTRT00000000501.5 &lt;dbl&gt;, ENSPTRT00000000502.5 &lt;dbl&gt;,
+#   ENSPTRT00000000510.3 &lt;dbl&gt;, ENSPTRT00000000524.5 &lt;dbl&gt;,
+#   ENSPTRT00000000525.4 &lt;dbl&gt;, ENSPTRT00000000526.5 &lt;dbl&gt;,
+#   ENSPTRT00000000532.4 &lt;dbl&gt;, ENSPTRT00000000535.3 &lt;dbl&gt;,
+#   ENSPTRT00000000537.4 &lt;dbl&gt;, ENSPTRT00000000542.6 &lt;dbl&gt;,
+#   ENSPTRT00000000548.4 &lt;dbl&gt;, ENSPTRT00000000555.5 &lt;dbl&gt;,
+#   ENSPTRT00000000557.4 &lt;dbl&gt;, ENSPTRT00000000558.5 &lt;dbl&gt;,
+#   ENSPTRT00000000568.4 &lt;dbl&gt;, ENSPTRT00000000569.4 &lt;dbl&gt;,
+#   ENSPTRT00000000571.4 &lt;dbl&gt;, ENSPTRT00000000572.5 &lt;dbl&gt;, …</code></pre>
+<pre class="r"><code>GeneList &lt;- data.frame(GeneList=colnames(Output.df)[-1:-5])</code></pre>
+<pre class="r"><code>if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeFamPhenotypeFile.R&quot;){
+  write.table(Output.df, col.names = F, sep=&#39;\t&#39;, file=PhenotypeOutFilepath, row.names=F, quote=F)
+  write.table(GeneList, col.names = F, sep=&#39;\t&#39;, file=PhenotypeListOutFilepath, row.names=F, quote=F)
+}</code></pre>
+<br> <br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.14
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] knitr_1.22      forcats_0.4.0   stringr_1.4.0   dplyr_0.8.0.1  
+ [5] purrr_0.3.2     readr_1.3.1     tidyr_0.8.2     tibble_2.1.1   
+ [9] ggplot2_3.1.0   tidyverse_1.2.1
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.1       highr_0.8        cellranger_1.1.0 plyr_1.8.4      
+ [5] pillar_1.3.1     compiler_3.5.1   git2r_0.24.0     workflowr_1.2.0 
+ [9] tools_3.5.1      digest_0.6.18    lubridate_1.7.4  jsonlite_1.6    
+[13] evaluate_0.13    nlme_3.1-137     gtable_0.3.0     lattice_0.20-38 
+[17] pkgconfig_2.0.2  rlang_0.3.3      cli_1.1.0        rstudioapi_0.10 
+[21] yaml_2.2.0       haven_2.1.0      xfun_0.6         withr_2.1.2     
+[25] xml2_1.2.0       httr_1.4.0       hms_0.4.2        generics_0.0.2  
+[29] fs_1.2.6         rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.5
+[33] glue_1.3.1       R6_2.4.0         fansi_0.4.0      readxl_1.1.0    
+[37] rmarkdown_1.11   modelr_0.1.4     magrittr_1.5     backports_1.1.3 
+[41] scales_1.0.0     htmltools_0.3.6  rvest_0.3.2      assertthat_0.2.1
+[45] colorspace_1.4-1 utf8_1.1.4       stringi_1.4.3    lazyeval_0.2.2  
+[49] munsell_0.5.0    broom_0.5.1      crayon_1.3.4    </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

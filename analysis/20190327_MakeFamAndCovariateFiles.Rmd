@@ -1,0 +1,15 @@
+---
+title: "20190327_MakeFamAndCovariateFiles"
+author: "Ben Fair"
+date: "3/27/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Based on previous QC analyses of genotypes and RNA-seq data, this script will output a plink .fam file and coviariate file for eQTL association testing with gemma. The following covariates wiil be included:
+- Nothing for now...
+
+And the .fam file will contain phenotypes (expresion matrix) which will be log-transformed TPM values, filtering for genes which 

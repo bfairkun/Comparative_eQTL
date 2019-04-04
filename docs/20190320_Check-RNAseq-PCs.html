@@ -440,7 +440,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-03-20
+<strong>Last updated:</strong> 2019-04-03
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -464,7 +464,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -519,26 +519,34 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree6b34096a09a2c6f729e4b1418ee446e8333b5f4etargetblank6b34096a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/6b34096a09a2c6f729e4b1418ee446e8333b5f4e" target="_blank">6b34096</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreefc37682444bda6468e6954c8273d93fdca385897targetblankfc37682a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/fc37682444bda6468e6954c8273d93fdca385897" target="_blank">fc37682</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree6b34096a09a2c6f729e4b1418ee446e8333b5f4etargetblank6b34096a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreefc37682444bda6468e6954c8273d93fdca385897targetblankfc37682a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    code/snakemake_workflow/bahblah
 
 Untracked files:
-    Untracked:  ._workflowr.yml.swp
-    Untracked:  analysis/20190320_Check-RNAseq-PCs.Rmd
-    Untracked:  docs/figure/
+    Untracked:  analysis/20190321_Check-Kinship-And-PopulationStructure.Rmd
+    Untracked:  analysis/20190325_MergingRNASeqLanes.Rmd
+    Untracked:  analysis/20190326_Admixture.Rmd
+    Untracked:  analysis/20190326_PCA.Rmd
+    Untracked:  analysis/20190327_MakeFamAndCovariateFiles.Rmd
+    Untracked:  analysis/20190327_MakeFamPhenotypeFile.Rmd
+    Untracked:  docs/figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/
+    Untracked:  docs/figure/20190325_MergingRNASeqLanes.Rmd/
+    Untracked:  docs/figure/20190326_PCA.Rmd/
 
 Unstaged changes:
-    Modified:   _workflowr.yml
+    Deleted:    ._workflowr.yml.swp
+    Modified:   analysis/20190320_Check-RNAseq-PCs.Rmd
     Modified:   analysis/index.Rmd
 
 </code></pre>
@@ -552,9 +560,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8dd795fa81ffe40134fc952f4249f95d3efbefff/analysis/20190320_Check-RNAseq-PCs.Rmd" target="_blank">8dd795f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-03-20
+</td>
+<td>
+First analysis on workflowr
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/8dd795fa81ffe40134fc952f4249f95d3efbefff/docs/20190320_Check-RNAseq-PCs.html" target="_blank">8dd795f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-03-20
+</td>
+<td>
+First analysis on workflowr
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -566,20 +634,1058 @@ library(tidyverse)
 library(psych)
 library(ggrepel)
 library(knitr)
-library(reshape2)</code></pre>
-<pre class="r"><code># Read in count table, filtering for TPM&gt;1
-CountTable &lt;- read.table(&#39;../output/CountTable.tpm.txt&#39;, header=T, check.names=FALSE, row.names = 1) %&gt;%
-  filter(rowSums(.) &gt; 1)
+library(reshape2)
+library(gplots)</code></pre>
+<p>RNA-seq data for each individual was pseudo-mapped/quantified by kallisto and merged into a matrix of TPM values.</p>
+<pre class="r"><code># Read in count table, filtering out rows that are all zeros
+CountTable &lt;- read.table(gzfile(&#39;../output/CountTable.tpm.txt.gz&#39;), header=T, check.names=FALSE, row.names = 1) %&gt;%
+  rownames_to_column(&#39;gene&#39;) %&gt;% #hack to keep rownames despite dplyr filter step
+  filter_if(is.numeric, any_vars(. &gt; 0)) %&gt;%
+  column_to_rownames(&#39;gene&#39;)
 
-# Read in metadata
-Metadata &lt;- as.data.frame(read_excel(&quot;../data/Metadata.xlsx&quot;))</code></pre>
-<p>Now perform PCA, plot a few visualizations</p>
+kable(head(CountTable))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">4X0095</th>
+<th align="right">4X0212</th>
+<th align="right">4X0267</th>
+<th align="right">4X0333</th>
+<th align="right">4X0339</th>
+<th align="right">4X0354</th>
+<th align="right">4X0357</th>
+<th align="right">4X0550</th>
+<th align="right">4x0025</th>
+<th align="right">4x0043</th>
+<th align="right">4x373</th>
+<th align="right">4x0430</th>
+<th align="right">4x0519</th>
+<th align="right">4x523</th>
+<th align="right">88A020</th>
+<th align="right">95A014</th>
+<th align="right">295</th>
+<th align="right">317</th>
+<th align="right">338</th>
+<th align="right">389</th>
+<th align="right">438</th>
+<th align="right">456</th>
+<th align="right">462</th>
+<th align="right">476</th>
+<th align="right">495</th>
+<th align="right">503</th>
+<th align="right">522</th>
+<th align="right">529</th>
+<th align="right">537</th>
+<th align="right">549</th>
+<th align="right">554</th>
+<th align="right">554_2</th>
+<th align="right">558</th>
+<th align="right">570</th>
+<th align="right">623</th>
+<th align="right">676</th>
+<th align="right">724</th>
+<th align="right">Little_R</th>
+<th align="right">MD_And</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ENSPTRT00000098376.1</td>
+<td align="right">0.0377317</td>
+<td align="right">0.272220</td>
+<td align="right">0.283268</td>
+<td align="right">0.0768681</td>
+<td align="right">0.0241551</td>
+<td align="right">0.489356</td>
+<td align="right">0.149515</td>
+<td align="right">0.0338373</td>
+<td align="right">0.159397</td>
+<td align="right">0.2715600</td>
+<td align="right">0.0718747</td>
+<td align="right">0.508540</td>
+<td align="right">0.487206</td>
+<td align="right">0.4750030</td>
+<td align="right">0.0341022</td>
+<td align="right">0.138268</td>
+<td align="right">0.2475900</td>
+<td align="right">0.0435386</td>
+<td align="right">0.299943</td>
+<td align="right">0.0288987</td>
+<td align="right">0.0332317</td>
+<td align="right">0.0316096</td>
+<td align="right">0.0338501</td>
+<td align="right">0.153948</td>
+<td align="right">0</td>
+<td align="right">0.1674910</td>
+<td align="right">0.2284390</td>
+<td align="right">0.245499</td>
+<td align="right">0.258301</td>
+<td align="right">0.1090800</td>
+<td align="right">0.0415181</td>
+<td align="right">0.1853400</td>
+<td align="right">0.034166</td>
+<td align="right">0.10919</td>
+<td align="right">0.0405918</td>
+<td align="right">0.0690902</td>
+<td align="right">0.0339912</td>
+<td align="right">0.0376673</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSPTRT00000091526.1</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0279624</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.1664070</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.3142130</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0</td>
+<td align="right">0.0553974</td>
+<td align="right">0.0000000</td>
+<td align="right">0.243596</td>
+<td align="right">0.108732</td>
+<td align="right">0.1894100</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>ENSPTRT00000091354.1</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0741825</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.2960420</td>
+<td align="right">0.149597</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0713518</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0596237</td>
+<td align="right">0.0907759</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0755299</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSPTRT00000080032.1</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.1268190</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.4753460</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0495538</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.196541</td>
+<td align="right">0.000000</td>
+<td align="right">0.0764113</td>
+<td align="right">0.0000000</td>
+<td align="right">0.2077310</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>ENSPTRT00000096913.1</td>
+<td align="right">0.0781316</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0937206</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.2810280</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0337880</td>
+<td align="right">0.145246</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSPTRT00000079752.1</td>
+<td align="right">0.0873579</td>
+<td align="right">0.236346</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.7335140</td>
+<td align="right">0.0000000</td>
+<td align="right">0.098116</td>
+<td align="right">0.000000</td>
+<td align="right">0.1571070</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0.0409451</td>
+<td align="right">0.0000000</td>
+<td align="right">0.173610</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0769393</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.000000</td>
+<td align="right">0</td>
+<td align="right">0.0000000</td>
+<td align="right">0.2266680</td>
+<td align="right">1.055580</td>
+<td align="right">0.000000</td>
+<td align="right">0.0631367</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0858213</td>
+<td align="right">0.000000</td>
+<td align="right">0.00000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Read admixture coefficients (K=4), and first 3 principle components, since some form of population substructure will likely be included in the expression modeling as a covariate.
+AdmixtureCoeff &lt;- read.table(&quot;../output/PopulationStructure/Admixture/MergedForAdmixture.4.Q.labelled&quot;) %&gt;% 
+  dplyr::rename(Individual.ID=V2) %&gt;%
+  select(-V1, -V3, -V4, -V5, -V6) %&gt;%
+  dplyr::rename(Admix.Western=V9, Admix.Eastern=V10, Admix.Central=V8, Admix.NigeriaCameroon=V7) #Renaming the admixture clusters after looking at plots with known subspecies
+kable(head(AdmixtureCoeff))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Individual.ID</th>
+<th align="right">Admix.NigeriaCameroon</th>
+<th align="right">Admix.Central</th>
+<th align="right">Admix.Western</th>
+<th align="right">Admix.Eastern</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">549</td>
+<td align="right">1.0e-05</td>
+<td align="right">0.000010</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="even">
+<td align="left">570</td>
+<td align="right">1.3e-05</td>
+<td align="right">0.059266</td>
+<td align="right">0.940711</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="odd">
+<td align="left">389</td>
+<td align="right">1.0e-05</td>
+<td align="right">0.000010</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="even">
+<td align="left">456</td>
+<td align="right">1.1e-05</td>
+<td align="right">0.000010</td>
+<td align="right">0.999969</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="odd">
+<td align="left">623</td>
+<td align="right">1.0e-05</td>
+<td align="right">0.000010</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="even">
+<td align="left">438</td>
+<td align="right">1.0e-05</td>
+<td align="right">0.000010</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>GenotypePCs &lt;- read.table(&quot;../output/PopulationStructure/pca.eigenvec&quot;, header=T) %&gt;%
+  select(IID, PC1, PC2, PC3) %&gt;%
+  dplyr::rename(Individual.ID=IID, GenotypePC1=PC1, GenotypePC2=PC2, GenotypePC3=PC3)
+kable(head(GenotypePCs))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Individual.ID</th>
+<th align="right">GenotypePC1</th>
+<th align="right">GenotypePC2</th>
+<th align="right">GenotypePC3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">549</td>
+<td align="right">-0.1086080</td>
+<td align="right">-0.0185367</td>
+<td align="right">0.0047385</td>
+</tr>
+<tr class="even">
+<td align="left">570</td>
+<td align="right">-0.0945861</td>
+<td align="right">-0.0228424</td>
+<td align="right">-0.0139375</td>
+</tr>
+<tr class="odd">
+<td align="left">389</td>
+<td align="right">-0.1102000</td>
+<td align="right">-0.0206677</td>
+<td align="right">0.0032202</td>
+</tr>
+<tr class="even">
+<td align="left">456</td>
+<td align="right">-0.1080520</td>
+<td align="right">-0.0178848</td>
+<td align="right">0.0044265</td>
+</tr>
+<tr class="odd">
+<td align="left">623</td>
+<td align="right">-0.1098180</td>
+<td align="right">-0.0207351</td>
+<td align="right">0.0041487</td>
+</tr>
+<tr class="even">
+<td align="left">438</td>
+<td align="right">-0.1081380</td>
+<td align="right">-0.0178263</td>
+<td align="right">0.0044915</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Read in other metadata
+OtherMetadata &lt;- as.data.frame(read_excel(&quot;../data/Metadata.xlsx&quot;))
+kable(head(OtherMetadata))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Individual.ID</th>
+<th align="left">Source</th>
+<th align="left">Individual.Name</th>
+<th align="right">Yerkes.ID</th>
+<th align="left">Label</th>
+<th align="left">Notes</th>
+<th align="left">FileID.(Library_Species_CellType_FlowCell)</th>
+<th align="left">SX</th>
+<th align="right">RNA.Library.prep.batch</th>
+<th align="right">RNA.Sequencing.Lane</th>
+<th align="right">Sequencing.Barcode</th>
+<th align="left">RNA.Extract_date</th>
+<th align="left">DNASeq_FastqIdentifier</th>
+<th align="right">DNA.library.prep.batch</th>
+<th align="right">DNA.Sequencing.Lane</th>
+<th align="left">DNA.Sequencin.Barcode</th>
+<th align="left">DNA.Extract_date</th>
+<th align="right">Age</th>
+<th align="left">X__1</th>
+<th align="left">Post.mortem.time.interval</th>
+<th align="right">RIN</th>
+<th align="left">Viral.status</th>
+<th align="right">RNA.total.reads.mapped.to.genome</th>
+<th align="right">RNA.total.reads.mapping.to.ortho.exons</th>
+<th align="left">Subspecies</th>
+<th align="left">DOB</th>
+<th align="left">DOD</th>
+<th align="left">DOB Estimated</th>
+<th align="right">Age (DOD-DOB)</th>
+<th align="left">OldLibInfo. RIN,RNA-extractdate,RNAbatch</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">295</td>
+<td align="left">Yerkes</td>
+<td align="left">Duncan</td>
+<td align="right">295</td>
+<td align="left">295</td>
+<td align="left">NA</td>
+<td align="left">24_CM_3_L006.bam</td>
+<td align="left">M</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">18</td>
+<td align="left">2018-10-10</td>
+<td align="left">YG3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">40</td>
+<td align="left">NA</td>
+<td align="left">0.5</td>
+<td align="right">7.3</td>
+<td align="left">NA</td>
+<td align="right">45.67002</td>
+<td align="right">17.51562</td>
+<td align="left">verus/ellioti</td>
+<td align="left">24731</td>
+<td align="left">39386</td>
+<td align="left">NA</td>
+<td align="right">40</td>
+<td align="left">6.3,6/14/2016,2</td>
+</tr>
+<tr class="even">
+<td align="left">317</td>
+<td align="left">Yerkes</td>
+<td align="left">Iyk</td>
+<td align="right">317</td>
+<td align="left">317</td>
+<td align="left">NA</td>
+<td align="left">11_CM_3_L004.bam</td>
+<td align="left">M</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="left">2016-06-07</td>
+<td align="left">YG2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">44</td>
+<td align="left">NA</td>
+<td align="left">2.5</td>
+<td align="right">7.6</td>
+<td align="left">NA</td>
+<td align="right">42.75617</td>
+<td align="right">17.18811</td>
+<td align="left">verus</td>
+<td align="left">22859</td>
+<td align="left">38832</td>
+<td align="left">NA</td>
+<td align="right">43</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">338</td>
+<td align="left">Yerkes</td>
+<td align="left">Maxine</td>
+<td align="right">338</td>
+<td align="left">338</td>
+<td align="left">NA</td>
+<td align="left">8_CF_3_L008.bam</td>
+<td align="left">F</td>
+<td align="right">3</td>
+<td align="right">8</td>
+<td align="right">6</td>
+<td align="left">2016-06-07</td>
+<td align="left">YG1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">53</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">7.2</td>
+<td align="left">NA</td>
+<td align="right">50.52632</td>
+<td align="right">19.49295</td>
+<td align="left">verus</td>
+<td align="left">20821</td>
+<td align="left">40179</td>
+<td align="left">Yes</td>
+<td align="right">53</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">389</td>
+<td align="left">Yerkes</td>
+<td align="left">Rogger</td>
+<td align="right">389</td>
+<td align="left">389</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">M</td>
+<td align="right">4</td>
+<td align="right">NA</td>
+<td align="right">23</td>
+<td align="left">2018-10-10</td>
+<td align="left">YG39</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="left">NA</td>
+<td align="left">2018-10-01</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.7</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">verus</td>
+<td align="left">25204</td>
+<td align="left">41656</td>
+<td align="left">NA</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">438</td>
+<td align="left">Yerkes</td>
+<td align="left">Cheeta</td>
+<td align="right">438</td>
+<td align="left">438</td>
+<td align="left">NA</td>
+<td align="left">155_CF_3_L004.bam</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">8</td>
+<td align="left">2016-06-22</td>
+<td align="left">YG22</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">55</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.6</td>
+<td align="left">NA</td>
+<td align="right">55.30614</td>
+<td align="right">18.06375</td>
+<td align="left">verus</td>
+<td align="left">20821</td>
+<td align="left">40909</td>
+<td align="left">Yes</td>
+<td align="right">55</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">456</td>
+<td align="left">Yerkes</td>
+<td align="left">Mai</td>
+<td align="right">456</td>
+<td align="left">456</td>
+<td align="left">NA</td>
+<td align="left">156_CF_3_L001.bam</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">15</td>
+<td align="left">2016-06-22</td>
+<td align="left">YG23</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">49</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.5</td>
+<td align="left">NA</td>
+<td align="right">54.00665</td>
+<td align="right">20.13760</td>
+<td align="left">verus</td>
+<td align="left">23377</td>
+<td align="left">41275</td>
+<td align="left">Yes</td>
+<td align="right">49</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#Merge all metadata tables
+Metadata &lt;- OtherMetadata %&gt;%
+  left_join(GenotypePCs, by=c(&quot;Individual.ID&quot;)) %&gt;%
+  left_join(AdmixtureCoeff, by=c(&quot;Individual.ID&quot;))
+kable(head(Metadata))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Individual.ID</th>
+<th align="left">Source</th>
+<th align="left">Individual.Name</th>
+<th align="right">Yerkes.ID</th>
+<th align="left">Label</th>
+<th align="left">Notes</th>
+<th align="left">FileID.(Library_Species_CellType_FlowCell)</th>
+<th align="left">SX</th>
+<th align="right">RNA.Library.prep.batch</th>
+<th align="right">RNA.Sequencing.Lane</th>
+<th align="right">Sequencing.Barcode</th>
+<th align="left">RNA.Extract_date</th>
+<th align="left">DNASeq_FastqIdentifier</th>
+<th align="right">DNA.library.prep.batch</th>
+<th align="right">DNA.Sequencing.Lane</th>
+<th align="left">DNA.Sequencin.Barcode</th>
+<th align="left">DNA.Extract_date</th>
+<th align="right">Age</th>
+<th align="left">X__1</th>
+<th align="left">Post.mortem.time.interval</th>
+<th align="right">RIN</th>
+<th align="left">Viral.status</th>
+<th align="right">RNA.total.reads.mapped.to.genome</th>
+<th align="right">RNA.total.reads.mapping.to.ortho.exons</th>
+<th align="left">Subspecies</th>
+<th align="left">DOB</th>
+<th align="left">DOD</th>
+<th align="left">DOB Estimated</th>
+<th align="right">Age (DOD-DOB)</th>
+<th align="left">OldLibInfo. RIN,RNA-extractdate,RNAbatch</th>
+<th align="right">GenotypePC1</th>
+<th align="right">GenotypePC2</th>
+<th align="right">GenotypePC3</th>
+<th align="right">Admix.NigeriaCameroon</th>
+<th align="right">Admix.Central</th>
+<th align="right">Admix.Western</th>
+<th align="right">Admix.Eastern</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">295</td>
+<td align="left">Yerkes</td>
+<td align="left">Duncan</td>
+<td align="right">295</td>
+<td align="left">295</td>
+<td align="left">NA</td>
+<td align="left">24_CM_3_L006.bam</td>
+<td align="left">M</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">18</td>
+<td align="left">2018-10-10</td>
+<td align="left">YG3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">40</td>
+<td align="left">NA</td>
+<td align="left">0.5</td>
+<td align="right">7.3</td>
+<td align="left">NA</td>
+<td align="right">45.67002</td>
+<td align="right">17.51562</td>
+<td align="left">verus/ellioti</td>
+<td align="left">24731</td>
+<td align="left">39386</td>
+<td align="left">NA</td>
+<td align="right">40</td>
+<td align="left">6.3,6/14/2016,2</td>
+<td align="right">-0.0820238</td>
+<td align="right">0.0482288</td>
+<td align="right">0.0152297</td>
+<td align="right">0.184097</td>
+<td align="right">1e-05</td>
+<td align="right">0.815883</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="even">
+<td align="left">317</td>
+<td align="left">Yerkes</td>
+<td align="left">Iyk</td>
+<td align="right">317</td>
+<td align="left">317</td>
+<td align="left">NA</td>
+<td align="left">11_CM_3_L004.bam</td>
+<td align="left">M</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="left">2016-06-07</td>
+<td align="left">YG2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">44</td>
+<td align="left">NA</td>
+<td align="left">2.5</td>
+<td align="right">7.6</td>
+<td align="left">NA</td>
+<td align="right">42.75617</td>
+<td align="right">17.18811</td>
+<td align="left">verus</td>
+<td align="left">22859</td>
+<td align="left">38832</td>
+<td align="left">NA</td>
+<td align="right">43</td>
+<td align="left">NA</td>
+<td align="right">-0.1089350</td>
+<td align="right">-0.0190364</td>
+<td align="right">0.0051265</td>
+<td align="right">0.000011</td>
+<td align="right">1e-05</td>
+<td align="right">0.999969</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="odd">
+<td align="left">338</td>
+<td align="left">Yerkes</td>
+<td align="left">Maxine</td>
+<td align="right">338</td>
+<td align="left">338</td>
+<td align="left">NA</td>
+<td align="left">8_CF_3_L008.bam</td>
+<td align="left">F</td>
+<td align="right">3</td>
+<td align="right">8</td>
+<td align="right">6</td>
+<td align="left">2016-06-07</td>
+<td align="left">YG1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">53</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">7.2</td>
+<td align="left">NA</td>
+<td align="right">50.52632</td>
+<td align="right">19.49295</td>
+<td align="left">verus</td>
+<td align="left">20821</td>
+<td align="left">40179</td>
+<td align="left">Yes</td>
+<td align="right">53</td>
+<td align="left">NA</td>
+<td align="right">-0.1081330</td>
+<td align="right">-0.0180125</td>
+<td align="right">0.0048198</td>
+<td align="right">0.000010</td>
+<td align="right">1e-05</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="even">
+<td align="left">389</td>
+<td align="left">Yerkes</td>
+<td align="left">Rogger</td>
+<td align="right">389</td>
+<td align="left">389</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">M</td>
+<td align="right">4</td>
+<td align="right">NA</td>
+<td align="right">23</td>
+<td align="left">2018-10-10</td>
+<td align="left">YG39</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="left">NA</td>
+<td align="left">2018-10-01</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.7</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">verus</td>
+<td align="left">25204</td>
+<td align="left">41656</td>
+<td align="left">NA</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+<td align="right">-0.1102000</td>
+<td align="right">-0.0206677</td>
+<td align="right">0.0032202</td>
+<td align="right">0.000010</td>
+<td align="right">1e-05</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="odd">
+<td align="left">438</td>
+<td align="left">Yerkes</td>
+<td align="left">Cheeta</td>
+<td align="right">438</td>
+<td align="left">438</td>
+<td align="left">NA</td>
+<td align="left">155_CF_3_L004.bam</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">8</td>
+<td align="left">2016-06-22</td>
+<td align="left">YG22</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">55</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.6</td>
+<td align="left">NA</td>
+<td align="right">55.30614</td>
+<td align="right">18.06375</td>
+<td align="left">verus</td>
+<td align="left">20821</td>
+<td align="left">40909</td>
+<td align="left">Yes</td>
+<td align="right">55</td>
+<td align="left">NA</td>
+<td align="right">-0.1081380</td>
+<td align="right">-0.0178263</td>
+<td align="right">0.0044915</td>
+<td align="right">0.000010</td>
+<td align="right">1e-05</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+</tr>
+<tr class="even">
+<td align="left">456</td>
+<td align="left">Yerkes</td>
+<td align="left">Mai</td>
+<td align="right">456</td>
+<td align="left">456</td>
+<td align="left">NA</td>
+<td align="left">156_CF_3_L001.bam</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">15</td>
+<td align="left">2016-06-22</td>
+<td align="left">YG23</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">49</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.5</td>
+<td align="left">NA</td>
+<td align="right">54.00665</td>
+<td align="right">20.13760</td>
+<td align="left">verus</td>
+<td align="left">23377</td>
+<td align="left">41275</td>
+<td align="left">Yes</td>
+<td align="right">49</td>
+<td align="left">NA</td>
+<td align="right">-0.1080520</td>
+<td align="right">-0.0178848</td>
+<td align="right">0.0044265</td>
+<td align="right">0.000011</td>
+<td align="right">1e-05</td>
+<td align="right">0.999969</td>
+<td align="right">1e-05</td>
+</tr>
+</tbody>
+</table>
+<p>First, look at TPM distribution of a couple genes across samples, looking for normality. Plot normal-QQ plot of TPM. With and without a couple potential transformations.</p>
+<pre class="r"><code>RowNumber&lt;-5000
+
+# raw tpm
+Phenotype &lt;- as.numeric(CountTable[RowNumber,])
+hist(Phenotype)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>qqnorm(Phenotype)
+qqline(Phenotype)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># log(tpm)
+Phenotype &lt;- log(as.numeric(CountTable[RowNumber,]))
+hist(Phenotype)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-1-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>qqnorm(Phenotype)
+qqline(Phenotype)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-1-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now I will more systematically test for normality for all genes after a few transformations…</p>
+<pre class="r"><code># histogram of P-values of Shapiro test for normality of raw TPM for each gene.
+df.shapiro &lt;- CountTable %&gt;%
+  apply(1, shapiro.test)
+Pvals&lt;-unlist(lapply(df.shapiro, function(x) x$p.value))
+hist(Pvals)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ...After log-transform+pseudocount.
+df.shapiro &lt;- CountTable %&gt;%
+  +0.1 %&gt;% log() %&gt;%
+  apply(1, shapiro.test)
+Pvals&lt;-unlist(lapply(df.shapiro, function(x) x$p.value))
+hist(Pvals)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Maybe the inflation of non-normal expression phenotypes is due to lots of rows with too many (0 + pseudocount) values.
+# Retry after filtering all genes with any 0 counts, then log-transform.
+df.shapiro &lt;- CountTable %&gt;%
+  filter_all(all_vars(.&gt;0)) %&gt;% log() %&gt;%
+  apply(1, shapiro.test)
+Pvals&lt;-unlist(lapply(df.shapiro, function(x) x$p.value))
+hist(Pvals)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ...After filtering all genes with any 0 counts, then log-transform, and filter for only top 500 expressed genes
+df.shapiro &lt;- CountTable %&gt;%
+  filter_all(all_vars(.&gt;0)) %&gt;% log() %&gt;%
+  mutate(sumVar = rowSums(.)) %&gt;%
+  arrange(desc(sumVar)) %&gt;%
+  head(500) %&gt;%
+  select(-sumVar) %&gt;%
+  apply(1, shapiro.test)
+Pvals&lt;-unlist(lapply(df.shapiro, function(x) x$p.value))
+hist(Pvals)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-2-4.png" width="672" style="display: block; margin: auto;" /> Data is generally not normal, even after considering only highly expressed genes after log-transformation. Probably too much structure/covariates that must be accounted for. For now I will keep exploring the data with log-transformed data, and consider if/how to more carefully transform the data later (eg quantile normalization) .</p>
+<p>Plot correlation matrix… For this purpose I will consider log(TPM + 0.1 pseudocount) for top 5000 expressed genes.</p>
+<pre class="r"><code>CorMatrix &lt;- CountTable %&gt;%
+  +0.1 %&gt;%
+  mutate(sumVar = rowSums(.)) %&gt;%
+  arrange(desc(sumVar)) %&gt;%
+  head(5000) %&gt;%
+  select(-sumVar) %&gt;%
+  log() %&gt;%
+  scale() %&gt;%
+  cor(method = c(&quot;spearman&quot;))
+
+RNAExtractionDate &lt;- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Extract_date))))
+RNA.Library.prep.batch &lt;- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Library.prep.batch))))
+
+# Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
+heatmap.2(CorMatrix, trace=&quot;none&quot;, ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># What is mean correlation
+mean(CorMatrix)</code></pre>
+<pre><code>[1] 0.7765719</code></pre>
+<p>Now perform PCA, plot a few visualizations…</p>
 <pre class="r"><code># pca with log-transformed count table (+ 0.1 pseudocount)
-pca_results &lt;- prcomp(t(log(CountTable+0.1)), center=T, scale. = T)
+pca_results &lt;- CountTable %&gt;%
+  +0.1 %&gt;%
+  mutate(sumVar = rowSums(.)) %&gt;%
+  arrange(desc(sumVar)) %&gt;%
+  head(2500) %&gt;%
+  select(-sumVar) %&gt;%
+  log() %&gt;%
+  t() %&gt;%
+  prcomp(center=T, scale. = T)
 
-# Plot PCs
-autoplot(pca_results)</code></pre>
-<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/pca-1.png" width="672" style="display: block; margin: auto;" /></p>
+summary(pca_results)</code></pre>
+<pre><code>Importance of components:
+                           PC1      PC2      PC3     PC4     PC5     PC6
+Standard deviation     39.2240 14.91153 10.40179 8.84746 8.19430 7.48033
+Proportion of Variance  0.6154  0.08894  0.04328 0.03131 0.02686 0.02238
+Cumulative Proportion   0.6154  0.70435  0.74763 0.77894 0.80580 0.82818
+                           PC7     PC8     PC9    PC10    PC11    PC12
+Standard deviation     6.53488 6.34844 6.20140 5.37654 4.99539 4.78658
+Proportion of Variance 0.01708 0.01612 0.01538 0.01156 0.00998 0.00916
+Cumulative Proportion  0.84526 0.86138 0.87677 0.88833 0.89831 0.90747
+                          PC13    PC14    PC15    PC16    PC17    PC18
+Standard deviation     4.70654 4.46198 4.16461 3.87579 3.72778 3.58367
+Proportion of Variance 0.00886 0.00796 0.00694 0.00601 0.00556 0.00514
+Cumulative Proportion  0.91634 0.92430 0.93124 0.93725 0.94280 0.94794
+                          PC19    PC20    PC21   PC22    PC23   PC24
+Standard deviation     3.44880 3.37702 3.21974 3.0002 2.95093 2.7392
+Proportion of Variance 0.00476 0.00456 0.00415 0.0036 0.00348 0.0030
+Cumulative Proportion  0.95270 0.95726 0.96141 0.9650 0.96849 0.9715
+                          PC25    PC26    PC27    PC28    PC29    PC30
+Standard deviation     2.64912 2.57087 2.51016 2.46120 2.41857 2.38343
+Proportion of Variance 0.00281 0.00264 0.00252 0.00242 0.00234 0.00227
+Cumulative Proportion  0.97430 0.97694 0.97946 0.98189 0.98423 0.98650
+                          PC31    PC32    PC33    PC34    PC35    PC36
+Standard deviation     2.30791 2.20390 2.15539 2.09649 2.07821 1.92604
+Proportion of Variance 0.00213 0.00194 0.00186 0.00176 0.00173 0.00148
+Cumulative Proportion  0.98863 0.99057 0.99243 0.99419 0.99592 0.99740
+                          PC37    PC38      PC39
+Standard deviation     1.83670 1.76876 2.137e-14
+Proportion of Variance 0.00135 0.00125 0.000e+00
+Cumulative Proportion  0.99875 1.00000 1.000e+00</code></pre>
 <pre class="r"><code># Merge with metadata
 Merged &lt;- merge(pca_results$x, Metadata, by.x = &quot;row.names&quot;, by.y = &quot;Individual.ID&quot;, all=TRUE)
 kable(head(Merged))</code></pre>
@@ -655,49 +1761,56 @@ kable(head(Merged))</code></pre>
 <th align="left">DOB Estimated</th>
 <th align="right">Age (DOD-DOB)</th>
 <th align="left">OldLibInfo. RIN,RNA-extractdate,RNAbatch</th>
+<th align="right">GenotypePC1</th>
+<th align="right">GenotypePC2</th>
+<th align="right">GenotypePC3</th>
+<th align="right">Admix.NigeriaCameroon</th>
+<th align="right">Admix.Central</th>
+<th align="right">Admix.Western</th>
+<th align="right">Admix.Eastern</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">295</td>
-<td align="right">-16.209924</td>
-<td align="right">-39.412051</td>
-<td align="right">-12.6609324</td>
-<td align="right">37.8823277</td>
-<td align="right">-31.0051139</td>
-<td align="right">-11.19556</td>
-<td align="right">-3.293419</td>
-<td align="right">6.914787</td>
-<td align="right">31.22802</td>
-<td align="right">9.387597</td>
-<td align="right">-18.921687</td>
-<td align="right">2.302928</td>
-<td align="right">6.658864</td>
-<td align="right">7.418947</td>
-<td align="right">-0.4551106</td>
-<td align="right">-7.1500666</td>
-<td align="right">-9.419899</td>
-<td align="right">-14.910621</td>
-<td align="right">5.729965</td>
-<td align="right">4.446016</td>
-<td align="right">-7.902738</td>
-<td align="right">4.4670507</td>
-<td align="right">-6.7363433</td>
-<td align="right">5.6427558</td>
-<td align="right">0.0628024</td>
-<td align="right">8.457065</td>
-<td align="right">16.643477</td>
-<td align="right">5.9641275</td>
-<td align="right">14.240850</td>
-<td align="right">8.746583</td>
-<td align="right">22.44346</td>
-<td align="right">8.1452946</td>
-<td align="right">-26.376143</td>
-<td align="right">-26.042034</td>
-<td align="right">1.411441</td>
-<td align="right">29.3035945</td>
-<td align="right">69.538376</td>
-<td align="right">-6.7226052</td>
+<td align="right">-4.450607</td>
+<td align="right">15.2199047</td>
+<td align="right">9.3873162</td>
+<td align="right">0.5827183</td>
+<td align="right">-7.6224986</td>
+<td align="right">-3.222932</td>
+<td align="right">-5.404917</td>
+<td align="right">0.3134311</td>
+<td align="right">-0.3214788</td>
+<td align="right">-4.5630865</td>
+<td align="right">-4.828557</td>
+<td align="right">5.6526248</td>
+<td align="right">2.3212618</td>
+<td align="right">2.6673775</td>
+<td align="right">1.400047</td>
+<td align="right">0.8472412</td>
+<td align="right">2.257820</td>
+<td align="right">0.3027499</td>
+<td align="right">-3.3323074</td>
+<td align="right">-2.8422269</td>
+<td align="right">-0.6284844</td>
+<td align="right">3.2564655</td>
+<td align="right">0.8079301</td>
+<td align="right">1.369027</td>
+<td align="right">0.3991908</td>
+<td align="right">-0.2891519</td>
+<td align="right">0.6906651</td>
+<td align="right">2.8398192</td>
+<td align="right">2.5887575</td>
+<td align="right">1.2545386</td>
+<td align="right">-0.7633684</td>
+<td align="right">-0.4762038</td>
+<td align="right">-8.201422</td>
+<td align="right">-3.665902</td>
+<td align="right">3.1000692</td>
+<td align="right">1.0102806</td>
+<td align="right">-1.3108538</td>
+<td align="right">-2.7839429</td>
 <td align="right">0</td>
 <td align="left">Yerkes</td>
 <td align="left">Duncan</td>
@@ -728,47 +1841,54 @@ kable(head(Merged))</code></pre>
 <td align="left">NA</td>
 <td align="right">40</td>
 <td align="left">6.3,6/14/2016,2</td>
+<td align="right">-0.0820238</td>
+<td align="right">0.0482288</td>
+<td align="right">0.0152297</td>
+<td align="right">0.184097</td>
+<td align="right">1e-05</td>
+<td align="right">0.815883</td>
+<td align="right">1e-05</td>
 </tr>
 <tr class="even">
 <td align="left">317</td>
-<td align="right">-77.598637</td>
-<td align="right">-7.285478</td>
-<td align="right">27.7851831</td>
-<td align="right">26.9782914</td>
-<td align="right">-50.5795688</td>
-<td align="right">35.50836</td>
-<td align="right">-38.647176</td>
-<td align="right">22.304682</td>
-<td align="right">29.24587</td>
-<td align="right">-7.972713</td>
-<td align="right">-4.291489</td>
-<td align="right">-10.836475</td>
-<td align="right">-27.736870</td>
-<td align="right">13.116081</td>
-<td align="right">-25.5213242</td>
-<td align="right">0.4864905</td>
-<td align="right">-23.591190</td>
-<td align="right">26.332198</td>
-<td align="right">-18.995956</td>
-<td align="right">79.950479</td>
-<td align="right">-25.880549</td>
-<td align="right">-7.0602532</td>
-<td align="right">-3.1543220</td>
-<td align="right">-32.1559370</td>
-<td align="right">0.1775541</td>
-<td align="right">23.843101</td>
-<td align="right">-4.452578</td>
-<td align="right">-0.5306732</td>
-<td align="right">3.358530</td>
-<td align="right">-8.339882</td>
-<td align="right">-17.73597</td>
-<td align="right">11.4968912</td>
-<td align="right">6.626615</td>
-<td align="right">5.764973</td>
-<td align="right">-1.359602</td>
-<td align="right">-7.6224544</td>
-<td align="right">-5.219604</td>
-<td align="right">0.6896142</td>
+<td align="right">-20.947886</td>
+<td align="right">-0.1866276</td>
+<td align="right">1.1315354</td>
+<td align="right">-4.4728882</td>
+<td align="right">-10.3478542</td>
+<td align="right">2.970197</td>
+<td align="right">-7.365084</td>
+<td align="right">-2.6503314</td>
+<td align="right">-3.5838155</td>
+<td align="right">-0.1699361</td>
+<td align="right">-4.861849</td>
+<td align="right">-2.3330432</td>
+<td align="right">0.4854135</td>
+<td align="right">3.0749643</td>
+<td align="right">-0.681427</td>
+<td align="right">2.5396315</td>
+<td align="right">2.194052</td>
+<td align="right">-3.0257243</td>
+<td align="right">1.2224522</td>
+<td align="right">-1.8671535</td>
+<td align="right">6.8282946</td>
+<td align="right">0.4340354</td>
+<td align="right">-1.0807536</td>
+<td align="right">2.630316</td>
+<td align="right">-0.3770471</td>
+<td align="right">3.5102121</td>
+<td align="right">0.4763148</td>
+<td align="right">-1.0884944</td>
+<td align="right">0.8370963</td>
+<td align="right">0.1601286</td>
+<td align="right">-2.9919575</td>
+<td align="right">-0.9262152</td>
+<td align="right">3.136494</td>
+<td align="right">2.017123</td>
+<td align="right">6.2390268</td>
+<td align="right">-0.6661984</td>
+<td align="right">5.0210956</td>
+<td align="right">-0.0848085</td>
 <td align="right">0</td>
 <td align="left">Yerkes</td>
 <td align="left">Iyk</td>
@@ -799,47 +1919,54 @@ kable(head(Merged))</code></pre>
 <td align="left">NA</td>
 <td align="right">43</td>
 <td align="left">NA</td>
+<td align="right">-0.1089350</td>
+<td align="right">-0.0190364</td>
+<td align="right">0.0051265</td>
+<td align="right">0.000011</td>
+<td align="right">1e-05</td>
+<td align="right">0.999969</td>
+<td align="right">1e-05</td>
 </tr>
 <tr class="odd">
 <td align="left">338</td>
-<td align="right">-76.811433</td>
-<td align="right">-23.588356</td>
-<td align="right">17.5616055</td>
-<td align="right">-6.1129203</td>
-<td align="right">30.3786753</td>
-<td align="right">-11.80251</td>
-<td align="right">-24.639145</td>
-<td align="right">-39.522681</td>
-<td align="right">-77.01271</td>
-<td align="right">-64.199910</td>
-<td align="right">11.431070</td>
-<td align="right">-6.266548</td>
-<td align="right">-35.178668</td>
-<td align="right">12.789184</td>
-<td align="right">-1.1044315</td>
-<td align="right">17.2460661</td>
-<td align="right">-28.688649</td>
-<td align="right">36.734930</td>
-<td align="right">1.741396</td>
-<td align="right">-25.663090</td>
-<td align="right">11.093598</td>
-<td align="right">-0.3704745</td>
-<td align="right">0.3318220</td>
-<td align="right">-15.7456145</td>
-<td align="right">21.5161869</td>
-<td align="right">17.545671</td>
-<td align="right">27.323194</td>
-<td align="right">26.9509079</td>
-<td align="right">16.720759</td>
-<td align="right">16.889667</td>
-<td align="right">-15.71704</td>
-<td align="right">0.7842111</td>
-<td align="right">-15.033587</td>
-<td align="right">-8.085853</td>
-<td align="right">2.586582</td>
-<td align="right">-0.0838811</td>
-<td align="right">5.268759</td>
-<td align="right">-2.5440612</td>
+<td align="right">-24.957253</td>
+<td align="right">-5.7497750</td>
+<td align="right">6.5689672</td>
+<td align="right">-2.5776571</td>
+<td align="right">14.4819469</td>
+<td align="right">6.685968</td>
+<td align="right">5.638185</td>
+<td align="right">-6.3434437</td>
+<td align="right">-11.3481854</td>
+<td align="right">-4.9016847</td>
+<td align="right">7.260506</td>
+<td align="right">-2.4206509</td>
+<td align="right">-4.9692652</td>
+<td align="right">-1.0649979</td>
+<td align="right">-3.206039</td>
+<td align="right">-2.2657695</td>
+<td align="right">3.109494</td>
+<td align="right">-3.5521152</td>
+<td align="right">2.6585544</td>
+<td align="right">-0.1265824</td>
+<td align="right">2.8437603</td>
+<td align="right">3.6784819</td>
+<td align="right">-0.5572758</td>
+<td align="right">-1.889896</td>
+<td align="right">8.1220151</td>
+<td align="right">-0.5054516</td>
+<td align="right">-0.3300081</td>
+<td align="right">0.2615871</td>
+<td align="right">2.0154483</td>
+<td align="right">-1.4111280</td>
+<td align="right">2.0639593</td>
+<td align="right">-1.5369087</td>
+<td align="right">-3.088290</td>
+<td align="right">3.186013</td>
+<td align="right">0.5388333</td>
+<td align="right">-0.1243136</td>
+<td align="right">-0.2179688</td>
+<td align="right">1.0522791</td>
 <td align="right">0</td>
 <td align="left">Yerkes</td>
 <td align="left">Maxine</td>
@@ -870,47 +1997,54 @@ kable(head(Merged))</code></pre>
 <td align="left">Yes</td>
 <td align="right">53</td>
 <td align="left">NA</td>
+<td align="right">-0.1081330</td>
+<td align="right">-0.0180125</td>
+<td align="right">0.0048198</td>
+<td align="right">0.000010</td>
+<td align="right">1e-05</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
 </tr>
 <tr class="even">
 <td align="left">389</td>
-<td align="right">-9.035152</td>
-<td align="right">-42.472885</td>
-<td align="right">-14.1230302</td>
-<td align="right">3.7761863</td>
-<td align="right">-11.9413104</td>
-<td align="right">-10.59732</td>
-<td align="right">11.476496</td>
-<td align="right">-10.044294</td>
-<td align="right">-6.07530</td>
-<td align="right">13.302190</td>
-<td align="right">-10.716897</td>
-<td align="right">1.289022</td>
-<td align="right">-7.888694</td>
-<td align="right">39.244380</td>
-<td align="right">-0.0374953</td>
-<td align="right">-8.3470084</td>
-<td align="right">16.795318</td>
-<td align="right">-8.959853</td>
-<td align="right">2.707977</td>
-<td align="right">-11.564602</td>
-<td align="right">-7.719343</td>
-<td align="right">-2.4054566</td>
-<td align="right">12.2189964</td>
-<td align="right">16.7895009</td>
-<td align="right">11.8680602</td>
-<td align="right">29.733060</td>
-<td align="right">-7.317870</td>
-<td align="right">35.2784335</td>
-<td align="right">-12.768171</td>
-<td align="right">-25.159829</td>
-<td align="right">-23.31646</td>
-<td align="right">-34.5523828</td>
-<td align="right">55.254399</td>
-<td align="right">7.193322</td>
-<td align="right">-27.242167</td>
-<td align="right">23.2062388</td>
-<td align="right">10.060393</td>
-<td align="right">-10.4575831</td>
+<td align="right">-11.110139</td>
+<td align="right">8.3594629</td>
+<td align="right">0.9078538</td>
+<td align="right">-4.4474043</td>
+<td align="right">-2.4928575</td>
+<td align="right">-3.891324</td>
+<td align="right">1.612010</td>
+<td align="right">-3.0056050</td>
+<td align="right">-1.9132874</td>
+<td align="right">-4.1360696</td>
+<td align="right">3.967365</td>
+<td align="right">-1.1839740</td>
+<td align="right">3.9305884</td>
+<td align="right">4.3514060</td>
+<td align="right">-5.022737</td>
+<td align="right">-1.5912500</td>
+<td align="right">-2.881446</td>
+<td align="right">-2.7652256</td>
+<td align="right">0.6892992</td>
+<td align="right">-5.1276789</td>
+<td align="right">-3.0001899</td>
+<td align="right">-4.8828397</td>
+<td align="right">-3.8604130</td>
+<td align="right">-2.481347</td>
+<td align="right">-2.1251274</td>
+<td align="right">1.3485938</td>
+<td align="right">-1.2175912</td>
+<td align="right">5.3063126</td>
+<td align="right">-1.9839867</td>
+<td align="right">0.9292217</td>
+<td align="right">2.8807922</td>
+<td align="right">-2.9988935</td>
+<td align="right">2.980931</td>
+<td align="right">1.892661</td>
+<td align="right">2.8918096</td>
+<td align="right">-1.1710940</td>
+<td align="right">-4.0513626</td>
+<td align="right">-2.2011283</td>
 <td align="right">0</td>
 <td align="left">Yerkes</td>
 <td align="left">Rogger</td>
@@ -941,47 +2075,54 @@ kable(head(Merged))</code></pre>
 <td align="left">NA</td>
 <td align="right">45</td>
 <td align="left">NA</td>
+<td align="right">-0.1102000</td>
+<td align="right">-0.0206677</td>
+<td align="right">0.0032202</td>
+<td align="right">0.000010</td>
+<td align="right">1e-05</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
 </tr>
 <tr class="odd">
 <td align="left">438</td>
-<td align="right">38.737750</td>
-<td align="right">-98.961705</td>
-<td align="right">-6.4241994</td>
-<td align="right">-0.4050236</td>
-<td align="right">0.0487974</td>
-<td align="right">-29.96134</td>
-<td align="right">-7.819097</td>
-<td align="right">4.098805</td>
-<td align="right">-5.33942</td>
-<td align="right">-3.408825</td>
-<td align="right">23.913235</td>
-<td align="right">-1.116522</td>
-<td align="right">-4.059425</td>
-<td align="right">4.850208</td>
-<td align="right">16.2480355</td>
-<td align="right">0.8583629</td>
-<td align="right">-14.200342</td>
-<td align="right">17.044620</td>
-<td align="right">-4.688113</td>
-<td align="right">-12.955579</td>
-<td align="right">-5.267388</td>
-<td align="right">-1.6547045</td>
-<td align="right">0.7736846</td>
-<td align="right">1.7292019</td>
-<td align="right">-2.0160545</td>
-<td align="right">-3.909655</td>
-<td align="right">10.519180</td>
-<td align="right">-24.5084626</td>
-<td align="right">5.336721</td>
-<td align="right">-36.539790</td>
-<td align="right">25.37062</td>
-<td align="right">34.8222446</td>
-<td align="right">28.385570</td>
-<td align="right">31.514002</td>
-<td align="right">46.684492</td>
-<td align="right">19.9919029</td>
-<td align="right">-3.156439</td>
-<td align="right">-22.8509246</td>
+<td align="right">-1.449858</td>
+<td align="right">15.0424731</td>
+<td align="right">3.0373196</td>
+<td align="right">-0.8557580</td>
+<td align="right">-5.6983462</td>
+<td align="right">7.139111</td>
+<td align="right">10.911910</td>
+<td align="right">1.7585953</td>
+<td align="right">-5.0411789</td>
+<td align="right">1.7735770</td>
+<td align="right">2.584722</td>
+<td align="right">-0.1268017</td>
+<td align="right">-5.0633962</td>
+<td align="right">0.4041424</td>
+<td align="right">-1.358687</td>
+<td align="right">-3.8590415</td>
+<td align="right">1.776126</td>
+<td align="right">5.9685110</td>
+<td align="right">-3.2313058</td>
+<td align="right">0.9378048</td>
+<td align="right">2.1280231</td>
+<td align="right">0.1732151</td>
+<td align="right">-0.6343212</td>
+<td align="right">-4.666408</td>
+<td align="right">1.3170280</td>
+<td align="right">0.3337715</td>
+<td align="right">-2.3545929</td>
+<td align="right">-0.4774521</td>
+<td align="right">-1.5078313</td>
+<td align="right">0.6497610</td>
+<td align="right">-4.4366366</td>
+<td align="right">-2.9485863</td>
+<td align="right">1.879969</td>
+<td align="right">-6.151146</td>
+<td align="right">-0.1397558</td>
+<td align="right">-4.0756488</td>
+<td align="right">0.1841345</td>
+<td align="right">0.2180296</td>
 <td align="right">0</td>
 <td align="left">Yerkes</td>
 <td align="left">Cheeta</td>
@@ -1012,47 +2153,54 @@ kable(head(Merged))</code></pre>
 <td align="left">Yes</td>
 <td align="right">55</td>
 <td align="left">NA</td>
+<td align="right">-0.1081380</td>
+<td align="right">-0.0178263</td>
+<td align="right">0.0044915</td>
+<td align="right">0.000010</td>
+<td align="right">1e-05</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
 </tr>
 <tr class="even">
 <td align="left">456</td>
-<td align="right">-6.639290</td>
-<td align="right">-80.557052</td>
-<td align="right">-0.5099719</td>
-<td align="right">2.1557191</td>
-<td align="right">15.4551016</td>
-<td align="right">-10.15878</td>
-<td align="right">2.904520</td>
-<td align="right">-4.162599</td>
-<td align="right">-13.39653</td>
-<td align="right">8.948876</td>
-<td align="right">28.547391</td>
-<td align="right">-4.611110</td>
-<td align="right">-11.118889</td>
-<td align="right">-25.646718</td>
-<td align="right">13.9431546</td>
-<td align="right">-10.9218697</td>
-<td align="right">-10.988095</td>
-<td align="right">2.564652</td>
-<td align="right">-3.315330</td>
-<td align="right">-12.427946</td>
-<td align="right">-23.478718</td>
-<td align="right">9.9509073</td>
-<td align="right">10.4812892</td>
-<td align="right">-0.7515643</td>
-<td align="right">-5.7613917</td>
-<td align="right">-4.340921</td>
-<td align="right">-3.857019</td>
-<td align="right">-31.4583272</td>
-<td align="right">8.353572</td>
-<td align="right">-1.643735</td>
-<td align="right">6.45784</td>
-<td align="right">41.0405598</td>
-<td align="right">11.636251</td>
-<td align="right">-17.878808</td>
-<td align="right">-70.401404</td>
-<td align="right">-11.3465290</td>
-<td align="right">-1.876168</td>
-<td align="right">-3.7437993</td>
+<td align="right">-12.640425</td>
+<td align="right">7.7149310</td>
+<td align="right">2.5241961</td>
+<td align="right">-0.2219808</td>
+<td align="right">-0.1919491</td>
+<td align="right">7.569948</td>
+<td align="right">5.715943</td>
+<td align="right">-0.0626909</td>
+<td align="right">0.5118827</td>
+<td align="right">6.6526419</td>
+<td align="right">6.005654</td>
+<td align="right">4.6666608</td>
+<td align="right">-0.1857602</td>
+<td align="right">-4.4495838</td>
+<td align="right">-1.538733</td>
+<td align="right">0.5316151</td>
+<td align="right">-0.646229</td>
+<td align="right">5.5766602</td>
+<td align="right">-7.0312194</td>
+<td align="right">1.6193611</td>
+<td align="right">-0.0279770</td>
+<td align="right">2.0434047</td>
+<td align="right">0.7038654</td>
+<td align="right">-2.587560</td>
+<td align="right">-0.8531699</td>
+<td align="right">-0.1384010</td>
+<td align="right">0.3979715</td>
+<td align="right">0.8683074</td>
+<td align="right">-0.1545142</td>
+<td align="right">-1.2727081</td>
+<td align="right">2.1824296</td>
+<td align="right">6.3967276</td>
+<td align="right">1.867300</td>
+<td align="right">1.121430</td>
+<td align="right">5.3876835</td>
+<td align="right">3.5287367</td>
+<td align="right">-0.8599416</td>
+<td align="right">0.9209316</td>
 <td align="right">0</td>
 <td align="left">Yerkes</td>
 <td align="left">Mai</td>
@@ -1083,6 +2231,13 @@ kable(head(Merged))</code></pre>
 <td align="left">Yes</td>
 <td align="right">49</td>
 <td align="left">NA</td>
+<td align="right">-0.1080520</td>
+<td align="right">-0.0178848</td>
+<td align="right">0.0044265</td>
+<td align="right">0.000011</td>
+<td align="right">1e-05</td>
+<td align="right">0.999969</td>
+<td align="right">1e-05</td>
 </tr>
 </tbody>
 </table>
@@ -1090,12 +2245,128 @@ kable(head(Merged))</code></pre>
 ggplot(Merged, aes(x=PC2, y=PC1, color=factor(RNA.Extract_date), label=Row.names)) + 
   geom_point() +
   geom_text_repel(size=2.5)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/pca-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-1">
+Past versions of pca-1.png
+</button>
+</p>
+<div id="fig-pca-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8dd795fa81ffe40134fc952f4249f95d3efbefff/docs/figure/20190320_Check-RNAseq-PCs.Rmd/pca-1.png" target="_blank">8dd795f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-03-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>ggplot(Merged, aes(x=PC1, y=PC2, color=factor(RNA.Library.prep.batch), label=Row.names)) + 
+  geom_point() +
+  geom_text_repel(size=2.5)</code></pre>
 <p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/pca-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-2">
+Past versions of pca-2.png
+</button>
+</p>
+<div id="fig-pca-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8dd795fa81ffe40134fc952f4249f95d3efbefff/docs/figure/20190320_Check-RNAseq-PCs.Rmd/pca-2.png" target="_blank">8dd795f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-03-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(Merged, aes(x=PC2, y=PC1, color=RIN, label=Row.names)) + 
   geom_point() +
   geom_text_repel(size=2.5)</code></pre>
 <p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/pca-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Now I am going to look more systematically for significant correlations between potential observed confounders in the Metadata and the first 10 PCs. Will use Spearman’s correlation to test continuous continuous confounders, will use anova for categorical confounders.</p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-3">
+Past versions of pca-3.png
+</button>
+</p>
+<div id="fig-pca-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8dd795fa81ffe40134fc952f4249f95d3efbefff/docs/figure/20190320_Check-RNAseq-PCs.Rmd/pca-3.png" target="_blank">8dd795f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-03-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Can already see maybe something with the RNA extraction batch in first PC… Now I am going to look more systematically for significant correlations between potential observed confounders in the Metadata and the first 10 principle components. Will use Pearsons’s correlation to test continuous continuous confounders, will use anova for categorical confounders.</p>
+<p>First the continuous confounders</p>
 <pre class="r"><code># Grab first 10 PCs
 PCs_to_test &lt;- Merged[,2:11]
 kable(head(PCs_to_test))</code></pre>
@@ -1116,129 +2387,181 @@ kable(head(PCs_to_test))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-16.209924</td>
-<td align="right">-39.412051</td>
-<td align="right">-12.6609324</td>
-<td align="right">37.8823277</td>
-<td align="right">-31.0051139</td>
-<td align="right">-11.19556</td>
-<td align="right">-3.293419</td>
-<td align="right">6.914787</td>
-<td align="right">31.22802</td>
-<td align="right">9.387597</td>
+<td align="right">-4.450607</td>
+<td align="right">15.2199047</td>
+<td align="right">9.3873162</td>
+<td align="right">0.5827183</td>
+<td align="right">-7.6224986</td>
+<td align="right">-3.222932</td>
+<td align="right">-5.404917</td>
+<td align="right">0.3134311</td>
+<td align="right">-0.3214788</td>
+<td align="right">-4.5630865</td>
 </tr>
 <tr class="even">
-<td align="right">-77.598637</td>
-<td align="right">-7.285478</td>
-<td align="right">27.7851831</td>
-<td align="right">26.9782914</td>
-<td align="right">-50.5795688</td>
-<td align="right">35.50836</td>
-<td align="right">-38.647176</td>
-<td align="right">22.304682</td>
-<td align="right">29.24587</td>
-<td align="right">-7.972713</td>
+<td align="right">-20.947886</td>
+<td align="right">-0.1866276</td>
+<td align="right">1.1315354</td>
+<td align="right">-4.4728882</td>
+<td align="right">-10.3478542</td>
+<td align="right">2.970197</td>
+<td align="right">-7.365084</td>
+<td align="right">-2.6503314</td>
+<td align="right">-3.5838155</td>
+<td align="right">-0.1699361</td>
 </tr>
 <tr class="odd">
-<td align="right">-76.811433</td>
-<td align="right">-23.588356</td>
-<td align="right">17.5616055</td>
-<td align="right">-6.1129203</td>
-<td align="right">30.3786753</td>
-<td align="right">-11.80251</td>
-<td align="right">-24.639145</td>
-<td align="right">-39.522681</td>
-<td align="right">-77.01271</td>
-<td align="right">-64.199910</td>
+<td align="right">-24.957253</td>
+<td align="right">-5.7497750</td>
+<td align="right">6.5689672</td>
+<td align="right">-2.5776571</td>
+<td align="right">14.4819469</td>
+<td align="right">6.685968</td>
+<td align="right">5.638185</td>
+<td align="right">-6.3434437</td>
+<td align="right">-11.3481854</td>
+<td align="right">-4.9016847</td>
 </tr>
 <tr class="even">
-<td align="right">-9.035152</td>
-<td align="right">-42.472885</td>
-<td align="right">-14.1230302</td>
-<td align="right">3.7761863</td>
-<td align="right">-11.9413104</td>
-<td align="right">-10.59732</td>
-<td align="right">11.476496</td>
-<td align="right">-10.044294</td>
-<td align="right">-6.07530</td>
-<td align="right">13.302190</td>
+<td align="right">-11.110139</td>
+<td align="right">8.3594629</td>
+<td align="right">0.9078538</td>
+<td align="right">-4.4474043</td>
+<td align="right">-2.4928575</td>
+<td align="right">-3.891324</td>
+<td align="right">1.612010</td>
+<td align="right">-3.0056050</td>
+<td align="right">-1.9132874</td>
+<td align="right">-4.1360696</td>
 </tr>
 <tr class="odd">
-<td align="right">38.737750</td>
-<td align="right">-98.961705</td>
-<td align="right">-6.4241994</td>
-<td align="right">-0.4050236</td>
-<td align="right">0.0487974</td>
-<td align="right">-29.96134</td>
-<td align="right">-7.819097</td>
-<td align="right">4.098805</td>
-<td align="right">-5.33942</td>
-<td align="right">-3.408825</td>
+<td align="right">-1.449858</td>
+<td align="right">15.0424731</td>
+<td align="right">3.0373196</td>
+<td align="right">-0.8557580</td>
+<td align="right">-5.6983462</td>
+<td align="right">7.139111</td>
+<td align="right">10.911910</td>
+<td align="right">1.7585953</td>
+<td align="right">-5.0411789</td>
+<td align="right">1.7735770</td>
 </tr>
 <tr class="even">
-<td align="right">-6.639290</td>
-<td align="right">-80.557052</td>
-<td align="right">-0.5099719</td>
-<td align="right">2.1557191</td>
-<td align="right">15.4551016</td>
-<td align="right">-10.15878</td>
-<td align="right">2.904520</td>
-<td align="right">-4.162599</td>
-<td align="right">-13.39653</td>
-<td align="right">8.948876</td>
+<td align="right">-12.640425</td>
+<td align="right">7.7149310</td>
+<td align="right">2.5241961</td>
+<td align="right">-0.2219808</td>
+<td align="right">-0.1919491</td>
+<td align="right">7.569948</td>
+<td align="right">5.715943</td>
+<td align="right">-0.0626909</td>
+<td align="right">0.5118827</td>
+<td align="right">6.6526419</td>
 </tr>
 </tbody>
 </table>
 <pre class="r"><code># Grab potential continuous confounders that make sense to test
-Continuous_confounders_to_test &lt;- Merged[, c(&quot;RIN&quot;, &quot;Age&quot;)]
+Continuous_confounders_to_test &lt;- Merged[, c(&quot;RIN&quot;, &quot;Age&quot;, &quot;GenotypePC1&quot;, &quot;GenotypePC2&quot;, &quot;GenotypePC3&quot;, &quot;Admix.Western&quot;, &quot;Admix.Eastern&quot;, &quot;Admix.Central&quot;, &quot;Admix.NigeriaCameroon&quot;)]
 kable(head(Continuous_confounders_to_test))</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="right">RIN</th>
 <th align="right">Age</th>
+<th align="right">GenotypePC1</th>
+<th align="right">GenotypePC2</th>
+<th align="right">GenotypePC3</th>
+<th align="right">Admix.Western</th>
+<th align="right">Admix.Eastern</th>
+<th align="right">Admix.Central</th>
+<th align="right">Admix.NigeriaCameroon</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">7.3</td>
 <td align="right">40</td>
+<td align="right">-0.0820238</td>
+<td align="right">0.0482288</td>
+<td align="right">0.0152297</td>
+<td align="right">0.815883</td>
+<td align="right">1e-05</td>
+<td align="right">1e-05</td>
+<td align="right">0.184097</td>
 </tr>
 <tr class="even">
 <td align="right">7.6</td>
 <td align="right">44</td>
+<td align="right">-0.1089350</td>
+<td align="right">-0.0190364</td>
+<td align="right">0.0051265</td>
+<td align="right">0.999969</td>
+<td align="right">1e-05</td>
+<td align="right">1e-05</td>
+<td align="right">0.000011</td>
 </tr>
 <tr class="odd">
 <td align="right">7.2</td>
 <td align="right">53</td>
+<td align="right">-0.1081330</td>
+<td align="right">-0.0180125</td>
+<td align="right">0.0048198</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+<td align="right">1e-05</td>
+<td align="right">0.000010</td>
 </tr>
 <tr class="even">
 <td align="right">5.7</td>
 <td align="right">45</td>
+<td align="right">-0.1102000</td>
+<td align="right">-0.0206677</td>
+<td align="right">0.0032202</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+<td align="right">1e-05</td>
+<td align="right">0.000010</td>
 </tr>
 <tr class="odd">
 <td align="right">5.6</td>
 <td align="right">55</td>
+<td align="right">-0.1081380</td>
+<td align="right">-0.0178263</td>
+<td align="right">0.0044915</td>
+<td align="right">0.999970</td>
+<td align="right">1e-05</td>
+<td align="right">1e-05</td>
+<td align="right">0.000010</td>
 </tr>
 <tr class="even">
 <td align="right">5.5</td>
 <td align="right">49</td>
+<td align="right">-0.1080520</td>
+<td align="right">-0.0178848</td>
+<td align="right">0.0044265</td>
+<td align="right">0.999969</td>
+<td align="right">1e-05</td>
+<td align="right">1e-05</td>
+<td align="right">0.000011</td>
 </tr>
 </tbody>
 </table>
 <pre class="r"><code># Test
 Spearman_test_results &lt;- corr.test(Continuous_confounders_to_test, PCs_to_test, adjust=&quot;none&quot;, method=&quot;spearman&quot;)
 
+MinP_floor &lt;- floor(log10(min(Spearman_test_results$p)))
 # Plot
 Spearman_test_results$p %&gt;%
   melt() %&gt;%
-  rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %&gt;%
+  dplyr::rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %&gt;%
   ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
     geom_tile() +
-    geom_text(aes(label = signif(Pvalue, 1))) +
-    scale_fill_gradient(limits=c(0.001, 1), breaks=c(0.001,0.01,0.1,1), trans = &#39;log&#39;, high=&quot;white&quot;, low=&quot;red&quot; ) +
-    theme_classic()</code></pre>
-<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/test_potential_confounders-1.png" width="672" style="display: block; margin: auto;" /></p>
+    geom_text(aes(label = signif(Pvalue, 2))) +
+    scale_fill_gradient(limits=c(10**MinP_floor, 1), breaks=10**seq(MinP_floor,0,1), trans = &#39;log&#39;, high=&quot;white&quot;, low=&quot;red&quot; ) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/continuous_confounders-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And the categorical confounders…</p>
 <pre class="r"><code># Grab potential categorical confounders that make sense to test
 Categorical_confounders_to_test &lt;- Merged[,c(&quot;Viral.status&quot;, &quot;SX&quot;,&quot;RNA.Extract_date&quot;, &quot;RNA.Library.prep.batch&quot;, &quot;Source&quot;)]
 kable(head(Categorical_confounders_to_test))</code></pre>
@@ -1377,16 +2700,37 @@ for (confounder in seq_along(Categorical_confounders_to_test)) {
     }
 }
 # Plot
+MinP_floor &lt;- floor(log10(min(Pvalues)))
 Pvalues %&gt;%
   melt() %&gt;%
-  rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %&gt;%
+  dplyr::rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %&gt;%
   ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
     geom_tile() +
-    geom_text(aes(label = signif(Pvalue, 1))) +
-    scale_fill_gradient( trans = &#39;log&#39;, high=&quot;white&quot;, low=&quot;red&quot; ) +
+    geom_text(aes(label = signif(Pvalue, 2))) +
+    scale_fill_gradient(limits=c(10**MinP_floor, 1), breaks=10**seq(MinP_floor,0,1), trans = &#39;log&#39;, high=&quot;white&quot;, low=&quot;red&quot; ) +
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
-<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/test_potential_confounders-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/categorical_confounders-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Plot some of the significant PC-metadata associations for a better look…</p>
+<pre class="r"><code>ggplot(Merged, aes(x=factor(RNA.Extract_date), y=PC6, label=Label)) + 
+  geom_boxplot() +
+  geom_jitter(position=position_jitter(width=.2, height=0))</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(Merged, aes(x=factor(RNA.Library.prep.batch), y=PC6)) + 
+  geom_boxplot() +
+  geom_jitter(position=position_jitter(width=.1, height=0))</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(Merged, aes(factor(RNA.Extract_date))) + 
+  geom_bar(aes(fill = factor(RNA.Library.prep.batch)))</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /> Strongest effect seems to be related to batch… RNA library prep batch and RNA extraction batch (date) both covary with a top PC. Have to check with Claudia that the last batch was a different extraction method (Trizol vs RNEasy).</p>
+<pre class="r"><code>ggplot(Merged, aes(x=factor(Source), y=PC3)) + 
+  geom_boxplot() +
+  geom_jitter(position=position_jitter(width=.1, height=0))</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(Merged, aes(x=RIN, y=PC3, label=Label, color=factor(Source))) +
+  geom_point() +
+  geom_text_repel(size=2.5)</code></pre>
+<p><img src="figure/20190320_Check-RNAseq-PCs.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /> Also, Source covaries with PC3, though we don’t have many observations for a lot of Source categories so it may not make be a good idea to directly model source.</p>
 <br> <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1410,27 +2754,33 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] bindrcpp_0.2.2  reshape2_1.4.3  knitr_1.21      ggrepel_0.8.0  
- [5] psych_1.8.10    forcats_0.4.0   stringr_1.3.1   dplyr_0.7.8    
- [9] purrr_0.2.5     readr_1.3.1     tidyr_0.8.2     tibble_1.4.2   
+ [1] gplots_3.0.1    reshape2_1.4.3  knitr_1.22      ggrepel_0.8.0  
+ [5] psych_1.8.10    forcats_0.4.0   stringr_1.4.0   dplyr_0.8.0.1  
+ [9] purrr_0.3.2     readr_1.3.1     tidyr_0.8.2     tibble_2.1.1   
 [13] tidyverse_1.2.1 readxl_1.1.0    ggfortify_0.4.5 ggplot2_3.1.0  
 [17] corrplot_0.84  
 
 loaded via a namespace (and not attached):
- [1] tidyselect_0.2.5 xfun_0.4         haven_2.1.0      lattice_0.20-38 
- [5] colorspace_1.3-2 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
- [9] rlang_0.3.0.1    pillar_1.3.1     foreign_0.8-71   glue_1.3.0      
-[13] withr_2.1.2      modelr_0.1.4     bindr_0.1.1      plyr_1.8.4      
-[17] munsell_0.5.0    gtable_0.2.0     workflowr_1.2.0  cellranger_1.1.0
-[21] rvest_0.3.2      evaluate_0.12    labeling_0.3     parallel_3.5.1  
-[25] highr_0.7        broom_0.5.1      Rcpp_1.0.0       scales_1.0.0    
-[29] backports_1.1.3  jsonlite_1.6     fs_1.2.6         gridExtra_2.3   
-[33] mnormt_1.5-5     hms_0.4.2        digest_0.6.18    stringi_1.2.4   
-[37] grid_3.5.1       rprojroot_1.3-2  cli_1.0.1        tools_3.5.1     
-[41] magrittr_1.5     lazyeval_0.2.1   crayon_1.3.4     pkgconfig_2.0.2 
-[45] xml2_1.2.0       lubridate_1.7.4  rstudioapi_0.8   assertthat_0.2.0
-[49] rmarkdown_1.11   httr_1.4.0       R6_2.3.0         nlme_3.1-137    
-[53] git2r_0.24.0     compiler_3.5.1  </code></pre>
+ [1] Rcpp_1.0.1         lubridate_1.7.4    lattice_0.20-38   
+ [4] gtools_3.8.1       assertthat_0.2.1   rprojroot_1.3-2   
+ [7] digest_0.6.18      R6_2.4.0           cellranger_1.1.0  
+[10] plyr_1.8.4         backports_1.1.3    evaluate_0.13     
+[13] highr_0.8          httr_1.4.0         pillar_1.3.1      
+[16] rlang_0.3.3        lazyeval_0.2.2     rstudioapi_0.10   
+[19] gdata_2.18.0       whisker_0.3-2      rmarkdown_1.11    
+[22] labeling_0.3       foreign_0.8-71     munsell_0.5.0     
+[25] broom_0.5.1        compiler_3.5.1     modelr_0.1.4      
+[28] xfun_0.6           pkgconfig_2.0.2    mnormt_1.5-5      
+[31] htmltools_0.3.6    tidyselect_0.2.5   gridExtra_2.3     
+[34] workflowr_1.2.0    crayon_1.3.4       withr_2.1.2       
+[37] bitops_1.0-6       grid_3.5.1         nlme_3.1-137      
+[40] jsonlite_1.6       gtable_0.3.0       git2r_0.24.0      
+[43] magrittr_1.5       scales_1.0.0       KernSmooth_2.23-15
+[46] cli_1.1.0          stringi_1.4.3      fs_1.2.6          
+[49] xml2_1.2.0         generics_0.0.2     tools_3.5.1       
+[52] glue_1.3.1         hms_0.4.2          parallel_3.5.1    
+[55] yaml_2.2.0         colorspace_1.4-1   caTools_1.17.1.1  
+[58] rvest_0.3.2        haven_2.1.0       </code></pre>
 </div>
 
 

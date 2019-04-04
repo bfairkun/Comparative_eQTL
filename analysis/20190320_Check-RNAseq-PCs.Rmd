@@ -19,25 +19,139 @@ library(psych)
 library(ggrepel)
 library(knitr)
 library(reshape2)
+library(gplots)
 ```
 
-```{r make-tidy-data}
-# Read in count table, filtering for TPM>1
-CountTable <- read.table('../output/CountTable.tpm.txt', header=T, check.names=FALSE, row.names = 1) %>%
-  filter(rowSums(.) > 1)
+RNA-seq data for each individual was pseudo-mapped/quantified by kallisto and merged into a matrix of TPM values.
 
-# Read in metadata
-Metadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+```{r make-tidy-data, warning=F}
+# Read in count table, filtering out rows that are all zeros
+CountTable <- read.table(gzfile('../output/CountTable.tpm.txt.gz'), header=T, check.names=FALSE, row.names = 1) %>%
+  rownames_to_column('gene') %>% #hack to keep rownames despite dplyr filter step
+  filter_if(is.numeric, any_vars(. > 0)) %>%
+  column_to_rownames('gene')
+
+kable(head(CountTable))
+
+# Read admixture coefficients (K=4), and first 3 principle components, since some form of population substructure will likely be included in the expression modeling as a covariate.
+AdmixtureCoeff <- read.table("../output/PopulationStructure/Admixture/MergedForAdmixture.4.Q.labelled") %>% 
+  dplyr::rename(Individual.ID=V2) %>%
+  select(-V1, -V3, -V4, -V5, -V6) %>%
+  dplyr::rename(Admix.Western=V9, Admix.Eastern=V10, Admix.Central=V8, Admix.NigeriaCameroon=V7) #Renaming the admixture clusters after looking at plots with known subspecies
+kable(head(AdmixtureCoeff))
+
+GenotypePCs <- read.table("../output/PopulationStructure/pca.eigenvec", header=T) %>%
+  select(IID, PC1, PC2, PC3) %>%
+  dplyr::rename(Individual.ID=IID, GenotypePC1=PC1, GenotypePC2=PC2, GenotypePC3=PC3)
+kable(head(GenotypePCs))
+
+# Read in other metadata
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+kable(head(OtherMetadata))
+
+#Merge all metadata tables
+Metadata <- OtherMetadata %>%
+  left_join(GenotypePCs, by=c("Individual.ID")) %>%
+  left_join(AdmixtureCoeff, by=c("Individual.ID"))
+kable(head(Metadata))
+```
+
+
+First, look at TPM distribution of a couple genes across samples, looking for normality. Plot normal-QQ plot of TPM. With and without a couple potential transformations.
+```{r}
+RowNumber<-5000
+
+# raw tpm
+Phenotype <- as.numeric(CountTable[RowNumber,])
+hist(Phenotype)
+qqnorm(Phenotype)
+qqline(Phenotype)
+
+# log(tpm)
+Phenotype <- log(as.numeric(CountTable[RowNumber,]))
+hist(Phenotype)
+qqnorm(Phenotype)
+qqline(Phenotype)
 
 ```
 
-Now perform PCA, plot a few visualizations
+Now I will more systematically test for normality for all genes after a few transformations...
+```{r}
+# histogram of P-values of Shapiro test for normality of raw TPM for each gene.
+df.shapiro <- CountTable %>%
+  apply(1, shapiro.test)
+Pvals<-unlist(lapply(df.shapiro, function(x) x$p.value))
+hist(Pvals)
+
+# ...After log-transform+pseudocount.
+df.shapiro <- CountTable %>%
+  +0.1 %>% log() %>%
+  apply(1, shapiro.test)
+Pvals<-unlist(lapply(df.shapiro, function(x) x$p.value))
+hist(Pvals)
+
+# Maybe the inflation of non-normal expression phenotypes is due to lots of rows with too many (0 + pseudocount) values.
+# Retry after filtering all genes with any 0 counts, then log-transform.
+df.shapiro <- CountTable %>%
+  filter_all(all_vars(.>0)) %>% log() %>%
+  apply(1, shapiro.test)
+Pvals<-unlist(lapply(df.shapiro, function(x) x$p.value))
+hist(Pvals)
+
+# ...After filtering all genes with any 0 counts, then log-transform, and filter for only top 500 expressed genes
+df.shapiro <- CountTable %>%
+  filter_all(all_vars(.>0)) %>% log() %>%
+  mutate(sumVar = rowSums(.)) %>%
+  arrange(desc(sumVar)) %>%
+  head(500) %>%
+  select(-sumVar) %>%
+  apply(1, shapiro.test)
+Pvals<-unlist(lapply(df.shapiro, function(x) x$p.value))
+hist(Pvals)
+```
+Data is generally not normal, even after considering only highly expressed genes after log-transformation. Probably too much structure/covariates that must be accounted for. For now I will keep exploring the data with log-transformed data, and consider if/how to more carefully transform the data later (eg quantile normalization) .
+
+Plot correlation matrix... For this purpose I will consider log(TPM + 0.1 pseudocount) for top 5000 expressed genes.
+
+```{r}
+CorMatrix <- CountTable %>%
+  +0.1 %>%
+  mutate(sumVar = rowSums(.)) %>%
+  arrange(desc(sumVar)) %>%
+  head(5000) %>%
+  select(-sumVar) %>%
+  log() %>%
+  scale() %>%
+  cor(method = c("spearman"))
+
+RNAExtractionDate <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Extract_date))))
+RNA.Library.prep.batch <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Library.prep.batch))))
+
+# Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
+heatmap.2(CorMatrix, trace="none", ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)
+
+
+# What is mean correlation
+mean(CorMatrix)
+
+```
+
+
+
+Now perform PCA, plot a few visualizations...
 ```{r pca}
 # pca with log-transformed count table (+ 0.1 pseudocount)
-pca_results <- prcomp(t(log(CountTable+0.1)), center=T, scale. = T)
+pca_results <- CountTable %>%
+  +0.1 %>%
+  mutate(sumVar = rowSums(.)) %>%
+  arrange(desc(sumVar)) %>%
+  head(2500) %>%
+  select(-sumVar) %>%
+  log() %>%
+  t() %>%
+  prcomp(center=T, scale. = T)
 
-# Plot PCs
-autoplot(pca_results)
+summary(pca_results)
 
 # Merge with metadata
 Merged <- merge(pca_results$x, Metadata, by.x = "row.names", by.y = "Individual.ID", all=TRUE)
@@ -47,37 +161,48 @@ kable(head(Merged))
 ggplot(Merged, aes(x=PC2, y=PC1, color=factor(RNA.Extract_date), label=Row.names)) + 
   geom_point() +
   geom_text_repel(size=2.5)
+ggplot(Merged, aes(x=PC1, y=PC2, color=factor(RNA.Library.prep.batch), label=Row.names)) + 
+  geom_point() +
+  geom_text_repel(size=2.5)
 ggplot(Merged, aes(x=PC2, y=PC1, color=RIN, label=Row.names)) + 
   geom_point() +
   geom_text_repel(size=2.5)
 
+
 ```
 
-Now I am going to look more systematically for significant correlations between potential observed confounders in the Metadata and the first 10 PCs. Will use Spearman's correlation to test continuous continuous confounders, will use anova for categorical confounders.
+Can already see maybe something with the RNA extraction batch in first PC... Now I am going to look more systematically for significant correlations between potential observed confounders in the Metadata and the first 10 principle components. Will use Pearsons's correlation to test continuous continuous confounders, will use anova for categorical confounders.
 
-```{r test_potential_confounders}
+
+First the continuous confounders
+```{r continuous_confounders}
 
 # Grab first 10 PCs
 PCs_to_test <- Merged[,2:11]
 kable(head(PCs_to_test))
 
 # Grab potential continuous confounders that make sense to test
-Continuous_confounders_to_test <- Merged[, c("RIN", "Age")]
+Continuous_confounders_to_test <- Merged[, c("RIN", "Age", "GenotypePC1", "GenotypePC2", "GenotypePC3", "Admix.Western", "Admix.Eastern", "Admix.Central", "Admix.NigeriaCameroon")]
 kable(head(Continuous_confounders_to_test))
 
 # Test
 Spearman_test_results <- corr.test(Continuous_confounders_to_test, PCs_to_test, adjust="none", method="spearman")
 
+MinP_floor <- floor(log10(min(Spearman_test_results$p)))
 # Plot
 Spearman_test_results$p %>%
   melt() %>%
-  rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
+  dplyr::rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
   ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
     geom_tile() +
-    geom_text(aes(label = signif(Pvalue, 1))) +
-    scale_fill_gradient(limits=c(0.001, 1), breaks=c(0.001,0.01,0.1,1), trans = 'log', high="white", low="red" ) +
-    theme_classic()
+    geom_text(aes(label = signif(Pvalue, 2))) +
+    scale_fill_gradient(limits=c(10**MinP_floor, 1), breaks=10**seq(MinP_floor,0,1), trans = 'log', high="white", low="red" ) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
+And the categorical confounders...
+```{r categorical_confounders}
 # Grab potential categorical confounders that make sense to test
 Categorical_confounders_to_test <- Merged[,c("Viral.status", "SX","RNA.Extract_date", "RNA.Library.prep.batch", "Source")]
 kable(head(Categorical_confounders_to_test))
@@ -101,14 +226,43 @@ for (confounder in seq_along(Categorical_confounders_to_test)) {
     }
 }
 # Plot
+MinP_floor <- floor(log10(min(Pvalues)))
 Pvalues %>%
   melt() %>%
-  rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
+  dplyr::rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
   ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
     geom_tile() +
-    geom_text(aes(label = signif(Pvalue, 1))) +
-    scale_fill_gradient( trans = 'log', high="white", low="red" ) +
+    geom_text(aes(label = signif(Pvalue, 2))) +
+    scale_fill_gradient(limits=c(10**MinP_floor, 1), breaks=10**seq(MinP_floor,0,1), trans = 'log', high="white", low="red" ) +
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+
+Plot some of the significant PC-metadata associations for a better look...
+```{r}
+ggplot(Merged, aes(x=factor(RNA.Extract_date), y=PC6, label=Label)) + 
+  geom_boxplot() +
+  geom_jitter(position=position_jitter(width=.2, height=0))
+
+ggplot(Merged, aes(x=factor(RNA.Library.prep.batch), y=PC6)) + 
+  geom_boxplot() +
+  geom_jitter(position=position_jitter(width=.1, height=0))
+
+ggplot(Merged, aes(factor(RNA.Extract_date))) + 
+  geom_bar(aes(fill = factor(RNA.Library.prep.batch)))
+```
+Strongest effect seems to be related to batch... RNA library prep batch and RNA extraction batch (date) both covary with a top PC. Have to check with Claudia that the last batch was a different extraction method (Trizol vs RNEasy).
+
+```{r}
+ggplot(Merged, aes(x=factor(Source), y=PC3)) + 
+  geom_boxplot() +
+  geom_jitter(position=position_jitter(width=.1, height=0))
+
+ggplot(Merged, aes(x=RIN, y=PC3, label=Label, color=factor(Source))) +
+  geom_point() +
+  geom_text_repel(size=2.5)
+```
+Also, Source covaries with PC3, though we don't have many observations for a lot of Source categories so it may not make be a good idea to directly model source.
+
 
