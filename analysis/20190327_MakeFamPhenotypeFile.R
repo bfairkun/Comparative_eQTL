@@ -1,12 +1,15 @@
 ## ----setup, include=FALSE------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
 
+
 ## ----load-libraries, message=F, warning=F--------------------------------
 library(tidyverse)
 library(knitr)
 
+
 ## ------------------------------------------------------------------------
 # knitr::purl(input="../analysis/20190327_MakeFamPhenotypeFile.Rmd", output="../analysis/20190327_MakeFamPhenotypeFile.R")
+
 
 ## ----Set-filepaths-------------------------------------------------------
 # Use command line input to specify input and output if this is the Rscript version of this file (as opposed to Rmarkdown).
@@ -23,6 +26,7 @@ if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
   GenesBedFile <- '../data/cDNA.all.chromosomal.bed'
 }
 
+
 ## ----make-tidy-data, warning=F-------------------------------------------
 CountTable <- read.table(gzfile(CountFilepath), header=T, check.names=FALSE, row.names = 1)
 
@@ -38,6 +42,7 @@ EmptyFamFile <- read.table(EmptyFamFilepath, col.names=c("FID", "IID", "Father",
 GeneChromosomes <- read.table(GenesBedFile, col.names=c("chromosome", "start", "stop", "gene", "score", "strand"), stringsAsFactors = F) %>%
   select(gene, chromosome)
 kable(head(GeneChromosomes))
+
 
 ## ------------------------------------------------------------------------
 GeneSet1 <- CountTable %>%
@@ -60,12 +65,13 @@ length(GeneSet2)
 #Number genes left after intersection of both methods
 length(intersect(GeneSet1, GeneSet2))
 
+
 ## ------------------------------------------------------------------------
 PhenotypesToOutput <- CountTable %>%
   rownames_to_column('gene') %>%
   filter_if(is.numeric, all_vars(.>0)) %>%
   merge(GeneChromosomes, by="gene", all.x=T) %>%
-  filter(!chromosome %in% c("X", "Y", "MT")) %>%
+  filter(chromosome %in% c(as.character(1:22), "2A", "2B")) %>%
   select(-chromosome) %>%
   column_to_rownames('gene') %>%
   log() %>%
@@ -79,6 +85,7 @@ Output.df <- EmptyFamFile %>%
 Output.df
 
 GeneList <- data.frame(GeneList=colnames(Output.df)[-1:-5])
+
 
 ## ----write-table-if-script-----------------------------------------------
 
