@@ -41,6 +41,3 @@ scripts/.snakemake*
 !RNASeqFileList.tsv
 !.test.snakemake.sbatch
 !MockDataSampleList.tsv
-!Session.vim
-*.swp
-*.swo

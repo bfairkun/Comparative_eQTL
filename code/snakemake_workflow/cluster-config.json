@@ -87,5 +87,18 @@
   {"mem" : 36000},
 
   "make_plink_file_for_gemma":
-  {"mem" : 36000}
+  {"mem" : 36000},
+
+  "Make_GRM":
+  {"mem" : 24000},
+
+  "run_Gemma_batches":
+  {"mem" : 32000},
+
+  "MakeMatrixEQTL_snp_table":
+  {"mem" : 42000},
+
+  "MatrixEQTL":
+  {"mem" : 12000}
+
 }

@@ -4,9 +4,15 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        # "logs/eQTL_mapping/collect_Gemma_batchlogs.log",
+        expand("eQTL_mapping/MatrixEQTL/Results/QN.{PCsInModel}.txt", PCsInModel=range(0,15)),
+        "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
         "../../output/RNA_seq_FlowCellInfo.txt",
-        "logs/eQTL_mapping/collect_GetCisSNPs_batchlogs.log",
-        # "PopulationSubstructure/ReferencePanel.vcf.gz",
+        "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
+        "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
+        # "eQTL_mapping/batchscripts/FullGetCisSNPsJobList.sh",
+        # "logs/eQTL_mapping/collect_GetCisSNPs_batchlogs.log",
+        "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
         # "PopulationSubstructure/ReferencePanelMerged.vcf",
         # "MiscOutput/LowComplexityRegions.bed",
         # "PopulationSubstructure/out.relatedness2",
@@ -46,5 +52,5 @@ include: "rules/calling.smk"
 include: "rules/populationstructure.smk"
 #include: "rules/stats.smk"
 include: "rules/eqtl_calling.smk"
-include: "rules/qc.smk"
+# include: "rules/qc.smk"
 #include: "rules/annotation.smk"
