@@ -1,0 +1,139 @@
+---
+title: "Check RNA-seq PCs"
+author: "Ben Fair"
+date: "3/20/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Given that there is both population structure and closely related individuals in my cohort, I called eQTLs with using an linear mixed model implemented in Matrix eQTL. Thus, I had to provide Matrix eQTL with an error covariance matrix K which should be symetric and positive definite. I initially tried used the kinship matrix calculated with king-robust algorithm (implemented in plink2). However, as this matrix was not symetric positive definite, it is not a suitable error covariance matrix for Matrix eQTL. Therefore, to make is SPD, I thresholded all the negative values of this matrix to 0. This matrix contains reasonable kinship coefficients based on my partial pedigree (see link) but does not the negative values that account for population level differences. Therefore, in the model I also included the first 3 genotype principal components as covariates.
+
+There are other possible solutions to this problem, which I will explore here by investigating the kinship matrices produced by various methods (gemma, plink, king-robust) and how they can be modified to be SPD.
+
+
+```{r load-libraries, message=F, warning=F}
+library(plyr)
+library(reshape2)
+library(tidyverse)
+library(readxl)
+library(knitr)
+library(ggrepel)
+
+#Function to return symetric matrix from the plink --make-king output
+ReadPlinkKing <- function(FilepathPlinkKing){
+  nc<-max(count.fields(FilepathPlinkKing, sep="\t")) + 1
+  kingMatrix = rbind(NA, as.matrix(read.table(FilepathPlinkKing, sep='\t', col.names=1:nc, fill=T)));
+  errorCovariance <- Matrix::forceSymmetric(kingMatrix,uplo="L")
+  errorCovariance[is.na(errorCovariance)] <- 0.5
+  return(as.matrix(errorCovariance))
+}
+King.IDs <- read.table("../output/KinshipMatrices/Pruned_king.king.id", stringsAsFactors = F)$V1
+Pruned <- ReadPlinkKing("../output/KinshipMatrices/Pruned_king.king")
+rownames(Pruned) <- King.IDs
+colnames(Pruned) <- King.IDs
+Unpruned <- ReadPlinkKing("../output/KinshipMatrices/Unpruned_king.king")
+rownames(Unpruned) <- King.IDs
+colnames(Unpruned) <- King.IDs
+GemmaS <- read.table("../output/KinshipMatrices/gemma/gk2_pruned.sXX.txt") %>%
+  as.matrix()
+rownames(GemmaS) <- King.IDs
+colnames(GemmaS) <- King.IDs
+GemmaC <- read.table("../output/KinshipMatrices/gemma/gk1_pruned.cXX.txt") %>%
+  as.matrix()
+rownames(GemmaC) <- King.IDs
+colnames(GemmaC) <- King.IDs
+
+A<- Pruned %>% melt()
+B<- GemmaC %>% melt()
+eigen(GemmaS+ diag(39)*0.00000000001)$values 
+qplot(A$value,B$value,alpha=0.1)
+
+B %>%
+  ggplot(aes(x=Var1, y=Var2, fill=value)) +
+    geom_tile() +
+    scale_fill_gradient(low="blue", high="red") +
+    theme(text = element_text(size=6), axis.text.x = element_text(angle=90, hjust=1))
+```
+
+```{r make-tidy-data}
+# Read in pedigree data
+YerkesKinship_from_pedigree <- as.data.frame(read_excel("../data/Metadata.xlsx", sheet="Yerkes.coan", col_types = c("text", "text", "numeric")))
+Yerkes.Matrix <-acast(YerkesKinship_from_pedigree, ind1 ~ ind2, value.var="coeff", fill=0)
+kable(Yerkes.Matrix[1:10,1:10])
+
+#Read in various kinship matrices, see [filename].log files for details on the software and parameters that created each [filename] kinship matrix.
+Kinship_from_KING.WGS <- ReadPlinkKing("../output/KinshipMatrices/Pruned_king.king")
+King.IDs <- read.table("../output/KinshipMatrices/Pruned_king.king.id", stringsAsFactors = F)$V1
+rownames(Kinship_from_KING.WGS) <- King.IDs
+colnames(Kinship_from_KING.WGS) <- King.IDs
+```
+Plot the kinship matrix obtained from Yerkes pedigree data, as well as the matrix obtained from whole genome SNP data...
+
+```{r}
+Yerkes.Matrix <-acast(YerkesKinship_from_pedigree, ind1 ~ ind2, value.var="coeff", fill=0)
+melt(Yerkes.Matrix) %>%
+  ggplot(aes(x=Var1, y=Var2, fill=value)) +
+    geom_tile() +
+    scale_fill_gradient(low="blue", high="red", limits=c(-0.5, 0.5)) +
+    theme(text = element_text(size=4), axis.text.x = element_text(angle=90, hjust=1))
+
+WGS.Matrix <- Kinship_from_KING.WGS
+melt(WGS.Matrix) %>%
+  ggplot(aes(x=Var1, y=Var2, fill=value)) +
+    geom_tile() +
+    scale_fill_gradient(low="blue", high="red", limits=c(-0.5, 0.5)) +
+    theme(text = element_text(size=7), axis.text.x = element_text(angle=90, hjust=1))
+```
+
+
+Let's fix a known sample mislabel... 554_2 is actually 554. And 554 is actually unknown.
+```{r}
+Kinship_from_KING.WGS$ID1 <- mapvalues(Kinship_from_KING.WGS$ID1, from=c("554_2"), to=c("554"))
+Kinship_from_KING.WGS$ID2 <- mapvalues(Kinship_from_KING.WGS$ID2, from=c("554_2"), to=c("554"))
+```
+
+
+Now I want to correlate the kinship-coefficients from Yerkes pedigree to those from the whole genome SNP data (KING algorithm). Easiest way I could think to match up the pairwise kinship coefficients is to make a new field that is the sorted ID pair and then merge the Yerkes coefficient-table to the KING-table by the sorted ID pairs...
+
+```{r}
+KSort <- Kinship_from_KING.WGS %>%
+  mutate(Teams = paste(pmin(ID1, ID2), pmax(ID1, ID2), sep= " - "))
+YSort <- YerkesKinship_from_pedigree %>%
+  mutate(Teams = paste(pmin(ind1, ind2), pmax(ind1, ind2), sep= " - ")) %>%
+  distinct(Teams, .keep_all=T)
+# Merge and plot
+Merged <- merge(KSort, YSort, by="Teams")
+Merged$label <- Merged$Team
+Merged$label[Merged$coeff==0] <- ""
+
+ggplot(Merged, aes(x=coeff, y=Kinship, label=label)) +
+  geom_point() +
+  geom_abline(slope=1, intercept=0, color="red") +
+  geom_text_repel(size=2.5) +
+  xlab("Kinship from Yerkes pedigree") +
+  ylab("Kinship from WGS (KING algorithm)")
+  # geom_jitter()
+```
+
+The expected value of Kinships coefficients from KING seem to match pedigree info, with the exception of sample 554 (not to be confused with 554_2 which for purposes of matching KING coefficients to pedigree coefficients we relabelled as 554) which we had prior knowledge to be a mislabelled sample... Hence why 554 is unrelated to a point labelled 554 (actually 554_2). Assuming sample 554 came from Yerkes, we might be able to correlate its kinship coefficients to other Yerkes chimps to help identify it. Bryan Pavlovic already did this for me by looking at the kinship matrices by hand and concluded that 554 is most likely Booka, but here I will repeat that analysis...
+
+```{r}
+# Find who 554 is related to from whole genome SNP data.
+WGS.Matrix['554',] %>%
+  sort(decreasing=T) %>%
+  head() %>%
+  t() %>% kable()
+```
+...554 looks related to 495 (Amos), perhaps 2nd or 3rd degree relationship
+
+```{r}
+# Find who to Amos is related from Yerkes Pedigree
+Yerkes.Matrix['495',] %>%
+  sort(decreasing=T) %>%
+  head(20) %>%
+  t() %>% kable()
+```
+Can eliminate 495, 724, 462 as they are all also part of my cohort, and not related to 554.

@@ -113,7 +113,7 @@ rule Annotate_vcf:
         "logs/populationsubstructure/Annotate_vcf.log"
     shell:
         """
-        bcftools annotate -O z -x ID -I +'%CHROM:%POS:%REF:%ALT' {input.vcf} > {output.vcf} 2> {log}
+        bcftools annotate -O z -x ID -I +'ID\.%CHROM\.%POS\.%REF\.%ALT' {input.vcf} > {output.vcf} 2> {log}
         tabix -p vcf {output.vcf} 2>> {log}
         """
 

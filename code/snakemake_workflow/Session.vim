@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit rules/eqtl_calling.smk
+edit scratch/TODO.txt
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -31,24 +31,28 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 94 - ((23 * winheight(0) + 25) / 50)
+let s:l = 1 - ((0 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-94
+1
 normal! 0
 tabnext 1
-badd +38 Snakefile
-badd +136 rules/eqtl_calling.smk
+badd +8 Snakefile
+badd +131 rules/calling.smk
+badd +25 rules/eqtl_calling.smk
+badd +30 scripts/FromAbhishek.py
+badd +89 cluster-config.json
+badd +18 rules/qc.smk
 badd +15 FixRNASeqFileList.py
 badd +1 rules/common.smk
-badd +173 rules/populationstructure.smk
-badd +48 rules/RNASeqMapping.smk
-badd +42 .gitignore
-badd +1 config.yaml
-badd +1 rules/calling.smk
-badd +87 cluster-config.json
+badd +257 rules/populationstructure.smk
+badd +53 rules/RNASeqMapping.smk
+badd +43 .gitignore
+badd +16 config.yaml
 badd +70 rules/mapping.smk
+badd +1 ./scratch/MakeGenesBed.sh
+badd +1 scratch/TODO.txt
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

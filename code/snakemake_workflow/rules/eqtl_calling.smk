@@ -1,27 +1,35 @@
-# TODO: Make covariate file (R or by hand). Make kinship matrix via gemma.
-# compare to KING.Use plink2 to make bimbam file. Make phenotype matrix file
-# (from count table). Use gemma for association testing ...
-# Use similar strategy as leafcutter prepare juncfiles; make quick python
-# wrapper script, taking as input a txt file with parameters for each gemma
-# call. The parameters to include are a start and stop coordinate of gene, the
-# gene name, the column number (n) in the phenotype file, the bfile, the output
-# prefix. The python script will then make calls to gemma roughly like so:
-#
-# gemma -lmm 2 -b {bfile} -n {column} -k output/results.cXX.txt -snps <(grep {genename} eQTL_mapping/Misc/cis_gene_windows | bedtools intersect -a - -b eQTL_mapping/plink/ForAssociationTesting.snps.bed -sorted) -outdir {outdir} -o {genaname} -c {covariates}
-#
-# Make expression matrix for all genes to be test
-# Make all bfiles/fam files for each gene to be tested.
-# Divide into sets of 1000 genes to test at a time, using dynamic keyword.
-# python script to make gemma parameter file
-
 # rule all:
 #     input:
 #         # "eQTL_mapping/MatrixEQTL/Results.txt",
-#         expand("eQTL_mapping/MatrixEQTL/Results.{PCsInModel}.txt", PCsInModel=range(0,15))
+#         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
+#         expand("eQTL_mapping/MatrixEQTL/Results_lmm/Results.{PCsInModel}.txt", PCsInModel=range(0,15)),
+#         config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw",
+#         config["gitinclude_output"] + "MatrixEQTL_sig_eqtls.txt"
 #         # "eQTL_mapping/batchscripts/FullGemmaJobList.sh",
 #         # "eQTL_mapping/batchscripts/FullGetCisSNPsJobList.sh",
 #         # "eQTL_mapping/GeneListToTest.txt",
 #         # "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps.raw",
+
+
+rule make_plink_file_for_testing:
+    input:
+        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz"),
+    output:
+        bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
+        fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
+        bim = "eQTL_mapping/plink/ForAssociationTesting.bim"
+    log:
+        "logs/eQTL_mapping/make_plink_file_for_gemma.log"
+    params:
+        stdparams = "--keep-fam <(echo {fam})".format(fam=config["read_mapping"]["ReadGroupID_prefix"].replace('-','')),
+        extra = "--remove <(printf Pan_troglodytes_ThisStudy\tMD_And\n)"
+    shell:
+        """
+        plink --id-delim '-' --vcf {input.vcf} --vcf-half-call m --allow-extra-chr --make-bed --out eQTL_mapping/plink/ForAssociationTesting.temp {params.stdparams} {params.extra} &> {log}
+        mv eQTL_mapping/plink/ForAssociationTesting.temp.bed {output.bed}
+        mv eQTL_mapping/plink/ForAssociationTesting.temp.bim {output.bim}
+        mv eQTL_mapping/plink/ForAssociationTesting.temp.fam {output.fam}
+        """
 
 rule make_cis_gene_windows:
     input:
@@ -36,26 +44,6 @@ rule make_cis_gene_windows:
     shell:
         """
         (bedtools sort -i {input.genes_bed} | bedtools flank -l 1 -r 0 -s -g {params.faidx} | bedtools slop -b {params.MaxDistFromTSS} -g {params.faidx} | bedtools sort -i - > {output}) &> {log}
-        """
-
-
-rule make_plink_file_for_gemma:
-    input:
-        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz"),
-    output:
-        bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
-        fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
-        bim = "eQTL_mapping/plink/ForAssociationTesting.bim"
-    log:
-        "logs/eQTL_mapping/make_plink_file_for_gemma.log"
-    params:
-        "--keep-fam <(echo {fam})".format(fam=config["read_mapping"]["ReadGroupID_prefix"].replace('-',''))
-    shell:
-        """
-        plink --id-delim '-' --vcf {input.vcf} --vcf-half-call m --allow-extra-chr --make-bed --out eQTL_mapping/plink/ForAssociationTesting.temp {params} &> {log}
-        mv eQTL_mapping/plink/ForAssociationTesting.temp.bed {output.bed}
-        mv eQTL_mapping/plink/ForAssociationTesting.temp.bim {output.bim}
-        mv eQTL_mapping/plink/ForAssociationTesting.temp.fam {output.fam}
         """
 
 rule make_filtered_phenotype_matrix:
@@ -307,8 +295,8 @@ rule MatrixEQTL:
         covariates = "../../output/Covariates.{PCsInModel}.txt",
         grm = "scratch/plink2.king.Reformatted",
     output:
-        results = "eQTL_mapping/MatrixEQTL/Results/QN.{PCsInModel}.txt",
-        fig = "eQTL_mapping/MatrixEQTL/Results/QN.{PCsInModel}.png"
+        results = "eQTL_mapping/MatrixEQTL/Results_lmm/Results.{PCsInModel}.txt",
+        fig = "eQTL_mapping/MatrixEQTL/Results_lmm/Results.{PCsInModel}.png"
     log:
         "logs/eQTL_mapping/MatrixEQTL.{PCsInModel}.log"
     shell:
@@ -316,6 +304,65 @@ rule MatrixEQTL:
         Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.grm} {output.results} {output.fig} &> {log}
         """
 
-# rule which result maximizes eqtls or egenes
-# rule permutation testing
+rule PickBestMatrixEQTLModelResults:
+    input:
+        expand("eQTL_mapping/MatrixEQTL/Results_lmm/Results.{PCsInModel}.txt", PCsInModel=range(0,15)),
+    output:
+        FullResults = "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
+    log:
+        "logs/eQTL_mapping/MatrixEQTL/eQTLsPerResult.txt"
+    run:
+        from shutil import copyfile
+        from collections import Counter
+        NumEqtls = Counter()
+        for filepath in input:
+            with open( filepath, 'rU' ) as f:
+                for i,line in enumerate(f):
+                    if i>1:
+                        snp, gene, beta, tstsat, p, fdr = line.strip('\t').split('\t')
+                        if float(fdr) < 0.1:
+                            NumEqtls[filepath] += 1
+        with open(log[0], 'w') as f:
+            for filepath, eqtl_count in NumEqtls.items():
+                f.write("{}\t{}\n".format( filepath, eqtl_count ))
+        filepath_w_most_eqtls = max(NumEqtls, key=lambda filepath: NumEqtls[filepath])
+        copyfile( filepath_w_most_eqtls, str(output.FullResults) )
+
+rule GetEqtlGenotypes:
+    """For checking genotype vs phenotype R-ggplot boxplots for eqtls"""
+    input:
+        eqtls = "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
+        plink_bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
+    output:
+        sig_genotypes = config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw",
+        sig_eqtls = config["gitinclude_output"] + "MatrixEQTL_sig_eqtls.txt"
+    log:
+        "eQTL_mapping/GetEqtlGenotypes.log"
+    shell:
+        """
+        awk -F'\\t' 'NR==1 {{ print }} NR>1 && $6<0.1 {{ print }}' {input.eqtls} > {output.sig_eqtls}
+        awk -F'\\t' 'NR>1 && $6<0.1 {{ print $1 }}' {input.eqtls} | sort | uniq -u | plink --bfile eQTL_mapping/plink/ForAssociationTesting --extract /dev/stdin --recode A --allow-extra-chr --out {config[gitinclude_output]}MatrixEQTL_sig_genotypes &> {log}
+        """
+
+rule MakeFastQTL_input:
+    input:
+        plink_bed = "eQTL_mapping/plink/ForAssociationTesting.bed"
+    output:
+        vcf = "FastQTL/ForAssociationTesting.vcf.gz",
+        vcftbi = "FastQTL/ForAssociationTesting.vcf.gz.tbi",
+        bed = "FastQTL/ForAssociationTesting.bed.gz",
+        bedtbi = "FastQTL/ForAssociationTesting.bed.gz.tbi"
+    shell:
+        """
+        # Make genotypes vcf
+        plink2 --bfile {input.plink_bed} --recode vcf-fid --allow-extra-chr --out FastQTL/ForAssociationTesting
+        bgzip FastQTL/ForAssociationTesting.vcf && tabix -p vcf {output.vcf}
+
+        # Make phenotypes bed
+        paste <(awk 'NR>1' {input.gene_loc} | sort) <(awk 'NR>1' {input.phenotypes} | sort) | perl -lne '/^.+?\\t(.+)$/ and print  "$1"' | bedtools sort -i - > FastQTL/ForAssociationTesting.bed
+        bgzip ForAssociationTesting.bed && tabix -p bed {output.bed}
+        """
+
+# TODO:
+# rule permutation testing, Needs new MatrixEQTL script.
 # rule 

@@ -78,6 +78,7 @@ length(GeneSet2)
 
 #Number genes left after intersection of both methods
 length(intersect(GeneSet1, GeneSet2))
+
 ```
 Seems like a reasonable (and inclusive) way to filter genes (rather than eQTL testing all ~50000 transcripts, many of which contain mostly 0's) is to just choose the genes with no 0 TPM values in any samples.
 

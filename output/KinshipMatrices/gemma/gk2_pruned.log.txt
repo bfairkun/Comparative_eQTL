@@ -1,0 +1,28 @@
+##
+## GEMMA Version    = 0.98 (2018-09-28)
+## Build profile    = /gnu/store/79fw0qqlgpk7n8vll6lnlc4ahahn4gbw-profile
+## GCC version      = 4.8.2
+## GSL Version      = 2.2.1
+## Eigen Version    = 3.3.5
+## OpenBlas         = OpenBLAS 0.2.20  - DYNAMIC_ARCH NO_AFFINITY Haswell
+##   arch           = Haswell
+##   threads        = 1
+##   parallel type  = threaded
+##
+## Command Line Input = gemma -gk 2 -bfile ForAssociationTesting.pruned -outdir ../../../output/KinshipMatrices/gemma -o gk2_pruned 
+##
+## Date = Fri Apr 12 11:33:02 2019
+##
+## Summary Statistics:
+## number of total individuals = 39
+## number of analyzed individuals = 39
+## number of covariates = 1
+## number of phenotypes = 1
+## number of total SNPs/var = 9359178
+## number of analyzed SNPs/var = 9086748
+##
+## Computation Time:
+## total computation time = 1.5735 min 
+## computation time break down: 
+##      time on calculating relatedness matrix = 0.634167 min 
+##

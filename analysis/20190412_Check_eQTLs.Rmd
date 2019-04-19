@@ -1,0 +1,235 @@
+---
+title: "20190412_Check_eQTLs"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries, message=F, warning=F}
+library(tidyverse)
+library(knitr)
+library(data.table)
+
+```
+
+
+My first pass at eqtl mapping was as follows: Genotypes filtered for MAF>0.5 & GenotypingRate>0.9. ~10.5M variants passed this filter. Gene expression as log(TPM), filtering for genes with >0 TPM in all samples (~17,500 genes passed this filter). Association testing used the following linear mixed model for each cis-variant-gene-pair (cis definied as <1Mb from gene):
+
+\[
+Y =Wα+xβ+u+ε
+\]
+
+where $Y$ is gene expression as $log(TPM)$, $W$ covariates include first three genotype principal components (to account for population structure) as well as 3 RNA-seq PCs, Sex, and an intercept. $x$ is coded as 0,1,2, $U \sim MVN(0,\sigma^2 K)$ where $K$ a the kinship matrix calculated by KING-robust and negative cells are thresholded at 0 (This results in a symetric positive definite matrix). This wqs implemented in the R package 'MatrixEQTL'. This resulted in ~7000 eSNP-gene pairs, across ~350eGenes at FDR<0.1 (Benjamini Hodgeberg correction). 
+
+Here I want to check that the results of this analysis are reasonable, starting by checking boxplots of gene expression stratified by genotype for a handful of significant eSNP-gene pairs.
+
+```{r make-tidy-data}
+# Read in genotypes for eQTLs
+Genotypes <- read.table("../data/20190410_eqtls.sig_genotypes.raw", header=T, check.names = F)
+# Genotypes[!duplicated(as.list(Genotypes))]
+kable(Genotypes[1:10,1:10])
+
+#Make sure there aren't duplicate columns
+length(colnames(Genotypes))
+length(unique(colnames(Genotypes)))
+
+# Read in eQTLs from MatrixEQTL output (already filtered for FDR<0.1)
+eQTLs <- read.table("../data/20190410_eqtls.txt", header=T)
+kable(head(eQTLs))
+
+# Read in phenotypes, from count table
+CountTable <- read.table(gzfile('../output/CountTable.tpm.txt.gz'), header=T, check.names=FALSE, row.names = 1) %>% 
+  t() %>% 
+  as.data.frame() %>% 
+  rownames_to_column(var = "FID")
+kable(CountTable[1:10, 1:10])
+
+MergedData <- left_join(Genotypes, CountTable, by="FID")
+```
+
+```{r checks}
+#eqtls, ordered from most significant at top
+kable(head(eQTLs))
+
+# 7682 eQTLs at FDR<0.1
+dim(eQTLs)
+
+# betas for these
+hist(eQTLs$beta)
+
+for(i in 1:10) {
+    SNP <- eQTLs[i,"SNP"]
+    print (SNP)
+    print(Genotypes[,SNP])
+}
+
+# Expression box plot, stratified by genotype. For a fe of top of the list snp-gene pairs (most significant)
+data.frame(Genotype = MergedData$`1:223660942:GTGTTTATTTTAATATTGAG:GTGT`,
+    Phenotype = MergedData$ENSPTRT00000096266.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`17:30190097:CCACGGCCCGCTAAC:CTGCACCTGGCTGAA`,
+    Phenotype = MergedData$ENSPTRT00000084268.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`15:65870468:C:T`,
+    Phenotype = MergedData$ENSPTRT00000013635.7,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+```
+Interpretation: This is concerning; these top hits seem to be all false positives, probably driven by genotyping errors as evidenced by a huge excess of heterozygotes. I checked the raw DNA-sequencing at some of these loci (not shown) and there doesn't seem to be anything obviously wrong with the alignment or variant calling (~50% of non-duplicate, reads without any excess of mismatches and no strand bias indicate a mismatch/true snp at these locations). Paralogous genes can cause mismapping and false positive variant calls at positions like this. Probably the best way to filter them out will be to apply a Hardy-weinberg filter. This positions will deviate from HWE with very extreme Pvals, so applying a very stringent HWE filter (that still allows for some deviation from HWE, as expected because of population substructure and related individuals) may get rid of these problematic genotypes.
+
+Let's check some randomly sampled eqtls to see if all of the eqtls are like this.
+
+```{r checks-for-random-eqtls}
+set.seed(80)
+RandomSampleOfEqtls <- eQTLs %>% sample_n(10) %>% select(SNP, gene, beta)
+kable(RandomSampleOfEqtls)
+
+
+data.frame(Genotype = MergedData$`1:53393622:A:G`,
+    Phenotype = MergedData$ENSPTRT00000108879.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`11:85739664:G:A`,
+    Phenotype = MergedData$ENSPTRT00000089773.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`2A:70424303:C:G`,
+    Phenotype = MergedData$ENSPTRT00000079798.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`16:58460835:C:T`,
+    Phenotype = MergedData$ENSPTRT00000087116.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`10:124136336:C:A`,
+    Phenotype = MergedData$ENSPTRT00000103391.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`16:58398631:C:A`,
+    Phenotype = MergedData$ENSPTRT00000087116.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+# same gene as previous, snp in LD with previous plot
+data.frame(Genotype = MergedData$`16:59259665:G:C`,
+    Phenotype = MergedData$ENSPTRT00000087116.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`15:32018636:G:A`,
+    Phenotype = MergedData$ENSPTRT00000081598.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`12:66710269:G:A`,
+    Phenotype = MergedData$ENSPTRT00000048028.3,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`15:22139368:TGGTTTTTTT:TGGTTTTTTG`,
+    Phenotype = MergedData$ENSPTRT00000084268.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+
+data.frame(Genotype = MergedData$`1:131341766:A:C`,
+    Phenotype = MergedData$ENSPTRT00000092453.1,
+    FID=MergedData$FID) %>%
+ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+geom_boxplot(outlier.shape = NA) +
+geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+scale_y_continuous(name="TPM", trans="log10")
+```
+
+Interpretation:
+At least the first of the randomly selected eqtls seems reasonable. The others seem to be false positives, often driven by gene expression measurement for the MD_And sample. Perhaps this sample should be discarded completely, or alternatively some filtering for outlier gene expression measurements should be implemented on a gene-by-gene basis. This is not an extreme outlier for gene expression on the first PC plots, so another explanation is that this sample might be an outlier in the sense that it has very low heterozygosity, resulting in false positive calls at the gene-snp pairs for which this is the sole genotype2 (alt-homozygote) and for which this sample is a gene expression outlier.
+
+Considerations for future:
+apply a hwe filter, check heterozygosity of samples, consider removing expression outliers on gene-by-gene basis and or normalization methods (eg quantile normalization would also dampen this outlier effect).
+
+In the code block below I will choose a P-value filter for filtering genotypes by hwe as implemented with `plink --hwe midp`. The data comes from a subset of 1M snps (that passed undergone MAF>0.5 and Geno>0.9 filters) and their HWE pvals calculated with plink. I am looking for a threshold that takes care of these false positive calls that have an excess of heterozygotes
+```{r Choose-hwe-filter}
+hwe.results <- fread('zcat ../data/20190416_hwe_tests.txt.gz') %>%
+  separate(GENO, c("HomA1", "Het", "HomA2"), sep="/", convert=T)
+kable(head(hwe.results))
+
+hist(hwe.results$P)
+
+#qqplot of Pvals
+qplot(-log10(1:length(hwe.results$P)/length(hwe.results$P)), -log10(sort(hwe.results$P, decreasing = F))) +
+  geom_abline(intercept = 0, slope = 1)
+
+# plot -log10(P) vs num heterozygotes. Plot as hex with log(counts) to see density of points
+ggplot(hwe.results, aes(x=Het, y=-log10(P))) +
+  stat_binhex(aes(fill=log10(..count..))) +
+  xlab("# heterozygote individuals")
+```
+
+Interpretation: the vast majority of SNPs would pass a HWE filter thresholded at -log10(P)<7.5. There are also a lot of SNPs that would fail this filter because of excess of heterozygotes. Not yet sure if those are genotyping errors or true snps that just don't obey HWE (as might be expected with the relatedness and population structure in this cohort). Will stick with -log10(P)<7.5 as the threshold. This would filter out those eqtls I suggested were false positives at the beginning of this analysis (-log10(P) is about 10 for those snps).
+
+Below I will check heterozygosity by samples. Used the following plink command: `plink --het --maf 0.05 --bfile {MyFile} --geno --hwe 1e-7.5`
+
+The F statistic plink uses is:
+(<observed hom. count> - <expected count>) / (<total observations> - <expected count>))
+
+```{r check-heterozygosity}
+heterozygosity <- read.table('../data/20190416_sample.heterozygosity.txt', header=T)
+kable(head(heterozygosity))
+
+ggplot(heterozygosity, aes(x=FID, y=`F`)) +
+  geom_bar(stat="identity") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5))
+
+```
+
+It is the case that MD_And sample has the highest homozygosity, though it's F-statistic doesn't stand out. On the basis of this, probably not justified to completely throw the sample out. Will consider phenotype filters on a gene-by-gene basis or quantile normalization to account for outliers that may drive false associations.

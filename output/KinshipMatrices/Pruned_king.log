@@ -1,0 +1,34 @@
+PLINK v2.00a2LM 64-bit Intel (23 Mar 2019)
+Options in effect:
+  --allow-extra-chr
+  --bfile ForAssociationTesting.pruned
+  --geno
+  --maf 0.05
+  --make-king
+  --out ../../../output/KinshipMatrices/Pruned_king
+
+Hostname: midway2-login2.rcc.local
+Working directory: /project/gilad/bjf79/projects/Comparative_eQTL/code/snakemake_workflow/scratch
+Start time: Fri Apr 12 11:21:39 2019
+
+Random number seed: 1555086099
+257137 MiB RAM detected; reserving 128568 MiB for main workspace.
+Allocated 96426 MiB successfully, after larger attempt(s) failed.
+Using up to 56 threads (change this with --threads).
+39 samples (0 females, 0 males, 39 ambiguous; 39 founders) loaded from
+ForAssociationTesting.pruned.fam.
+9359178 variants loaded from ForAssociationTesting.pruned.bim.
+1 quantitative phenotype loaded (39 values).
+Calculating allele frequencies... done.
+--geno: 248473 variants removed due to missing genotype data.
+4602393 variants removed due to allele frequency threshold(s)
+(--maf/--max-maf/--mac/--max-mac).
+4508312 variants remaining after main filters.
+Excluding 165088 variants on non-autosomes from KING-robust calculation.
+--make-king: Scanning for singletons and monomorphic variants... done.
+No singletons/monomorphics found.
+--make-king: 4343224 variants processed.
+Results written to ../../../output/KinshipMatrices/Pruned_king.king and
+../../../output/KinshipMatrices/Pruned_king.king.id .
+
+End time: Fri Apr 12 11:21:44 2019

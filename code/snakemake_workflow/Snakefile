@@ -5,6 +5,7 @@ include: "rules/common.smk"
 rule all:
     input:
         # "logs/eQTL_mapping/collect_Gemma_batchlogs.log",
+        "FastQTL/ForAssociationTesting.bed.gz.tbi",
         expand("eQTL_mapping/MatrixEQTL/Results/QN.{PCsInModel}.txt", PCsInModel=range(0,15)),
         "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
         "../../output/RNA_seq_FlowCellInfo.txt",
@@ -13,13 +14,14 @@ rule all:
         # "eQTL_mapping/batchscripts/FullGetCisSNPsJobList.sh",
         # "logs/eQTL_mapping/collect_GetCisSNPs_batchlogs.log",
         "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
+        "filtered/all.vcf.gz",
         # "PopulationSubstructure/ReferencePanelMerged.vcf",
         # "MiscOutput/LowComplexityRegions.bed",
         # "PopulationSubstructure/out.relatedness2",
         # "MiscOutput/filtered.bcftools.stats",
         # "MiscOutput/filtered.bcftools.smplstats",
         # "MiscOutput/STAR_index/chrLength.txt",
-        # expand("RNASeq/STAR/{sample}/Aligned.sortedByCoord.out.bam", sample=samples["sample"]),
+        expand("RNASeq/STAR/{sample}/Aligned.sortedByCoord.out.bam", sample=samples["sample"]),
         #"annotated/all.vcf.gz",
         config["gitinclude_output"] + "CountTable.SeparatedByFastq.tpm.txt.gz",
         "eQTL_mapping/plink/ForAssociationTesting.fam",
@@ -38,7 +40,7 @@ rule all:
         #"plots/depths.svg",
         #"plots/allele-freqs.svg"
         # expand ( "PopulationSubstructure/Admixture/MergedForAdmixture.{K}.Q.pdf", K=config["PopulationSubstructure"]["AdmixtureK"] ),
-        expand(config["gitinclude_output"] + "PopulationStructure/Admixture/MergedForAdmixture.{K}.Q.labelled", K=config["PopulationSubstructure"]["AdmixtureK"]),
+        # expand(config["gitinclude_output"] + "PopulationStructure/Admixture/MergedForAdmixture.{K}.Q.labelled", K=config["PopulationSubstructure"]["AdmixtureK"]),
         "eQTL_mapping/Misc/cis_gene_windows.bed",
         "eQTL_mapping/plink/ForAssociationTesting.bed",
         config['gitinclude_output'] + "ForAssociationTesting.temp.fam",

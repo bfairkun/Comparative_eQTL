@@ -129,27 +129,29 @@ rule IndexInitCalls:
     shell: "tabix -p vcf {input}"
 
 rule FilterInitialCalls:
+    """need to add bcftools norm filter because through some bug (https://github.com/samtools/bcftools/issues/221) bcftools view with -R will output some duplicate lines. It's also good practice to normalize calls anywy"""
     input:
-        InitCalls=lambda wildcards: "genotyped/ByContig/all.{contig}.vcf.gz".format(contig=wildcards.contig),
-        CallableSites="MiscOutput/CallableSites.bed",
-        Tabix=lambda wildcards: "genotyped/ByContig/all.{contig}.vcf.gz.tbi".format(contig=wildcards.contig),
+        InitCalls=ancient (lambda wildcards: "genotyped/ByContig/all.{contig}.vcf.gz".format(contig=wildcards.contig) ),
+        CallableSites= ancient( "MiscOutput/CallableSites.bed"),
+        Tabix= ancient (lambda wildcards: "genotyped/ByContig/all.{contig}.vcf.gz.tbi".format(contig=wildcards.contig) ),
     output:
         Filtered="filtered/{contig}.vcf.gz",
         Tabix="filtered/{contig}.vcf.gz.tbi"
     log: "logs/FilteringInitCalls/{contig}.log"
     params:
         VariantFilter = "-i '%QUAL>30'",
-        SortMem = "20G"
+        SortMem = "20G",
+        fasta = config["ref"]["genome"]
     shell:
         """
-        (bcftools view {params.VariantFilter} -R {input.CallableSites}  {input.InitCalls} | bcftools sort -m {params.SortMem} -O z > {output.Filtered}) 2> {log}
+        (bcftools view {params.VariantFilter} -R {input.CallableSites}  {input.InitCalls} | bcftools norm -f {params.fasta} -d none | bcftools sort -m {params.SortMem} -O z > {output.Filtered}) 2> {log}
         tabix -p vcf {output.Filtered} &>> {log}
         """
 
 rule MergeFilteredCalls:
     input:
-        FilteredCalls=ancient(expand("filtered/{contig}.vcf.gz", contig=contigs)),
-        Tabix=ancient(expand("filtered/{contig}.vcf.gz.tbi", contig=contigs)),
+        FilteredCalls=expand("filtered/{contig}.vcf.gz", contig=contigs),
+        Tabix=expand("filtered/{contig}.vcf.gz.tbi", contig=contigs),
     output:
         vcf = "filtered/all.vcf.gz",
         tbi = "filtered/all.vcf.gz.tbi"
