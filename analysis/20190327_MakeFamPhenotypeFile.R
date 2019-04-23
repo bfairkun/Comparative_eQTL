@@ -66,12 +66,13 @@ length(GeneSet2)
 length(intersect(GeneSet1, GeneSet2))
 
 
+
 ## ------------------------------------------------------------------------
 PhenotypesToOutput <- CountTable %>%
   rownames_to_column('gene') %>%
   filter_if(is.numeric, all_vars(.>0)) %>%
   merge(GeneChromosomes, by="gene", all.x=T) %>%
-  filter(chromosome %in% c(as.character(1:22), "2A", "2B")) %>%
+  filter(!chromosome %in% c("X", "Y", "MT")) %>%
   select(-chromosome) %>%
   column_to_rownames('gene') %>%
   log() %>%
