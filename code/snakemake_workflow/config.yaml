@@ -82,6 +82,20 @@ eQTL_mapping:
     # (1 gemma call for each gene, unless permutation testing) to lump into
     # each batch script
     gemma_batch_size: 1000
+    # Directory should contain a list of covariate files for all samples to be
+    # included in eQTL calling in the same format as requested by MatrixEQTL
+    # documentation. eQTLs will be called with all of the covariate files, and
+    # the model which maximizes number of significant eQTLs (as set by FDR)
+    # will be used for further analysis
+    CovariatesDir:
+    # FDR threshold for counting number of significant eQTLs at the level of
+    # SNP-gene pairs
+    gene_x_SNP_FDR: 0.1
+    # FDR threshold for counting number of significant eQTLs at the level of
+    # eGenes (permutation testing done by FastQTL)
+    gene_FDR: 0.1
+
+
 
 # Extract DNA-seq and RNA-seq reads from this region to make mock data for
 # testing purposes.

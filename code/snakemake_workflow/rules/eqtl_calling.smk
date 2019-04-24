@@ -1,17 +1,14 @@
 # rule all:
 #     input:
-#         # "eQTL_mapping/MatrixEQTL/Results.txt",
-#         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
-#         expand("eQTL_mapping/MatrixEQTL/Results_lmm/Results.{PCsInModel}.txt", PCsInModel=range(0,15)),
-#         config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw",
-#         config["gitinclude_output"] + "MatrixEQTL_sig_eqtls.txt"
-#         # "eQTL_mapping/batchscripts/FullGemmaJobList.sh",
-#         # "eQTL_mapping/batchscripts/FullGetCisSNPsJobList.sh",
-#         # "eQTL_mapping/GeneListToTest.txt",
-#         # "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps.raw",
-
+#         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
 
 rule make_plink_file_for_testing:
+    """
+    .fam file output to the gitinclude output directory for convenience, so
+    that I can easily access it from my local laptop with git, to edit scripts
+    that choose covariates and such with my local RStudio... For the covariate
+    files must have samples ordered same as the fam (phenotype) file
+    """
     input:
         vcf = ancient("PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz"),
     output:
@@ -22,7 +19,7 @@ rule make_plink_file_for_testing:
         "logs/eQTL_mapping/make_plink_file_for_gemma.log"
     params:
         stdparams = "--keep-fam <(echo {fam})".format(fam=config["read_mapping"]["ReadGroupID_prefix"].replace('-','')),
-        extra = "--remove <(printf Pan_troglodytes_ThisStudy\tMD_And\n)"
+        extra = "--remove <(printf Pan_troglodytes_ThisStudy\\tMD_And\\n) --maf 0.05 --geno --hwe 1e-7.5"
     shell:
         """
         plink --id-delim '-' --vcf {input.vcf} --vcf-half-call m --allow-extra-chr --make-bed --out eQTL_mapping/plink/ForAssociationTesting.temp {params.stdparams} {params.extra} &> {log}
@@ -64,18 +61,31 @@ rule make_filtered_phenotype_matrix:
         Rscript ../../analysis/20190327_MakeFamPhenotypeFile.R {input.counttable} {input.fam} {output.fam} {output.gene_list} {input.genes_bed} &> {log}
         """
 
+rule prune_plink_files_for_GRM:
+    input:
+        bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
+    output:
+        bed =  "eQTL_mapping/Kinship/ForAssocationTesting.pruned.bed",
+    log:
+        "logs/eQTL_mapping/prune_plink_files.log"
+    shell:
+        """
+        plink --bfile eQTL_mapping/plink/ForAssociationTesting --allow-extra-chr --indep-pairwise 50 5 0.5 &> {log}
+        plink --bfile eQTL_mapping/plink/ForAssociationTesting --allow-extra-chr --extract plink.prune.in --make-bed --out eQTL_mapping/Kinship/ForAssociationTesting.pruned &> {log}
+        rm plink.prune.in plink.prune.out
+        """
+
 rule Make_GRM:
     """Genetetic relatedness matrix for gemma LMM"""
     input:
-        plink_bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
-        fam = "eQTL_mapping/plink/ForAssociationTesting.fam",
+        bed =  "eQTL_mapping/Kinship/ForAssocationTesting.pruned.bed",
     output:
-        GRM = "eQTL_mapping/GRM.cXX.txt"
+        GRM = "eQTL_mapping/Kinship/GRM.cXX.txt"
     log:
         "logs/eQTL_mapping/make_GRM.log"
     shell:
         """
-        gemma -gk 1 -bfile eQTL_mapping/plink/ForAssociationTesting -o GRM -outdir eQTL_mapping/ &> {log}
+        gemma -gk 1 -bfile eQTL_mapping/Kinship/ForAssociationTesting -o GRM -outdir eQTL_mapping/Kinship &> {log}
         """
 
 rule Make_King_GRM:
@@ -261,7 +271,7 @@ rule MakeMatrixEQTL_snp_table:
         sed_search_delete = config["read_mapping"]["ReadGroupID_prefix"][:-1]
     shell:
         """
-        plink --maf 0.05 --bfile  eQTL_mapping/plink/ForAssociationTesting --allow-extra-chr --recode A-transpose --tab --geno --memory 40000 --out eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps
+        plink --bfile  eQTL_mapping/plink/ForAssociationTesting --allow-extra-chr --recode A-transpose --tab --geno --memory 40000 --out eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps
         perl -lne '/^.+?\\t(.+?\\t).+?\\t.+?\\t.+?\\t.+?\\t(.+$)/ and print "$1$2" ' eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps.traw | sed '1s/_{params}//g' > {output}
         """
 
@@ -278,12 +288,12 @@ rule MakeMatrixEQTL_gene_loc:
 
 rule MakeMatrixEQTL_snp_loc:
     input:
-        snps = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
+        snps = "eQTL_mapping/plink/ForAssociationTesting.bim",
     output:
         snp_locs = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc"
     shell:
         """
-        awk -F'\\t' -v OFS='\\t' 'NR==1 {{ print "snp", "chrom", "pos" }} NR>1 {{ split($1,a,":"); print $1, a[1], a[2] }}' {input.snps} > {output.snp_locs}
+        awk -F'\\t' -v OFS='\\t' 'BEGIN {{ print "snp","chrom","pos" }} {{ print $2, $1,$4 }}' {input.snps} > {output.snp_locs}
         """
 
 rule MatrixEQTL:
@@ -292,21 +302,22 @@ rule MatrixEQTL:
         snp_locs = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
         phenotypes = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
         gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
-        covariates = "../../output/Covariates.{PCsInModel}.txt",
+        covariates = "../../output/Covariates/{covariate_set}.covariates.txt",
         grm = "scratch/plink2.king.Reformatted",
     output:
-        results = "eQTL_mapping/MatrixEQTL/Results_lmm/Results.{PCsInModel}.txt",
-        fig = "eQTL_mapping/MatrixEQTL/Results_lmm/Results.{PCsInModel}.png"
+        results = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.txt",
+        fig = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.png"
     log:
-        "logs/eQTL_mapping/MatrixEQTL.{PCsInModel}.log"
+        "logs/eQTL_mapping/MatrixEQTL.{covariate_set}.log"
     shell:
         """
         Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.grm} {output.results} {output.fig} &> {log}
         """
 
+CovariateFiles, = glob_wildcards("../../output/Covariates/{CovariateName}.covariates.txt")
 rule PickBestMatrixEQTLModelResults:
     input:
-        expand("eQTL_mapping/MatrixEQTL/Results_lmm/Results.{PCsInModel}.txt", PCsInModel=range(0,15)),
+        expand("eQTL_mapping/MatrixEQTL/Results/Results.{CovariateSetName}.txt", CovariateSetName = CovariateFiles)
     output:
         FullResults = "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
     log:
@@ -346,23 +357,27 @@ rule GetEqtlGenotypes:
 
 rule MakeFastQTL_input:
     input:
-        plink_bed = "eQTL_mapping/plink/ForAssociationTesting.bed"
+        plink_bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
+        gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
+        phenotypes = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
     output:
-        vcf = "FastQTL/ForAssociationTesting.vcf.gz",
-        vcftbi = "FastQTL/ForAssociationTesting.vcf.gz.tbi",
-        bed = "FastQTL/ForAssociationTesting.bed.gz",
-        bedtbi = "FastQTL/ForAssociationTesting.bed.gz.tbi"
+        vcf = "eQTL_mapping/FastQTL/ForAssociationTesting.vcf.gz",
+        vcftbi = "eQTL_mapping/FastQTL/ForAssociationTesting.vcf.gz.tbi",
+        bed = "eQTL_mapping/FastQTL/ForAssociationTesting.bed.gz",
+        bedtbi = "eQTL_mapping/FastQTL/ForAssociationTesting.bed.gz.tbi"
     shell:
         """
         # Make genotypes vcf
-        plink2 --bfile {input.plink_bed} --recode vcf-fid --allow-extra-chr --out FastQTL/ForAssociationTesting
-        bgzip FastQTL/ForAssociationTesting.vcf && tabix -p vcf {output.vcf}
+        plink2 --bfile {input.plink_bed} --recode vcf-fid --allow-extra-chr --out eQTL_mapping/FastQTL/ForAssociationTesting
+        bgzip eQTL_mapping/FastQTL/ForAssociationTesting.vcf && tabix -p vcf {output.vcf}
 
         # Make phenotypes bed
-        paste <(awk 'NR>1' {input.gene_loc} | sort) <(awk 'NR>1' {input.phenotypes} | sort) | perl -lne '/^.+?\\t(.+)$/ and print  "$1"' | bedtools sort -i - > FastQTL/ForAssociationTesting.bed
-        bgzip ForAssociationTesting.bed && tabix -p bed {output.bed}
+        paste <(awk 'NR>1' {input.gene_loc} | sort) <(awk 'NR>1' {input.phenotypes} | sort) | perl -lne '/^.+?\\t(.+)$/ and print  "$1"' | bedtools sort -i - > eQTL_mapping/FastQTL/ForAssociationTesting.bed
+        bgzip eQTL_mapping/ForAssociationTesting.bed && tabix -p bed {output.bed}
         """
+
+
 
 # TODO:
 # rule permutation testing, Needs new MatrixEQTL script.
-# rule 
+# rule LD_decay_plot

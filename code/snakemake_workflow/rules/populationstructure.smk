@@ -152,6 +152,7 @@ rule prune_plink_files:
         """
         plink --bfile PopulationSubstructure/plink/Merged --allow-extra-chr --indep-pairwise 50 5 0.5 &> {log}
         plink --bfile PopulationSubstructure/plink/Merged --allow-extra-chr --extract plink.prune.in --make-bed --out PopulationSubstructure/plink/Merged.pruned &> {log}
+        rm plink.prune.in plink.prune.out
         """
 
 rule PCA:

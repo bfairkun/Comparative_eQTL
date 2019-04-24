@@ -17,6 +17,11 @@ errorCovariance_file <- args[6]
 output_file_name_cis <- args[7]
 ouput_QQ <- args[8]
 
+# snps_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc"
+# expression_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
+# gene_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
+# covariates_file_name <- "output/Covariates/3RS_3GT.covariates.txt"
+# errorCovariance_file <- "code/snakemake_workflow/eQTL_mapping/Kinship/GRM.cXX.txt"
 
 
 # Linear model to use, modelANOVA, modelLINEAR, or modelLINEAR_CROSS
@@ -59,13 +64,13 @@ gene$LoadFile(expression_file_name);
 
 ## Quantile normalization
 
-for( sl in 1:length(gene) ) {
-  mat = gene[[sl]];
-  mat = t(apply(mat, 1, rank, ties.method = "average"));
-  mat = qnorm(mat / (ncol(gene)+1));
-  gene[[sl]] = mat;
-}
-rm(sl, mat);
+# for( sl in 1:length(gene) ) {
+#   mat = gene[[sl]];
+#   mat = t(apply(mat, 1, rank, ties.method = "average"));
+#   mat = qnorm(mat / (ncol(gene)+1));
+#   gene[[sl]] = mat;
+# }
+# rm(sl, mat);
 
 ## Load covariates
 

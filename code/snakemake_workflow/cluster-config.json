@@ -44,15 +44,6 @@
   "STAR_alignment":
   {"partition" : "broadwl", "mem": 58000, "tasks-per-node" : 14},
 
-  "kallisto_make_index":
-  {"partition" : "sandyb"},
-
-  "kallisto_quant":
-  {"partition" : "sandyb"},
-
-  "kallisto_quant_merge_into_count_table":
-  {"partition" : "sandyb"},
-
   "MergeFilteredCalls":
   {"mem" : 38000},
 

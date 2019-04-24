@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit scratch/TODO.txt
+edit Snakefile
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -38,21 +38,21 @@ normal! zt
 1
 normal! 0
 tabnext 1
-badd +8 Snakefile
+badd +16 Snakefile
 badd +131 rules/calling.smk
-badd +25 rules/eqtl_calling.smk
+badd +1 rules/eqtl_calling.smk
 badd +30 scripts/FromAbhishek.py
-badd +89 cluster-config.json
+badd +31 cluster-config.json
 badd +18 rules/qc.smk
 badd +15 FixRNASeqFileList.py
 badd +1 rules/common.smk
-badd +257 rules/populationstructure.smk
-badd +53 rules/RNASeqMapping.smk
+badd +140 rules/populationstructure.smk
+badd +95 rules/RNASeqMapping.smk
 badd +43 .gitignore
 badd +16 config.yaml
 badd +70 rules/mapping.smk
 badd +1 ./scratch/MakeGenesBed.sh
-badd +1 scratch/TODO.txt
+badd +12 scratch/TODO.txt
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

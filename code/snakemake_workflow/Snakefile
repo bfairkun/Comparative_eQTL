@@ -5,8 +5,8 @@ include: "rules/common.smk"
 rule all:
     input:
         # "logs/eQTL_mapping/collect_Gemma_batchlogs.log",
-        "FastQTL/ForAssociationTesting.bed.gz.tbi",
-        expand("eQTL_mapping/MatrixEQTL/Results/QN.{PCsInModel}.txt", PCsInModel=range(0,15)),
+        "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
+        "eQTL_mapping/FastQTL/ForAssociationTesting.bed.gz.tbi",
         "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
         "../../output/RNA_seq_FlowCellInfo.txt",
         "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
@@ -15,6 +15,7 @@ rule all:
         # "logs/eQTL_mapping/collect_GetCisSNPs_batchlogs.log",
         "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
         "filtered/all.vcf.gz",
+        config['gitinclude_output'] + "ForAssociationTesting.phenotypes.txt",
         # "PopulationSubstructure/ReferencePanelMerged.vcf",
         # "MiscOutput/LowComplexityRegions.bed",
         # "PopulationSubstructure/out.relatedness2",
