@@ -59,12 +59,6 @@ dim(eQTLs)
 # betas for these
 hist(eQTLs$beta)
 
-for(i in 1:10) {
-    SNP <- eQTLs[i,"SNP"]
-    print (SNP)
-    print(Genotypes[,SNP])
-}
-
 # Expression box plot, stratified by genotype. For a fe of top of the list snp-gene pairs (most significant)
 data.frame(Genotype = MergedData$`1:223660942:GTGTTTATTTTAATATTGAG:GTGT`,
     Phenotype = MergedData$ENSPTRT00000096266.1,
@@ -174,13 +168,6 @@ geom_boxplot(outlier.shape = NA) +
 geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
 scale_y_continuous(name="TPM", trans="log10")
 
-data.frame(Genotype = MergedData$`15:22139368:TGGTTTTTTT:TGGTTTTTTG`,
-    Phenotype = MergedData$ENSPTRT00000084268.1,
-    FID=MergedData$FID) %>%
-ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
-geom_boxplot(outlier.shape = NA) +
-geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
-scale_y_continuous(name="TPM", trans="log10")
 
 data.frame(Genotype = MergedData$`1:131341766:A:C`,
     Phenotype = MergedData$ENSPTRT00000092453.1,
@@ -199,7 +186,7 @@ apply a hwe filter, check heterozygosity of samples, consider removing expressio
 
 In the code block below I will choose a P-value filter for filtering genotypes by hwe as implemented with `plink --hwe midp`. The data comes from a subset of 1M snps (that passed undergone MAF>0.5 and Geno>0.9 filters) and their HWE pvals calculated with plink. I am looking for a threshold that takes care of these false positive calls that have an excess of heterozygotes
 ```{r Choose-hwe-filter}
-hwe.results <- fread('zcat ../data/20190416_hwe_tests.txt.gz') %>%
+hwe.results <- read.table(gzfile('../data/20190416_hwe_tests.uncorrupted.txt.gz'), header=T) %>%
   separate(GENO, c("HomA1", "Het", "HomA2"), sep="/", convert=T)
 kable(head(hwe.results))
 

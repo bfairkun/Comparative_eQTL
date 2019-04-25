@@ -22,5 +22,10 @@ Welcome to my research website.
 - [Checking RNA-seq data for covariates](20190320_Check-RNAseq-PCs.html)
 
 ### Prepare data for eQTL testing
-- [Make phenotype table for gemma](20190327_MakeFamAndCovariateFiles.html)
-- [Make covariate table for gemma](20190327_MakeFamAndCovariateFiles.html)
+- [Make phenotype table for testing](20190327_MakeFamPhenotypeFile.html)
+- [Make covariate table for testing](20190327_MakeCovariateFiles.html)
+
+### Association testing with various models
+- [first iteration](20190412_Check_eQTLs.html): description: lmm with KING-robust GRM thresholded at 0, and 3 genotype PCs
+- [Check residuals after regressing out some covariates](20190421_RegressOutRNASeqPCs.html)
+- [second iteration](20190424_Check_eQTLs.html): description: lm with 5 genotype PCs (PCs 4 and 5 takes into account some first hand relatedness) and more stringent genotype filtering. Also, outlier sample MD_And dropped from analysis

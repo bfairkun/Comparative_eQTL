@@ -1,0 +1,306 @@
+---
+title: "20190421_RegressOutRNASeqPC"
+author: "Ben Fair"
+date: "4/21/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries, message=F, warning=F}
+library(corrplot)
+library(ggfortify)
+library(readxl)
+library(tidyverse)
+library(psych)
+library(ggrepel)
+library(knitr)
+library(reshape2)
+library(gplots)
+library(matrixStats)
+```
+
+RNA-seq data for each individual was pseudo-mapped/quantified by kallisto and merged into a matrix of TPM values. Genes were filtered by some criteria (see [link]()) to generate a table of phenotypes for association testing. Here I will assess if there is still an obvious batch affect (compared to my [previous PCA analysis]() of the TPM count table) after I regress out the first (or first few PCs), since I will be included some of these PCs as covariates in the gene expression model.
+
+```{r make-tidy-data, warning=F}
+# Read in count table, filtering out rows that are all zeros. Here the count-table is log transformed TPM values, with genes filtered just as they would be used for association testing
+CountTable <- read.table(gzfile('../output/ForAssociationTesting.phenotypes.txt'), header=T, check.names=FALSE, row.names = 1)
+
+kable(head(CountTable))
+
+# Read Covariates file
+Covariates <- read.table('../output/Covariates/3RS_10GT.covariates.txt', header=T, check.names = F, stringsAsFactors = F, row.names=1)
+
+# Read admixture coefficients (K=4), and first 3 principle components, since some form of population substructure will likely be included in the expression modeling as a covariate.
+AdmixtureCoeff <- read.table("../output/PopulationStructure/Admixture/MergedForAdmixture.4.Q.labelled") %>% 
+  dplyr::rename(Individual.ID=V2) %>%
+  select(-V1, -V3, -V4, -V5, -V6) %>%
+  dplyr::rename(Admix.Western=V9, Admix.Eastern=V10, Admix.Central=V8, Admix.NigeriaCameroon=V7) #Renaming the admixture clusters after looking at plots with known subspecies
+kable(head(AdmixtureCoeff))
+
+GenotypePCs <- read.table("../output/PopulationStructure/pca.eigenvec", header=T) %>%
+  select(IID, PC1, PC2, PC3) %>%
+  dplyr::rename(Individual.ID=IID, GenotypePC1=PC1, GenotypePC2=PC2, GenotypePC3=PC3)
+kable(head(GenotypePCs))
+
+# Read in other metadata
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+kable(head(OtherMetadata))
+
+#Merge all metadata tables
+Metadata <- OtherMetadata %>%
+  left_join(GenotypePCs, by=c("Individual.ID")) %>%
+  left_join(AdmixtureCoeff, by=c("Individual.ID"))
+kable(head(Metadata))
+
+```
+
+Check some of the gene expression phenotype distributions 
+```{r}
+#function to plot datapoints as violin plot with individual points labelled. I find this slightly more useful than histograms for plotting phenotype because I can see the distribution and also label points
+MyPlot <- function(DataIn){
+  ggplot(mapping=aes(x=1, y=DataIn, label=names(DataIn))) +
+  geom_violin() +
+  geom_text(position=position_jitter(width=0.25), alpha=1, size=2)
+}
+
+#Plot expression phenotypes for a few genes
+MyPlot(unlist(CountTable[1,]))
+MyPlot(unlist(CountTable[2,]))
+MyPlot(unlist(CountTable[3,]))
+MyPlot(unlist(CountTable[4,]))
+MyPlot(unlist(CountTable[5,]))
+MyPlot(unlist(CountTable[6,]))
+MyPlot(unlist(CountTable[7,]))
+MyPlot(unlist(CountTable[8,]))
+MyPlot(unlist(CountTable[9,]))
+MyPlot(unlist(CountTable[10,]))
+
+
+#What is distribution of expression levels for all genes in the table
+# Histogram of rowMeans. (Arithmetic mean of the log-transformed data)
+hist(rowMeans(CountTable))
+```
+
+
+Plot correlation matrix... Should closely resemble the correlation matrix in this [previous analysis](), except that the previous correlation matrix included the top5000 expressed genes, while this one includes the top5000 genes of the genes that are included in the phenotype table for association testing.
+
+```{r}
+CorMatrix <- CountTable %>%
+  mutate(sumVar = rowSums(.)) %>%
+  arrange(desc(sumVar)) %>%
+  head(5000) %>%
+  select(-sumVar) %>%
+  scale() %>%
+  cor(method = c("spearman"))
+
+RNAExtractionDate <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Extract_date))))
+RNA.Library.prep.batch <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Library.prep.batch))))
+
+# Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
+heatmap.2(CorMatrix, trace="none", ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)
+
+
+# What is mean correlation
+mean(CorMatrix)
+```
+
+
+
+Now regress out the first RNA-seq PC and recheck correlation matrix
+
+```{r}
+# Regress out PC1
+
+GetResiduals <- function(Y, X){
+  df <- data.frame(c(Y),X)
+  mylm <- lm(Y ~ ., data=df)
+  return(mylm$residuals)
+}
+
+ResidualCountTable <- t(apply(CountTable,1,GetResiduals, t(Covariates[c("PC1.RS"),])))
+
+CorMatrix <- ResidualCountTable %>% as.data.frame() %>%
+  mutate(sumVar = rowSums(.)) %>%
+  arrange(desc(sumVar)) %>%
+  head(5000) %>%
+  select(-sumVar) %>%
+  scale() %>%
+  cor(method = c("spearman"))
+
+RNAExtractionDate <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Extract_date))))
+RNA.Library.prep.batch <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Library.prep.batch))))
+
+# Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
+heatmap.2(CorMatrix, trace="none", ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)
+
+
+# What is mean correlation
+mean(CorMatrix)
+```
+
+Interpretation:
+The regressing first PC1 seems to take away the obvious batch effect that was present in the lower left of the original correlation matrix (The samples that were in that batch no longer cluster together in the lower left), however, regressing out first PC alone still leaves 2 clear clusters of samples.
+
+In my first pass at eQTL mapping I including 3 PCs, let's see how the correlation matrix clusters after regressing out all of these PCs. (Not iteratively regressing out, but all at once; take residuals from this model Y~PC1+PC2+PC3)
+
+```{r}
+# Regress out PC1, PC2, and PC3
+
+ResidualCountTable <- t(apply(CountTable,1,GetResiduals, t(Covariates[c("PC1.RS", "PC2.RS", "PC3.RS"),])))
+
+CorMatrix <- ResidualCountTable %>% as.data.frame() %>%
+  mutate(sumVar = rowSums(.)) %>%
+  arrange(desc(sumVar)) %>%
+  head(5000) %>%
+  select(-sumVar) %>%
+  scale() %>%
+  cor(method = c("spearman"))
+
+RNAExtractionDate <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Extract_date))))
+RNA.Library.prep.batch <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Library.prep.batch))))
+
+# Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
+heatmap.2(CorMatrix, trace="none", ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)
+
+
+# What is mean correlation
+mean(CorMatrix)
+```
+
+Clearly there is still residual structure in the data even after regressing out the top 3 PCs. Now I want to figure out if this residual structure is caused by any technical factors that I could justifiably adjust for (eg RIN score) or if it is genetic. I will now perform PCA on the residuals and see if they correlate to any of the observed technical factors or genetic population substructure that I [previously]() looked at before regressing out PCs.
+
+
+```{r pca-on-residuals}
+#First get a list of the same genes that were used in the original PCA analysis (top 2500 expressed genes)
+
+GenesForPCA <- CountTable %>%
+  rownames_to_column('gene') %>%
+  mutate(sumVar = rowSums(select(.,-gene))) %>%
+  arrange(desc(sumVar)) %>%
+  head(2500) %>%
+  pull(gene)
+
+pca_results <- ResidualCountTable %>% as.data.frame() %>%
+  rownames_to_column('gene') %>%
+  filter(gene %in% GenesForPCA) %>%
+  column_to_rownames('gene') %>%
+  mutate(Variance = rowVars(as.matrix(.))) %>%
+  filter(Variance>0) %>%
+  select(-Variance) %>%
+  t() %>%
+  prcomp(center=T, scale. = T)
+
+summary(pca_results)
+
+#Scree plot
+screeplot(pca_results)
+```
+
+```{r correlate-pcs-with-factors}
+# Merge with metadata
+Merged <- merge(pca_results$x, Metadata, by.x = "row.names", by.y = "Individual.ID", all=TRUE)
+kable(head(Merged))
+
+PCs_to_test <- Merged[,2:11]
+kable(head(PCs_to_test))
+
+# Grab potential continuous confounders that make sense to test
+Continuous_confounders_to_test <- Merged[, c("RIN", "Age", "GenotypePC1", "GenotypePC2", "GenotypePC3", "Admix.Western", "Admix.Eastern", "Admix.Central", "Admix.NigeriaCameroon")]
+kable(head(Continuous_confounders_to_test))
+
+# Test
+Spearman_test_results <- corr.test(Continuous_confounders_to_test, PCs_to_test, adjust="none", method="spearman")
+
+MinP_floor <- floor(log10(min(Spearman_test_results$p)))
+# Plot
+Spearman_test_results$p %>%
+  melt() %>%
+  dplyr::rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
+  ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
+    geom_tile() +
+    geom_text(aes(label = signif(Pvalue, 2))) +
+    scale_fill_gradient(limits=c(10**MinP_floor, 1), breaks=10**seq(MinP_floor,0,1), trans = 'log', high="white", low="red" ) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Grab potential categorical confounders that make sense to test
+Categorical_confounders_to_test <- Merged[,c("Viral.status", "SX","RNA.Extract_date", "RNA.Library.prep.batch", "Source")]
+kable(head(Categorical_confounders_to_test))
+
+# Viral status will need to be reformatted to make factors that make sense for testing (example: HBV+, HBV- HCV+, HCV- are factors that make sense). Let's assume that NA means negative status.
+Categorical_confounders_to_test$HBV_status <- grepl("HBV+", Categorical_confounders_to_test$Viral.status)
+Categorical_confounders_to_test$HCV_status <- grepl("HCV+", Categorical_confounders_to_test$Viral.status)
+Categorical_confounders_to_test <- Categorical_confounders_to_test[, -1 ]
+kable(head(Categorical_confounders_to_test))
+
+# Do one-way anova test as a loop.
+# First initialize results matrix
+Pvalues <- matrix(ncol = dim(PCs_to_test)[2], nrow = dim(Categorical_confounders_to_test)[2])
+colnames(Pvalues) <- colnames(PCs_to_test)
+rownames(Pvalues) <- colnames(Categorical_confounders_to_test)
+for (confounder in seq_along(Categorical_confounders_to_test)) {
+    for (PC in seq_along(PCs_to_test)) {
+      res.aov <- aov(PCs_to_test[[PC]] ~ Categorical_confounders_to_test[[confounder]])
+      pval <- summary(res.aov)[[1]][["Pr(>F)"]][1]
+      Pvalues[confounder, PC] <- pval
+    }
+}
+# Plot
+MinP_floor <- floor(log10(min(Pvalues)))
+Pvalues %>%
+  melt() %>%
+  dplyr::rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
+  ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
+    geom_tile() +
+    geom_text(aes(label = signif(Pvalue, 2))) +
+    scale_fill_gradient(limits=c(10**MinP_floor, 1), breaks=10**seq(MinP_floor,0,1), trans = 'log', high="white", low="red" ) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Interpretation:
+The only observed technical factors (or measured population structure statistics) that correlate with any of the PCs on the residuals are Admix.Central and HBV status. Given that HBV status is correlated with such late PCs that explain so little variance (see scree plot above), and there are only 3 HBV+ observations, I think including HBV in the model is not justified. Also note that the correlation matrix of the residuals after regressing out 3PCs generally shows two clusters, neither of which segregate with the 3HBV+ observations. The other significant correlation is between PC9 (which explains little variance) and Admix.Central coefficient. This trait is already included implicitly in the eQTL calling model as a genotype PC covariate.
+
+Lastly, I want to look at the residuals after regressing out those first three PCs.
+```{r plot-residuals}
+#Plot residuals for a few genes
+MyPlot(ResidualCountTable[1,])
+MyPlot(ResidualCountTable[2,])
+MyPlot(ResidualCountTable[3,])
+MyPlot(ResidualCountTable[4,])
+MyPlot(ResidualCountTable[5,])
+MyPlot(ResidualCountTable[6,])
+MyPlot(ResidualCountTable[7,])
+MyPlot(ResidualCountTable[8,])
+MyPlot(ResidualCountTable[9,])
+MyPlot(ResidualCountTable[10,])
+
+#Plot of first two PCs of residuals
+pca_results$x %>%
+  as.data.frame() %>%
+  rownames_to_column('sample') %>%
+  ggplot(aes(x=PC1, y=PC2, label=sample)) +
+  geom_text()
+```
+
+Interpretation:
+After regressing out the PCs and looking at residuals, sample 317 seems to be consistently an outlier. This is also reflected in PC space of the residuals. It was not an outlier in the original phenotypes. Was it an outlier in the original PCs that were regressed out?
+
+```{r}
+# The PCs were read in from the covariates file
+
+t(Covariates) %>%
+  as.data.frame() %>%
+  rownames_to_column('sample') %>%
+  ggplot(aes(x=PC1.RS, y=PC2.RS, label=sample)) +
+  geom_text()
+t(Covariates) %>%
+  as.data.frame() %>%
+  rownames_to_column('sample') %>%
+  ggplot(aes(x=PC2.RS, y=PC3.RS, label=sample)) +
+  geom_text()
+```
+No it was not an outlier in the original phenotypes.

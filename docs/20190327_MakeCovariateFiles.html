@@ -12,7 +12,7 @@
 <meta name="author" content="Ben Fair" />
 
 
-<title>20190327_MakeFamAndCovariateFiles</title>
+<title>20190327_MakeCovariateFiles</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -413,7 +413,7 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">20190327_MakeFamAndCovariateFiles</h1>
+<h1 class="title toc-ignore">20190327_MakeCovariateFiles</h1>
 <h4 class="author"><em>Ben Fair</em></h4>
 <h4 class="date"><em>3/27/2019</em></h4>
 
@@ -422,7 +422,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -431,7 +431,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -443,7 +443,7 @@ div.section {
 <strong>Last updated:</strong> 2019-04-25
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -459,12 +459,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -551,108 +551,42 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
-These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/bfairkun/Comparative_eQTL/blob/4c2b69f8e116f4a097dc4a235b944bc467d7b9e6/analysis/20190327_MakeFamPhenotypeFile.Rmd" target="_blank">4c2b69f</a>
-</td>
-<td>
-Benjmain Fair
-</td>
-<td>
-2019-04-19
-</td>
-<td>
-a messy commit
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e5923352fa1aeb42041e564534e8e145011d505d/analysis/20190327_MakeFamPhenotypeFile.Rmd" target="_blank">e592335</a>
-</td>
-<td>
-Benjmain Fair
-</td>
-<td>
-2019-04-03
-</td>
-<td>
-build site
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/e5923352fa1aeb42041e564534e8e145011d505d/docs/20190327_MakeFamPhenotypeFile.html" target="_blank">e592335</a>
-</td>
-<td>
-Benjmain Fair
-</td>
-<td>
-2019-04-03
-</td>
-<td>
-build site
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
-<p>this shows how I will output a plink [.fam] file containing phenotypes for eQTL association testing with gemma. The phenotypes (expresion matrix) which will be log-transformed TPM values, filtering for genes which have non-zero TPM values for all samples. The Rscript version of this R code is included in the snakemake workflow to generate the [.fam] file using the <code>knitr::purl()</code> function.</p>
-<pre class="r"><code>library(tidyverse)
-library(knitr)</code></pre>
+<p>After checking previous QC analyses of genotypes and RNA-seq data, this markdown will describe covariates used in gene expression modeling and the associated Rscript will output those covariates in the format required for MatrixEQTL. Specifically, the covariates that will be output are {NumGenotypePCs}, {NumRNASeqPCs}, sex, and perhaps RIN score.</p>
+<p>The Rscript version of this R markdown is included in the snakemake workflow to generate the [{NumGenotypePCs}.{NumRNASeqPCs}.covariates] file using the <code>knitr::purl()</code> function.</p>
+<pre class="r"><code>library(plyr)
+library(tidyverse)
+library(knitr)
+library(readxl)</code></pre>
 <p>Run this command to write this [.Rmd] into a [.R] that is included in the snakemake workflow for eQTL mapping:</p>
-<pre class="r"><code># knitr::purl(input=&quot;../analysis/20190327_MakeFamPhenotypeFile.Rmd&quot;, output=&quot;../analysis/20190327_MakeFamPhenotypeFile.R&quot;)</code></pre>
+<pre class="r"><code># knitr::purl(input=&quot;../analysis/20190327_MakeCovariateFiles.Rmd&quot;, output=&quot;../analysis/20190327_MakeCovariateFiles.R&quot;)</code></pre>
 <pre class="r"><code># Use command line input to specify input and output if this is the Rscript version of this file (as opposed to Rmarkdown).
-if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeFamPhenotypeFile.R&quot;){
+if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeCovariateFiles.R&quot;){
   args &lt;- commandArgs(trailingOnly = T)
-  CountFilepath &lt;- args[1]
-  EmptyFamFilepath &lt;- args[2]
-  PhenotypeOutFilepath &lt;- args[3]
-  PhenotypeListOutFilepath &lt;- args[4]
-  GenesBedFile &lt;- args[5]
+  EmptyFamFilepath &lt;- args[1]
+  MetadataExcel &lt;- args[2]
+  CountFilepath &lt;- args[3]
+  NumRS.PCs &lt;- args[4]
+  GenotypePCs &lt;- args[5]
+  NumGenotype.PCs &lt;- args[6]
+  OutputFile &lt;- args[7]
+  print (args)
+
 } else {
   CountFilepath &lt;- &#39;../output/CountTable.tpm.txt.gz&#39;
   EmptyFamFilepath &lt;- &#39;../output/ForAssociationTesting.temp.fam&#39;
-  GenesBedFile &lt;- &#39;../data/cDNA.all.chromosomal.bed&#39;
+  MetadataExcel &lt;- &#39;../data/Metadata.xlsx&#39;
+  GenotypePCs &lt;- &#39;../output/PopulationStructure/pca.eigenvec&#39;
+  NumGenotype.PCs &lt;- 3
+  NumRS.PCs &lt;- 3
 }</code></pre>
+<p>Read in data:</p>
 <pre class="r"><code>CountTable &lt;- read.table(gzfile(CountFilepath), header=T, check.names=FALSE, row.names = 1)
 
 # dimensions of count table
@@ -962,153 +896,691 @@ CountTable %&gt;% dim()</code></pre>
 <pre class="r"><code>EmptyFamFile &lt;- read.table(EmptyFamFilepath, col.names=c(&quot;FID&quot;, &quot;IID&quot;, &quot;Father&quot;, &quot;Mother&quot;, &quot;SX&quot;, &quot;Pheno&quot;), stringsAsFactors = F) %&gt;%
   select(-Pheno)
 
-# Will use GeneRegions to filter out non-autosomal genes
-GeneChromosomes &lt;- read.table(GenesBedFile, col.names=c(&quot;chromosome&quot;, &quot;start&quot;, &quot;stop&quot;, &quot;gene&quot;, &quot;score&quot;, &quot;strand&quot;), stringsAsFactors = F) %&gt;%
-  select(gene, chromosome)
-kable(head(GeneChromosomes))</code></pre>
+GenotypePCs.df &lt;- read.table(GenotypePCs, header=T) %&gt;% 
+  select(-c(&quot;FID&quot;)) %&gt;%
+  rename_all(paste0, &quot;.GT&quot;)
+kable(head(GenotypePCs.df))</code></pre>
 <table>
 <thead>
 <tr class="header">
-<th align="left">gene</th>
-<th align="left">chromosome</th>
+<th align="left">IID.GT</th>
+<th align="right">PC1.GT</th>
+<th align="right">PC2.GT</th>
+<th align="right">PC3.GT</th>
+<th align="right">PC4.GT</th>
+<th align="right">PC5.GT</th>
+<th align="right">PC6.GT</th>
+<th align="right">PC7.GT</th>
+<th align="right">PC8.GT</th>
+<th align="right">PC9.GT</th>
+<th align="right">PC10.GT</th>
+<th align="right">PC11.GT</th>
+<th align="right">PC12.GT</th>
+<th align="right">PC13.GT</th>
+<th align="right">PC14.GT</th>
+<th align="right">PC15.GT</th>
+<th align="right">PC16.GT</th>
+<th align="right">PC17.GT</th>
+<th align="right">PC18.GT</th>
+<th align="right">PC19.GT</th>
+<th align="right">PC20.GT</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">ENSPTRT00000082924.1</td>
-<td align="left">10</td>
+<td align="left">549</td>
+<td align="right">-0.1085980</td>
+<td align="right">-0.0184943</td>
+<td align="right">0.0047314</td>
+<td align="right">-0.0150498</td>
+<td align="right">-0.0319818</td>
+<td align="right">-0.0004605</td>
+<td align="right">0.0584162</td>
+<td align="right">-0.0021767</td>
+<td align="right">0.0057926</td>
+<td align="right">-0.0138491</td>
+<td align="right">-0.0006760</td>
+<td align="right">0.0014917</td>
+<td align="right">0.0024960</td>
+<td align="right">0.0444586</td>
+<td align="right">0.0005304</td>
+<td align="right">0.0067183</td>
+<td align="right">0.0025586</td>
+<td align="right">0.0015872</td>
+<td align="right">-0.0116857</td>
+<td align="right">0.0076842</td>
 </tr>
 <tr class="even">
-<td align="left">ENSPTRT00000003967.6</td>
-<td align="left">10</td>
+<td align="left">570</td>
+<td align="right">-0.0945827</td>
+<td align="right">-0.0228220</td>
+<td align="right">-0.0140236</td>
+<td align="right">0.1793750</td>
+<td align="right">0.0671347</td>
+<td align="right">-0.0111882</td>
+<td align="right">-0.1524830</td>
+<td align="right">-0.0101299</td>
+<td align="right">-0.0614712</td>
+<td align="right">0.2670480</td>
+<td align="right">-0.0468162</td>
+<td align="right">0.0399717</td>
+<td align="right">0.0258174</td>
+<td align="right">-0.0527277</td>
+<td align="right">0.0278379</td>
+<td align="right">-0.3333410</td>
+<td align="right">-0.1546580</td>
+<td align="right">-0.1739510</td>
+<td align="right">0.1237160</td>
+<td align="right">-0.0771322</td>
 </tr>
 <tr class="odd">
-<td align="left">ENSPTRT00000101968.1</td>
-<td align="left">10</td>
+<td align="left">389</td>
+<td align="right">-0.1101630</td>
+<td align="right">-0.0206061</td>
+<td align="right">0.0032451</td>
+<td align="right">0.0219085</td>
+<td align="right">-0.1004940</td>
+<td align="right">0.0090560</td>
+<td align="right">-0.3750780</td>
+<td align="right">0.0213782</td>
+<td align="right">0.0000433</td>
+<td align="right">0.0097597</td>
+<td align="right">0.0015130</td>
+<td align="right">-0.0013585</td>
+<td align="right">-0.0072876</td>
+<td align="right">-0.0176905</td>
+<td align="right">-0.0047013</td>
+<td align="right">0.0317992</td>
+<td align="right">-0.0091693</td>
+<td align="right">0.0133724</td>
+<td align="right">0.0038605</td>
+<td align="right">-0.0039837</td>
 </tr>
 <tr class="even">
-<td align="left">ENSPTRT00000004081.5</td>
-<td align="left">10</td>
+<td align="left">456</td>
+<td align="right">-0.1080570</td>
+<td align="right">-0.0178108</td>
+<td align="right">0.0044597</td>
+<td align="right">-0.0103130</td>
+<td align="right">-0.0185596</td>
+<td align="right">-0.0001795</td>
+<td align="right">0.0344615</td>
+<td align="right">-0.0021105</td>
+<td align="right">0.0026981</td>
+<td align="right">-0.0058951</td>
+<td align="right">0.0012633</td>
+<td align="right">-0.0013892</td>
+<td align="right">0.0002392</td>
+<td align="right">-0.0089160</td>
+<td align="right">0.0013406</td>
+<td align="right">-0.0064834</td>
+<td align="right">0.0081531</td>
+<td align="right">-0.0025395</td>
+<td align="right">-0.0120499</td>
+<td align="right">0.0088498</td>
 </tr>
 <tr class="odd">
-<td align="left">ENSPTRT00000107469.1</td>
-<td align="left">10</td>
+<td align="left">623</td>
+<td align="right">-0.1098320</td>
+<td align="right">-0.0206678</td>
+<td align="right">0.0041903</td>
+<td align="right">-0.0137927</td>
+<td align="right">-0.1012860</td>
+<td align="right">0.0118115</td>
+<td align="right">-0.2853820</td>
+<td align="right">0.0216451</td>
+<td align="right">0.0220789</td>
+<td align="right">-0.0857080</td>
+<td align="right">0.0177347</td>
+<td align="right">-0.0161525</td>
+<td align="right">-0.0149519</td>
+<td align="right">0.0154757</td>
+<td align="right">-0.0131564</td>
+<td align="right">0.1546820</td>
+<td align="right">0.0570773</td>
+<td align="right">0.0793976</td>
+<td align="right">-0.0569467</td>
+<td align="right">0.0363648</td>
 </tr>
 <tr class="even">
-<td align="left">ENSPTRT00000081834.1</td>
-<td align="left">10</td>
+<td align="left">438</td>
+<td align="right">-0.1081420</td>
+<td align="right">-0.0177823</td>
+<td align="right">0.0045724</td>
+<td align="right">-0.0108220</td>
+<td align="right">-0.0197756</td>
+<td align="right">-0.0009599</td>
+<td align="right">0.0394830</td>
+<td align="right">-0.0029283</td>
+<td align="right">0.0016249</td>
+<td align="right">-0.0085211</td>
+<td align="right">0.0021596</td>
+<td align="right">-0.0016848</td>
+<td align="right">-0.0013350</td>
+<td align="right">0.0038822</td>
+<td align="right">0.0014313</td>
+<td align="right">-0.0008248</td>
+<td align="right">0.0071914</td>
+<td align="right">0.0016188</td>
+<td align="right">-0.0128241</td>
+<td align="right">0.0102553</td>
 </tr>
 </tbody>
 </table>
-<p>Here I will consider how to filter genes for association testing</p>
-<pre class="r"><code>GeneSet1 &lt;- CountTable %&gt;%
-  rownames_to_column(&#39;gene&#39;) %&gt;%
-  mutate(Mean = rowMeans(select(., -gene))) %&gt;%
-  filter(Mean&gt;1) %&gt;%
-  pull(gene)
-
-GeneSet2 &lt;- CountTable %&gt;%
-  rownames_to_column(&#39;gene&#39;) %&gt;%
-  filter_if(is.numeric, all_vars(.&gt;0)) %&gt;%
-  pull(gene)
-
-#Number genes left after filter method1
-length(GeneSet1)</code></pre>
-<pre><code>[1] 15696</code></pre>
-<pre class="r"><code>#Number genes left after filter method2
-length(GeneSet2)</code></pre>
-<pre><code>[1] 18924</code></pre>
-<pre class="r"><code>#Number genes left after intersection of both methods
-length(intersect(GeneSet1, GeneSet2))</code></pre>
-<pre><code>[1] 13852</code></pre>
-<p>Seems like a reasonable (and inclusive) way to filter genes (rather than eQTL testing all ~50000 transcripts, many of which contain mostly 0’s) is to just choose the genes with no 0 TPM values in any samples.</p>
-<p>For now I will also filter out non-autosomal genes.</p>
-<pre class="r"><code>PhenotypesToOutput &lt;- CountTable %&gt;%
-  rownames_to_column(&#39;gene&#39;) %&gt;%
-  filter_if(is.numeric, all_vars(.&gt;0)) %&gt;%
-  merge(GeneChromosomes, by=&quot;gene&quot;, all.x=T) %&gt;%
-  filter(!chromosome %in% c(&quot;X&quot;, &quot;Y&quot;, &quot;MT&quot;)) %&gt;%
-  select(-chromosome) %&gt;%
-  column_to_rownames(&#39;gene&#39;) %&gt;%
+<pre class="r"><code>OtherMetadata &lt;- as.data.frame(read_excel(MetadataExcel))
+kable(head(OtherMetadata))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Individual.ID</th>
+<th align="left">Source</th>
+<th align="left">Individual.Name</th>
+<th align="right">Yerkes.ID</th>
+<th align="left">Label</th>
+<th align="left">Notes</th>
+<th align="left">FileID.(Library_Species_CellType_FlowCell)</th>
+<th align="left">SX</th>
+<th align="right">RNA.Library.prep.batch</th>
+<th align="right">RNA.Sequencing.Lane</th>
+<th align="right">Sequencing.Barcode</th>
+<th align="left">RNA.Extract_date</th>
+<th align="left">DNASeq_FastqIdentifier</th>
+<th align="right">DNA.library.prep.batch</th>
+<th align="right">DNA.Sequencing.Lane</th>
+<th align="left">DNA.Sequencin.Barcode</th>
+<th align="left">DNA.Extract_date</th>
+<th align="right">Age</th>
+<th align="left">X__1</th>
+<th align="left">Post.mortem.time.interval</th>
+<th align="right">RIN</th>
+<th align="left">Viral.status</th>
+<th align="right">RNA.total.reads.mapped.to.genome</th>
+<th align="right">RNA.total.reads.mapping.to.ortho.exons</th>
+<th align="left">Subspecies</th>
+<th align="left">DOB</th>
+<th align="left">DOD</th>
+<th align="left">DOB Estimated</th>
+<th align="right">Age (DOD-DOB)</th>
+<th align="left">OldLibInfo. RIN,RNA-extractdate,RNAbatch</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">295</td>
+<td align="left">Yerkes</td>
+<td align="left">Duncan</td>
+<td align="right">295</td>
+<td align="left">295</td>
+<td align="left">NA</td>
+<td align="left">24_CM_3_L006.bam</td>
+<td align="left">M</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">18</td>
+<td align="left">2018-10-10</td>
+<td align="left">YG3</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">40</td>
+<td align="left">NA</td>
+<td align="left">0.5</td>
+<td align="right">7.3</td>
+<td align="left">NA</td>
+<td align="right">45.67002</td>
+<td align="right">17.51562</td>
+<td align="left">verus/ellioti</td>
+<td align="left">24731</td>
+<td align="left">39386</td>
+<td align="left">NA</td>
+<td align="right">40</td>
+<td align="left">6.3,6/14/2016,2</td>
+</tr>
+<tr class="even">
+<td align="left">317</td>
+<td align="left">Yerkes</td>
+<td align="left">Iyk</td>
+<td align="right">317</td>
+<td align="left">317</td>
+<td align="left">NA</td>
+<td align="left">11_CM_3_L004.bam</td>
+<td align="left">M</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="left">2016-06-07</td>
+<td align="left">YG2</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">44</td>
+<td align="left">NA</td>
+<td align="left">2.5</td>
+<td align="right">7.6</td>
+<td align="left">NA</td>
+<td align="right">42.75617</td>
+<td align="right">17.18811</td>
+<td align="left">verus</td>
+<td align="left">22859</td>
+<td align="left">38832</td>
+<td align="left">NA</td>
+<td align="right">43</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">338</td>
+<td align="left">Yerkes</td>
+<td align="left">Maxine</td>
+<td align="right">338</td>
+<td align="left">338</td>
+<td align="left">NA</td>
+<td align="left">8_CF_3_L008.bam</td>
+<td align="left">F</td>
+<td align="right">3</td>
+<td align="right">8</td>
+<td align="right">6</td>
+<td align="left">2016-06-07</td>
+<td align="left">YG1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">53</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">7.2</td>
+<td align="left">NA</td>
+<td align="right">50.52632</td>
+<td align="right">19.49295</td>
+<td align="left">verus</td>
+<td align="left">20821</td>
+<td align="left">40179</td>
+<td align="left">Yes</td>
+<td align="right">53</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">389</td>
+<td align="left">Yerkes</td>
+<td align="left">Rogger</td>
+<td align="right">389</td>
+<td align="left">389</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">M</td>
+<td align="right">4</td>
+<td align="right">NA</td>
+<td align="right">23</td>
+<td align="left">2018-10-10</td>
+<td align="left">YG39</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="left">NA</td>
+<td align="left">2018-10-01</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.7</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">verus</td>
+<td align="left">25204</td>
+<td align="left">41656</td>
+<td align="left">NA</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">438</td>
+<td align="left">Yerkes</td>
+<td align="left">Cheeta</td>
+<td align="right">438</td>
+<td align="left">438</td>
+<td align="left">NA</td>
+<td align="left">155_CF_3_L004.bam</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">8</td>
+<td align="left">2016-06-22</td>
+<td align="left">YG22</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">55</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.6</td>
+<td align="left">NA</td>
+<td align="right">55.30614</td>
+<td align="right">18.06375</td>
+<td align="left">verus</td>
+<td align="left">20821</td>
+<td align="left">40909</td>
+<td align="left">Yes</td>
+<td align="right">55</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">456</td>
+<td align="left">Yerkes</td>
+<td align="left">Mai</td>
+<td align="right">456</td>
+<td align="left">456</td>
+<td align="left">NA</td>
+<td align="left">156_CF_3_L001.bam</td>
+<td align="left">F</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">15</td>
+<td align="left">2016-06-22</td>
+<td align="left">YG23</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+<td align="left">2018-09-01</td>
+<td align="right">49</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">5.5</td>
+<td align="left">NA</td>
+<td align="right">54.00665</td>
+<td align="right">20.13760</td>
+<td align="left">verus</td>
+<td align="left">23377</td>
+<td align="left">41275</td>
+<td align="left">Yes</td>
+<td align="right">49</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># RNA-seq PCA
+pca_results &lt;- CountTable %&gt;%
+  +0.1 %&gt;%
+  mutate(sumVar = rowSums(.)) %&gt;%
+  arrange(desc(sumVar)) %&gt;%
+  head(2500) %&gt;%
+  select(-sumVar) %&gt;%
   log() %&gt;%
-  t()
+  t() %&gt;%
+  prcomp(center=T, scale. = T)
 
-row.names(PhenotypesToOutput) &lt;- colnames(CountTable)
+RNASeqPCs.df &lt;- pca_results$x %&gt;% 
+  as.data.frame %&gt;% 
+  rownames_to_column() %&gt;%
+  rename_all(paste0, &quot;.RS&quot;)
 
-
-Output.df &lt;- EmptyFamFile %&gt;%
-  merge(PhenotypesToOutput, all.x=T, by.x=&quot;IID&quot;, by.y=0) %&gt;% as.tibble()</code></pre>
-<pre><code>Warning: `as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
-This warning is displayed once per session.</code></pre>
-<pre class="r"><code>Output.df</code></pre>
-<pre><code># A tibble: 38 x 18,287
-   IID   FID   Father Mother    SX ENSPTRT00000000… ENSPTRT00000000…
-   &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;  &lt;int&gt; &lt;int&gt;            &lt;dbl&gt;            &lt;dbl&gt;
- 1 295   Pan_…      0      0     0           -0.503            0.709
- 2 317   Pan_…      0      0     0           -0.933            0.598
- 3 338   Pan_…      0      0     0           -1.08             1.37 
- 4 389   Pan_…      0      0     0           -0.779            0.648
- 5 438   Pan_…      0      0     0           -0.871            0.778
- 6 456   Pan_…      0      0     0           -0.516            0.791
- 7 462   Pan_…      0      0     0           -0.674            1.06 
- 8 476   Pan_…      0      0     0           -1.09             0.668
- 9 495   Pan_…      0      0     0            0.221            0.852
-10 4x00… Pan_…      0      0     0           -0.797            1.36 
-# … with 28 more rows, and 18,280 more variables:
-#   ENSPTRT00000000050.4 &lt;dbl&gt;, ENSPTRT00000000057.4 &lt;dbl&gt;,
-#   ENSPTRT00000000060.3 &lt;dbl&gt;, ENSPTRT00000000069.4 &lt;dbl&gt;,
-#   ENSPTRT00000000071.5 &lt;dbl&gt;, ENSPTRT00000000083.6 &lt;dbl&gt;,
-#   ENSPTRT00000000093.4 &lt;dbl&gt;, ENSPTRT00000000100.4 &lt;dbl&gt;,
-#   ENSPTRT00000000105.6 &lt;dbl&gt;, ENSPTRT00000000106.3 &lt;dbl&gt;,
-#   ENSPTRT00000000114.4 &lt;dbl&gt;, ENSPTRT00000000116.4 &lt;dbl&gt;,
-#   ENSPTRT00000000118.6 &lt;dbl&gt;, ENSPTRT00000000144.6 &lt;dbl&gt;,
-#   ENSPTRT00000000145.7 &lt;dbl&gt;, ENSPTRT00000000149.3 &lt;dbl&gt;,
-#   ENSPTRT00000000152.5 &lt;dbl&gt;, ENSPTRT00000000172.4 &lt;dbl&gt;,
-#   ENSPTRT00000000176.6 &lt;dbl&gt;, ENSPTRT00000000180.5 &lt;dbl&gt;,
-#   ENSPTRT00000000188.6 &lt;dbl&gt;, ENSPTRT00000000207.3 &lt;dbl&gt;,
-#   ENSPTRT00000000210.3 &lt;dbl&gt;, ENSPTRT00000000215.6 &lt;dbl&gt;,
-#   ENSPTRT00000000216.4 &lt;dbl&gt;, ENSPTRT00000000219.6 &lt;dbl&gt;,
-#   ENSPTRT00000000222.5 &lt;dbl&gt;, ENSPTRT00000000227.5 &lt;dbl&gt;,
-#   ENSPTRT00000000229.3 &lt;dbl&gt;, ENSPTRT00000000234.5 &lt;dbl&gt;,
-#   ENSPTRT00000000237.5 &lt;dbl&gt;, ENSPTRT00000000238.4 &lt;dbl&gt;,
-#   ENSPTRT00000000243.6 &lt;dbl&gt;, ENSPTRT00000000247.4 &lt;dbl&gt;,
-#   ENSPTRT00000000254.4 &lt;dbl&gt;, ENSPTRT00000000258.6 &lt;dbl&gt;,
-#   ENSPTRT00000000260.4 &lt;dbl&gt;, ENSPTRT00000000270.4 &lt;dbl&gt;,
-#   ENSPTRT00000000275.3 &lt;dbl&gt;, ENSPTRT00000000278.5 &lt;dbl&gt;,
-#   ENSPTRT00000000279.6 &lt;dbl&gt;, ENSPTRT00000000298.3 &lt;dbl&gt;,
-#   ENSPTRT00000000302.7 &lt;dbl&gt;, ENSPTRT00000000303.5 &lt;dbl&gt;,
-#   ENSPTRT00000000306.5 &lt;dbl&gt;, ENSPTRT00000000310.5 &lt;dbl&gt;,
-#   ENSPTRT00000000316.4 &lt;dbl&gt;, ENSPTRT00000000323.4 &lt;dbl&gt;,
-#   ENSPTRT00000000324.4 &lt;dbl&gt;, ENSPTRT00000000329.4 &lt;dbl&gt;,
-#   ENSPTRT00000000334.4 &lt;dbl&gt;, ENSPTRT00000000335.3 &lt;dbl&gt;,
-#   ENSPTRT00000000336.5 &lt;dbl&gt;, ENSPTRT00000000339.4 &lt;dbl&gt;,
-#   ENSPTRT00000000341.6 &lt;dbl&gt;, ENSPTRT00000000343.4 &lt;dbl&gt;,
-#   ENSPTRT00000000348.3 &lt;dbl&gt;, ENSPTRT00000000349.4 &lt;dbl&gt;,
-#   ENSPTRT00000000351.3 &lt;dbl&gt;, ENSPTRT00000000352.5 &lt;dbl&gt;,
-#   ENSPTRT00000000354.6 &lt;dbl&gt;, ENSPTRT00000000355.4 &lt;dbl&gt;,
-#   ENSPTRT00000000357.4 &lt;dbl&gt;, ENSPTRT00000000361.5 &lt;dbl&gt;,
-#   ENSPTRT00000000369.4 &lt;dbl&gt;, ENSPTRT00000000395.4 &lt;dbl&gt;,
-#   ENSPTRT00000000411.6 &lt;dbl&gt;, ENSPTRT00000000424.4 &lt;dbl&gt;,
-#   ENSPTRT00000000431.5 &lt;dbl&gt;, ENSPTRT00000000435.3 &lt;dbl&gt;,
-#   ENSPTRT00000000438.4 &lt;dbl&gt;, ENSPTRT00000000439.4 &lt;dbl&gt;,
-#   ENSPTRT00000000441.5 &lt;dbl&gt;, ENSPTRT00000000444.5 &lt;dbl&gt;,
-#   ENSPTRT00000000445.4 &lt;dbl&gt;, ENSPTRT00000000459.3 &lt;dbl&gt;,
-#   ENSPTRT00000000462.4 &lt;dbl&gt;, ENSPTRT00000000464.4 &lt;dbl&gt;,
-#   ENSPTRT00000000465.4 &lt;dbl&gt;, ENSPTRT00000000466.6 &lt;dbl&gt;,
-#   ENSPTRT00000000494.5 &lt;dbl&gt;, ENSPTRT00000000499.4 &lt;dbl&gt;,
-#   ENSPTRT00000000501.5 &lt;dbl&gt;, ENSPTRT00000000502.5 &lt;dbl&gt;,
-#   ENSPTRT00000000510.3 &lt;dbl&gt;, ENSPTRT00000000524.5 &lt;dbl&gt;,
-#   ENSPTRT00000000525.4 &lt;dbl&gt;, ENSPTRT00000000526.5 &lt;dbl&gt;,
-#   ENSPTRT00000000532.4 &lt;dbl&gt;, ENSPTRT00000000535.3 &lt;dbl&gt;,
-#   ENSPTRT00000000537.4 &lt;dbl&gt;, ENSPTRT00000000542.6 &lt;dbl&gt;,
-#   ENSPTRT00000000548.4 &lt;dbl&gt;, ENSPTRT00000000555.5 &lt;dbl&gt;,
-#   ENSPTRT00000000557.4 &lt;dbl&gt;, ENSPTRT00000000558.5 &lt;dbl&gt;,
-#   ENSPTRT00000000568.4 &lt;dbl&gt;, ENSPTRT00000000569.4 &lt;dbl&gt;,
-#   ENSPTRT00000000571.4 &lt;dbl&gt;, ENSPTRT00000000572.5 &lt;dbl&gt;, …</code></pre>
-<pre class="r"><code>GeneList &lt;- data.frame(GeneList=colnames(Output.df)[-1:-5])</code></pre>
-<pre class="r"><code>if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeFamPhenotypeFile.R&quot;){
-  write.table(Output.df, col.names = F, sep=&#39;\t&#39;, file=PhenotypeOutFilepath, row.names=F, quote=F)
-  write.table(GeneList, col.names = F, sep=&#39;\t&#39;, file=PhenotypeListOutFilepath, row.names=F, quote=F)
+Covariates &lt;- EmptyFamFile %&gt;%
+  select(IID) %&gt;%
+  left_join(RNASeqPCs.df[0:NumRS.PCs+1], by=c(&quot;IID&quot; = &quot;rowname.RS&quot;)) %&gt;%
+  left_join(GenotypePCs.df[0:NumGenotype.PCs+1], by=c(&quot;IID&quot; = &quot;IID.GT&quot;)) %&gt;%
+  left_join(
+    OtherMetadata %&gt;% select(Individual.ID, SX),
+    by = c(&quot;IID&quot; = &quot;Individual.ID&quot;)
+  ) %&gt;%
+  mutate(SX = plyr::mapvalues(SX, from=c(&quot;M&quot;, &quot;F&quot;), to=c(0,1))) %&gt;%
+  t()</code></pre>
+<pre><code>Warning: Column `IID`/`IID.GT` joining character vector and factor,
+coercing into character vector</code></pre>
+<pre class="r"><code>kable(head(Covariates))</code></pre>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">IID</td>
+<td align="left">549</td>
+<td align="left">570</td>
+<td align="left">389</td>
+<td align="left">456</td>
+<td align="left">623</td>
+<td align="left">438</td>
+<td align="left">724</td>
+<td align="left">522</td>
+<td align="left">338</td>
+<td align="left">476</td>
+<td align="left">495</td>
+<td align="left">558</td>
+<td align="left">503</td>
+<td align="left">4x0430</td>
+<td align="left">317</td>
+<td align="left">676</td>
+<td align="left">4x373</td>
+<td align="left">4X0333</td>
+<td align="left">4X0095</td>
+<td align="left">554</td>
+<td align="left">4x523</td>
+<td align="left">88A020</td>
+<td align="left">95A014</td>
+<td align="left">4x0043</td>
+<td align="left">529</td>
+<td align="left">4X0550</td>
+<td align="left">4X0267</td>
+<td align="left">4X0357</td>
+<td align="left">462</td>
+<td align="left">554_2</td>
+<td align="left">4X0212</td>
+<td align="left">4x0025</td>
+<td align="left">4x0519</td>
+<td align="left">295</td>
+<td align="left">Little_R</td>
+<td align="left">537</td>
+<td align="left">4X0339</td>
+<td align="left">4X0354</td>
+</tr>
+<tr class="even">
+<td align="left">PC1.RS</td>
+<td align="left">-4.6671389</td>
+<td align="left">-26.1710828</td>
+<td align="left">-11.1101394</td>
+<td align="left">-12.6404247</td>
+<td align="left">-4.3640984</td>
+<td align="left">-1.4498584</td>
+<td align="left">-21.0578454</td>
+<td align="left">-12.4893238</td>
+<td align="left">-24.9572534</td>
+<td align="left">-11.9529579</td>
+<td align="left">50.9788389</td>
+<td align="left">84.9548137</td>
+<td align="left">-0.2127408</td>
+<td align="left">-35.1478044</td>
+<td align="left">-20.9478859</td>
+<td align="left">-18.0083558</td>
+<td align="left">-14.5603875</td>
+<td align="left">-24.9379189</td>
+<td align="left">-8.8393599</td>
+<td align="left">-24.3314095</td>
+<td align="left">-33.2376632</td>
+<td align="left">-11.2296681</td>
+<td align="left">-16.3502202</td>
+<td align="left">-16.9671933</td>
+<td align="left">41.7608044</td>
+<td align="left">-25.0626524</td>
+<td align="left">-29.0210945</td>
+<td align="left">4.6571111</td>
+<td align="left">-1.6699147</td>
+<td align="left">-10.7351772</td>
+<td align="left">-16.9547828</td>
+<td align="left">-39.5164346</td>
+<td align="left">-37.5044833</td>
+<td align="left">-4.4506068</td>
+<td align="left">108.2370478</td>
+<td align="left">113.2855069</td>
+<td align="left">72.4481625</td>
+<td align="left">64.4069774</td>
+</tr>
+<tr class="odd">
+<td align="left">PC2.RS</td>
+<td align="left">-4.3375035</td>
+<td align="left">-21.6697827</td>
+<td align="left">8.3594629</td>
+<td align="left">7.7149310</td>
+<td align="left">11.4830846</td>
+<td align="left">15.0424731</td>
+<td align="left">0.1968575</td>
+<td align="left">8.8510347</td>
+<td align="left">-5.7497750</td>
+<td align="left">14.6417858</td>
+<td align="left">-10.8136469</td>
+<td align="left">3.0086759</td>
+<td align="left">24.7673589</td>
+<td align="left">-10.3794142</td>
+<td align="left">-0.1866276</td>
+<td align="left">-0.2689843</td>
+<td align="left">-8.5411432</td>
+<td align="left">-9.9294523</td>
+<td align="left">4.4755158</td>
+<td align="left">4.1510345</td>
+<td align="left">-26.0707696</td>
+<td align="left">12.9561345</td>
+<td align="left">1.3257869</td>
+<td align="left">-11.4492868</td>
+<td align="left">-7.1557796</td>
+<td align="left">1.5507298</td>
+<td align="left">3.3727728</td>
+<td align="left">13.1198594</td>
+<td align="left">2.5833339</td>
+<td align="left">10.0813352</td>
+<td align="left">2.3004992</td>
+<td align="left">-32.2372103</td>
+<td align="left">-12.8248016</td>
+<td align="left">15.2199047</td>
+<td align="left">-35.4712198</td>
+<td align="left">-14.5526529</td>
+<td align="left">42.8206393</td>
+<td align="left">-0.9346548</td>
+</tr>
+<tr class="even">
+<td align="left">PC3.RS</td>
+<td align="left">4.2139684</td>
+<td align="left">9.7196123</td>
+<td align="left">0.9078538</td>
+<td align="left">2.5241961</td>
+<td align="left">13.6712695</td>
+<td align="left">3.0373196</td>
+<td align="left">0.9699229</td>
+<td align="left">5.1954610</td>
+<td align="left">6.5689672</td>
+<td align="left">-0.8687375</td>
+<td align="left">12.3040061</td>
+<td align="left">-1.0172486</td>
+<td align="left">10.2526758</td>
+<td align="left">-1.3376464</td>
+<td align="left">1.1315354</td>
+<td align="left">3.3802363</td>
+<td align="left">-8.0894655</td>
+<td align="left">-0.2424765</td>
+<td align="left">1.9887210</td>
+<td align="left">5.4549860</td>
+<td align="left">0.5869073</td>
+<td align="left">3.5973730</td>
+<td align="left">-2.0260809</td>
+<td align="left">-8.4029382</td>
+<td align="left">1.6618992</td>
+<td align="left">-8.1996543</td>
+<td align="left">0.8435924</td>
+<td align="left">-12.3538209</td>
+<td align="left">8.0436919</td>
+<td align="left">-2.7301627</td>
+<td align="left">-7.1071920</td>
+<td align="left">-12.3115231</td>
+<td align="left">1.9554952</td>
+<td align="left">9.3873162</td>
+<td align="left">16.0991363</td>
+<td align="left">3.1108955</td>
+<td align="left">-0.5672118</td>
+<td align="left">-46.8640748</td>
+</tr>
+<tr class="odd">
+<td align="left">PC1.GT</td>
+<td align="left">-0.1085980</td>
+<td align="left">-0.0945827</td>
+<td align="left">-0.1101630</td>
+<td align="left">-0.1080570</td>
+<td align="left">-0.1098320</td>
+<td align="left">-0.1081420</td>
+<td align="left">-0.0378419</td>
+<td align="left">-0.1083980</td>
+<td align="left">-0.1081500</td>
+<td align="left">-0.1083960</td>
+<td align="left">0.0133693</td>
+<td align="left">-0.1090570</td>
+<td align="left">-0.1107340</td>
+<td align="left">-0.0422648</td>
+<td align="left">-0.1089490</td>
+<td align="left">-0.1051800</td>
+<td align="left">-0.1092620</td>
+<td align="left">-0.1094040</td>
+<td align="left">-0.1083620</td>
+<td align="left">-0.0522406</td>
+<td align="left">-0.0548972</td>
+<td align="left">-0.1083140</td>
+<td align="left">-0.1083140</td>
+<td align="left">-0.1081420</td>
+<td align="left">-0.0745853</td>
+<td align="left">-0.1082120</td>
+<td align="left">-0.1086980</td>
+<td align="left">-0.1090900</td>
+<td align="left">0.0696170</td>
+<td align="left">-0.1083110</td>
+<td align="left">-0.1085550</td>
+<td align="left">-0.1083620</td>
+<td align="left">-0.0691744</td>
+<td align="left">-0.0819553</td>
+<td align="left">-0.1082080</td>
+<td align="left">-0.1077380</td>
+<td align="left">-0.1097850</td>
+<td align="left">0.1400900</td>
+</tr>
+<tr class="even">
+<td align="left">PC2.GT</td>
+<td align="left">-0.0184943</td>
+<td align="left">-0.0228220</td>
+<td align="left">-0.0206061</td>
+<td align="left">-0.0178108</td>
+<td align="left">-0.0206678</td>
+<td align="left">-0.0177823</td>
+<td align="left">-0.0298039</td>
+<td align="left">-0.0179836</td>
+<td align="left">-0.0179254</td>
+<td align="left">-0.0182646</td>
+<td align="left">-0.0312946</td>
+<td align="left">-0.0192725</td>
+<td align="left">-0.0214998</td>
+<td align="left">-0.0288509</td>
+<td align="left">-0.0190248</td>
+<td align="left">-0.0222267</td>
+<td align="left">-0.0189720</td>
+<td align="left">-0.0193025</td>
+<td align="left">-0.0184038</td>
+<td align="left">0.0408846</td>
+<td align="left">-0.0254363</td>
+<td align="left">-0.0178967</td>
+<td align="left">-0.0184395</td>
+<td align="left">-0.0181587</td>
+<td align="left">0.0431692</td>
+<td align="left">-0.0186956</td>
+<td align="left">-0.0185368</td>
+<td align="left">-0.0191630</td>
+<td align="left">0.1020240</td>
+<td align="left">-0.0182602</td>
+<td align="left">-0.0185807</td>
+<td align="left">-0.0180731</td>
+<td align="left">-0.0264851</td>
+<td align="left">0.0484042</td>
+<td align="left">-0.0182170</td>
+<td align="left">-0.0182431</td>
+<td align="left">-0.0196049</td>
+<td align="left">-0.0831354</td>
+</tr>
+</tbody>
+</table>
+<p>Write table if this is the Rscript form of this Rmarkdown</p>
+<pre class="r"><code>if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeCovariateFiles.R&quot;){
+  write.table(Covariates, col.names = F, sep=&#39;\t&#39;, file=OutputFile, row.names=T, quote=F)
 }</code></pre>
 <br> <br>
 <p>
@@ -1133,24 +1605,23 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] knitr_1.22      forcats_0.4.0   stringr_1.4.0   dplyr_0.8.0.1  
- [5] purrr_0.3.2     readr_1.3.1     tidyr_0.8.2     tibble_2.1.1   
- [9] ggplot2_3.1.0   tidyverse_1.2.1
+ [1] readxl_1.1.0    knitr_1.22      forcats_0.4.0   stringr_1.4.0  
+ [5] dplyr_0.8.0.1   purrr_0.3.2     readr_1.3.1     tidyr_0.8.2    
+ [9] tibble_2.1.1    ggplot2_3.1.0   tidyverse_1.2.1 plyr_1.8.4     
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.1       highr_0.8        cellranger_1.1.0 plyr_1.8.4      
- [5] pillar_1.3.1     compiler_3.5.1   git2r_0.24.0     workflowr_1.2.0 
- [9] tools_3.5.1      digest_0.6.18    lubridate_1.7.4  jsonlite_1.6    
-[13] evaluate_0.13    nlme_3.1-137     gtable_0.3.0     lattice_0.20-38 
-[17] pkgconfig_2.0.2  rlang_0.3.3      cli_1.1.0        rstudioapi_0.10 
-[21] yaml_2.2.0       haven_2.1.0      xfun_0.6         withr_2.1.2     
-[25] xml2_1.2.0       httr_1.4.0       hms_0.4.2        generics_0.0.2  
-[29] fs_1.2.6         rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.5
-[33] glue_1.3.1       R6_2.4.0         fansi_0.4.0      readxl_1.1.0    
-[37] rmarkdown_1.11   modelr_0.1.4     magrittr_1.5     whisker_0.3-2   
-[41] backports_1.1.3  scales_1.0.0     htmltools_0.3.6  rvest_0.3.2     
-[45] assertthat_0.2.1 colorspace_1.4-1 utf8_1.1.4       stringi_1.4.3   
-[49] lazyeval_0.2.2   munsell_0.5.0    broom_0.5.1      crayon_1.3.4    </code></pre>
+ [1] Rcpp_1.0.1       highr_0.8        cellranger_1.1.0 pillar_1.3.1    
+ [5] compiler_3.5.1   git2r_0.24.0     workflowr_1.2.0  tools_3.5.1     
+ [9] digest_0.6.18    lubridate_1.7.4  jsonlite_1.6     evaluate_0.13   
+[13] nlme_3.1-137     gtable_0.3.0     lattice_0.20-38  pkgconfig_2.0.2 
+[17] rlang_0.3.3      cli_1.1.0        rstudioapi_0.10  yaml_2.2.0      
+[21] haven_2.1.0      xfun_0.6         withr_2.1.2      xml2_1.2.0      
+[25] httr_1.4.0       hms_0.4.2        generics_0.0.2   fs_1.2.6        
+[29] rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.5 glue_1.3.1      
+[33] R6_2.4.0         rmarkdown_1.11   modelr_0.1.4     magrittr_1.5    
+[37] backports_1.1.3  scales_1.0.0     htmltools_0.3.6  rvest_0.3.2     
+[41] assertthat_0.2.1 colorspace_1.4-1 stringi_1.4.3    lazyeval_0.2.2  
+[45] munsell_0.5.0    broom_0.5.1      crayon_1.3.4    </code></pre>
 </div>
 
 
