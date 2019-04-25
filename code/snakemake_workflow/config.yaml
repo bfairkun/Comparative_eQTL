@@ -80,25 +80,43 @@ eQTL_mapping:
     TSS_flanking_snp_width: 1000000
     # To control eQTL modeling parrallelization... Set how many calls to gemma
     # (1 gemma call for each gene, unless permutation testing) to lump into
-    # each batch script
+    # each batch script. I have moved on to do the eQTL mapping with MatrixEQTL
+    # (not gemma), though I left some of the old gemma code. So this parameter
+    # may not be of importance.
     gemma_batch_size: 1000
     # Directory should contain a list of covariate files for all samples to be
     # included in eQTL calling in the same format as requested by MatrixEQTL
     # documentation. eQTLs will be called with all of the covariate files, and
     # the model which maximizes number of significant eQTLs (as set by FDR)
     # will be used for further analysis
-    CovariatesDir:
-    # FDR threshold for counting number of significant eQTLs at the level of
-    # SNP-gene pairs
+    CovariatesDir: "../../output/Covariates/"
+    # Optional directory containing covariates in same format as requested by
+    # MatrixEQTL. I recommend making these files using the R script in the
+    # scripts directory. This option exists since choosing the covariates has
+    # been an iterative process that is not alaways well suited to automatic
+    # incorporation into the snakemake pipeline. Out of all the covariate files
+    # in this directory, the model with the most eQTLs will be kept for further
+    # analysis. If this option is left blank, the value of this option will be
+    # filled to the default value "../../output/Covariates/" and the snakemake
+    # will automatically create the covariate files as coded in the
+    # eqtl_calling.smk portion of the pipeline.
     gene_x_SNP_FDR: 0.1
     # FDR threshold for counting number of significant eQTLs at the level of
-    # eGenes (permutation testing done by FastQTL)
+    # SNP-gene pairs
     gene_FDR: 0.1
+    # FDR threshold for counting number of significant eQTLs at the level of
+    # eGenes (permutation testing done by FastQTL or MatrixEQTL script)
+    Permutations: 10000
+    # Number permutations of GTEx style permutations for identifying eGenes
+    ParallelizationFactor: 100
+    # Used in permutation testing. Number of jobs to break up the eQTL calling
+    # (with permutations) across various compute nodes
 
 
 
 # Extract DNA-seq and RNA-seq reads from this region to make mock data for
 # testing purposes.
+# The functions relating to this part of the code are not well developed.
 MockDataMaker:
     MakeMockData: True
     SampleListForMockData: "MockDataSampleList.tsv"

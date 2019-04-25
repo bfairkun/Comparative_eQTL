@@ -1,6 +1,9 @@
-# rule all:
-#     input:
-#         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
+rule all:
+    input:
+        "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
+        config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw"
+
+print(expand("{A}and{B}", A=[1,2], B=[3,4]))
 
 rule make_plink_file_for_testing:
     """
@@ -303,7 +306,7 @@ rule MatrixEQTL:
         phenotypes = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
         gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
         covariates = "../../output/Covariates/{covariate_set}.covariates.txt",
-        grm = "scratch/plink2.king.Reformatted",
+        grm = "eQTL_mapping/Kinship/IdentityMatrix.txt",
     output:
         results = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.txt",
         fig = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.png"
@@ -380,4 +383,6 @@ rule MakeFastQTL_input:
 
 # TODO:
 # rule permutation testing, Needs new MatrixEQTL script.
+# pseudocode:
+# choose number of permutations and batch size (N). Execute R script, each will output best Pvals for N permutations. Next rule to cat all those permutations. Finally, R script to get permutated gene-wise P-val.
 # rule LD_decay_plot

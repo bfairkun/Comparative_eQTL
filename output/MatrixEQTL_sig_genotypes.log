@@ -8,24 +8,24 @@ Options in effect:
 
 Hostname: midway2-login1.rcc.local
 Working directory: /project/gilad/bjf79/projects/Comparative_eQTL/code/snakemake_workflow
-Start time: Mon Apr 15 11:33:11 2019
+Start time: Wed Apr 24 10:22:36 2019
 
-Random number seed: 1555345991
+Random number seed: 1556119356
 257137 MB RAM detected; reserving 128568 MB for main workspace.
-Allocated 96426 MB successfully, after larger attempt(s) failed.
-43599338 variants loaded from .bim file.
-39 people (0 males, 0 females, 39 ambiguous) loaded from .fam.
+Allocated 40679 MB successfully, after larger attempt(s) failed.
+9850940 variants loaded from .bim file.
+38 people (0 males, 0 females, 38 ambiguous) loaded from .fam.
 Ambiguous sex IDs written to ../../output/MatrixEQTL_sig_genotypes.nosex .
-39 phenotype values loaded from .fam.
---extract: 6613 variants remaining.
+38 phenotype values loaded from .fam.
+--extract: 4693 variants remaining.
 Warning: Ignoring phenotypes of missing-sex samples.  If you don't want those
 phenotypes to be ignored, use the --allow-no-sex flag.
 Using 1 thread (no multithreaded calculations invoked).
-Before main variant filters, 39 founders and 0 nonfounders present.
+Before main variant filters, 38 founders and 0 nonfounders present.
 Calculating allele frequencies... done.
-Total genotyping rate is 0.999965.
-6613 variants and 39 people pass filters and QC.
+Total genotyping rate is 0.999854.
+4693 variants and 38 people pass filters and QC.
 Phenotype data is quantitative.
 --recode A to ../../output/MatrixEQTL_sig_genotypes.raw ... done.
 
-End time: Mon Apr 15 11:33:52 2019
+End time: Wed Apr 24 10:22:47 2019

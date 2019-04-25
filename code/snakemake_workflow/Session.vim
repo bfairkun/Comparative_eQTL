@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit Snakefile
+edit config.yaml
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -31,28 +31,28 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 25) / 50)
+let s:l = 5 - ((4 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+5
 normal! 0
 tabnext 1
-badd +16 Snakefile
 badd +131 rules/calling.smk
-badd +1 rules/eqtl_calling.smk
+badd +9 Snakefile
+badd +381 rules/eqtl_calling.smk
 badd +30 scripts/FromAbhishek.py
-badd +31 cluster-config.json
+badd +82 cluster-config.json
 badd +18 rules/qc.smk
 badd +15 FixRNASeqFileList.py
 badd +1 rules/common.smk
 badd +140 rules/populationstructure.smk
-badd +95 rules/RNASeqMapping.smk
+badd +74 rules/RNASeqMapping.smk
 badd +43 .gitignore
-badd +16 config.yaml
+badd +96 config.yaml
 badd +70 rules/mapping.smk
 badd +1 ./scratch/MakeGenesBed.sh
-badd +12 scratch/TODO.txt
+badd +3 scratch/TODO.txt
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

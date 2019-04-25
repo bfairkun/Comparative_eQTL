@@ -45,13 +45,24 @@ GemmaC <- read.table("../output/KinshipMatrices/gemma/gk1_pruned.cXX.txt") %>%
   as.matrix()
 rownames(GemmaC) <- King.IDs
 colnames(GemmaC) <- King.IDs
+GemmaC_filtered <- read.table("../code/snakemake_workflow/eQTL_mapping/Kinship/GRM.cXX.txt") %>%
+  as.matrix()
+GemmaC_filtered_IDs <- read.table('../code/snakemake_workflow/eQTL_mapping/Kinship/GRM.king.id', stringsAsFactors = F)$V1
+rownames(GemmaC_filtered) <- GemmaC_filtered_IDs
+colnames(GemmaC_filtered) <- GemmaC_filtered_IDs
 
 A<- Pruned %>% melt()
 B<- GemmaC %>% melt()
 eigen(GemmaS+ diag(39)*0.00000000001)$values 
 qplot(A$value,B$value,alpha=0.1)
 
-B %>%
+A %>%
+  ggplot(aes(x=Var1, y=Var2, fill=value)) +
+    geom_tile() +
+    scale_fill_gradient(low="blue", high="red") +
+    theme(text = element_text(size=6), axis.text.x = element_text(angle=90, hjust=1))
+
+GemmaC_filtered %>% melt() %>%
   ggplot(aes(x=Var1, y=Var2, fill=value)) +
     geom_tile() +
     scale_fill_gradient(low="blue", high="red") +
