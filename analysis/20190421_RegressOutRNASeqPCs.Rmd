@@ -26,12 +26,12 @@ RNA-seq data for each individual was pseudo-mapped/quantified by kallisto and me
 
 ```{r make-tidy-data, warning=F}
 # Read in count table, filtering out rows that are all zeros. Here the count-table is log transformed TPM values, with genes filtered just as they would be used for association testing
-CountTable <- read.table(gzfile('../output/ForAssociationTesting.phenotypes.txt'), header=T, check.names=FALSE, row.names = 1)
+CountTable <- read.table(gzfile('../data/PastAnalysesDataToKeep/ForAssociationTesting.phenotypes.txt'), header=T, check.names=FALSE, row.names = 1)
 
 kable(head(CountTable))
 
 # Read Covariates file
-Covariates <- read.table('../output/Covariates/3RS_10GT.covariates.txt', header=T, check.names = F, stringsAsFactors = F, row.names=1)
+Covariates <- read.table('../data/PastAnalysesDataToKeep/3RS_10GT.covariates.txt', header=T, check.names = F, stringsAsFactors = F, row.names=1)
 
 # Read admixture coefficients (K=4), and first 3 principle components, since some form of population substructure will likely be included in the expression modeling as a covariate.
 AdmixtureCoeff <- read.table("../output/PopulationStructure/Admixture/MergedForAdmixture.4.Q.labelled") %>% 

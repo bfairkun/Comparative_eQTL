@@ -27,7 +27,7 @@ Here I want to check that the results of this analysis are reasonable, starting 
 
 ```{r make-tidy-data}
 # Read in genotypes for eQTLs
-Genotypes <- read.table("../data/20190410_eqtls.sig_genotypes.raw", header=T, check.names = F)
+Genotypes <- read.table("../data/PastAnalysesDataToKeep/20190410_eqtls.sig_genotypes.raw", header=T, check.names = F)
 # Genotypes[!duplicated(as.list(Genotypes))]
 kable(Genotypes[1:10,1:10])
 
@@ -186,7 +186,7 @@ apply a hwe filter, check heterozygosity of samples, consider removing expressio
 
 In the code block below I will choose a P-value filter for filtering genotypes by hwe as implemented with `plink --hwe midp`. The data comes from a subset of 1M snps (that passed undergone MAF>0.5 and Geno>0.9 filters) and their HWE pvals calculated with plink. I am looking for a threshold that takes care of these false positive calls that have an excess of heterozygotes
 ```{r Choose-hwe-filter}
-hwe.results <- read.table(gzfile('../data/20190416_hwe_tests.uncorrupted.txt.gz'), header=T) %>%
+hwe.results <- read.table(gzfile('../data/PastAnalysesDataToKeep/20190416_hwe_tests.uncorrupted.txt.gz'), header=T) %>%
   separate(GENO, c("HomA1", "Het", "HomA2"), sep="/", convert=T)
 kable(head(hwe.results))
 
@@ -210,7 +210,7 @@ The F statistic plink uses is:
 (<observed hom. count> - <expected count>) / (<total observations> - <expected count>))
 
 ```{r check-heterozygosity}
-heterozygosity <- read.table('../data/20190416_sample.heterozygosity.txt', header=T)
+heterozygosity <- read.table('../data/PastAnalysesDataToKeep/20190416_sample.heterozygosity.txt', header=T)
 kable(head(heterozygosity))
 
 ggplot(heterozygosity, aes(x=FID, y=`F`)) +

@@ -26,7 +26,7 @@ RNA-seq data for each individual was pseudo-mapped/quantified by kallisto and me
 
 ```{r make-tidy-data, warning=F}
 # Read in count table, filtering out rows that are all zeros
-CountTable <- read.table(gzfile('../output/CountTable.tpm.txt.gz'), header=T, check.names=FALSE, row.names = 1) %>%
+CountTable <- read.table(gzfile('../data/PastAnalysesDataToKeep/CountTable.tpm.txt.gz'), header=T, check.names=FALSE, row.names = 1) %>%
   rownames_to_column('gene') %>% #hack to keep rownames despite dplyr filter step
   filter_if(is.numeric, any_vars(. > 0)) %>%
   column_to_rownames('gene')

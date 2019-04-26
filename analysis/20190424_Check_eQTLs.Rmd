@@ -33,7 +33,7 @@ Here I want to check that the results of this analysis are reasonable, starting 
 
 ```{r make-tidy-data}
 # Read in genotypes for eQTLs
-Genotypes <- read.table("../data/20140424_sig_genotypes.raw", header=T, check.names = F, stringsAsFactors = F)
+Genotypes <- read.table("../data/PastAnalysesDataToKeep/20140424_sig_genotypes.raw", header=T, check.names = F, stringsAsFactors = F)
 colnames(Genotypes) <- sub("_.*", "", colnames(Genotypes))
 # Genotypes[!duplicated(as.list(Genotypes))]
 kable(Genotypes[1:10,1:10])
@@ -44,11 +44,11 @@ length(colnames(Genotypes))
 length(unique(colnames(Genotypes)))
 
 # Read in eQTLs from MatrixEQTL output (already filtered for FDR<0.1)
-eQTLs <- read.table("../data/20140424_sig_eqtls.txt", header=T)
+eQTLs <- read.table("../data/PastAnalysesDataToKeep/20140424_sig_eqtls.txt", header=T)
 kable(head(eQTLs))
 
 # Read in phenotypes, from count table
-CountTable <- read.table('../output/ForAssociationTesting.phenotypes.txt', header=T, check.names=FALSE, row.names = 1) %>% 
+CountTable <- read.table('../data/PastAnalysesDataToKeep/ForAssociationTesting.phenotypes.txt', header=T, check.names=FALSE, row.names = 1) %>% 
   t() %>%
   as.data.frame() %>%
   rownames_to_column(var = "FID")
@@ -84,8 +84,7 @@ MyBoxplot(MergedData, "FID", "ID.1.27687107.C.A", "ENSPTRT00000101617.1")
 MyBoxplot(MergedData, "FID", "ID.19.47916617.CA.C", "ENSPTRT00000026036.6")
 
 ```
-Interpretation: This is concerning; these top hits seem to be all false positives, probably driven by genotyping errors as evidenced by a huge excess of heterozygotes. I checked the raw DNA-sequencing at some of these loci (not shown) and there doesn't seem to be anything obviously wrong with the alignment or variant calling (~50% of non-duplicate, reads without any excess of mismatches and no strand bias indicate a mismatch/true snp at these locations). Paralogous genes can cause mismapping and false positive variant calls at positions like this. Probably the best way to filter them out will be to apply a Hardy-weinberg filter. This positions will deviate from HWE with very extreme Pvals, so applying a very stringent HWE filter (that still allows for some deviation from HWE, as expected because of population substructure and related individuals) may get rid of these problematic genotypes.
-
+Interpretation: This is concerning; the top hits seem to be all false positives, driven by outliers.
 Let's check some randomly sampled eqtls to see if all of the eqtls are like this.
 
 ```{r checks-for-random-eqtls}
@@ -100,4 +99,6 @@ for(i in 1:nrow(RandomSampleOfEqtls)) {
 }
 ```
 
-Interpretation: still a lot of spurious looking associations are driven by outliers. At least it doesn't seem like 317 is the outlier in most of these as I would have expected based on a [previous analysis]() of looking at the residuals after regressing out the same 3 RNA-seq PCs that were included in this model.
+Interpretation: better than [previous analysis]() but still a lot of spurious looking associations are driven by outliers. At least it doesn't seem like 317 is the outlier in most of these as I would have expected based on a  of looking at the residuals after regressing out the same 3 RNA-seq PCs that were included in this model.
+
+Next I may try the method of transformating the phenotype data by first standardizing across genes, then quantile normalizing across individuals as described in leafcutter paper.
