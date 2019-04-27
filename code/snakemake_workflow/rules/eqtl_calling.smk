@@ -1,9 +1,9 @@
 rule all:
     input:
-        "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
-        config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw"
+        "../../output/Genes.bed",
+        "../../output/log10TPM.StandardizedAndNormalized.txt",
 
-print(expand("{A}and{B}", A=[1,2], B=[3,4]))
+# print(expand("{A}and{B}", A=[1,2], B=[3,4]))
 
 rule make_plink_file_for_testing:
     """
@@ -31,9 +31,18 @@ rule make_plink_file_for_testing:
         mv eQTL_mapping/plink/ForAssociationTesting.temp.fam {output.fam}
         """
 
+rule GetGeneLevelLocation:
+    input: config["ref"]["genomegtf"]
+    output: "../../output/Genes.bed"
+    shell:
+        """
+        cat {input} | awk -F '\\t' -v OFS='\\t' '$3=="gene"' | perl -lne '/^(.+?)\\t.+?\\t.+?\\t(.+?)\\t(.+?)\\t.+?\\t(.+?)\\t.+?\\tgene_id "(.+?)".+$/ and print "$1\\t$2\\t$3\\t$5\\t.\\t$4"' > {output}
+        """
+
+
 rule make_cis_gene_windows:
     input:
-        genes_bed = config["eQTL_mapping"]["genes"]
+        genes_bed = "../../output/Genes.bed"
     output:
         "eQTL_mapping/Misc/cis_gene_windows.bed"
     log:
@@ -48,20 +57,31 @@ rule make_cis_gene_windows:
 
 rule make_filtered_phenotype_matrix:
     """
-    Use R to filter TPM count matrix for genes to map eqtls for.
+    Use R to filter TPM count matrix for genes to map eqtls for. Additionally,
+    do quantile normalization here.
     """
     input:
         fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
         counttable = config["gitinclude_output"] + "CountTable.tpm.txt.gz",
-        genes_bed = config["eQTL_mapping"]["genes"]
+        genes_bed = "../../output/Genes.bed",
+        transcripts_to_genes = "../../data/Biomart_export.Pan_Tro_3.geneids.txt"
     output:
+        log10TPM = "../../output/log10TPM.txt",
+        standardized = "../../output/log10TPM.StandardizedAndNormalized.txt",
         fam = "eQTL_mapping/plink/ForAssociationTesting.fam",
         gene_list = "eQTL_mapping/plink/ForAssociationTesting.fam.phenotype-list"
     log:
         "logs/eQTL_mapping/make_filtered_phenotype_matrix.log"
     shell:
         """
-        Rscript ../../analysis/20190327_MakeFamPhenotypeFile.R {input.counttable} {input.fam} {output.fam} {output.gene_list} {input.genes_bed} &> {log}
+        # Rscript to filter for autosomal genes and sum transcript TPM to gene TPM
+        Rscript ../../analysis/20190327_MakeFamPhenotypeFile.R {input.counttable} {input.fam} {output.log10TPM} {input.genes_bed} {input.transcripts_to_genes} &> {log}
+
+        # script to standardize and quantile normalize
+        python3 scripts/StandardizeAndQuantileNormalize.py {output.log10TPM} {output.standardized} &>> {log}
+
+        # convert to .fam format expected by gemma
+        Rscript scripts/MergeFamWithPhenotypes.R {output.standardized} {input.fam} {output.fam} {output.gene_list} &>> {log}
         """
 
 rule prune_plink_files_for_GRM:
