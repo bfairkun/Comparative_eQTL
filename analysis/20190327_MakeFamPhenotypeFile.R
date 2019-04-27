@@ -10,7 +10,7 @@ library(matrixStats)
 
 
 ## ------------------------------------------------------------------------
-knitr::purl(input="../analysis/20190327_MakeFamPhenotypeFile.Rmd", output="../analysis/20190327_MakeFamPhenotypeFile.R")
+# knitr::purl(input="../analysis/20190327_MakeFamPhenotypeFile.Rmd", output="../analysis/20190327_MakeFamPhenotypeFile.R")
 
 
 ## ----Set-filepaths-------------------------------------------------------
@@ -20,9 +20,8 @@ if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
   CountFilepath <- args[1]
   EmptyFamFilepath <- args[2]
   PhenotypeOutFilepath <- args[3]
-  PhenotypeListOutFilepath <- args[4]
-  GenesBedFile <- args[5]
-  TranscriptToGenesFile <- args[6] #Two column mapping of gene_id(col1) and transcript_id(col2)
+  GenesBedFile <- args[4]
+  TranscriptToGenesFile <- args[5] #Two column mapping of gene_id(col1) and transcript_id(col2)
 } else {
   CountFilepath <- '../output/CountTable.tpm.txt.gz'
   EmptyFamFilepath <- '../output/ForAssociationTesting.temp.fam'
@@ -102,24 +101,22 @@ length(intersect(GeneSet1, GeneSet2))
 PhenotypesToOutput <- MyDf %>%
   filter_if(is.numeric, all_vars(.>0)) %>%
   column_to_rownames('Gene.stable.ID') %>%
-  log10() %>%
-  t()
+  log10()
 
-row.names(PhenotypesToOutput) <- colnames(CountTable)
-
-
-Output.df <- EmptyFamFile %>%
-  merge(PhenotypesToOutput, all.x=T, by.x="IID", by.y=0) %>% as.tibble()
-Output.df
-
-GeneList <- data.frame(GeneList=colnames(Output.df)[-1:-5])
+# row.names(PhenotypesToOutput) <- colnames(CountTable)
+# 
+# 
+# Output.df <- EmptyFamFile %>%
+#   merge(PhenotypesToOutput, all.x=T, by.x="IID", by.y=0) %>% as.tibble()
+# Output.df
+# 
+# GeneList <- data.frame(GeneList=colnames(Output.df)[-1:-5])
 
 
 ## ----write-table-if-script-----------------------------------------------
 
 if(commandArgs()[4] == "--file=../../analysis/20190327_MakeFamPhenotypeFile.R"){
-  write.table(Output.df, col.names = F, sep='\t', file=PhenotypeOutFilepath, row.names=F, quote=F)
-  write.table(GeneList, col.names = F, sep='\t', file=PhenotypeListOutFilepath, row.names=F, quote=F)
+  write.table(PhenotypesToOutput, col.names = NA, sep='\t', file=PhenotypeOutFilepath, row.names=T, quote=F)
 }
 
 
