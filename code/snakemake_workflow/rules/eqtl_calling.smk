@@ -2,7 +2,8 @@ rule all:
     input:
         "../../output/Genes.bed",
         "../../output/log10TPM.StandardizedAndNormalized.txt",
-        "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
+        "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
+        config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw",
 
 # Use covariate files in folder specified in config, otherwise, use all the
 # covariates definied by the min and max number of PCs specified in the config
