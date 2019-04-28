@@ -1,33 +1,21 @@
----
-title: "20190327_MakeCovariateFiles"
-author: "Ben Fair"
-date: "3/27/2019"
-output: html_document
----
-
-```{r setup, include=FALSE}
+## ----setup, include=FALSE------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
-```
 
-After checking previous QC analyses of genotypes and RNA-seq data, this markdown will describe covariates used in gene expression modeling and the associated Rscript will output those covariates in the format required for MatrixEQTL. Specifically, the covariates that will be output are {NumGenotypePCs}, {NumRNASeqPCs}, sex, and perhaps RIN score.
 
-The Rscript version of this R markdown is included in the snakemake workflow to generate the [{NumGenotypePCs}.{NumRNASeqPCs}.covariates] file using the `knitr::purl()` function.
-
-```{r load-libraries, message=F, warning=F}
+## ----load-libraries, message=F, warning=F--------------------------------
 library(plyr)
 library(tidyverse)
 library(knitr)
 library(readxl)
-```
 
-Run this command to write this [.Rmd] into a [.R] that is included in the snakemake workflow for eQTL mapping:
-```{r}
-# knitr::purl(input="../analysis/20190327_MakeCovariateFiles.Rmd", output="../analysis/20190327_MakeCovariateFiles.R")
-```
 
-```{r Set-filepaths}
+## ------------------------------------------------------------------------
+knitr::purl(input="../analysis/20190427_MakeCovariateFiles.Rmd", output="../analysis/20190427_MakeCovariateFiles.R")
+
+
+## ----Set-filepaths-------------------------------------------------------
 # Use command line input to specify input and output if this is the Rscript version of this file (as opposed to Rmarkdown).
-if(commandArgs()[4] == "--file=../../analysis/20190327_MakeCovariateFiles.R"){
+if(commandArgs()[4] == "--file=../../analysis/20190427_MakeCovariateFiles.R"){
   args <- commandArgs(trailingOnly = T)
   EmptyFamFilepath <- args[1]
   MetadataExcel <- args[2]
@@ -39,19 +27,17 @@ if(commandArgs()[4] == "--file=../../analysis/20190327_MakeCovariateFiles.R"){
   print (args)
 
 } else {
-  CountFilepath <- '../data/PastAnalysesDataToKeep/CountTable.tpm.txt.gz'
+  CountFilepath <- '../output/log10TPM.StandardizedAndNormalized.txt'
   EmptyFamFilepath <- '../output/ForAssociationTesting.temp.fam'
   MetadataExcel <- '../data/Metadata.xlsx'
   GenotypePCs <- '../output/PopulationStructure/pca.eigenvec'
   NumGenotype.PCs <- 3
   NumRS.PCs <- 3
 }
-```
 
 
-Read in data:
-```{r make-tidy-data, warning=F}
-CountTable <- read.table(gzfile(CountFilepath), header=T, check.names=FALSE, row.names = 1)
+## ----make-tidy-data, warning=F-------------------------------------------
+CountTable <- read.table(CountFilepath, header=T, check.names=FALSE, row.names = 1)
 
 # dimensions of count table
 CountTable %>% dim()
@@ -68,17 +54,11 @@ kable(head(GenotypePCs.df))
 
 OtherMetadata <- as.data.frame(read_excel(MetadataExcel))
 kable(head(OtherMetadata))
-```
 
-```{r write-covariates}
+
+## ----write-covariates----------------------------------------------------
 # RNA-seq PCA
 pca_results <- CountTable %>%
-  +0.1 %>%
-  mutate(sumVar = rowSums(.)) %>%
-  arrange(desc(sumVar)) %>%
-  head(2500) %>%
-  select(-sumVar) %>%
-  log() %>%
   t() %>%
   prcomp(center=T, scale. = T)
 
@@ -99,11 +79,10 @@ Covariates <- EmptyFamFile %>%
   t()
   
 kable(head(Covariates))
-```
 
-Write table if this is the Rscript form of this Rmarkdown
-```{r write-table-if-script}
-if(commandArgs()[4] == "--file=../../analysis/20190327_MakeCovariateFiles.R"){
+
+## ----write-table-if-script-----------------------------------------------
+if(commandArgs()[4] == "--file=../../analysis/20190427_MakeCovariateFiles.R"){
   write.table(Covariates, col.names = F, sep='\t', file=OutputFile, row.names=T, quote=F)
 }
-```
+

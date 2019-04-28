@@ -1,0 +1,218 @@
+---
+title: "04272019_CheckRNASeqPCs_2"
+author: "Ben Fair"
+date: "4/27/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r load-libraries, message=F, warning=F}
+library(corrplot)
+library(ggfortify)
+library(readxl)
+library(tidyverse)
+library(psych)
+library(ggrepel)
+library(knitr)
+library(reshape2)
+library(gplots)
+```
+
+I previously did a [similar analysis]().. But this time I am using different data: Here the N genes by M individulals expression matrix has been summed to gene-level log(TPM) (as opposed to transcript level quantifications), filtered, standardized across individuals, quantile normalized across genes, and is exactly the phenotypes I will use for association testing.
+
+```{r make-tidy-data, warning=F}
+# Read in count table (not raw counts but transformed as described above)
+CountTable <- read.table(gzfile('../output/log10TPM.StandardizedAndNormalized.txt'), header=T, check.names=FALSE, row.names = 1)
+
+kable(CountTable[1:10,1:10])
+
+# Read admixture coefficients (K=4), and first 3 principle components, since some form of population substructure will likely be included in the expression modeling as a covariate.
+AdmixtureCoeff <- read.table("../output/PopulationStructure/Admixture/MergedForAdmixture.4.Q.labelled") %>% 
+  dplyr::rename(Individual.ID=V2) %>%
+  select(-V1, -V3, -V4, -V5, -V6) %>%
+  dplyr::rename(Admix.Western=V9, Admix.Eastern=V10, Admix.Central=V8, Admix.NigeriaCameroon=V7) #Renaming the admixture clusters after looking at plots with known subspecies
+kable(head(AdmixtureCoeff))
+
+GenotypePCs <- read.table("../output/PopulationStructure/pca.eigenvec", header=T) %>%
+  select(IID, PC1, PC2, PC3) %>%
+  dplyr::rename(Individual.ID=IID, GenotypePC1=PC1, GenotypePC2=PC2, GenotypePC3=PC3)
+kable(head(GenotypePCs))
+
+# Read in other metadata
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+kable(head(OtherMetadata))
+
+#Merge all metadata tables
+Metadata <- OtherMetadata %>%
+  left_join(GenotypePCs, by=c("Individual.ID")) %>%
+  left_join(AdmixtureCoeff, by=c("Individual.ID"))
+kable(head(Metadata))
+```
+
+
+First, look at distribution of a couple genes across samples. Plot histogram and normal QQ-plot
+
+```{r}
+set.seed(0)
+# Pick some random row numbers to plot.
+for (i in sample(1:nrow(CountTable), 5, replace=F)){
+  Phenotype <- as.numeric(CountTable[i,])
+  hist(Phenotype, main=rownames(CountTable)[i])
+  qqnorm(Phenotype, main=rownames(CountTable)[i])
+  qqline(Phenotype)
+}
+
+# Pick a some randome column numbers to plot. these distributions (of all expressed genes in an individual) should be normal since they are quantile normalized.
+for (i in sample(1:ncol(CountTable), 3, replace=F)){
+  Phenotype <- as.numeric(CountTable[,i])
+  hist(Phenotype, main=colnames(CountTable)[i])
+  qqnorm(Phenotype, main=colnames(CountTable)[i])
+  qqline(Phenotype)
+}
+```
+
+
+Plot correlation matrix.
+
+```{r}
+CorMatrix <- CountTable %>%
+  cor(method = c("spearman"))
+
+RNAExtractionDate <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Extract_date))))
+RNA.Library.prep.batch <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Library.prep.batch))))
+
+# Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
+heatmap.2(CorMatrix, trace="none", ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)
+
+
+# What is mean correlation
+mean(CorMatrix)
+
+```
+This correlation matrix looks reassuringly similar to the [previous analysis]() which had a number of pre-processing differences. Still a within-batch clustering of the same samples in the bottom left.
+
+
+Now perform PCA, plot a few visualizations...
+```{r pca}
+# pca with log-transformed count table (+ 0.1 pseudocount)
+pca_results <- CountTable %>%
+  t() %>%
+  prcomp(center=T, scale. = T)
+
+summary(pca_results)
+
+screeplot(pca_results, main="scree plot of PCA")
+
+# Merge with metadata
+Merged <- merge(pca_results$x, Metadata, by.x = "row.names", by.y = "Individual.ID", all=TRUE)
+kable(head(Merged))
+
+# Plot a couple PCs with a couple potential covariates
+ggplot(Merged, aes(x=PC2, y=PC1, color=factor(RNA.Extract_date), label=Row.names)) + 
+  geom_point() +
+  geom_text_repel(size=2.5)
+ggplot(Merged, aes(x=PC1, y=PC2, color=factor(RNA.Library.prep.batch), label=Row.names)) + 
+  geom_point() +
+  geom_text_repel(size=2.5)
+ggplot(Merged, aes(x=PC2, y=PC1, color=Age, label=Row.names)) + 
+  geom_point() +
+  geom_text_repel(size=2.5)
+
+
+```
+
+Can already see maybe something with the RNA extraction batch in first PC... Now I am going to look more systematically for significant correlations between potential observed confounders in the Metadata and the first 10 principle components. Will use Pearsons's correlation to test continuous continuous confounders, will use anova for categorical confounders.
+
+
+First the continuous confounders
+```{r continuous_confounders}
+
+# Grab first 10 PCs
+PCs_to_test <- Merged[,2:11]
+kable(head(PCs_to_test))
+
+# Grab potential continuous confounders that make sense to test
+Continuous_confounders_to_test <- Merged[, c("RIN", "Age", "GenotypePC1", "GenotypePC2", "GenotypePC3", "Admix.Western", "Admix.Eastern", "Admix.Central", "Admix.NigeriaCameroon")]
+kable(head(Continuous_confounders_to_test))
+
+# Test
+Spearman_test_results <- corr.test(Continuous_confounders_to_test, PCs_to_test, adjust="none", method="spearman")
+
+MinP_floor <- floor(log10(min(Spearman_test_results$p)))
+# Plot
+Spearman_test_results$p %>%
+  melt() %>%
+  dplyr::rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
+  ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
+    geom_tile() +
+    geom_text(aes(label = signif(Pvalue, 2))) +
+    scale_fill_gradient(limits=c(10**MinP_floor, 1), breaks=10**seq(MinP_floor,0,1), trans = 'log', high="white", low="red" ) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+And the categorical confounders...
+```{r categorical_confounders}
+# Grab potential categorical confounders that make sense to test
+Categorical_confounders_to_test <- Merged[,c("Viral.status", "SX","RNA.Extract_date", "RNA.Library.prep.batch", "Source")]
+kable(head(Categorical_confounders_to_test))
+
+# Viral status will need to be reformatted to make factors that make sense for testing (example: HBV+, HBV- HCV+, HCV- are factors that make sense). Let's assume that NA means negative status.
+Categorical_confounders_to_test$HBV_status <- grepl("HBV+", Categorical_confounders_to_test$Viral.status)
+Categorical_confounders_to_test$HCV_status <- grepl("HCV+", Categorical_confounders_to_test$Viral.status)
+Categorical_confounders_to_test <- Categorical_confounders_to_test[, -1 ]
+kable(head(Categorical_confounders_to_test))
+
+# Do one-way anova test as a loop.
+# First initialize results matrix
+Pvalues <- matrix(ncol = dim(PCs_to_test)[2], nrow = dim(Categorical_confounders_to_test)[2])
+colnames(Pvalues) <- colnames(PCs_to_test)
+rownames(Pvalues) <- colnames(Categorical_confounders_to_test)
+for (confounder in seq_along(Categorical_confounders_to_test)) {
+    for (PC in seq_along(PCs_to_test)) {
+      res.aov <- aov(PCs_to_test[[PC]] ~ Categorical_confounders_to_test[[confounder]])
+      pval <- summary(res.aov)[[1]][["Pr(>F)"]][1]
+      Pvalues[confounder, PC] <- pval
+    }
+}
+# Plot
+MinP_floor <- floor(log10(min(Pvalues)))
+Pvalues %>%
+  melt() %>%
+  dplyr::rename(Pvalue = value, Principle.Component=Var2, Potential.Confounder=Var1) %>%
+  ggplot(aes(x=Potential.Confounder, y=Principle.Component, fill=Pvalue)) + 
+    geom_tile() +
+    geom_text(aes(label = signif(Pvalue, 2))) +
+    scale_fill_gradient(limits=c(10**MinP_floor, 1), breaks=10**seq(MinP_floor,0,1), trans = 'log', high="white", low="red" ) +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+Plot some of the significant PC-metadata associations for a better look...
+```{r}
+ggplot(Merged, aes(x=factor(RNA.Extract_date), y=PC2, label=Label)) + 
+  geom_boxplot() +
+  geom_jitter(position=position_jitter(width=.2, height=0))
+
+ggplot(Merged, aes(x=factor(RNA.Library.prep.batch), y=PC2)) + 
+  geom_boxplot() +
+  geom_jitter(position=position_jitter(width=.1, height=0))
+
+ggplot(Merged, aes(factor(RNA.Extract_date))) + 
+  geom_bar(aes(fill = factor(RNA.Library.prep.batch)))
+```
+Strongest effect seems to be related to batch... RNA library prep batch and RNA extraction batch (date) both covary with a top PC. Have to check with Claudia that the last batch was a different extraction method (Trizol vs RNEasy).
+
+```{r}
+
+ggplot(Merged, aes(x=RIN, y=PC5, label=Label, color=factor(Source))) +
+  geom_point() +
+  geom_text_repel(size=2.5)
+```
+
+PC5 is somewhat correlated with RIN and source.
