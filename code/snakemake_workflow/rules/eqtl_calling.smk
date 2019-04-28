@@ -1,9 +1,25 @@
-rule all:
-    input:
-        "../../output/Genes.bed",
-        "../../output/log10TPM.StandardizedAndNormalized.txt",
+# rule all:
+#     input:
+#         "../../output/Genes.bed",
+#         "../../output/log10TPM.StandardizedAndNormalized.txt",
+#         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
 
-# print(expand("{A}and{B}", A=[1,2], B=[3,4]))
+# Use covariate files in folder specified in config, otherwise, use all the
+# covariates definied by the min and max number of PCs specified in the config
+# Note functions must be defined above the rules that use them
+if config["eQTL_mapping"]["CovariatesDir"]:
+    def get_covariates(wildcards):
+        """Get covariate file"""
+        return config["eQTL_mapping"]["CovariatesDir"] + "{covariate_set}".format(covariate_set = wildcards.covariate_set)
+    CovariateFiles, = glob_wildcards(config["eQTL_mapping"]["CovariatesDir"] + "{CovariateName}")
+    MatrixEQTLModels = expand("eQTL_mapping/MatrixEQTL/Results/Results.{CovariateSetName}.txt", CovariateSetName = CovariateFiles)
+else:
+    def get_covariates(wildcards):
+        return "../../output/Covariates/{covariate_set}".format(covariate_set = wildcards.covariate_set)
+    MatrixEQTLModels = expand("eQTL_mapping/MatrixEQTL/Results/Results.{A}GenotypePCs_and_{B}RNASeqPCs.covariates.txt", 
+        A= list( range( config["eQTL_mapping"]["CovariatePCs"]["GenotypePC_min"], config["eQTL_mapping"]["CovariatePCs"]["GenotypePC_max"] + 1) ),
+        B= list( range( config["eQTL_mapping"]["CovariatePCs"]["RNASeqPC_min"], config["eQTL_mapping"]["CovariatePCs"]["RNASeqPC_max"] + 1) ),
+    )
 
 rule make_plink_file_for_testing:
     """
@@ -117,24 +133,13 @@ rule Make_King_GRM:
         plink_bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
         fam = "eQTL_mapping/plink/ForAssociationTesting.fam",
     output:
-        GRM = "eQTL_mapping/GRM.king.txt"
+        GRM = "eQTL_mapping/Kinship/GRM.king.txt"
     log:
         "logs/eQTL_mapping/make_King_GRM.log"
     shell:
         """
         plink2 --bfile eQTL_mapping/plink/ForAssociationTesting --king
         """
-
-# rule make_covariate_file:
-#     """
-#     Use R to make covariate file that matches order of fam file
-#     """
-#     input:
-#     output:
-#     log:
-#     shell:
-
-#put subset gene list here. to subset fam.phenotype-list instead of gemma command batch script. That way MatrixEQTL isn't dependent on the GetCisSnp steps.
 
 rule Subset_GenesToTest:
     input:
@@ -219,7 +224,7 @@ rule GetGemmaJobList:
         plink_fam = "eQTL_mapping/plink/ForAssociationTesting.fam",
         cis_snps_collected = "logs/eQTL_mapping/collect_GetCisSNPs_batchlogs.log",
         plink_bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
-        GRM = "eQTL_mapping/GRM.cXX.txt",
+        GRM = "eQTL_mapping/Kinship/GRM.cXX.txt",
     output:
         batchshellscript = "eQTL_mapping/batchscripts/FullGemmaJobList.sh"
     params:
@@ -300,7 +305,7 @@ rule MakeMatrixEQTL_snp_table:
 
 rule MakeMatrixEQTL_gene_loc:
     input:
-        bed = config["eQTL_mapping"]["genes"],
+        bed = "../../output/Genes.bed",
         subset_to_test = "eQTL_mapping/GeneListToTest.txt",
     output:
         gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
@@ -319,14 +324,34 @@ rule MakeMatrixEQTL_snp_loc:
         awk -F'\\t' -v OFS='\\t' 'BEGIN {{ print "snp","chrom","pos" }} {{ print $2, $1,$4 }}' {input.snps} > {output.snp_locs}
         """
 
+rule make_covariate_file:
+    """
+    Use R to make covariate file that matches order of fam file
+    """
+    input:
+        EmptyFam = "../../output/ForAssociationTesting.temp.fam",
+        MetadataExcel = "../../data/Metadata.xlsx",
+        ExpressionMatrix = "../../output/log10TPM.StandardizedAndNormalized.txt",
+        GenotypePCs = "../../output/PopulationStructure/pca.eigenvec"
+    output:
+        "../../output/Covariates/{NumGenotypePCs}GenotypePCs_and_{NumRNASeqPCs}RNASeqPCs.covariates"
+    log:
+        "logs/eQTL_mapping/make_covariate_file/{NumGenotypePCs}GenotypePCs_and_{NumRNASeqPCs}RNASeqPCs.covariates.txt.log"
+    shell:
+        """
+        Rscript ../../analysis/20190427_MakeCovariateFiles.R {input.EmptyFam} {input.MetadataExcel} {input.ExpressionMatrix} {wildcards.NumRNASeqPCs} {input.GenotypePCs} {wildcards.NumGenotypePCs} {output} &> {log}
+        """
+
+
 rule MatrixEQTL:
     input:
         snps = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
         snp_locs = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
         phenotypes = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
         gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
-        covariates = "../../output/Covariates/{covariate_set}.covariates.txt",
-        grm = "eQTL_mapping/Kinship/IdentityMatrix.txt",
+        covariates = get_covariates,
+        # GRM = "eQTL_mapping/Kinship/IdentityMatrix.txt",
+        GRM = "eQTL_mapping/Kinship/GRM.cXX.txt",
     output:
         results = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.txt",
         fig = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.png"
@@ -334,13 +359,12 @@ rule MatrixEQTL:
         "logs/eQTL_mapping/MatrixEQTL.{covariate_set}.log"
     shell:
         """
-        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.grm} {output.results} {output.fig} &> {log}
+        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} &> {log}
         """
 
-CovariateFiles, = glob_wildcards("../../output/Covariates/{CovariateName}.covariates.txt")
 rule PickBestMatrixEQTLModelResults:
     input:
-        expand("eQTL_mapping/MatrixEQTL/Results/Results.{CovariateSetName}.txt", CovariateSetName = CovariateFiles)
+        MatrixEQTLModels
     output:
         FullResults = "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
     log:

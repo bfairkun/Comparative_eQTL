@@ -94,7 +94,7 @@ eQTL_mapping:
     # documentation. eQTLs will be called with all of the covariate files, and
     # the model which maximizes number of significant eQTLs (as set by FDR)
     # will be used for further analysis
-    CovariatesDir: "../../output/Covariates/"
+    CovariatesDir: ""
     # Optional directory containing covariates in same format as requested by
     # MatrixEQTL. I recommend making these files using the R script in the
     # scripts directory. This option exists since choosing the covariates has
@@ -105,6 +105,14 @@ eQTL_mapping:
     # filled to the default value "../../output/Covariates/" and the snakemake
     # will automatically create the covariate files as coded in the
     # eqtl_calling.smk portion of the pipeline.
+    CovariatePCs:
+        # If CovariatesDir is set to default, will try all combinations of
+        # covariates as definied by the following number of PCs and continue
+        # with the model that maximizes eqtls.
+        GenotypePC_min: 3
+        GenotypePC_max: 3
+        RNASeqPC_min: 0
+        RNASeqPC_max: 10
     gene_x_SNP_FDR: 0.1
     # FDR threshold for counting number of significant eQTLs at the level of
     # SNP-gene pairs

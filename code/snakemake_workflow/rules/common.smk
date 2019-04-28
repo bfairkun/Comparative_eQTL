@@ -126,3 +126,4 @@ def get_vcf_chunks_by_contig(wildcards):
                   coords=freebayes_region_chunks_dict[wildcards.contig])
 
 genotypedregions, = glob_wildcards("genotyped/all.{region}.vcf.gz")
+
