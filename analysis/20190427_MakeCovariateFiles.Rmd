@@ -22,7 +22,7 @@ library(readxl)
 
 Run this command to write this [.Rmd] into a [.R] that is included in the snakemake workflow for eQTL mapping:
 ```{r}
-knitr::purl(input="../analysis/20190427_MakeCovariateFiles.Rmd", output="../analysis/20190427_MakeCovariateFiles.R")
+# knitr::purl(input="../analysis/20190427_MakeCovariateFiles.Rmd", output="../analysis/20190427_MakeCovariateFiles.R")
 ```
 
 ```{r Set-filepaths}

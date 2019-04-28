@@ -10,7 +10,7 @@ library(readxl)
 
 
 ## ------------------------------------------------------------------------
-knitr::purl(input="../analysis/20190427_MakeCovariateFiles.Rmd", output="../analysis/20190427_MakeCovariateFiles.R")
+# knitr::purl(input="../analysis/20190427_MakeCovariateFiles.Rmd", output="../analysis/20190427_MakeCovariateFiles.R")
 
 
 ## ----Set-filepaths-------------------------------------------------------
