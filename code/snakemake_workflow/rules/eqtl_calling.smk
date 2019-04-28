@@ -1,8 +1,8 @@
-# rule all:
-#     input:
-#         "../../output/Genes.bed",
-#         "../../output/log10TPM.StandardizedAndNormalized.txt",
-#         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
+rule all:
+    input:
+        "../../output/Genes.bed",
+        "../../output/log10TPM.StandardizedAndNormalized.txt",
+        "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
 
 # Use covariate files in folder specified in config, otherwise, use all the
 # covariates definied by the min and max number of PCs specified in the config
@@ -356,7 +356,7 @@ rule MatrixEQTL:
         results = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.txt",
         fig = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.png"
     log:
-        "logs/eQTL_mapping/MatrixEQTL.{covariate_set}.log"
+        "logs/eQTL_mapping/MatrixEQTL/{covariate_set}.log"
     shell:
         """
         Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} &> {log}
@@ -368,18 +368,21 @@ rule PickBestMatrixEQTLModelResults:
     output:
         FullResults = "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
     log:
-        "logs/eQTL_mapping/MatrixEQTL/eQTLsPerResult.txt"
+        "logs/eQTL_mapping/MatrixEQTL/PickBestMatrixEQTLModelResults.txt"
     run:
         from shutil import copyfile
         from collections import Counter
         NumEqtls = Counter()
-        for filepath in input:
+        print ( list(input) )
+        for filepath in list(input):
             with open( filepath, 'rU' ) as f:
                 for i,line in enumerate(f):
-                    if i>1:
+                    if i>=1:
                         snp, gene, beta, tstsat, p, fdr = line.strip('\t').split('\t')
                         if float(fdr) < 0.1:
+                            print('yes')
                             NumEqtls[filepath] += 1
+        # print( NumEqtls )
         with open(log[0], 'w') as f:
             for filepath, eqtl_count in NumEqtls.items():
                 f.write("{}\t{}\n".format( filepath, eqtl_count ))

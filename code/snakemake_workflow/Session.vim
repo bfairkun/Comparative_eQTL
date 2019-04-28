@@ -31,29 +31,19 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 314 - ((36 * winheight(0) + 25) / 50)
+let s:l = 383 - ((39 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-314
-normal! 037|
+383
+normal! 038|
 tabnext 1
+badd +143 rules/eqtl_calling.smk
+badd +8 Snakefile
 badd +1 .gitignore
-badd +1 Snakefile
-badd +1 rules/eqtl_calling.smk
-badd +17 scripts/StandardizeAndQuantileNormalize.py
 badd +1 scratch/TODO.txt
 badd +97 config.yaml
-badd +131 rules/calling.smk
-badd +30 scripts/FromAbhishek.py
 badd +82 cluster-config.json
-badd +18 rules/qc.smk
-badd +15 FixRNASeqFileList.py
-badd +129 rules/common.smk
-badd +140 rules/populationstructure.smk
-badd +74 rules/RNASeqMapping.smk
-badd +70 rules/mapping.smk
-badd +1 ./scratch/MakeGenesBed.sh
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif
