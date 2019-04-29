@@ -1,4 +1,3 @@
-
 rule MergeFastqFiles:
     input:
         lambda wildcards: expand("{RNASeqSample}", RNASeqSample=RNASeqSampleToFastq_dict[wildcards.RNASeqSample])
@@ -72,8 +71,24 @@ rule kallisto_quant_merge_into_count_table:
     shell:
         """
         paste <(awk '{{print $1}}' {input.quant[0]}) \
-        <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/kallisto\///g' | sed 's/\/abundance.tsv//g' | sed 's/[[:blank:]]+/\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $5 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) | awk -v OFS='\t' 'NR>1')) | gzip - > {output}
+        <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/kallisto\///g' | sed 's/\/abundance.tsv//g' | sed 's/[[:blank:]]+/\\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $5 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) | awk -v OFS='\t' 'NR>1')) | gzip - > {output}
         """
+
+rule STAR_quant_merge_into_count_table:
+    input:
+        quant=expand("RNASeq/STAR/{sample}/ReadsPerGene.out.tab", sample=RNASeqSampleToFastq_dict.keys()),
+    output:
+        "RNASeq/STAR/CountTable.txt.gz"
+    shell:
+        """
+        paste <(awk 'BEGIN {{print "GENE"}} {{print $1}}' {input.quant[0]}) \
+        <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/STAR\///g' | sed 's/\/ReadsPerGene.out.tab//g' | sed 's/[[:blank:]]+/\\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $2 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) )) | awk -F'\\t' -v OFS='\\t' 'NR==1 || NR >=6' |  gzip - > {output}
+        """
+
+# rule ChooseCountTableForDownstreamAnalysis:
+#     input:
+#     output:
+#     shell:
 
 rule kallisto_quant_each_fastq:
     input:

@@ -1,9 +1,9 @@
-rule all:
-    input:
-        "../../output/Genes.bed",
-        "../../output/log10TPM.StandardizedAndNormalized.txt",
-        "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
-        config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw",
+# rule all:
+#     input:
+#         "../../output/Genes.bed",
+#         "../../output/log10TPM.StandardizedAndNormalized.txt",
+#         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
+#         config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw",
 
 # Use covariate files in folder specified in config, otherwise, use all the
 # covariates definied by the min and max number of PCs specified in the config
@@ -343,6 +343,10 @@ rule make_covariate_file:
         Rscript ../../analysis/20190427_MakeCovariateFiles.R {input.EmptyFam} {input.MetadataExcel} {input.ExpressionMatrix} {wildcards.NumRNASeqPCs} {input.GenotypePCs} {wildcards.NumGenotypePCs} {output} &> {log}
         """
 
+if config["eQTL_mapping"]["model_type"] == "lm":
+    CovarianceMatrix = "eQTL_mapping/Kinship/IdentityMatrix.txt"
+elif config["eQTL_mapping"]["model_type"] == "lmm":
+    CovarianceMatrix = "eQTL_mapping/Kinship/GRM.cXX.txt"
 
 rule MatrixEQTL:
     input:
@@ -351,8 +355,7 @@ rule MatrixEQTL:
         phenotypes = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
         gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
         covariates = get_covariates,
-        # GRM = "eQTL_mapping/Kinship/IdentityMatrix.txt",
-        GRM = "eQTL_mapping/Kinship/GRM.cXX.txt",
+        GRM = CovarianceMatrix,
     output:
         results = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.txt",
         fig = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.png"

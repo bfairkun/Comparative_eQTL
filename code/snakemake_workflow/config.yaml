@@ -94,6 +94,8 @@ eQTL_mapping:
     # documentation. eQTLs will be called with all of the covariate files, and
     # the model which maximizes number of significant eQTLs (as set by FDR)
     # will be used for further analysis
+    model_type: "lm"
+    # Must be either "lm" or "lmm". Only applies to MatrixEQTL rules.
     CovariatesDir: ""
     # Optional directory containing covariates in same format as requested by
     # MatrixEQTL. I recommend making these files using the R script in the

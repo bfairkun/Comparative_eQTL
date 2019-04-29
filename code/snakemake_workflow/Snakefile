@@ -5,6 +5,7 @@ include: "rules/common.smk"
 rule all:
     input:
         # "logs/eQTL_mapping/collect_Gemma_batchlogs.log",
+        "RNASeq/STAR/CountTable.txt",
         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
         "eQTL_mapping/FastQTL/ForAssociationTesting.bed.gz.tbi",
         "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
