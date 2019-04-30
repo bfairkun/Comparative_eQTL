@@ -70,7 +70,7 @@ PopulationSubstructure:
         - "5"
 
 eQTL_mapping:
-    read_mapper:
+    read_mapper: "STAR"
     # Must be either "kallisto" or "STAR"
     genes: "../../data/cDNA.all.chromosomal.bed"
     # gene locations. used only in kallisto (if any.)
@@ -81,6 +81,9 @@ eQTL_mapping:
     # Transcript stable ID
     TSS_flanking_snp_width: 1000000
     # cis-SNPs definied as SNPs within this many bp from a gene's TSS
+    quantile_normalize: false
+    # Either true or false. If false, will model log(TPM) or log(CPM) without
+    # normalization.
     gemma_batch_size: 1000
     # To control eQTL modeling parrallelization... Set how many calls to gemma
     # (1 gemma call for each gene, unless permutation testing) to lump into

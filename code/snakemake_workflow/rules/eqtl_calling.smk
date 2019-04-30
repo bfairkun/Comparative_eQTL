@@ -82,7 +82,7 @@ if config["eQTL_mapping"]["read_mapper"] == "kallisto":
         """
         input:
             fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
-            counttable = "RNASeq/kallisto/CountTable.tpm.txt.gz"
+            counttable = "RNASeq/kallisto/CountTable.tpm.txt.gz",
             genes_bed = "../../output/Genes.bed",
             transcripts_to_genes = "../../data/Biomart_export.Pan_Tro_3.geneids.txt"
         output:
@@ -91,7 +91,8 @@ if config["eQTL_mapping"]["read_mapper"] == "kallisto":
             "logs/eQTL_mapping/kallisto_counttable_to_log10TPM_matrix.log"
         shell:
             """
-            Rscript ../../analysis/20190327_MakeFamPhenotypeFile.R {input.counttable} {input.fam} {output.log10TPM} {input.genes_bed} {input.transcripts_to_genes} &> {log}
+            Rscript ../../analysis/20190327_MakeFamPhenotypeFile.R {input.counttable} {input.fam} {config[gitinclude_output]}ExpressionMatrix.un-normalized.txt  {input.genes_bed} {input.transcripts_to_genes} &> {log}
+            gzip {config[gitinclude_output]}ExpressionMatrix.un-normalized.txt
             """
 
 elif config["eQTL_mapping"]["read_mapper"] == "STAR":
@@ -103,7 +104,7 @@ elif config["eQTL_mapping"]["read_mapper"] == "STAR":
         """
         input:
             fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
-            counttable = "RNASeq/STAR/CountTable.txt.gz"
+            counttable = "RNASeq/STAR/CountTable.txt.gz",
             genes_bed = "../../output/Genes.bed",
         output:
             log10TPM = config["gitinclude_output"] + "ExpressionMatrix.un-normalized.txt.gz"
@@ -111,7 +112,8 @@ elif config["eQTL_mapping"]["read_mapper"] == "STAR":
             "logs/eQTL_mapping/STAR_counttable_to_log10CPM_matrix.log"
         shell:
             """
-            Rscript scripts/STARRawCountTableToLog10CPM.R {input.counttable} {input.fam} {output.log10TPM} {input.genes_bed} &> {log}
+            Rscript scripts/STARRawCountTableToLog10CPM.R {input.counttable} {input.fam} {config[gitinclude_output]}ExpressionMatrix.un-normalized.txt {input.genes_bed} &> {log}
+            gzip {config[gitinclude_output]}ExpressionMatrix.un-normalized.txt
             """
 
 rule quantile_normalize:
@@ -123,15 +125,19 @@ rule quantile_normalize:
         python3 scripts/StandardizeAndQuantileNormalize.py {input} {output} &>> {log}
         """
 
-rule convert_normalized_matrix_to_fam:
+if config["eQTL_mapping"]["quantile_normalize"]:
+    ExpressionMatrix = config["gitinclude_output"] + "ExpressionMatrix.normalized.txt.gz"
+else:
+    ExpressionMatrix = config["gitinclude_output"] + "ExpressionMatrix.un-normalized.txt.gz"
+rule convert_expression_matrix_to_fam:
     input:
-        ExpressionMatrix = config["gitinclude_output"] + "ExpressionMatrix.normalized.txt.gz",
+        ExpressionMatrix = ExpressionMatrix,
         fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
     output:
         gene_list = "eQTL_mapping/plink/ForAssociationTesting.fam.phenotype-list",
         fam = "eQTL_mapping/plink/ForAssociationTesting.fam",
     log:
-        "logs/eQTL_mapping/convert_normalized_matrix_to_fam.log"
+        "logs/eQTL_mapping/convert_expression_matrix_to_fam.log"
     shell:
         """
         Rscript scripts/MergeFamWithPhenotypes.R {input.ExpressionMatrix} {input.fam} {output.fam} {output.gene_list} &>> {log}
