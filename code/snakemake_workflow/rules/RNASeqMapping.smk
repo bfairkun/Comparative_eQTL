@@ -67,7 +67,7 @@ rule kallisto_quant_merge_into_count_table:
     input:
         quant=expand("RNASeq/kallisto/{sample}/abundance.tsv", sample=RNASeqSampleToFastq_dict.keys()),
     output:
-        config["gitinclude_output"] + "CountTable.tpm.txt.gz"
+        "RNASeq/kallisto/CountTable.tpm.txt.gz"
     shell:
         """
         paste <(awk '{{print $1}}' {input.quant[0]}) \
@@ -84,11 +84,6 @@ rule STAR_quant_merge_into_count_table:
         paste <(awk 'BEGIN {{print "GENE"}} {{print $1}}' {input.quant[0]}) \
         <(cat <(echo $(ls -1v {input.quant}) | sed 's/RNASeq\/STAR\///g' | sed 's/\/ReadsPerGene.out.tab//g' | sed 's/[[:blank:]]+/\\t/g') <(awk '{{ a[FNR] = (a[FNR] ? a[FNR] FS : "") $2 }} END {{ for(i=1;i<=FNR;i++) print a[i] }}' $(ls -1v {input.quant}) )) | awk -F'\\t' -v OFS='\\t' 'NR==1 || NR >=6' |  gzip - > {output}
         """
-
-# rule ChooseCountTableForDownstreamAnalysis:
-#     input:
-#     output:
-#     shell:
 
 rule kallisto_quant_each_fastq:
     input:

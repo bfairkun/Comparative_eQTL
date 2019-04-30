@@ -38,22 +38,14 @@ normal! zt
 1
 normal! 0
 tabnext 1
-badd +89 rules/RNASeqMapping.smk
+badd +85 rules/eqtl_calling.smk
 badd +8 Snakefile
-badd +44 .gitignore
-badd +345 rules/eqtl_calling.smk
-badd +17 scripts/StandardizeAndQuantileNormalize.py
-badd +1 scratch/TODO.txt
-badd +30 config.yaml
-badd +131 rules/calling.smk
-badd +30 scripts/FromAbhishek.py
+badd +70 rules/RNASeqMapping.smk
+badd +1 .gitignore
+badd +24 scratch/TODO.txt
+badd +87 config.yaml
 badd +82 cluster-config.json
-badd +18 rules/qc.smk
-badd +15 FixRNASeqFileList.py
-badd +1 rules/common.smk
-badd +140 rules/populationstructure.smk
-badd +70 rules/mapping.smk
-badd +1 ./scratch/MakeGenesBed.sh
+badd +7 scripts/StandardizeAndQuantileNormalize.py
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

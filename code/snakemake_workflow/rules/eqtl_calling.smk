@@ -72,33 +72,69 @@ rule make_cis_gene_windows:
         (bedtools sort -i {input.genes_bed} | bedtools flank -l 1 -r 0 -s -g {params.faidx} | bedtools slop -b {params.MaxDistFromTSS} -g {params.faidx} | bedtools sort -i - > {output}) &> {log}
         """
 
-rule make_filtered_phenotype_matrix:
-    """
-    Use R to filter TPM count matrix for genes to map eqtls for. Additionally,
-    do quantile normalization here.
-    """
-    input:
-        fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
-        counttable = config["gitinclude_output"] + "CountTable.tpm.txt.gz",
-        genes_bed = "../../output/Genes.bed",
-        transcripts_to_genes = "../../data/Biomart_export.Pan_Tro_3.geneids.txt"
-    output:
-        log10TPM = "../../output/log10TPM.txt",
-        standardized = "../../output/log10TPM.StandardizedAndNormalized.txt",
-        fam = "eQTL_mapping/plink/ForAssociationTesting.fam",
-        gene_list = "eQTL_mapping/plink/ForAssociationTesting.fam.phenotype-list"
-    log:
-        "logs/eQTL_mapping/make_filtered_phenotype_matrix.log"
+# Different rule for if filtering phenotype matrix if using kallisto vs STAR. For example, with STAR I require 80% of samples to have >10 reads in a gene. In kallisto this is not possible so I have different critera for filtering.
+if config["eQTL_mapping"]["read_mapper"] == "kallisto":
+
+    rule kallisto_counttable_to_log10TPM_matrix:
+        """
+        Use R to filter TPM count matrix for genes to map eqtls for. Additionally,
+        do quantile normalization here.
+        """
+        input:
+            fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
+            counttable = "RNASeq/kallisto/CountTable.tpm.txt.gz"
+            genes_bed = "../../output/Genes.bed",
+            transcripts_to_genes = "../../data/Biomart_export.Pan_Tro_3.geneids.txt"
+        output:
+            log10TPM = config["gitinclude_output"] + "ExpressionMatrix.un-normalized.txt.gz"
+        log:
+            "logs/eQTL_mapping/kallisto_counttable_to_log10TPM_matrix.log"
+        shell:
+            """
+            Rscript ../../analysis/20190327_MakeFamPhenotypeFile.R {input.counttable} {input.fam} {output.log10TPM} {input.genes_bed} {input.transcripts_to_genes} &> {log}
+            """
+
+elif config["eQTL_mapping"]["read_mapper"] == "STAR":
+
+    rule STAR_counttable_to_log10CPM_matrix:
+        """
+        Use R to filter TPM count matrix for genes to map eqtls for. Additionally,
+        do quantile normalization here.
+        """
+        input:
+            fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
+            counttable = "RNASeq/STAR/CountTable.txt.gz"
+            genes_bed = "../../output/Genes.bed",
+        output:
+            log10TPM = config["gitinclude_output"] + "ExpressionMatrix.un-normalized.txt.gz"
+        log:
+            "logs/eQTL_mapping/STAR_counttable_to_log10CPM_matrix.log"
+        shell:
+            """
+            Rscript scripts/STARRawCountTableToLog10CPM.R {input.counttable} {input.fam} {output.log10TPM} {input.genes_bed} &> {log}
+            """
+
+rule quantile_normalize:
+    input: config["gitinclude_output"] + "ExpressionMatrix.un-normalized.txt.gz"
+    output: config["gitinclude_output"] + "ExpressionMatrix.normalized.txt.gz"
+    log: "logs/eQTL_mapping/quantile_normalize.log"
     shell:
         """
-        # Rscript to filter for autosomal genes and sum transcript TPM to gene TPM
-        Rscript ../../analysis/20190327_MakeFamPhenotypeFile.R {input.counttable} {input.fam} {output.log10TPM} {input.genes_bed} {input.transcripts_to_genes} &> {log}
+        python3 scripts/StandardizeAndQuantileNormalize.py {input} {output} &>> {log}
+        """
 
-        # script to standardize and quantile normalize
-        python3 scripts/StandardizeAndQuantileNormalize.py {output.log10TPM} {output.standardized} &>> {log}
-
-        # convert to .fam format expected by gemma
-        Rscript scripts/MergeFamWithPhenotypes.R {output.standardized} {input.fam} {output.fam} {output.gene_list} &>> {log}
+rule convert_normalized_matrix_to_fam:
+    input:
+        ExpressionMatrix = config["gitinclude_output"] + "ExpressionMatrix.normalized.txt.gz",
+        fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
+    output:
+        gene_list = "eQTL_mapping/plink/ForAssociationTesting.fam.phenotype-list",
+        fam = "eQTL_mapping/plink/ForAssociationTesting.fam",
+    log:
+        "logs/eQTL_mapping/convert_normalized_matrix_to_fam.log"
+    shell:
+        """
+        Rscript scripts/MergeFamWithPhenotypes.R {input.ExpressionMatrix} {input.fam} {output.fam} {output.gene_list} &>> {log}
         """
 
 rule prune_plink_files_for_GRM:
