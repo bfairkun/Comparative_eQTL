@@ -1,0 +1,133 @@
+---
+title: "20190429_RNASeqSTAR_quantifications"
+author: "Ben Fair"
+date: "4/29/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries, message=F, warning=F}
+library(corrplot)
+library(ggfortify)
+library(readxl)
+library(tidyverse)
+library(psych)
+library(ggrepel)
+library(knitr)
+library(reshape2)
+library(gplots)
+library(matrixStats)
+```
+
+All my previous analyses (for example, here) were based on RNA-seq quantifications using the kallisto mapper/quantifier. I have noticed at low expression levels especially, there is a tendency for large variation due to a single outlier sample. I was wondering if this is a result of the kallisto softare quantification. So I remapped all the RNA-seq data with STAR aligner and here I will compare, looking specifically for outliers.
+
+```{r}
+# Read in count table from kallisto pseudoalignment/quantification (not raw counts but transformed to log10 TPM)
+CountTableKallisto <- read.table(gzfile('../data/PastAnalysesDataToKeep/20190428_log10TPM.txt.gz'), header=T, check.names=FALSE, row.names = 1)
+kable(CountTableKallisto[1:10,1:10])
+
+# Read in count table from STAR alignments
+CountTableSTAR <- read.table(gzfile('../data/PastAnalysesDataToKeep/20190429_STAR.CountTable.txt.gz'), header=T, check.names=FALSE, row.names = 1)
+kable(CountTableSTAR[1:10,1:10])
+
+```
+
+```{r}
+
+# Some initial checks of STAR  count table before doing any transformations
+dim(CountTableSTAR)
+
+# Millions of mapped reads per sample
+kable(colSums(CountTableSTAR)/1000000)
+
+# XY scatter of first two samples
+qplot(log10(CountTableSTAR$`338`), log10(CountTableSTAR$`295`))
+
+#Histogram of average gene expressions measured in counts.
+qplot(log10(rowMeans(CountTableSTAR)))
+
+# Cumulative plot of mean reads per gene. Added psuedo count
+plot(ecdf(log10(rowMeans(CountTableSTAR) + 0.001)), xlab="log10Counts", ylab="Fraction of genes with at less than x counts on average")
+
+# Now test some filtering methods, mostly based on minimum read counts:
+
+# 80% of samples must have at least 10 reads
+Q <- rowQuantiles(as.matrix(CountTableSTAR), probs=0.2)
+# Now some filtering:
+GeneSetFilter1 <- names(which(Q>10))
+
+# 100% of samples must have at least 1 read
+GeneSetFilter2<-CountTableSTAR %>%
+  rownames_to_column('gene') %>%
+  filter_if(is.numeric, all_vars(.>0)) %>%
+  pull(gene)
+
+# 100% of samples must have >0 TPM (quantified by kallisto)
+GeneSetFilter3<-rownames(CountTableKallisto)
+
+length(GeneSetFilter1)
+length(GeneSetFilter2)
+length(GeneSetFilter3)
+length(intersect(GeneSetFilter1, GeneSetFilter2))
+length(intersect(GeneSetFilter2, GeneSetFilter3))
+length(intersect(GeneSetFilter1, GeneSetFilter3))
+length(intersect(intersect(GeneSetFilter1, GeneSetFilter2), GeneSetFilter3))
+
+```
+
+All of these filter methods result in highly overlapping sets of ~14000 genes. Conceptually I prefer method 1, where 80% of samples must contain at least 10 reads, thus allowing some samples to have much less or even 0. This method will require a pseudocount to deal with log-transform.
+
+Now do some basic transformations. I will just convert to log10(CPM). 
+
+```{r}
+CountTableFiltered <- CountTableSTAR %>% as.data.frame() %>%
+  rownames_to_column('gene') %>%
+  filter(gene %in% GeneSetFilter1) %>%
+  column_to_rownames('gene')
+
+# table of log10COM
+log10CPM_table <- log10((CountTableFiltered + 1) / colSums(CountTableFiltered))
+kable(log10CPM_table[1:10,1:10])
+
+
+```
+
+Now make correlation matrix from STAR quantifications
+```{r}
+# Read in metadata
+Metadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+kable(head(Metadata))
+
+CorMatrix <- log10CPM_table %>%
+  cor(method = c("spearman"))
+
+RNAExtractionDate <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Extract_date))))
+RNA.Library.prep.batch <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Library.prep.batch))))
+
+# Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
+heatmap.2(CorMatrix, trace="none", ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)
+
+# A couple of pairwise comparisons
+qplot(log10CPM_table$`4X0095`, log10CPM_table$`4X0212`)
+qplot(log10CPM_table$`295`, log10CPM_table$Little_R)
+```
+
+Now make the same plots from the kallisto quantifications
+```{r}
+CorMatrix <- CountTableKallisto %>%
+  cor(method = c("spearman"))
+
+RNAExtractionDate <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Extract_date))))
+RNA.Library.prep.batch <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Library.prep.batch))))
+
+# Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
+heatmap.2(CorMatrix, trace="none", ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)
+
+qplot(CountTableKallisto$`4X0095`, CountTableKallisto$`4X0212`)
+qplot(CountTableKallisto$`295`, CountTableKallisto$Little_R)
+```
+Conclusion:
+Kallisto and STAR give very similar correlation matrices as expected, but especially for lowly expressed genes, kallisto quantifications can yield extreme small values where as STAR does not (or at least, it was straightforward to filter these out and yield a similarly sized set of ~14000 genes in the end).

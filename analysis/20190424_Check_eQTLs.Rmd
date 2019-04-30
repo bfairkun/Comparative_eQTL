@@ -99,6 +99,8 @@ for(i in 1:nrow(RandomSampleOfEqtls)) {
 }
 ```
 
-Interpretation: better than [previous analysis]() but still a lot of spurious looking associations are driven by outliers. At least it doesn't seem like 317 is the outlier in most of these as I would have expected based on a  of looking at the residuals after regressing out the same 3 RNA-seq PCs that were included in this model.
+Interpretation: better than [previous analysis]() but still a lot of spurious looking associations are driven by outliers. At least it doesn't seem like 317 is the outlier in most of these as I would have expected based on a  of looking at the residuals after regressing out the same 3 RNA-seq PCs that were included in this model. Note that the outliers seem to be the really really low expressed values.
 
 Next I may try the method of transformating the phenotype data by first standardizing across genes, then quantile normalizing across individuals as described in leafcutter paper.
+
+other methods I may try are more stringent filtering to get rid of genes where any sample has an extremely small value, or different quantification, for example, using cpm from STAR aligned reads instead of kallisto tpm.

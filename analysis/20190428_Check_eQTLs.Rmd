@@ -1,0 +1,110 @@
+---
+title: "20190424_Check_eQTLs"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries, message=F, warning=F}
+library(tidyverse)
+library(knitr)
+library(data.table)
+
+```
+
+
+My second pass at eqtl mapping was as follows: Genotypes filtered for MAF>0.5 & GenotypingRate>0.9, HWE-pvalue<10e-7.5. ~9.5M variants passed these filter. Gene expression as log(TPM), filtering for genes with >0 TPM (transcript level TPM summed to get gene TPM) in all samples (~14000 genes passed this filter). TPM was then standardized across individuals and quantile normalized to a normal distribution across genes. Sample MD_And was dropped from analysis because it was [previously shown]() to be an outlier that caused spurious associations. Association testing used the following linear mixed model for each cis-variant-gene-pair (cis definied as <1Mb from gene):
+
+\[
+Y =Wα+xβ+u+ε
+\]
+
+where $Y$ is gene expression as $log(TPM)$, $W$ covariates include first three genotype principal components (to account for population structure) as well as 3 RNA-seq PCs, Sex, an interceptm and 3 genotype PCs. $x$ is coded as 0,1,2, $U \sim MVN(0,\sigma^2 K)$ where $K$ an centered kinship matrix made from gemma software.
+
+Association testing was implemented in the R package 'MatrixEQTL'. This resulted in 0 eSNP-gene pairs at FDR<0.1 (Benjamini Hodgeberg correction). QQ-plots didn't show any P-value inflation relative to the null. From previous (unshown) tests, this lack of significant tests is likely due to the quantile normalizatino step diminishing signal. Even though none of the results are significant after multiple hypothesis correction, I still want to check some of the top nominally significant results to check that they aren't false positives driven by extreme outliers as I had seen in previous analyses.
+
+
+```{r make-tidy-data}
+# Read in genotypes for eQTLs
+Genotypes <- read.table("../data/PastAnalysesDataToKeep/20190428_28_Top5000eqtls.genotypes.raw", header=T, check.names = F, stringsAsFactors = F)
+colnames(Genotypes) <- sub("_.*", "", colnames(Genotypes))
+# Genotypes[!duplicated(as.list(Genotypes))]
+kable(Genotypes[1:10,1:10])
+
+
+#Make sure there aren't duplicate columns
+length(colnames(Genotypes))
+length(unique(colnames(Genotypes)))
+
+# Read in eQTLs from MatrixEQTL output (already filtered for FDR<0.1)
+eQTLs <- read.table("../data/PastAnalysesDataToKeep/20190428_Top5000eqtls.txt.gz", header=T)
+kable(head(eQTLs))
+
+# This count table is the log10(TPM); no standardization or quantile normalization
+# Read in phenotypes, from count table
+CountTable <- read.table('../output/log10TPM.StandardizedAndNormalized.txt', header=T, check.names=FALSE, row.names = 1) %>% 
+  t() %>%
+  as.data.frame() %>%
+  rownames_to_column(var = "FID")
+kable(CountTable[1:10, 1:10])
+
+MergedData <- left_join(Genotypes, CountTable, by="FID")
+```
+
+```{r checks}
+#eqtls, ordered from most significant at top
+kable(head(eQTLs))
+
+# betas for these
+hist(eQTLs$beta, breaks=20)
+```
+Not sure what to make of that multi-modal distribution of betas (Two peaks around 0 might be expected, but I wasn't expecting another peak at ~5). Maybe most of these eqtls are the snps in LD that are associated with the same gene...
+
+```{r checks}
+#how many snps
+length(unique(eQTLs$SNP))
+
+#how many genes
+length(unique(eQTLs$gene))
+```
+Average of ~5 snps per gene, so I'm still perplexed by the multiple modes in the distribution of effect sizes.
+
+In any case, now I want to check some boxplots
+```{r more-checks}
+
+# Expression box plot, stratified by genotype. For a fe of top of the list snp-gene pairs (most significant)
+MyBoxplot <- function(DataFrame, Labels.name, SNP.name, Gene.name){
+  data.frame(Genotype = DataFrame[[SNP.name]],
+    Phenotype = DataFrame[[Gene.name]],
+    FID=DataFrame[[Labels.name]]) %>%
+    ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+    scale_y_continuous(name=paste("log TPM", Gene.name)) +
+    xlab(SNP.name)
+}
+
+#Box plot of top3 eqtls
+MyBoxplot(MergedData, "FID", "ID.3.10249149.C.CT", "ENSPTRG00000043259")
+MyBoxplot(MergedData, "FID", "ID.19.55922879.C.CT", "ENSPTRG00000011430")
+MyBoxplot(MergedData, "FID", "ID.22.4961539.C.A", "ENSPTRG00000014048")
+
+```
+Interpretation: These look more believable than previous analyses without quantile normalization in the sense that these don't look driven by single outliers.
+Let's check some randomly sampled eqtls.
+
+```{r checks-for-random-eqtls}
+set.seed(1)
+RandomSampleOfEqtls <- eQTLs %>% sample_n(20) %>% select(SNP, gene, beta)
+kable(RandomSampleOfEqtls)
+
+for(i in 1:nrow(RandomSampleOfEqtls)) {
+  try(
+    print(MyBoxplot(MergedData, "FID", as.character(RandomSampleOfEqtls$SNP[i]), as.character(RandomSampleOfEqtls$gene[i])))
+  )
+}
+```
+
+

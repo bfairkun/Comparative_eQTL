@@ -26,7 +26,7 @@ I previously did a [similar analysis]().. But this time I am using different dat
 
 ```{r make-tidy-data, warning=F}
 # Read in count table (not raw counts but transformed as described above)
-CountTable <- read.table(gzfile('../output/log10TPM.StandardizedAndNormalized.txt'), header=T, check.names=FALSE, row.names = 1)
+CountTable <- read.table(gzfile('../data/PastAnalysesDataToKeep/20190428_log10TPM.StandardizedAndNormalized.txt.gz'), header=T, check.names=FALSE, row.names = 1)
 
 kable(CountTable[1:10,1:10])
 
@@ -75,8 +75,28 @@ for (i in sample(1:ncol(CountTable), 3, replace=F)){
 }
 ```
 
+Plot correlation matrix before standardization and qqnorm.
+```{r}
+CountTableNoNorm <- read.table(gzfile('../data/PastAnalysesDataToKeep/20190428_log10TPM.txt.gz'), header=T, check.names=FALSE, row.names = 1)
+CorMatrix <- CountTableNoNorm %>%
+  cor(method = c("spearman"))
 
-Plot correlation matrix.
+RNAExtractionDate <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Extract_date))))
+RNA.Library.prep.batch <- as.character(unclass(factor(plyr::mapvalues(row.names(CorMatrix), from=Metadata$Individual.ID, to=Metadata$RNA.Library.prep.batch))))
+
+# Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
+heatmap.2(CorMatrix, trace="none", ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)
+
+qplot(CountTableNoNorm$`4X0267`, CountTableNoNorm$`4X0212`)
+qplot(CountTableNoNorm$Little_R, CountTableNoNorm$`4X0212`)
+
+
+# What is mean correlation
+mean(CorMatrix)
+```
+
+
+Plot correlation matrix after standardization and qqnorm.
 
 ```{r}
 CorMatrix <- CountTable %>%
@@ -216,3 +236,4 @@ ggplot(Merged, aes(x=RIN, y=PC5, label=Label, color=factor(Source))) +
 ```
 
 PC5 is somewhat correlated with RIN and source.
+
