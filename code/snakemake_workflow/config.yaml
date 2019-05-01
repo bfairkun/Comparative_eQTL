@@ -81,7 +81,7 @@ eQTL_mapping:
     # Transcript stable ID
     TSS_flanking_snp_width: 1000000
     # cis-SNPs definied as SNPs within this many bp from a gene's TSS
-    quantile_normalize: false
+    quantile_normalize: true
     # Either true or false. If false, will model log(TPM) or log(CPM) without
     # normalization.
     gemma_batch_size: 1000
@@ -90,7 +90,7 @@ eQTL_mapping:
     # each batch script. I have moved on to do the eQTL mapping with MatrixEQTL
     # (not gemma), though I left some of the old gemma code. So this parameter
     # may not be of importance.
-    model_type: "lm"
+    model_type: "lmm"
     # Must be either "lm" or "lmm". Only applies to MatrixEQTL rules.
     CovariatesDir: ""
     # Optional directory containing covariates in same format as requested by

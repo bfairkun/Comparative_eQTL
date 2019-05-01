@@ -16,6 +16,8 @@ covariates_file_name <- args[5]
 errorCovariance_file <- args[6]
 output_file_name_cis <- args[7]
 ouput_QQ <- args[8]
+permuted_output_filename <- args[9]
+permuted_output_QQ <- args[10]
 
 # snps_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc"
 # expression_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
@@ -62,16 +64,6 @@ gene$fileSkipColumns = 1;       # one column of row labels
 gene$fileSliceSize = 2000;      # read file in slices of 2,000 rows
 gene$LoadFile(expression_file_name);
 
-## Quantile normalization
-
-# for( sl in 1:length(gene) ) {
-#   mat = gene[[sl]];
-#   mat = t(apply(mat, 1, rank, ties.method = "average"));
-#   mat = qnorm(mat / (ncol(gene)+1));
-#   gene[[sl]] = mat;
-# }
-# rm(sl, mat);
-
 ## Load covariates
 
 cvrt = SlicedData$new();
@@ -105,6 +97,33 @@ me = Matrix_eQTL_main(
   min.pv.by.genesnp = FALSE,
   noFDRsaveMemory = FALSE);
 
+# Permute the sample labels for expression
+ActualData <- read.table(expression_file_name, header=T, row.names = 1)
+Temp.df <- ActualData %>% select(sample(colnames(ActualData), length(colnames(ActualData))))
+colnames(Temp.df) <- colnames(ActualData)
+TempFilepath <- tempfile()
+write.table(Temp.df, file=TempFilepath, sep='\t', quote=F, col.names =NA)
+
+gene$LoadFile(TempFilepath);
+
+permuted = Matrix_eQTL_main(
+  snps = snps,
+  gene = gene,
+  cvrt = cvrt,
+  output_file_name     = NULL,
+  pvOutputThreshold     = 0,
+  useModel = useModel,
+  errorCovariance = errorCovariance,
+  verbose = TRUE,
+  output_file_name.cis = permuted_output_filename,
+  pvOutputThreshold.cis = pvOutputThreshold_cis,
+  snpspos = snpspos,
+  genepos = genepos,
+  cisDist = cisDist,
+  pvalue.hist = "qqplot",
+  min.pv.by.genesnp = FALSE,
+  noFDRsaveMemory = FALSE);
+
 ## Results:
 
 cat('Analysis done in: ', me$time.in.sec, ' seconds', '\n');
@@ -112,5 +131,7 @@ cat('Analysis done in: ', me$time.in.sec, ' seconds', '\n');
 ## Plot the Q-Q plot of local p-values
 
 ggsave(file=ouput_QQ, plot(me))
+ggsave(file=permuted_output_QQ, plot(permuted))
+
 
 

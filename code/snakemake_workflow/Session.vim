@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit config.yaml
+edit Snakefile
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -31,19 +31,19 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 84 - ((5 * winheight(0) + 25) / 50)
+let s:l = 1 - ((0 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-84
-normal! 029|
+1
+normal! 0
 tabnext 1
-badd +99 rules/eqtl_calling.smk
-badd +8 Snakefile
+badd +484 rules/eqtl_calling.smk
+badd +1 Snakefile
+badd +74 config.yaml
 badd +70 rules/RNASeqMapping.smk
 badd +1 .gitignore
 badd +24 scratch/TODO.txt
-badd +107 config.yaml
 badd +82 cluster-config.json
 badd +7 scripts/StandardizeAndQuantileNormalize.py
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0

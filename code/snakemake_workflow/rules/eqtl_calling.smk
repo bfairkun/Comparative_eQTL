@@ -391,6 +391,8 @@ elif config["eQTL_mapping"]["model_type"] == "lmm":
     CovarianceMatrix = "eQTL_mapping/Kinship/GRM.cXX.txt"
 
 rule MatrixEQTL:
+    """Matrix EQTL script performs one cis-eqtl scan with real data and one
+    scan with permutated sample labels for phenotypes for an empirical null."""
     input:
         snps = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
         snp_locs = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
@@ -400,12 +402,14 @@ rule MatrixEQTL:
         GRM = CovarianceMatrix,
     output:
         results = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.txt",
-        fig = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.png"
+        fig = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.png",
+        permuted_results = "eQTL_mapping/MatrixEQTL/Results/PermutatedResults.{covariate_set}.txt",
+        permutated_fig = "eQTL_mapping/MatrixEQTL/Results/PermutatedResults.{covariate_set}.png",
     log:
         "logs/eQTL_mapping/MatrixEQTL/{covariate_set}.log"
     shell:
         """
-        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} &> {log}
+        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {permutated_fig} &> {log}
         """
 
 rule PickBestMatrixEQTLModelResults:
@@ -426,9 +430,8 @@ rule PickBestMatrixEQTLModelResults:
                     if i>=1:
                         snp, gene, beta, tstsat, p, fdr = line.strip('\t').split('\t')
                         if float(fdr) < 0.1:
-                            print('yes')
                             NumEqtls[filepath] += 1
-        # print( NumEqtls )
+        print( NumEqtls )
         with open(log[0], 'w') as f:
             for filepath, eqtl_count in NumEqtls.items():
                 f.write("{}\t{}\n".format( filepath, eqtl_count ))

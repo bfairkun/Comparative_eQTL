@@ -6,7 +6,7 @@ rule all:
     input:
         # "logs/eQTL_mapping/collect_Gemma_batchlogs.log",
         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
-        "eQTL_mapping/FastQTL/ForAssociationTesting.bed.gz.tbi",
+        # "eQTL_mapping/FastQTL/ForAssociationTesting.bed.gz.tbi",
         "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
         "../../output/RNA_seq_FlowCellInfo.txt",
         "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
