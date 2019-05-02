@@ -1,0 +1,32 @@
+PLINK v1.90b4 64-bit (20 Mar 2017)
+Options in effect:
+  --allow-extra-chr
+  --bfile eQTL_mapping/plink/ForAssociationTesting
+  --extract /dev/stdin
+  --out ../../data/PastAnalysesDataToKeep/20190502_SigQTLs.genotypes.txt
+  --recode A
+
+Hostname: midway2-login2.rcc.local
+Working directory: /project/gilad/bjf79/projects/Comparative_eQTL/code/snakemake_workflow
+Start time: Thu May  2 08:43:30 2019
+
+Random number seed: 1556804610
+257137 MB RAM detected; reserving 128568 MB for main workspace.
+9850940 variants loaded from .bim file.
+38 people (0 males, 0 females, 38 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+../../data/PastAnalysesDataToKeep/20190502_SigQTLs.genotypes.txt.nosex .
+38 phenotype values loaded from .fam.
+--extract: 283 variants remaining.
+Warning: Ignoring phenotypes of missing-sex samples.  If you don't want those
+phenotypes to be ignored, use the --allow-no-sex flag.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 38 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999907.
+283 variants and 38 people pass filters and QC.
+Phenotype data is quantitative.
+--recode A to
+../../data/PastAnalysesDataToKeep/20190502_SigQTLs.genotypes.txt.raw ... done.
+
+End time: Thu May  2 08:43:38 2019
