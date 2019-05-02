@@ -1,9 +1,6 @@
 # rule all:
 #     input:
 #         "../../output/Genes.bed",
-#         "../../output/log10TPM.StandardizedAndNormalized.txt",
-#         "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
-#         config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw",
 
 # Use covariate files in folder specified in config, otherwise, use all the
 # covariates definied by the min and max number of PCs specified in the config
@@ -22,7 +19,19 @@ else:
         B= list( range( config["eQTL_mapping"]["CovariatePCs"]["RNASeqPC_min"], config["eQTL_mapping"]["CovariatePCs"]["RNASeqPC_max"] + 1) ),
     )
 
-rule make_plink_file_for_testing:
+rule make_plink_file_from_vcf_for_testing:
+    input:
+        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz"),
+    output:
+        "eQTL_mapping/plink/Unfiltered.bed"
+    log:
+        "logs/eQTL_mapping/make_plink_file_from_vcf_for_testing.log"
+    shell:
+        """
+        plink --id-delim '-' --vcf {input.vcf} --vcf-half-call m --allow-extra-chr --make-bed --out eQTL_mapping/plink/Unfiltered &> {log}
+        """
+
+rule filter_plink_file_for_testing:
     """
     .fam file output to the gitinclude output directory for convenience, so
     that I can easily access it from my local laptop with git, to edit scripts
@@ -30,19 +39,19 @@ rule make_plink_file_for_testing:
     files must have samples ordered same as the fam (phenotype) file
     """
     input:
-        vcf = ancient("PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz"),
+        bed = "eQTL_mapping/plink/Unfiltered.bed"
     output:
         bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
         fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
         bim = "eQTL_mapping/plink/ForAssociationTesting.bim"
     log:
-        "logs/eQTL_mapping/make_plink_file_for_gemma.log"
+        "logs/eQTL_mapping/filter_plink_file_for_testing.log"
     params:
-        stdparams = "--keep-fam <(echo {fam})".format(fam=config["read_mapping"]["ReadGroupID_prefix"].replace('-','')),
-        extra = "--remove <(printf Pan_troglodytes_ThisStudy\\tMD_And\\n) --maf 0.05 --geno --hwe 1e-7.5"
+        stdparams = "--keep-fam eQTL_mapping/plink/KeepFam.txt",
+        extra = '--remove eQTL_mapping/plink/Remove.txt --maf 0.05 --geno --hwe 1e-7.5'
     shell:
         """
-        plink --id-delim '-' --vcf {input.vcf} --vcf-half-call m --allow-extra-chr --make-bed --out eQTL_mapping/plink/ForAssociationTesting.temp {params.stdparams} {params.extra} &> {log}
+        plink --bfile eQTL_mapping/plink/Unfiltered  --allow-extra-chr --make-bed --out eQTL_mapping/plink/ForAssociationTesting.temp {params.stdparams} {params.extra} &> {log}
         mv eQTL_mapping/plink/ForAssociationTesting.temp.bed {output.bed}
         mv eQTL_mapping/plink/ForAssociationTesting.temp.bim {output.bim}
         mv eQTL_mapping/plink/ForAssociationTesting.temp.fam {output.fam}
@@ -146,6 +155,7 @@ rule convert_expression_matrix_to_fam:
 rule prune_plink_files_for_GRM:
     input:
         bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
+        fam = "eQTL_mapping/plink/ForAssociationTesting.fam"
     output:
         bed =  "eQTL_mapping/Kinship/ForAssocationTesting.pruned.bed",
     log:
@@ -167,7 +177,7 @@ rule Make_GRM:
         "logs/eQTL_mapping/make_GRM.log"
     shell:
         """
-        gemma -gk 1 -bfile eQTL_mapping/Kinship/ForAssociationTesting -o GRM -outdir eQTL_mapping/Kinship &> {log}
+        gemma -gk 1 -bfile eQTL_mapping/Kinship/ForAssociationTesting.pruned -o GRM -outdir eQTL_mapping/Kinship &> {log}
         """
 
 rule Make_King_GRM:
@@ -402,14 +412,14 @@ rule MatrixEQTL:
         GRM = CovarianceMatrix,
     output:
         results = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.txt",
-        fig = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.png",
+        fig = "eQTL_mapping/MatrixEQTL/Results/images/Results.{covariate_set}.png",
         permuted_results = "eQTL_mapping/MatrixEQTL/Results/PermutatedResults.{covariate_set}.txt",
-        permutated_fig = "eQTL_mapping/MatrixEQTL/Results/PermutatedResults.{covariate_set}.png",
+        permutated_fig = "eQTL_mapping/MatrixEQTL/Results/images/PermutatedResults.{covariate_set}.png",
     log:
         "logs/eQTL_mapping/MatrixEQTL/{covariate_set}.log"
     shell:
         """
-        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {permutated_fig} &> {log}
+        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {output.permutated_fig} &> {log}
         """
 
 rule PickBestMatrixEQTLModelResults:
@@ -467,13 +477,50 @@ rule MakeFastQTL_input:
     shell:
         """
         # Make genotypes vcf
-        plink2 --bfile {input.plink_bed} --recode vcf-fid --allow-extra-chr --out eQTL_mapping/FastQTL/ForAssociationTesting
+        plink2 --bfile eQTL_mapping/plink/ForAssociationTesting  --recode vcf-iid --allow-extra-chr --out eQTL_mapping/FastQTL/ForAssociationTesting
         bgzip eQTL_mapping/FastQTL/ForAssociationTesting.vcf && tabix -p vcf {output.vcf}
 
         # Make phenotypes bed
         paste <(awk 'NR>1' {input.gene_loc} | sort) <(awk 'NR>1' {input.phenotypes} | sort) | perl -lne '/^.+?\\t(.+)$/ and print  "$1"' | bedtools sort -i - > eQTL_mapping/FastQTL/ForAssociationTesting.bed
         bgzip eQTL_mapping/ForAssociationTesting.bed && tabix -p bed {output.bed}
         """
+
+# rule prepare_vcf_for_VerifyBamID:
+#     """Grab vcf from plink file for association testing, since these genotypes
+#     are already well filtered for errors"""
+#     input:
+#         bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
+#     output:
+#         "qc/verifybamid/VerifyBamID.chr21.vcf.gz"
+#     shell:
+#         """
+#         # plink2 --bfile eQTL_mapping/plink/ForAssociationTesting --chr 21 --recode vcf-fid --allow-extra-chr --out qc/verifybamid/VerifyBamID.chr21
+#         # bgzip qc/verifybamid/VerifyBamID.chr21.vcf && tabix -p vcf {output}
+#         """
+
+# rule VerifyBamID:
+#     """Find best sample match (among those included for eqtl calling) for each
+#     RNA-seq sample (among all samples in RNAseqsamples.tsv list).
+#     Note this means that if some samples are discarded from eqtl calling, this rule will pick the best"""
+#     input:
+#         bam = "RNASeq/STAR/{sample}/Aligned.sortedByCoord.out.bam",
+#         bambai = "RNASeq/STAR/{sample}/Aligned.sortedByCoord.out.bam",
+#         vcf = "filtered/21.vcf.gz"
+#         # bam = "/project/gilad/bjf79/Chimp_eQTL/dna-seq-gatk-variant-calling/dedup_merged/{sample}.sorted.bam",
+#         # bai = "/project/gilad/bjf79/Chimp_eQTL/dna-seq-gatk-variant-calling/dedup_merged/{sample}.sorted.bam.bai",
+#         # vcf = "qc/verifybamid/VerifyBamID.chr21.vcf.gz"
+#     output:
+#         bestSM = "qc/verifybamid/{sample}.bestSM",
+#         chr21bam = "qc/verifybamid/bams/{sample}.bam"
+#     log:
+#         "logs/Admixture/qc/VerifyBamID.{sample}.log"
+#     shell:
+#         """
+#         samtools view -bh {input.bam} 21 1-1000000 > {output.chr21bam} 2> {log}
+#         samtools index {output.chr21bam} &>> {log}
+#         verifyBamID --vcf {input.vcf} --bam {output.chr21bam} --best --out qc/verifybamid/{wildcards.sample} &>> {log}
+#         """
+
 
 
 

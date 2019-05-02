@@ -81,7 +81,7 @@ eQTL_mapping:
     # Transcript stable ID
     TSS_flanking_snp_width: 1000000
     # cis-SNPs definied as SNPs within this many bp from a gene's TSS
-    quantile_normalize: true
+    quantile_normalize: false
     # Either true or false. If false, will model log(TPM) or log(CPM) without
     # normalization.
     gemma_batch_size: 1000

@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit Snakefile
+edit rules/eqtl_calling.smk
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -38,14 +38,16 @@ normal! zt
 1
 normal! 0
 tabnext 1
-badd +484 rules/eqtl_calling.smk
-badd +1 Snakefile
-badd +74 config.yaml
-badd +70 rules/RNASeqMapping.smk
+badd +410 rules/eqtl_calling.smk
+badd +4 Snakefile
+badd +84 cluster-config.json
+badd +125 config.yaml
+badd +26 rules/RNASeqMapping.smk
 badd +1 .gitignore
 badd +24 scratch/TODO.txt
-badd +82 cluster-config.json
 badd +7 scripts/StandardizeAndQuantileNormalize.py
+badd +79 rules/calling.smk
+badd +42 rules/common.smk
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

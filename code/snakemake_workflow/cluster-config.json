@@ -77,7 +77,10 @@
   "MakePlinkBed":
   {"mem" : 36000},
 
-  "make_plink_file_for_testing":
+  "make_plink_file_from_vcf_for_testing":
+  {"mem" : 36000},
+
+  "filter_plink_file_for_testing":
   {"mem" : 36000},
 
   "Make_GRM":
