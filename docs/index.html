@@ -339,7 +339,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-04-25
+<strong>Last updated:</strong> 2019-05-02
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -370,10 +370,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree680e39ef06e316c56ecf87264155d5f31881839ctargetblank680e39ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/680e39ef06e316c56ecf87264155d5f31881839c" target="_blank">680e39e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9a1ab6e1cf9db9868b66c811ca01373c419085detargetblank9a1ab6ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/9a1ab6e1cf9db9868b66c811ca01373c419085de" target="_blank">9a1ab6e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree680e39ef06e316c56ecf87264155d5f31881839ctargetblank680e39ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9a1ab6e1cf9db9868b66c811ca01373c419085detargetblank9a1ab6ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -383,18 +383,25 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    docs/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/20190327_MakeCovariateFiles.Rmd
-    Untracked:  analysis/20190421_RegressOutRNASeqPCs.Rmd
-    Untracked:  analysis_temp/
-    Untracked:  docs/figure/20190412_Check_eQTLs.Rmd/
-    Untracked:  docs/figure/20190421_RegressOutRNASeqPCs.Rmd/
-    Untracked:  docs/figure/20190424_Check_eQTLs.Rmd/
+    Untracked:  analysis/20190502_Check_eQTLs.Rmd
+    Untracked:  analysis_temp/20190412_Check_eQTLs.Rmd
+    Untracked:  data/PastAnalysesDataToKeep/20190428_log10TPM.txt.gz
+    Untracked:  docs/assets/
+    Untracked:  docs/figure/20190426_CheckRNASeqPCs_2.Rmd/
+    Untracked:  docs/figure/20190428_Check_eQTLs.Rmd/
+    Untracked:  docs/figure/20190429_RNASeqSTAR_quantifications.Rmd/
+    Untracked:  docs/figure/20190502_Check_eQTLs.Rmd/
 
 Unstaged changes:
-    Deleted:    analysis/20190412_Check-Kinship-Matrices.Rmd
-    Modified:   analysis/20190412_Check_eQTLs.Rmd
+    Deleted:    analysis/20190412_Check_eQTLs.Rmd
+    Modified:   analysis/20190428_Check_eQTLs.Rmd
     Modified:   analysis/index.Rmd
 
 </code></pre>
@@ -434,6 +441,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/analysis/index.Rmd" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+<td>
+updated site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/index.html" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+<td>
+updated site
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -597,6 +638,7 @@ Start workflowr project.
 <ul>
 <li><a href="20190325_MergingRNASeqLanes.html">Check that RNA-seq data segregates by biological sample over sequencing flow cell</a></li>
 <li><a href="20190320_Check-RNAseq-PCs.html">Checking RNA-seq data for covariates</a></li>
+<li><a href="20190429_RNASeqSTAR_quantifications.html">STAR Aligner vs kallisto pseudoaligner for gene quantification</a></li>
 </ul>
 </div>
 <div id="prepare-data-for-eqtl-testing" class="section level3">
@@ -612,6 +654,8 @@ Start workflowr project.
 <li><a href="20190412_Check_eQTLs.html">first iteration</a>: description: lmm with KING-robust GRM thresholded at 0, and 3 genotype PCs</li>
 <li><a href="20190421_RegressOutRNASeqPCs.html">Check residuals after regressing out some covariates</a></li>
 <li><a href="20190424_Check_eQTLs.html">second iteration</a>: description: lm with 5 genotype PCs (PCs 4 and 5 takes into account some first hand relatedness) and more stringent genotype filtering. Also, outlier sample MD_And dropped from analysis</li>
+<li><a href="20190428_Check_eQTLs.html">Third iteration</a></li>
+<li><a href="20190502_Check_eQTLs.html">fourth iteration</a>: description, lmm with 4 PCs and 3 Genotype PCs, used STAR RNA-seq CPM for less outliers. Fixed big bug that was permuting samples, resulting in no true hits in previous iterations. Here I used standardization and qqnorm.</li>
 </ul>
 </div>
 </div>
