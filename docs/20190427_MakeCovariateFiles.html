@@ -532,16 +532,23 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis_temp/.DS_Store
     Ignored:    data/.DS_Store
     Ignored:    data/PastAnalysesDataToKeep/.DS_Store
     Ignored:    docs/.DS_Store
 
 Untracked files:
     Untracked:  analysis/20190502_Check_eQTLs.Rmd
+    Untracked:  analysis_temp/20190412_Check_eQTLs.Rmd
     Untracked:  data/PastAnalysesDataToKeep/20190428_log10TPM.txt.gz
     Untracked:  docs/assets/
+    Untracked:  docs/figure/20190426_CheckRNASeqPCs_2.Rmd/
     Untracked:  docs/figure/20190429_RNASeqSTAR_quantifications.Rmd/
     Untracked:  docs/figure/20190502_Check_eQTLs.Rmd/
+
+Unstaged changes:
+    Deleted:    analysis/20190412_Check_eQTLs.Rmd
 
 </code></pre>
 <p>
@@ -585,7 +592,24 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/bfairkun/Comparative_eQTL/blob/db7c8470f4dc117c727eea6bd8ceff487e983abb/analysis/20190327_MakeCovariateFiles.Rmd" target="_blank">db7c847</a>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f405423568ce14451dd1caf4697a1b6fa89686f2/analysis/20190427_MakeCovariateFiles.Rmd" target="_blank">f405423</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-27
+</td>
+<td>
+fixed unnecessary knitr call that fails
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/db7c8470f4dc117c727eea6bd8ceff487e983abb/analysis/20190427_MakeCovariateFiles.Rmd" target="_blank">db7c847</a>
 </td>
 <td>
 Benjmain Fair
@@ -595,40 +619,6 @@ Benjmain Fair
 </td>
 <td>
 Added PCA of normalized data, new covariates R script
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/analysis/20190327_MakeCovariateFiles.Rmd" target="_blank">f47ec35</a>
-</td>
-<td>
-Benjmain Fair
-</td>
-<td>
-2019-04-25
-</td>
-<td>
-updated site
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/20190327_MakeCovariateFiles.html" target="_blank">f47ec35</a>
-</td>
-<td>
-Benjmain Fair
-</td>
-<td>
-2019-04-25
-</td>
-<td>
-updated site
 </td>
 </tr>
 </tbody>
@@ -645,9 +635,9 @@ library(tidyverse)
 library(knitr)
 library(readxl)</code></pre>
 <p>Run this command to write this [.Rmd] into a [.R] that is included in the snakemake workflow for eQTL mapping:</p>
-<pre class="r"><code># knitr::purl(input=&quot;../analysis/20190327_MakeCovariateFiles.Rmd&quot;, output=&quot;../analysis/20190327_MakeCovariateFiles.R&quot;)</code></pre>
+<pre class="r"><code># knitr::purl(input=&quot;../analysis/20190427_MakeCovariateFiles.Rmd&quot;, output=&quot;../analysis/20190427_MakeCovariateFiles.R&quot;)</code></pre>
 <pre class="r"><code># Use command line input to specify input and output if this is the Rscript version of this file (as opposed to Rmarkdown).
-if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeCovariateFiles.R&quot;){
+if(commandArgs()[4] == &quot;--file=../../analysis/20190427_MakeCovariateFiles.R&quot;){
   args &lt;- commandArgs(trailingOnly = T)
   EmptyFamFilepath &lt;- args[1]
   MetadataExcel &lt;- args[2]
@@ -659,7 +649,7 @@ if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeCovariateFiles.R
   print (args)
 
 } else {
-  CountFilepath &lt;- &#39;../data/PastAnalysesDataToKeep/CountTable.tpm.txt.gz&#39;
+  CountFilepath &lt;- &#39;../output/log10TPM.StandardizedAndNormalized.txt&#39;
   EmptyFamFilepath &lt;- &#39;../output/ForAssociationTesting.temp.fam&#39;
   MetadataExcel &lt;- &#39;../data/Metadata.xlsx&#39;
   GenotypePCs &lt;- &#39;../output/PopulationStructure/pca.eigenvec&#39;
@@ -667,11 +657,11 @@ if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeCovariateFiles.R
   NumRS.PCs &lt;- 3
 }</code></pre>
 <p>Read in data:</p>
-<pre class="r"><code>CountTable &lt;- read.table(gzfile(CountFilepath), header=T, check.names=FALSE, row.names = 1)
+<pre class="r"><code>CountTable &lt;- read.table(CountFilepath, header=T, check.names=FALSE, row.names = 1)
 
 # dimensions of count table
 CountTable %&gt;% dim()</code></pre>
-<pre><code>[1] 50434    39</code></pre>
+<pre><code>[1] 14824    39</code></pre>
 <pre class="r"><code>kable(head(CountTable))</code></pre>
 <table>
 <thead>
@@ -720,256 +710,256 @@ CountTable %&gt;% dim()</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>ENSPTRT00000098376.1</td>
-<td align="right">0.0377317</td>
-<td align="right">0.272220</td>
-<td align="right">0.283268</td>
-<td align="right">0.0768681</td>
-<td align="right">0.0241551</td>
-<td align="right">0.489356</td>
-<td align="right">0.149515</td>
-<td align="right">0.0338373</td>
-<td align="right">0.159397</td>
-<td align="right">0.2715600</td>
-<td align="right">0.0718747</td>
-<td align="right">0.508540</td>
-<td align="right">0.487206</td>
-<td align="right">0.4750030</td>
-<td align="right">0.0341022</td>
-<td align="right">0.138268</td>
-<td align="right">0.2475900</td>
-<td align="right">0.0435386</td>
-<td align="right">0.299943</td>
-<td align="right">0.0288987</td>
-<td align="right">0.0332317</td>
-<td align="right">0.0316096</td>
-<td align="right">0.0338501</td>
-<td align="right">0.153948</td>
-<td align="right">0</td>
-<td align="right">0.1674910</td>
-<td align="right">0.2284390</td>
-<td align="right">0.245499</td>
-<td align="right">0.258301</td>
-<td align="right">0.1090800</td>
-<td align="right">0.0415181</td>
-<td align="right">0.1853400</td>
-<td align="right">0.034166</td>
-<td align="right">0.10919</td>
-<td align="right">0.0405918</td>
-<td align="right">0.0690902</td>
-<td align="right">0.0339912</td>
-<td align="right">0.0376673</td>
-<td align="right">0</td>
+<td>ENSPTRG00000000001</td>
+<td align="right">0.8416212</td>
+<td align="right">-0.7904331</td>
+<td align="right">1.5144345</td>
+<td align="right">0.5872556</td>
+<td align="right">-0.2028427</td>
+<td align="right">-0.5092311</td>
+<td align="right">0.5824408</td>
+<td align="right">-0.5291596</td>
+<td align="right">0.3792723</td>
+<td align="right">-0.1078288</td>
+<td align="right">-0.2529979</td>
+<td align="right">0.9095964</td>
+<td align="right">0.2580640</td>
+<td align="right">0.9746915</td>
+<td align="right">0.0410137</td>
+<td align="right">-0.6411634</td>
+<td align="right">0.0942329</td>
+<td align="right">-0.1636371</td>
+<td align="right">0.9834291</td>
+<td align="right">-0.0489686</td>
+<td align="right">0.4988640</td>
+<td align="right">1.3135281</td>
+<td align="right">-0.2912501</td>
+<td align="right">-0.2564911</td>
+<td align="right">0.2979602</td>
+<td align="right">-0.2880763</td>
+<td align="right">0.4750678</td>
+<td align="right">-1.5267917</td>
+<td align="right">-0.3345790</td>
+<td align="right">-0.0845567</td>
+<td align="right">-0.1124217</td>
+<td align="right">-0.0290015</td>
+<td align="right">-0.3980542</td>
+<td align="right">-0.2731271</td>
+<td align="right">0.4569740</td>
+<td align="right">0.8561667</td>
+<td align="right">0.6322592</td>
+<td align="right">-1.0571233</td>
+<td align="right">-0.4431284</td>
 </tr>
 <tr class="even">
-<td>ENSPTRT00000091526.1</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0279624</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.1664070</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.3142130</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0</td>
-<td align="right">0.0553974</td>
-<td align="right">0.0000000</td>
-<td align="right">0.243596</td>
-<td align="right">0.108732</td>
-<td align="right">0.1894100</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.00000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0</td>
+<td>ENSPTRG00000000008</td>
+<td align="right">0.7757291</td>
+<td align="right">0.5565898</td>
+<td align="right">0.6001624</td>
+<td align="right">-2.2634369</td>
+<td align="right">1.3151323</td>
+<td align="right">1.7291771</td>
+<td align="right">0.8583642</td>
+<td align="right">-1.4100801</td>
+<td align="right">-1.0562368</td>
+<td align="right">-1.5091332</td>
+<td align="right">-0.9875508</td>
+<td align="right">-1.0123600</td>
+<td align="right">-2.3896724</td>
+<td align="right">-1.3602193</td>
+<td align="right">-2.0558431</td>
+<td align="right">-0.8411395</td>
+<td align="right">1.5624639</td>
+<td align="right">-1.2383622</td>
+<td align="right">-1.3232048</td>
+<td align="right">0.2263739</td>
+<td align="right">0.5581697</td>
+<td align="right">1.7012083</td>
+<td align="right">0.2963698</td>
+<td align="right">-0.6141906</td>
+<td align="right">3.0157745</td>
+<td align="right">-0.0357683</td>
+<td align="right">2.4138687</td>
+<td align="right">0.4433150</td>
+<td align="right">1.3792275</td>
+<td align="right">-0.2717234</td>
+<td align="right">-0.6446977</td>
+<td align="right">1.3272735</td>
+<td align="right">0.3750967</td>
+<td align="right">-2.6209321</td>
+<td align="right">-0.1549038</td>
+<td align="right">2.7905792</td>
+<td align="right">-0.6382588</td>
+<td align="right">0.0041425</td>
+<td align="right">-0.5457648</td>
 </tr>
 <tr class="odd">
-<td>ENSPTRT00000091354.1</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0741825</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.2960420</td>
-<td align="right">0.149597</td>
-<td align="right">0</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0713518</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0596237</td>
-<td align="right">0.0907759</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.00000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0755299</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0</td>
+<td>ENSPTRG00000000009</td>
+<td align="right">-1.3483746</td>
+<td align="right">-0.3429953</td>
+<td align="right">-0.5080765</td>
+<td align="right">1.1377030</td>
+<td align="right">1.0684250</td>
+<td align="right">1.3367160</td>
+<td align="right">0.4142126</td>
+<td align="right">-1.1517021</td>
+<td align="right">-0.6595468</td>
+<td align="right">1.4661884</td>
+<td align="right">1.6772647</td>
+<td align="right">-1.2875320</td>
+<td align="right">-0.8520272</td>
+<td align="right">1.0354936</td>
+<td align="right">-2.3667992</td>
+<td align="right">-0.8566547</td>
+<td align="right">-1.6529188</td>
+<td align="right">-1.7912410</td>
+<td align="right">-0.3285055</td>
+<td align="right">-0.2715479</td>
+<td align="right">-0.8948635</td>
+<td align="right">-0.8368122</td>
+<td align="right">-1.5670650</td>
+<td align="right">-0.6811380</td>
+<td align="right">1.7344794</td>
+<td align="right">-0.5559976</td>
+<td align="right">-0.8895770</td>
+<td align="right">1.7398310</td>
+<td align="right">1.6181402</td>
+<td align="right">-0.2871951</td>
+<td align="right">-0.6574467</td>
+<td align="right">-0.2357513</td>
+<td align="right">1.6032922</td>
+<td align="right">-1.4583087</td>
+<td align="right">-2.1567049</td>
+<td align="right">-0.4959938</td>
+<td align="right">-0.9121565</td>
+<td align="right">2.2157061</td>
+<td align="right">-1.5096614</td>
 </tr>
 <tr class="even">
-<td>ENSPTRT00000080032.1</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.1268190</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.4753460</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0495538</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.196541</td>
-<td align="right">0.000000</td>
-<td align="right">0.0764113</td>
-<td align="right">0.0000000</td>
-<td align="right">0.2077310</td>
-<td align="right">0.000000</td>
-<td align="right">0.00000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0</td>
+<td>ENSPTRG00000000021</td>
+<td align="right">-0.7569059</td>
+<td align="right">-0.4845533</td>
+<td align="right">-0.1795951</td>
+<td align="right">-1.3572402</td>
+<td align="right">0.6238155</td>
+<td align="right">-0.4889312</td>
+<td align="right">0.8329788</td>
+<td align="right">-1.2756167</td>
+<td align="right">0.5377367</td>
+<td align="right">0.7925146</td>
+<td align="right">-0.7821413</td>
+<td align="right">0.4652481</td>
+<td align="right">0.1947372</td>
+<td align="right">0.3029130</td>
+<td align="right">-0.7228907</td>
+<td align="right">-1.2608790</td>
+<td align="right">-0.2796267</td>
+<td align="right">-1.4091669</td>
+<td align="right">1.3920333</td>
+<td align="right">-0.4775299</td>
+<td align="right">0.7627732</td>
+<td align="right">0.2729516</td>
+<td align="right">0.8310668</td>
+<td align="right">-0.1413989</td>
+<td align="right">0.6886201</td>
+<td align="right">-0.1381548</td>
+<td align="right">0.3770929</td>
+<td align="right">-0.5540253</td>
+<td align="right">-0.3376204</td>
+<td align="right">0.4885502</td>
+<td align="right">-0.0855749</td>
+<td align="right">0.7736748</td>
+<td align="right">0.1015384</td>
+<td align="right">1.3135281</td>
+<td align="right">1.4337776</td>
+<td align="right">1.0988394</td>
+<td align="right">0.7461418</td>
+<td align="right">-1.5590346</td>
+<td align="right">-0.2573649</td>
 </tr>
 <tr class="odd">
-<td>ENSPTRT00000096913.1</td>
-<td align="right">0.0781316</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0937206</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.2810280</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0337880</td>
-<td align="right">0.145246</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.00000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0</td>
+<td>ENSPTRG00000000024</td>
+<td align="right">0.8308280</td>
+<td align="right">-1.6069711</td>
+<td align="right">1.1635983</td>
+<td align="right">2.0259921</td>
+<td align="right">1.9458773</td>
+<td align="right">0.8910849</td>
+<td align="right">1.4642099</td>
+<td align="right">-0.4564110</td>
+<td align="right">0.3076960</td>
+<td align="right">-1.2210758</td>
+<td align="right">0.6950640</td>
+<td align="right">-0.2345346</td>
+<td align="right">-1.4314186</td>
+<td align="right">1.6456717</td>
+<td align="right">-0.1098698</td>
+<td align="right">-1.4656933</td>
+<td align="right">-0.0367834</td>
+<td align="right">-1.7128216</td>
+<td align="right">-0.9483835</td>
+<td align="right">-1.5711184</td>
+<td align="right">-0.9075526</td>
+<td align="right">0.0323847</td>
+<td align="right">-2.2021320</td>
+<td align="right">-1.3139288</td>
+<td align="right">0.9856253</td>
+<td align="right">-0.3265431</td>
+<td align="right">0.1413989</td>
+<td align="right">0.1957713</td>
+<td align="right">0.4830327</td>
+<td align="right">-1.6063564</td>
+<td align="right">1.9369723</td>
+<td align="right">0.0207139</td>
+<td align="right">1.0526991</td>
+<td align="right">-1.0205797</td>
+<td align="right">-1.0786540</td>
+<td align="right">1.6456717</td>
+<td align="right">1.7546134</td>
+<td align="right">-0.3918392</td>
+<td align="right">-1.5590346</td>
 </tr>
 <tr class="even">
-<td>ENSPTRT00000079752.1</td>
-<td align="right">0.0873579</td>
-<td align="right">0.236346</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.7335140</td>
-<td align="right">0.0000000</td>
-<td align="right">0.098116</td>
-<td align="right">0.000000</td>
-<td align="right">0.1571070</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0.0409451</td>
-<td align="right">0.0000000</td>
-<td align="right">0.173610</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0769393</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.000000</td>
-<td align="right">0</td>
-<td align="right">0.0000000</td>
-<td align="right">0.2266680</td>
-<td align="right">1.055580</td>
-<td align="right">0.000000</td>
-<td align="right">0.0631367</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0858213</td>
-<td align="right">0.000000</td>
-<td align="right">0.00000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0.0000000</td>
-<td align="right">0</td>
+<td>ENSPTRG00000000025</td>
+<td align="right">0.7997104</td>
+<td align="right">-1.1851636</td>
+<td align="right">1.0160362</td>
+<td align="right">1.1025578</td>
+<td align="right">0.7643574</td>
+<td align="right">-0.9831549</td>
+<td align="right">-1.0559415</td>
+<td align="right">-0.1501142</td>
+<td align="right">0.4671330</td>
+<td align="right">-1.5410475</td>
+<td align="right">0.0952520</td>
+<td align="right">0.7305971</td>
+<td align="right">-0.7650369</td>
+<td align="right">1.3580902</td>
+<td align="right">-0.0589589</td>
+<td align="right">-1.0171701</td>
+<td align="right">1.5171012</td>
+<td align="right">-0.6273111</td>
+<td align="right">-0.0848961</td>
+<td align="right">-0.3137291</td>
+<td align="right">0.0279866</td>
+<td align="right">0.2197869</td>
+<td align="right">-1.2376345</td>
+<td align="right">-0.4794258</td>
+<td align="right">0.6593367</td>
+<td align="right">0.3995188</td>
+<td align="right">1.2394549</td>
+<td align="right">-0.1778770</td>
+<td align="right">-0.5256620</td>
+<td align="right">-0.8961260</td>
+<td align="right">2.0447765</td>
+<td align="right">-0.7043511</td>
+<td align="right">-0.5002048</td>
+<td align="right">0.1816574</td>
+<td align="right">0.7800768</td>
+<td align="right">1.0813807</td>
+<td align="right">1.8214869</td>
+<td align="right">-0.2988441</td>
+<td align="right">-1.4109946</td>
 </tr>
 </tbody>
 </table>
@@ -1381,12 +1371,6 @@ kable(head(OtherMetadata))</code></pre>
 </table>
 <pre class="r"><code># RNA-seq PCA
 pca_results &lt;- CountTable %&gt;%
-  +0.1 %&gt;%
-  mutate(sumVar = rowSums(.)) %&gt;%
-  arrange(desc(sumVar)) %&gt;%
-  head(2500) %&gt;%
-  select(-sumVar) %&gt;%
-  log() %&gt;%
   t() %&gt;%
   prcomp(center=T, scale. = T)
 
@@ -1453,126 +1437,126 @@ coercing into character vector</code></pre>
 </tr>
 <tr class="even">
 <td align="left">PC1.RS</td>
-<td align="left">-4.6671389</td>
-<td align="left">-26.1710828</td>
-<td align="left">-11.1101394</td>
-<td align="left">-12.6404247</td>
-<td align="left">-4.3640984</td>
-<td align="left">-1.4498584</td>
-<td align="left">-21.0578454</td>
-<td align="left">-12.4893238</td>
-<td align="left">-24.9572534</td>
-<td align="left">-11.9529579</td>
-<td align="left">50.9788389</td>
-<td align="left">84.9548137</td>
-<td align="left">-0.2127408</td>
-<td align="left">-35.1478044</td>
-<td align="left">-20.9478859</td>
-<td align="left">-18.0083558</td>
-<td align="left">-14.5603875</td>
-<td align="left">-24.9379189</td>
-<td align="left">-8.8393599</td>
-<td align="left">-24.3314095</td>
-<td align="left">-33.2376632</td>
-<td align="left">-11.2296681</td>
-<td align="left">-16.3502202</td>
-<td align="left">-16.9671933</td>
-<td align="left">41.7608044</td>
-<td align="left">-25.0626524</td>
-<td align="left">-29.0210945</td>
-<td align="left">4.6571111</td>
-<td align="left">-1.6699147</td>
-<td align="left">-10.7351772</td>
-<td align="left">-16.9547828</td>
-<td align="left">-39.5164346</td>
-<td align="left">-37.5044833</td>
-<td align="left">-4.4506068</td>
-<td align="left">108.2370478</td>
-<td align="left">113.2855069</td>
-<td align="left">72.4481625</td>
-<td align="left">64.4069774</td>
+<td align="left">23.3038114</td>
+<td align="left">21.6867923</td>
+<td align="left">-51.3918517</td>
+<td align="left">-68.6813376</td>
+<td align="left">-46.0082344</td>
+<td align="left">-62.3385222</td>
+<td align="left">-25.7778426</td>
+<td align="left">-60.9832084</td>
+<td align="left">-29.7781951</td>
+<td align="left">-78.8120161</td>
+<td align="left">101.9384415</td>
+<td align="left">112.2859983</td>
+<td align="left">-74.9346654</td>
+<td align="left">-17.7638937</td>
+<td align="left">-26.8959700</td>
+<td align="left">31.4904010</td>
+<td align="left">17.1652277</td>
+<td align="left">65.0829726</td>
+<td align="left">-20.4139554</td>
+<td align="left">-5.8876325</td>
+<td align="left">31.2601939</td>
+<td align="left">-75.9776468</td>
+<td align="left">-41.2095755</td>
+<td align="left">3.8831104</td>
+<td align="left">87.6822290</td>
+<td align="left">-54.8740926</td>
+<td align="left">-6.9660350</td>
+<td align="left">35.5624951</td>
+<td align="left">-25.6411180</td>
+<td align="left">18.1890273</td>
+<td align="left">-28.5716182</td>
+<td align="left">24.3696140</td>
+<td align="left">-0.9367574</td>
+<td align="left">-44.2539621</td>
+<td align="left">93.8559823</td>
+<td align="left">112.9503042</td>
+<td align="left">33.8499791</td>
+<td align="left">79.9502816</td>
 </tr>
 <tr class="odd">
 <td align="left">PC2.RS</td>
-<td align="left">-4.3375035</td>
-<td align="left">-21.6697827</td>
-<td align="left">8.3594629</td>
-<td align="left">7.7149310</td>
-<td align="left">11.4830846</td>
-<td align="left">15.0424731</td>
-<td align="left">0.1968575</td>
-<td align="left">8.8510347</td>
-<td align="left">-5.7497750</td>
-<td align="left">14.6417858</td>
-<td align="left">-10.8136469</td>
-<td align="left">3.0086759</td>
-<td align="left">24.7673589</td>
-<td align="left">-10.3794142</td>
-<td align="left">-0.1866276</td>
-<td align="left">-0.2689843</td>
-<td align="left">-8.5411432</td>
-<td align="left">-9.9294523</td>
-<td align="left">4.4755158</td>
-<td align="left">4.1510345</td>
-<td align="left">-26.0707696</td>
-<td align="left">12.9561345</td>
-<td align="left">1.3257869</td>
-<td align="left">-11.4492868</td>
-<td align="left">-7.1557796</td>
-<td align="left">1.5507298</td>
-<td align="left">3.3727728</td>
-<td align="left">13.1198594</td>
-<td align="left">2.5833339</td>
-<td align="left">10.0813352</td>
-<td align="left">2.3004992</td>
-<td align="left">-32.2372103</td>
-<td align="left">-12.8248016</td>
-<td align="left">15.2199047</td>
-<td align="left">-35.4712198</td>
-<td align="left">-14.5526529</td>
-<td align="left">42.8206393</td>
-<td align="left">-0.9346548</td>
+<td align="left">0.5876373</td>
+<td align="left">-55.1433540</td>
+<td align="left">30.1645861</td>
+<td align="left">2.3415201</td>
+<td align="left">0.6175264</td>
+<td align="left">36.9214103</td>
+<td align="left">-14.0277945</td>
+<td align="left">14.1598411</td>
+<td align="left">-25.9057012</td>
+<td align="left">15.2099058</td>
+<td align="left">-8.7539163</td>
+<td align="left">22.6237997</td>
+<td align="left">30.8087770</td>
+<td align="left">-26.8093406</td>
+<td align="left">-28.7349958</td>
+<td align="left">55.5981184</td>
+<td align="left">5.8284013</td>
+<td align="left">2.4089772</td>
+<td align="left">8.5654051</td>
+<td align="left">14.2125669</td>
+<td align="left">-53.4484142</td>
+<td align="left">-15.4904117</td>
+<td align="left">-30.9810704</td>
+<td align="left">-44.6087798</td>
+<td align="left">12.6241225</td>
+<td align="left">-24.2469780</td>
+<td align="left">52.2473770</td>
+<td align="left">76.0099281</td>
+<td align="left">-46.6435316</td>
+<td align="left">43.1863987</td>
+<td align="left">-8.0597927</td>
+<td align="left">-71.8647904</td>
+<td align="left">-65.7759279</td>
+<td align="left">39.4611716</td>
+<td align="left">-34.7316085</td>
+<td align="left">-10.1319868</td>
+<td align="left">95.1006812</td>
+<td align="left">9.0852400</td>
 </tr>
 <tr class="even">
 <td align="left">PC3.RS</td>
-<td align="left">4.2139684</td>
-<td align="left">9.7196123</td>
-<td align="left">0.9078538</td>
-<td align="left">2.5241961</td>
-<td align="left">13.6712695</td>
-<td align="left">3.0373196</td>
-<td align="left">0.9699229</td>
-<td align="left">5.1954610</td>
-<td align="left">6.5689672</td>
-<td align="left">-0.8687375</td>
-<td align="left">12.3040061</td>
-<td align="left">-1.0172486</td>
-<td align="left">10.2526758</td>
-<td align="left">-1.3376464</td>
-<td align="left">1.1315354</td>
-<td align="left">3.3802363</td>
-<td align="left">-8.0894655</td>
-<td align="left">-0.2424765</td>
-<td align="left">1.9887210</td>
-<td align="left">5.4549860</td>
-<td align="left">0.5869073</td>
-<td align="left">3.5973730</td>
-<td align="left">-2.0260809</td>
-<td align="left">-8.4029382</td>
-<td align="left">1.6618992</td>
-<td align="left">-8.1996543</td>
-<td align="left">0.8435924</td>
-<td align="left">-12.3538209</td>
-<td align="left">8.0436919</td>
-<td align="left">-2.7301627</td>
-<td align="left">-7.1071920</td>
-<td align="left">-12.3115231</td>
-<td align="left">1.9554952</td>
-<td align="left">9.3873162</td>
-<td align="left">16.0991363</td>
-<td align="left">3.1108955</td>
-<td align="left">-0.5672118</td>
-<td align="left">-46.8640748</td>
+<td align="left">61.911038</td>
+<td align="left">-40.882732</td>
+<td align="left">16.153499</td>
+<td align="left">3.310246</td>
+<td align="left">-1.692747</td>
+<td align="left">39.104542</td>
+<td align="left">-48.002322</td>
+<td align="left">42.129362</td>
+<td align="left">-17.158137</td>
+<td align="left">-4.943692</td>
+<td align="left">-2.221208</td>
+<td align="left">17.083230</td>
+<td align="left">-10.963433</td>
+<td align="left">27.007833</td>
+<td align="left">13.860490</td>
+<td align="left">-22.178945</td>
+<td align="left">41.874687</td>
+<td align="left">-63.113255</td>
+<td align="left">-54.065297</td>
+<td align="left">-89.242318</td>
+<td align="left">21.437811</td>
+<td align="left">-25.187074</td>
+<td align="left">22.884996</td>
+<td align="left">30.459727</td>
+<td align="left">33.030542</td>
+<td align="left">-23.165231</td>
+<td align="left">-10.671254</td>
+<td align="left">-19.645088</td>
+<td align="left">-5.018105</td>
+<td align="left">-42.759447</td>
+<td align="left">19.243216</td>
+<td align="left">-7.638538</td>
+<td align="left">-3.302403</td>
+<td align="left">17.359257</td>
+<td align="left">2.206495</td>
+<td align="left">21.370718</td>
+<td align="left">28.885426</td>
+<td align="left">-9.107126</td>
 </tr>
 <tr class="odd">
 <td align="left">PC1.GT</td>
@@ -1659,7 +1643,7 @@ coercing into character vector</code></pre>
 </tbody>
 </table>
 <p>Write table if this is the Rscript form of this Rmarkdown</p>
-<pre class="r"><code>if(commandArgs()[4] == &quot;--file=../../analysis/20190327_MakeCovariateFiles.R&quot;){
+<pre class="r"><code>if(commandArgs()[4] == &quot;--file=../../analysis/20190427_MakeCovariateFiles.R&quot;){
   write.table(Covariates, col.names = F, sep=&#39;\t&#39;, file=OutputFile, row.names=T, quote=F)
 }</code></pre>
 <br> <br>

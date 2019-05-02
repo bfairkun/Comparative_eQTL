@@ -422,7 +422,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -431,7 +431,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -440,10 +440,10 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-04-25
+<strong>Last updated:</strong> 2019-05-02
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -459,12 +459,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </div>
 </div>
 </div>
@@ -519,10 +519,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree680e39ef06e316c56ecf87264155d5f31881839ctargetblank680e39ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/680e39ef06e316c56ecf87264155d5f31881839c" target="_blank">680e39e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9a1ab6e1cf9db9868b66c811ca01373c419085detargetblank9a1ab6ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/9a1ab6e1cf9db9868b66c811ca01373c419085de" target="_blank">9a1ab6e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree680e39ef06e316c56ecf87264155d5f31881839ctargetblank680e39ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9a1ab6e1cf9db9868b66c811ca01373c419085detargetblank9a1ab6ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -532,18 +532,22 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    docs/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/20190327_MakeCovariateFiles.Rmd
-    Untracked:  analysis/20190421_RegressOutRNASeqPCs.Rmd
-    Untracked:  analysis_temp/
-    Untracked:  docs/figure/20190412_Check_eQTLs.Rmd/
-    Untracked:  docs/figure/20190424_Check_eQTLs.Rmd/
+    Untracked:  analysis/20190502_Check_eQTLs.Rmd
+    Untracked:  analysis_temp/20190412_Check_eQTLs.Rmd
+    Untracked:  data/PastAnalysesDataToKeep/20190428_log10TPM.txt.gz
+    Untracked:  docs/assets/
+    Untracked:  docs/figure/20190429_RNASeqSTAR_quantifications.Rmd/
+    Untracked:  docs/figure/20190502_Check_eQTLs.Rmd/
 
 Unstaged changes:
-    Deleted:    analysis/20190412_Check-Kinship-Matrices.Rmd
-    Modified:   analysis/20190412_Check_eQTLs.Rmd
-    Modified:   analysis/index.Rmd
+    Deleted:    analysis/20190412_Check_eQTLs.Rmd
 
 </code></pre>
 <p>
@@ -556,9 +560,86 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/dee079accee958154bf71855e6ceeae231e690c2/analysis/20190421_RegressOutRNASeqPCs.Rmd" target="_blank">dee079a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+<td>
+Organized analysis and data
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/analysis/20190421_RegressOutRNASeqPCs.Rmd" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+<td>
+updated site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/20190421_RegressOutRNASeqPCs.html" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+<td>
+updated site
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -575,7 +656,7 @@ library(gplots)
 library(matrixStats)</code></pre>
 <p>RNA-seq data for each individual was pseudo-mapped/quantified by kallisto and merged into a matrix of TPM values. Genes were filtered by some criteria (see <a href="">link</a>) to generate a table of phenotypes for association testing. Here I will assess if there is still an obvious batch affect (compared to my <a href="">previous PCA analysis</a> of the TPM count table) after I regress out the first (or first few PCs), since I will be included some of these PCs as covariates in the gene expression model.</p>
 <pre class="r"><code># Read in count table, filtering out rows that are all zeros. Here the count-table is log transformed TPM values, with genes filtered just as they would be used for association testing
-CountTable &lt;- read.table(gzfile(&#39;../output/ForAssociationTesting.phenotypes.txt&#39;), header=T, check.names=FALSE, row.names = 1)
+CountTable &lt;- read.table(gzfile(&#39;../data/PastAnalysesDataToKeep/ForAssociationTesting.phenotypes.txt&#39;), header=T, check.names=FALSE, row.names = 1)
 
 kable(head(CountTable))</code></pre>
 <table>
@@ -872,7 +953,7 @@ kable(head(CountTable))</code></pre>
 </tbody>
 </table>
 <pre class="r"><code># Read Covariates file
-Covariates &lt;- read.table(&#39;../output/Covariates/3RS_10GT.covariates.txt&#39;, header=T, check.names = F, stringsAsFactors = F, row.names=1)
+Covariates &lt;- read.table(&#39;../data/PastAnalysesDataToKeep/3RS_10GT.covariates.txt&#39;, header=T, check.names = F, stringsAsFactors = F, row.names=1)
 
 # Read admixture coefficients (K=4), and first 3 principle components, since some form of population substructure will likely be included in the expression modeling as a covariate.
 AdmixtureCoeff &lt;- read.table(&quot;../output/PopulationStructure/Admixture/MergedForAdmixture.4.Q.labelled&quot;) %&gt;% 
@@ -1515,28 +1596,435 @@ MyPlot &lt;- function(DataIn){
 #Plot expression phenotypes for a few genes
 MyPlot(unlist(CountTable[1,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-1.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(unlist(CountTable[2,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-2">
+Past versions of unnamed-chunk-1-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-2.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(unlist(CountTable[3,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-3">
+Past versions of unnamed-chunk-1-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-3.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(unlist(CountTable[4,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-4">
+Past versions of unnamed-chunk-1-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-4.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(unlist(CountTable[5,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-5">
+Past versions of unnamed-chunk-1-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-5.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(unlist(CountTable[6,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-6">
+Past versions of unnamed-chunk-1-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-6.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(unlist(CountTable[7,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-7">
+Past versions of unnamed-chunk-1-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-7.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(unlist(CountTable[8,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-8">
+Past versions of unnamed-chunk-1-8.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-8.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(unlist(CountTable[9,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-9">
+Past versions of unnamed-chunk-1-9.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-9.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(unlist(CountTable[10,]))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-10">
+Past versions of unnamed-chunk-1-10.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-10.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#What is distribution of expression levels for all genes in the table
 # Histogram of rowMeans. (Arithmetic mean of the log-transformed data)
 hist(rowMeans(CountTable))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-11">
+Past versions of unnamed-chunk-1-11.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-1-11.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Plot correlation matrix… Should closely resemble the correlation matrix in this <a href="">previous analysis</a>, except that the previous correlation matrix included the top5000 expressed genes, while this one includes the top5000 genes of the genes that are included in the phenotype table for association testing.</p>
 <pre class="r"><code>CorMatrix &lt;- CountTable %&gt;%
   mutate(sumVar = rowSums(.)) %&gt;%
@@ -1553,6 +2041,43 @@ RNAExtractionDate &lt;- as.character(unclass(factor(plyr::mapvalues(row.names(Co
 <pre class="r"><code># Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
 heatmap.2(CorMatrix, trace=&quot;none&quot;, ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-2-1.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># What is mean correlation
 mean(CorMatrix)</code></pre>
 <pre><code>[1] 0.8059961</code></pre>
@@ -1582,6 +2107,43 @@ RNAExtractionDate &lt;- as.character(unclass(factor(plyr::mapvalues(row.names(Co
 <pre class="r"><code># Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
 heatmap.2(CorMatrix, trace=&quot;none&quot;, ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-3-1.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># What is mean correlation
 mean(CorMatrix)</code></pre>
 <pre><code>[1] 0.2167298</code></pre>
@@ -1606,6 +2168,43 @@ RNAExtractionDate &lt;- as.character(unclass(factor(plyr::mapvalues(row.names(Co
 <pre class="r"><code># Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
 heatmap.2(CorMatrix, trace=&quot;none&quot;, ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-4-1.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># What is mean correlation
 mean(CorMatrix)</code></pre>
 <pre><code>[1] 0.1172888</code></pre>
@@ -1662,6 +2261,43 @@ Cumulative Proportion  1.000e+00 1.000e+00</code></pre>
 <pre class="r"><code>#Scree plot
 screeplot(pca_results)</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/pca-on-residuals-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-on-residuals-1">
+Past versions of pca-on-residuals-1.png
+</button>
+</p>
+<div id="fig-pca-on-residuals-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/pca-on-residuals-1.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># Merge with metadata
 Merged &lt;- merge(pca_results$x, Metadata, by.x = &quot;row.names&quot;, by.y = &quot;Individual.ID&quot;, all=TRUE)
 kable(head(Merged))</code></pre>
@@ -2403,6 +3039,43 @@ Spearman_test_results$p %&gt;%
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/correlate-pcs-with-factors-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-correlate-pcs-with-factors-1">
+Past versions of correlate-pcs-with-factors-1.png
+</button>
+</p>
+<div id="fig-correlate-pcs-with-factors-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/correlate-pcs-with-factors-1.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># Grab potential categorical confounders that make sense to test
 Categorical_confounders_to_test &lt;- Merged[,c(&quot;Viral.status&quot;, &quot;SX&quot;,&quot;RNA.Extract_date&quot;, &quot;RNA.Library.prep.batch&quot;, &quot;Source&quot;)]
 kable(head(Categorical_confounders_to_test))</code></pre>
@@ -2552,29 +3225,436 @@ Pvalues %&gt;%
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/correlate-pcs-with-factors-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-correlate-pcs-with-factors-2">
+Past versions of correlate-pcs-with-factors-2.png
+</button>
+</p>
+<div id="fig-correlate-pcs-with-factors-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/correlate-pcs-with-factors-2.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Interpretation: The only observed technical factors (or measured population structure statistics) that correlate with any of the PCs on the residuals are Admix.Central and HBV status. Given that HBV status is correlated with such late PCs that explain so little variance (see scree plot above), and there are only 3 HBV+ observations, I think including HBV in the model is not justified. Also note that the correlation matrix of the residuals after regressing out 3PCs generally shows two clusters, neither of which segregate with the 3HBV+ observations. The other significant correlation is between PC9 (which explains little variance) and Admix.Central coefficient. This trait is already included implicitly in the eQTL calling model as a genotype PC covariate.</p>
 <p>Lastly, I want to look at the residuals after regressing out those first three PCs.</p>
 <pre class="r"><code>#Plot residuals for a few genes
 MyPlot(ResidualCountTable[1,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-1">
+Past versions of plot-residuals-1.png
+</button>
+</p>
+<div id="fig-plot-residuals-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-1.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(ResidualCountTable[2,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-2">
+Past versions of plot-residuals-2.png
+</button>
+</p>
+<div id="fig-plot-residuals-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-2.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(ResidualCountTable[3,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-3">
+Past versions of plot-residuals-3.png
+</button>
+</p>
+<div id="fig-plot-residuals-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-3.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(ResidualCountTable[4,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-4">
+Past versions of plot-residuals-4.png
+</button>
+</p>
+<div id="fig-plot-residuals-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-4.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(ResidualCountTable[5,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-5">
+Past versions of plot-residuals-5.png
+</button>
+</p>
+<div id="fig-plot-residuals-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-5.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(ResidualCountTable[6,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-6">
+Past versions of plot-residuals-6.png
+</button>
+</p>
+<div id="fig-plot-residuals-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-6.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(ResidualCountTable[7,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-7">
+Past versions of plot-residuals-7.png
+</button>
+</p>
+<div id="fig-plot-residuals-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-7.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(ResidualCountTable[8,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-8">
+Past versions of plot-residuals-8.png
+</button>
+</p>
+<div id="fig-plot-residuals-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-8.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(ResidualCountTable[9,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-9">
+Past versions of plot-residuals-9.png
+</button>
+</p>
+<div id="fig-plot-residuals-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-9.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MyPlot(ResidualCountTable[10,])</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-10">
+Past versions of plot-residuals-10.png
+</button>
+</p>
+<div id="fig-plot-residuals-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-10.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#Plot of first two PCs of residuals
 pca_results$x %&gt;%
   as.data.frame() %&gt;%
@@ -2582,6 +3662,43 @@ pca_results$x %&gt;%
   ggplot(aes(x=PC1, y=PC2, label=sample)) +
   geom_text()</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-plot-residuals-11">
+Past versions of plot-residuals-11.png
+</button>
+</p>
+<div id="fig-plot-residuals-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/plot-residuals-11.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Interpretation: After regressing out the PCs and looking at residuals, sample 317 seems to be consistently an outlier. This is also reflected in PC space of the residuals. It was not an outlier in the original phenotypes. Was it an outlier in the original PCs that were regressed out?</p>
 <pre class="r"><code># The PCs were read in from the covariates file
 
@@ -2591,12 +3708,87 @@ t(Covariates) %&gt;%
   ggplot(aes(x=PC1.RS, y=PC2.RS, label=sample)) +
   geom_text()</code></pre>
 <p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-5-1.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>t(Covariates) %&gt;%
   as.data.frame() %&gt;%
   rownames_to_column(&#39;sample&#39;) %&gt;%
   ggplot(aes(x=PC2.RS, y=PC3.RS, label=sample)) +
   geom_text()</code></pre>
-<img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /> No it was not an outlier in the original phenotypes. <br> <br>
+<p><img src="figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
+Past versions of unnamed-chunk-5-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f47ec35c04da477a94bfe2482822041a31e61ec5/docs/figure/20190421_RegressOutRNASeqPCs.Rmd/unnamed-chunk-5-2.png" target="_blank">f47ec35</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-25
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+No it was not an outlier in the original phenotypes. <br> <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
@@ -2633,20 +3825,20 @@ loaded via a namespace (and not attached):
 [10] plyr_1.8.4         backports_1.1.3    evaluate_0.13     
 [13] highr_0.8          httr_1.4.0         pillar_1.3.1      
 [16] rlang_0.3.3        lazyeval_0.2.2     rstudioapi_0.10   
-[19] gdata_2.18.0       rmarkdown_1.11     labeling_0.3      
-[22] foreign_0.8-71     munsell_0.5.0      broom_0.5.1       
-[25] compiler_3.5.1     modelr_0.1.4       xfun_0.6          
-[28] pkgconfig_2.0.2    mnormt_1.5-5       htmltools_0.3.6   
-[31] tidyselect_0.2.5   gridExtra_2.3      workflowr_1.2.0   
-[34] crayon_1.3.4       withr_2.1.2        bitops_1.0-6      
-[37] grid_3.5.1         nlme_3.1-137       jsonlite_1.6      
-[40] gtable_0.3.0       git2r_0.24.0       magrittr_1.5      
-[43] scales_1.0.0       KernSmooth_2.23-15 cli_1.1.0         
-[46] stringi_1.4.3      fs_1.2.6           xml2_1.2.0        
-[49] generics_0.0.2     tools_3.5.1        glue_1.3.1        
-[52] hms_0.4.2          parallel_3.5.1     yaml_2.2.0        
-[55] colorspace_1.4-1   caTools_1.17.1.1   rvest_0.3.2       
-[58] haven_2.1.0       </code></pre>
+[19] gdata_2.18.0       whisker_0.3-2      rmarkdown_1.11    
+[22] labeling_0.3       foreign_0.8-71     munsell_0.5.0     
+[25] broom_0.5.1        compiler_3.5.1     modelr_0.1.4      
+[28] xfun_0.6           pkgconfig_2.0.2    mnormt_1.5-5      
+[31] htmltools_0.3.6    tidyselect_0.2.5   gridExtra_2.3     
+[34] workflowr_1.2.0    crayon_1.3.4       withr_2.1.2       
+[37] bitops_1.0-6       grid_3.5.1         nlme_3.1-137      
+[40] jsonlite_1.6       gtable_0.3.0       git2r_0.24.0      
+[43] magrittr_1.5       scales_1.0.0       KernSmooth_2.23-15
+[46] cli_1.1.0          stringi_1.4.3      fs_1.2.6          
+[49] xml2_1.2.0         generics_0.0.2     tools_3.5.1       
+[52] glue_1.3.1         hms_0.4.2          parallel_3.5.1    
+[55] yaml_2.2.0         colorspace_1.4-1   caTools_1.17.1.1  
+[58] rvest_0.3.2        haven_2.1.0       </code></pre>
 </div>
 
 

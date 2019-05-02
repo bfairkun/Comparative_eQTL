@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>20190424_Check_eQTLs</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">20190424_Check_eQTLs</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-05-02
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.2.0). The <em>Report</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="report" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9a1ab6e1cf9db9868b66c811ca01373c419085detargetblank9a1ab6ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/9a1ab6e1cf9db9868b66c811ca01373c419085de" target="_blank">9a1ab6e</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9a1ab6e1cf9db9868b66c811ca01373c419085detargetblank9a1ab6ea" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    docs/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/20190502_Check_eQTLs.Rmd
+    Untracked:  analysis_temp/20190412_Check_eQTLs.Rmd
+    Untracked:  data/PastAnalysesDataToKeep/20190428_log10TPM.txt.gz
+    Untracked:  docs/assets/
+    Untracked:  docs/figure/20190426_CheckRNASeqPCs_2.Rmd/
+    Untracked:  docs/figure/20190429_RNASeqSTAR_quantifications.Rmd/
+    Untracked:  docs/figure/20190502_Check_eQTLs.Rmd/
+
+Unstaged changes:
+    Deleted:    analysis/20190412_Check_eQTLs.Rmd
+    Modified:   analysis/20190428_Check_eQTLs.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/ece3b4adc719867c12bd16f3ed9002e5c076c586/analysis/20190428_Check_eQTLs.Rmd" target="_blank">ece3b4a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-30
+</td>
+<td>
+added STAR v kallisto comparison
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(tidyverse)
+library(knitr)
+library(data.table)</code></pre>
+<p>My second pass at eqtl mapping was as follows: Genotypes filtered for MAF&gt;0.5 &amp; GenotypingRate&gt;0.9, HWE-pvalue&lt;10e-7.5. ~9.5M variants passed these filter. Gene expression as log(TPM), filtering for genes with &gt;0 TPM (transcript level TPM summed to get gene TPM) in all samples (~14000 genes passed this filter). TPM was then standardized across individuals and quantile normalized to a normal distribution across genes. Sample MD_And was dropped from analysis because it was <a href="">previously shown</a> to be an outlier that caused spurious associations. Association testing used the following linear mixed model for each cis-variant-gene-pair (cis definied as &lt;1Mb from gene):</p>
+<p><span class="math display">\[
+Y =Wα+xβ+u+ε
+\]</span></p>
+<p>where <span class="math inline">\(Y\)</span> is gene expression as <span class="math inline">\(log(TPM)\)</span>, <span class="math inline">\(W\)</span> covariates include first three genotype principal components (to account for population structure) as well as 3 RNA-seq PCs, Sex, an interceptm and 3 genotype PCs. <span class="math inline">\(x\)</span> is coded as 0,1,2, <span class="math inline">\(U \sim MVN(0,\sigma^2 K)\)</span> where <span class="math inline">\(K\)</span> an centered kinship matrix made from gemma software.</p>
+<p>Association testing was implemented in the R package ‘MatrixEQTL’. This resulted in 0 eSNP-gene pairs at FDR&lt;0.1 (Benjamini Hodgeberg correction). QQ-plots didn’t show any P-value inflation relative to the null. From previous (unshown) tests, this lack of significant tests is likely due to the quantile normalizatino step diminishing signal. Even though none of the results are significant after multiple hypothesis correction, I still want to check some of the top nominally significant results to check that they aren’t false positives driven by extreme outliers as I had seen in previous analyses.</p>
+<pre class="r"><code># Read in genotypes for eQTLs
+Genotypes &lt;- read.table(&quot;../data/PastAnalysesDataToKeep/20190428_28_Top5000eqtls.genotypes.raw&quot;, header=T, check.names = F, stringsAsFactors = F)
+colnames(Genotypes) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(Genotypes))
+# Genotypes[!duplicated(as.list(Genotypes))]
+kable(Genotypes[1:10,1:10])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">FID</th>
+<th align="left">IID</th>
+<th align="right">PAT</th>
+<th align="right">MAT</th>
+<th align="right">SEX</th>
+<th align="right">PHENOTYPE</th>
+<th align="right">ID.1.569995.A.C</th>
+<th align="right">ID.1.572334.G.A</th>
+<th align="right">ID.1.572938.G.A</th>
+<th align="right">ID.1.573420.T.C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">295</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.0942329</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">317</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-0.1636370</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">338</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.9834290</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">389</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-0.0489686</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">438</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.4988640</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">456</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1.3135300</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">462</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-0.2912500</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">476</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-0.2564910</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">495</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.2979600</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">4x0025</td>
+<td align="left">Pan_troglodytes_ThisStudy</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.3792720</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#Make sure there aren&#39;t duplicate columns
+length(colnames(Genotypes))</code></pre>
+<pre><code>[1] 4890</code></pre>
+<pre class="r"><code>length(unique(colnames(Genotypes)))</code></pre>
+<pre><code>[1] 4890</code></pre>
+<pre class="r"><code># Read in eQTLs from MatrixEQTL output (already filtered for FDR&lt;0.1)
+eQTLs &lt;- read.table(&quot;../data/PastAnalysesDataToKeep/20190428_Top5000eqtls.txt.gz&quot;, header=T)
+kable(head(eQTLs))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SNP</th>
+<th align="left">gene</th>
+<th align="right">beta</th>
+<th align="right">t.stat</th>
+<th align="right">p.value</th>
+<th align="right">FDR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ID.3.10249149.C.CT</td>
+<td align="left">ENSPTRG00000043259</td>
+<td align="right">2.392096</td>
+<td align="right">8.108636</td>
+<td align="right">0e+00</td>
+<td align="right">0.5704260</td>
+</tr>
+<tr class="even">
+<td align="left">ID.19.55922879.C.CT</td>
+<td align="left">ENSPTRG00000011430</td>
+<td align="right">2.573798</td>
+<td align="right">7.122076</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.22.4961539.C.A</td>
+<td align="left">ENSPTRG00000014048</td>
+<td align="right">2.366572</td>
+<td align="right">7.010308</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+<tr class="even">
+<td align="left">ID.14.76525141.A.G</td>
+<td align="left">ENSPTRG00000006649</td>
+<td align="right">-1.965541</td>
+<td align="right">-6.955140</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.14.76528940.A.C</td>
+<td align="left">ENSPTRG00000006649</td>
+<td align="right">-1.965541</td>
+<td align="right">-6.955140</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+<tr class="even">
+<td align="left">ID.14.76551609.A.T</td>
+<td align="left">ENSPTRG00000006649</td>
+<td align="right">-1.965541</td>
+<td align="right">-6.955140</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># This count table is the log10(TPM); no standardization or quantile normalization
+# Read in phenotypes, from count table
+CountTable &lt;- read.table(&#39;../output/log10TPM.StandardizedAndNormalized.txt&#39;, header=T, check.names=FALSE, row.names = 1) %&gt;% 
+  t() %&gt;%
+  as.data.frame() %&gt;%
+  rownames_to_column(var = &quot;FID&quot;)
+kable(CountTable[1:10, 1:10])</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">FID</th>
+<th align="right">ENSPTRG00000000001</th>
+<th align="right">ENSPTRG00000000008</th>
+<th align="right">ENSPTRG00000000009</th>
+<th align="right">ENSPTRG00000000021</th>
+<th align="right">ENSPTRG00000000024</th>
+<th align="right">ENSPTRG00000000025</th>
+<th align="right">ENSPTRG00000000027</th>
+<th align="right">ENSPTRG00000000028</th>
+<th align="right">ENSPTRG00000000029</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">4X0095</td>
+<td align="right">0.8416212</td>
+<td align="right">0.7757291</td>
+<td align="right">-1.3483746</td>
+<td align="right">-0.7569059</td>
+<td align="right">0.8308280</td>
+<td align="right">0.7997104</td>
+<td align="right">0.0181772</td>
+<td align="right">0.1034081</td>
+<td align="right">0.4249217</td>
+</tr>
+<tr class="even">
+<td align="left">4X0212</td>
+<td align="right">-0.7904331</td>
+<td align="right">0.5565898</td>
+<td align="right">-0.3429953</td>
+<td align="right">-0.4845533</td>
+<td align="right">-1.6069711</td>
+<td align="right">-1.1851636</td>
+<td align="right">1.4756654</td>
+<td align="right">-1.3947115</td>
+<td align="right">-0.4301090</td>
+</tr>
+<tr class="odd">
+<td align="left">4X0267</td>
+<td align="right">1.5144345</td>
+<td align="right">0.6001624</td>
+<td align="right">-0.5080765</td>
+<td align="right">-0.1795951</td>
+<td align="right">1.1635983</td>
+<td align="right">1.0160362</td>
+<td align="right">1.1422363</td>
+<td align="right">0.7078222</td>
+<td align="right">0.1528507</td>
+</tr>
+<tr class="even">
+<td align="left">4X0333</td>
+<td align="right">0.5872556</td>
+<td align="right">-2.2634369</td>
+<td align="right">1.1377030</td>
+<td align="right">-1.3572402</td>
+<td align="right">2.0259921</td>
+<td align="right">1.1025578</td>
+<td align="right">-1.0294431</td>
+<td align="right">1.4817199</td>
+<td align="right">-0.1381548</td>
+</tr>
+<tr class="odd">
+<td align="left">4X0339</td>
+<td align="right">-0.2028427</td>
+<td align="right">1.3151323</td>
+<td align="right">1.0684250</td>
+<td align="right">0.6238155</td>
+<td align="right">1.9458773</td>
+<td align="right">0.7643574</td>
+<td align="right">1.0639476</td>
+<td align="right">1.7375314</td>
+<td align="right">0.4234417</td>
+</tr>
+<tr class="even">
+<td align="left">4X0354</td>
+<td align="right">-0.5092311</td>
+<td align="right">1.7291771</td>
+<td align="right">1.3367160</td>
+<td align="right">-0.4889312</td>
+<td align="right">0.8910849</td>
+<td align="right">-0.9831549</td>
+<td align="right">0.3301120</td>
+<td align="right">2.1964366</td>
+<td align="right">0.4874074</td>
+</tr>
+<tr class="odd">
+<td align="left">4X0357</td>
+<td align="right">0.5824408</td>
+<td align="right">0.8583642</td>
+<td align="right">0.4142126</td>
+<td align="right">0.8329788</td>
+<td align="right">1.4642099</td>
+<td align="right">-1.0559415</td>
+<td align="right">0.6700917</td>
+<td align="right">1.6976258</td>
+<td align="right">0.4114508</td>
+</tr>
+<tr class="even">
+<td align="left">4X0550</td>
+<td align="right">-0.5291596</td>
+<td align="right">-1.4100801</td>
+<td align="right">-1.1517021</td>
+<td align="right">-1.2756167</td>
+<td align="right">-0.4564110</td>
+<td align="right">-0.1501142</td>
+<td align="right">-0.1518244</td>
+<td align="right">-1.1134913</td>
+<td align="right">0.0234199</td>
+</tr>
+<tr class="odd">
+<td align="left">4x0025</td>
+<td align="right">0.3792723</td>
+<td align="right">-1.0562368</td>
+<td align="right">-0.6595468</td>
+<td align="right">0.5377367</td>
+<td align="right">0.3076960</td>
+<td align="right">0.4671330</td>
+<td align="right">-0.5623238</td>
+<td align="right">-0.9211644</td>
+<td align="right">0.5856492</td>
+</tr>
+<tr class="even">
+<td align="left">4x0043</td>
+<td align="right">-0.1078288</td>
+<td align="right">-1.5091332</td>
+<td align="right">1.4661884</td>
+<td align="right">0.7925146</td>
+<td align="right">-1.2210758</td>
+<td align="right">-1.5410475</td>
+<td align="right">0.5159799</td>
+<td align="right">-1.0317436</td>
+<td align="right">0.8435503</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>MergedData &lt;- left_join(Genotypes, CountTable, by=&quot;FID&quot;)</code></pre>
+<pre class="r"><code>#eqtls, ordered from most significant at top
+kable(head(eQTLs))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SNP</th>
+<th align="left">gene</th>
+<th align="right">beta</th>
+<th align="right">t.stat</th>
+<th align="right">p.value</th>
+<th align="right">FDR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ID.3.10249149.C.CT</td>
+<td align="left">ENSPTRG00000043259</td>
+<td align="right">2.392096</td>
+<td align="right">8.108636</td>
+<td align="right">0e+00</td>
+<td align="right">0.5704260</td>
+</tr>
+<tr class="even">
+<td align="left">ID.19.55922879.C.CT</td>
+<td align="left">ENSPTRG00000011430</td>
+<td align="right">2.573798</td>
+<td align="right">7.122076</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.22.4961539.C.A</td>
+<td align="left">ENSPTRG00000014048</td>
+<td align="right">2.366572</td>
+<td align="right">7.010308</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+<tr class="even">
+<td align="left">ID.14.76525141.A.G</td>
+<td align="left">ENSPTRG00000006649</td>
+<td align="right">-1.965541</td>
+<td align="right">-6.955140</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.14.76528940.A.C</td>
+<td align="left">ENSPTRG00000006649</td>
+<td align="right">-1.965541</td>
+<td align="right">-6.955140</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+<tr class="even">
+<td align="left">ID.14.76551609.A.T</td>
+<td align="left">ENSPTRG00000006649</td>
+<td align="right">-1.965541</td>
+<td align="right">-6.955140</td>
+<td align="right">1e-07</td>
+<td align="right">0.7419872</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># betas for these
+hist(eQTLs$beta, breaks=20)</code></pre>
+<p><img src="figure/20190428_Check_eQTLs.Rmd/checks-1.png" width="672" style="display: block; margin: auto;" /> Not sure what to make of that multi-modal distribution of betas (Two peaks around 0 might be expected, but I wasn’t expecting another peak at ~5). Maybe most of these eqtls are the snps in LD that are associated with the same gene…</p>
+<pre class="r"><code>#how many snps
+length(unique(eQTLs$SNP))</code></pre>
+<pre><code>[1] 4941</code></pre>
+<pre class="r"><code>#how many genes
+length(unique(eQTLs$gene))</code></pre>
+<pre><code>[1] 1103</code></pre>
+<p>Average of ~5 snps per gene, so I’m still perplexed by the multiple modes in the distribution of effect sizes.</p>
+<p>In any case, now I want to check some boxplots</p>
+<pre class="r"><code># Expression box plot, stratified by genotype. For a fe of top of the list snp-gene pairs (most significant)
+MyBoxplot &lt;- function(DataFrame, Labels.name, SNP.name, Gene.name){
+  data.frame(Genotype = DataFrame[[SNP.name]],
+    Phenotype = DataFrame[[Gene.name]],
+    FID=DataFrame[[Labels.name]]) %&gt;%
+    ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+    scale_y_continuous(name=paste(&quot;log TPM&quot;, Gene.name)) +
+    xlab(SNP.name)
+}
+
+#Box plot of top3 eqtls
+MyBoxplot(MergedData, &quot;FID&quot;, &quot;ID.3.10249149.C.CT&quot;, &quot;ENSPTRG00000043259&quot;)</code></pre>
+<p><img src="figure/20190428_Check_eQTLs.Rmd/more-checks-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>MyBoxplot(MergedData, &quot;FID&quot;, &quot;ID.19.55922879.C.CT&quot;, &quot;ENSPTRG00000011430&quot;)</code></pre>
+<p><img src="figure/20190428_Check_eQTLs.Rmd/more-checks-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>MyBoxplot(MergedData, &quot;FID&quot;, &quot;ID.22.4961539.C.A&quot;, &quot;ENSPTRG00000014048&quot;)</code></pre>
+<p><img src="figure/20190428_Check_eQTLs.Rmd/more-checks-3.png" width="672" style="display: block; margin: auto;" /> Interpretation: These look more believable than previous analyses without quantile normalization in the sense that these don’t look driven by single outliers. Let’s check some randomly sampled eqtls.</p>
+<pre class="r"><code>set.seed(1)
+RandomSampleOfEqtls &lt;- eQTLs %&gt;% sample_n(20) %&gt;% select(SNP, gene, beta)
+kable(RandomSampleOfEqtls)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">SNP</th>
+<th align="left">gene</th>
+<th align="right">beta</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ID.14.52319827.C.T</td>
+<td align="left">ENSPTRG00000006466</td>
+<td align="right">4.4493981</td>
+</tr>
+<tr class="even">
+<td align="left">ID.17.8493422.C.T</td>
+<td align="left">ENSPTRG00000008694</td>
+<td align="right">1.7900814</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.5.73804435.T.A</td>
+<td align="left">ENSPTRG00000050195</td>
+<td align="right">1.2770758</td>
+</tr>
+<tr class="even">
+<td align="left">ID.19.49158941.C.A</td>
+<td align="left">ENSPTRG00000011198</td>
+<td align="right">-1.1634375</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.14.52812700.A.AT</td>
+<td align="left">ENSPTRG00000006466</td>
+<td align="right">4.8214705</td>
+</tr>
+<tr class="even">
+<td align="left">ID.17.64048237.C.CA</td>
+<td align="left">ENSPTRG00000009519</td>
+<td align="right">0.8118323</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.12.24711864.C.T</td>
+<td align="left">ENSPTRG00000005177</td>
+<td align="right">-1.8386880</td>
+</tr>
+<tr class="even">
+<td align="left">ID.16.5605004.T.G</td>
+<td align="left">ENSPTRG00000007744</td>
+<td align="right">-1.5800232</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.15.68340181.C.T</td>
+<td align="left">ENSPTRG00000007421</td>
+<td align="right">-1.1271545</td>
+</tr>
+<tr class="even">
+<td align="left">ID.19.56953829.A.G</td>
+<td align="left">ENSPTRG00000011442</td>
+<td align="right">-1.3466103</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.14.52853249.G.A</td>
+<td align="left">ENSPTRG00000006466</td>
+<td align="right">4.8214705</td>
+</tr>
+<tr class="even">
+<td align="left">ID.14.52596000.A.G</td>
+<td align="left">ENSPTRG00000006466</td>
+<td align="right">4.8214705</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.5.181283787.G.C</td>
+<td align="left">ENSPTRG00000017621</td>
+<td align="right">1.0340098</td>
+</tr>
+<tr class="even">
+<td align="left">ID.12.66200553.G.A</td>
+<td align="left">ENSPTRG00000042785</td>
+<td align="right">-0.9109811</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.1.111084301.A.G</td>
+<td align="left">ENSPTRG00000045999</td>
+<td align="right">2.9252377</td>
+</tr>
+<tr class="even">
+<td align="left">ID.14.15972054.A.G</td>
+<td align="left">ENSPTRG00000006245</td>
+<td align="right">-1.0287083</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.15.62588323.C.T</td>
+<td align="left">ENSPTRG00000007374</td>
+<td align="right">0.6043537</td>
+</tr>
+<tr class="even">
+<td align="left">ID.12.71441957.T.C</td>
+<td align="left">ENSPTRG00000005208</td>
+<td align="right">4.4265817</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.22.28305428.G.A</td>
+<td align="left">ENSPTRG00000014428</td>
+<td align="right">-1.7638515</td>
+</tr>
+<tr class="even">
+<td align="left">ID.6.119248768.A.G</td>
+<td align="left">ENSPTRG00000023905</td>
+<td align="right">1.1430873</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>for(i in 1:nrow(RandomSampleOfEqtls)) {
+  try(
+    print(MyBoxplot(MergedData, &quot;FID&quot;, as.character(RandomSampleOfEqtls$SNP[i]), as.character(RandomSampleOfEqtls$gene[i])))
+  )
+}</code></pre>
+<p><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-10.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-16.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-17.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-18.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-19.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190428_Check_eQTLs.Rmd/checks-for-random-eqtls-20.png" width="672" style="display: block; margin: auto;" /></p>
+<br> <br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.14
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] data.table_1.12.0 knitr_1.22        forcats_0.4.0    
+ [4] stringr_1.4.0     dplyr_0.8.0.1     purrr_0.3.2      
+ [7] readr_1.3.1       tidyr_0.8.2       tibble_2.1.1     
+[10] ggplot2_3.1.0     tidyverse_1.2.1  
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.1       highr_0.8        cellranger_1.1.0 plyr_1.8.4      
+ [5] pillar_1.3.1     compiler_3.5.1   git2r_0.24.0     workflowr_1.2.0 
+ [9] tools_3.5.1      digest_0.6.18    lubridate_1.7.4  jsonlite_1.6    
+[13] evaluate_0.13    nlme_3.1-137     gtable_0.3.0     lattice_0.20-38 
+[17] pkgconfig_2.0.2  rlang_0.3.3      cli_1.1.0        rstudioapi_0.10 
+[21] yaml_2.2.0       haven_2.1.0      xfun_0.6         withr_2.1.2     
+[25] xml2_1.2.0       httr_1.4.0       hms_0.4.2        generics_0.0.2  
+[29] fs_1.2.6         rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.5
+[33] glue_1.3.1       R6_2.4.0         readxl_1.1.0     rmarkdown_1.11  
+[37] modelr_0.1.4     magrittr_1.5     whisker_0.3-2    backports_1.1.3 
+[41] scales_1.0.0     htmltools_0.3.6  rvest_0.3.2      assertthat_0.2.1
+[45] colorspace_1.4-1 labeling_0.3     stringi_1.4.3    lazyeval_0.2.2  
+[49] munsell_0.5.0    broom_0.5.1      crayon_1.3.4    </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
