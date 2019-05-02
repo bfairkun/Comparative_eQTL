@@ -8,12 +8,14 @@ GeneListOutFilepath <- args[4]
 
 EmptyFamFile <- read.table(EmptyFamFilepath, col.names=c("FID", "IID", "Father", "Mother", "SX", "Pheno"), stringsAsFactors = F) %>%
   select(-Pheno)
+EmptyFamFile$IID
 
 PhenotypeFile <- read.table(PhenotypeTableFilepath, header=T, check.names = F, row.names = 1)
-Transposed <- t(PhenotypeFile) %>% as.data.frame()
+Transposed <- t(PhenotypeFile) %>% as.data.frame() %>% rownames_to_column("IID")
 
 Output.df <- EmptyFamFile %>%
-  merge(Transposed, all.x=T, by.x="IID", by.y=0) %>% as_tibble()
+  left_join(Transposed, by="IID") %>% as_tibble()
+Output.df
 
 GeneList <- data.frame(GeneList=colnames(Output.df)[-1:-5])
 

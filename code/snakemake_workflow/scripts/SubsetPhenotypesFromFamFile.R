@@ -19,5 +19,5 @@ columns.to.grab <- phenotypes.to.grab$n + 5
 
 MatrixOut <- fam.df[,columns.to.grab]
 colnames(MatrixOut) <- phenotypes.to.grab$phenotype_name
-rownames(MatrixOut) <- fam.df$V1
+rownames(MatrixOut) <- fam.df$V2
 write.table(t(MatrixOut), file=OutputFile, quote=F, sep='\t', col.names=NA)
