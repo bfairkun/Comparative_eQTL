@@ -6,6 +6,7 @@
 # source("Matrix_eQTL_R/Matrix_eQTL_engine.r");
 library(MatrixEQTL)
 library(tidyverse)
+library(qvalue)
 
 args = commandArgs(trailingOnly=TRUE)
 SNP_file_name <- args[1]
@@ -19,12 +20,13 @@ ouput_QQ <- args[8]
 permuted_output_filename <- args[9]
 permuted_output_QQ <- args[10]
 
-# snps_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc"
-# expression_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
-# gene_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
-# covariates_file_name <- "output/Covariates/3RS_3GT.covariates.txt"
-# errorCovariance_file <- "code/snakemake_workflow/eQTL_mapping/Kinship/GRM.cXX.txt"
-
+SNP_file_name <- "code/snakemake_workflow/scratch/Test.snps"
+snps_location_file_name <- "code/snakemake_workflow/scratch/Test.snploc"
+expression_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
+gene_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
+covariates_file_name <- "output/Covariates/0GenotypePCs_and_11RNASeqPCs.covariates"
+errorCovariance_file <- "code/snakemake_workflow/eQTL_mapping/Kinship/GRM.cXX.txt"
+output_file_name_cis = tempfile()
 
 # Linear model to use, modelANOVA, modelLINEAR, or modelLINEAR_CROSS
 useModel = modelLINEAR; # modelANOVA, modelLINEAR, or modelLINEAR_CROSS
@@ -33,7 +35,6 @@ useModel = modelLINEAR; # modelANOVA, modelLINEAR, or modelLINEAR_CROSS
 output_file_name_tra = tempfile();
 
 # Only associations significant at this level will be saved
-# pvOutputThreshold_cis = 1;
 pvOutputThreshold_cis = 2e-2;
 
 # Error covariance matrix
@@ -42,7 +43,7 @@ errorCovariance <- as.matrix(read.table(errorCovariance_file,sep='\t'))
 
 
 # Distance for local gene-SNP pairs
-cisDist = 1e6;
+cisDist = 250000;
 
 ## Load genotype data
 
@@ -79,6 +80,7 @@ if(length(covariates_file_name)>0) {
 snpspos = read.table(snps_location_file_name, header = TRUE, stringsAsFactors = FALSE);
 genepos = read.table(gene_location_file_name, header = TRUE, stringsAsFactors = FALSE);
 
+#Include all pvalues in output so that qvalues can be calculated. Filter after.
 me = Matrix_eQTL_main(
   snps = snps,
   gene = gene,
@@ -88,14 +90,26 @@ me = Matrix_eQTL_main(
   useModel = useModel,
   errorCovariance = errorCovariance,
   verbose = TRUE,
-  output_file_name.cis = output_file_name_cis,
-  pvOutputThreshold.cis = pvOutputThreshold_cis,
+  output_file_name.cis = NULL,
+  pvOutputThreshold.cis = 1,
   snpspos = snpspos,
   genepos = genepos,
   cisDist = cisDist,
   pvalue.hist = "qqplot",
   min.pv.by.genesnp = FALSE,
   noFDRsaveMemory = FALSE);
+
+#Transform Pvalues to Qvalues
+#If pi_0 is close to 1 (which is is in eQTL calling), BH-p will be equal to Q-value within precision of saved digits.
+me$cis$eqtls$qvalue <-
+  qvalue(me$cis$eqtls$pvalue)$qvalues
+
+#Write out results, while filtering by pvalue
+me$cis$eqtls %>%
+  filter(pvalue < pvOutputThreshold_cis ) %>%
+  select(snps, gene, beta, statistic, pvalue, FDR, qvalue) %>%
+  write.table(file=output_file_name_cis, sep='\t', quote = F, row.names = F)
+
 
 # Permute the sample labels for expression
 ActualData <- read.table(expression_file_name, header=T, row.names = 1)
@@ -115,14 +129,19 @@ permuted = Matrix_eQTL_main(
   useModel = useModel,
   errorCovariance = errorCovariance,
   verbose = TRUE,
-  output_file_name.cis = permuted_output_filename,
-  pvOutputThreshold.cis = pvOutputThreshold_cis,
+  output_file_name.cis = NULL,
+  pvOutputThreshold.cis = 1,
   snpspos = snpspos,
   genepos = genepos,
   cisDist = cisDist,
   pvalue.hist = "qqplot",
   min.pv.by.genesnp = FALSE,
   noFDRsaveMemory = FALSE);
+
+permuted$cis$eqtls %>%
+  filter(pvalue < pvOutputThreshold_cis ) %>%
+  select(snps, gene, beta, statistic, pvalue, FDR) %>%
+  write.table(file=permuted_output_filename, sep='\t', quote = F, row.names = F)
 
 ## Results:
 

@@ -48,7 +48,7 @@ rule filter_plink_file_for_testing:
         "logs/eQTL_mapping/filter_plink_file_for_testing.log"
     params:
         stdparams = "--keep-fam eQTL_mapping/plink/KeepFam.txt",
-        extra = '--remove eQTL_mapping/plink/Remove.txt --maf 0.05 --geno --hwe 1e-7.5'
+        extra = '--remove eQTL_mapping/plink/Remove.txt --maf 0.10 --geno --hwe 1e-7.5'
     shell:
         """
         plink --bfile eQTL_mapping/plink/Unfiltered  --allow-extra-chr --make-bed --out eQTL_mapping/plink/ForAssociationTesting.temp {params.stdparams} {params.extra} &> {log}
@@ -157,7 +157,7 @@ rule prune_plink_files_for_GRM:
         bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
         fam = "eQTL_mapping/plink/ForAssociationTesting.fam"
     output:
-        bed =  "eQTL_mapping/Kinship/ForAssocationTesting.pruned.bed",
+        bed =  "eQTL_mapping/Kinship/ForAssociationTesting.pruned.bed",
     log:
         "logs/eQTL_mapping/prune_plink_files.log"
     shell:
@@ -170,7 +170,7 @@ rule prune_plink_files_for_GRM:
 rule Make_GRM:
     """Genetetic relatedness matrix for gemma LMM"""
     input:
-        bed =  "eQTL_mapping/Kinship/ForAssocationTesting.pruned.bed",
+        bed =  "eQTL_mapping/Kinship/ForAssociationTesting.pruned.bed",
     output:
         GRM = "eQTL_mapping/Kinship/GRM.cXX.txt"
     log:
@@ -370,6 +370,7 @@ rule MakeMatrixEQTL_gene_loc:
 rule MakeMatrixEQTL_snp_loc:
     input:
         snps = "eQTL_mapping/plink/ForAssociationTesting.bim",
+        plink_bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
     output:
         snp_locs = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc"
     shell:
@@ -384,7 +385,7 @@ rule make_covariate_file:
     input:
         EmptyFam = "../../output/ForAssociationTesting.temp.fam",
         MetadataExcel = "../../data/Metadata.xlsx",
-        ExpressionMatrix = "../../output/log10TPM.StandardizedAndNormalized.txt",
+        ExpressionMatrix = ExpressionMatrix,
         GenotypePCs = "../../output/PopulationStructure/pca.eigenvec"
     output:
         "../../output/Covariates/{NumGenotypePCs}GenotypePCs_and_{NumRNASeqPCs}RNASeqPCs.covariates"
@@ -413,8 +414,8 @@ rule MatrixEQTL:
     output:
         results = "eQTL_mapping/MatrixEQTL/Results/Results.{covariate_set}.txt",
         fig = "eQTL_mapping/MatrixEQTL/Results/images/Results.{covariate_set}.png",
-        permuted_results = "eQTL_mapping/MatrixEQTL/Results/PermutatedResults.{covariate_set}.txt",
         permutated_fig = "eQTL_mapping/MatrixEQTL/Results/images/PermutatedResults.{covariate_set}.png",
+        permuted_results = "eQTL_mapping/MatrixEQTL/Results/PermutatedResults.{covariate_set}.txt",
     log:
         "logs/eQTL_mapping/MatrixEQTL/{covariate_set}.log"
     shell:
@@ -422,31 +423,19 @@ rule MatrixEQTL:
         Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {output.permutated_fig} &> {log}
         """
 
-rule PickBestMatrixEQTLModelResults:
+rule PlotPCsVsEQTLs:
     input:
         MatrixEQTLModels
     output:
-        FullResults = "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt"
+        CattedResult = "eQTL_mapping/MatrixEQTL/Results/ConcatenatedResult.txt",
+        Plot = "eQTL_mapping/MatrixEQTL/Results/images/PCsVsEQTLs.pdf"
     log:
-        "logs/eQTL_mapping/MatrixEQTL/PickBestMatrixEQTLModelResults.txt"
-    run:
-        from shutil import copyfile
-        from collections import Counter
-        NumEqtls = Counter()
-        print ( list(input) )
-        for filepath in list(input):
-            with open( filepath, 'rU' ) as f:
-                for i,line in enumerate(f):
-                    if i>=1:
-                        snp, gene, beta, tstsat, p, fdr = line.strip('\t').split('\t')
-                        if float(fdr) < 0.1:
-                            NumEqtls[filepath] += 1
-        print( NumEqtls )
-        with open(log[0], 'w') as f:
-            for filepath, eqtl_count in NumEqtls.items():
-                f.write("{}\t{}\n".format( filepath, eqtl_count ))
-        filepath_w_most_eqtls = max(NumEqtls, key=lambda filepath: NumEqtls[filepath])
-        copyfile( filepath_w_most_eqtls, str(output.FullResults) )
+        "logs/eQTL_mapping/PlotPCsVsEQTLs.log"
+    shell:
+        """
+        awk -F'\\t' -v OFS='\\t' 'FNR>1 && $6<0.3 {{ print $1,$2,$3,$4,$5,$6,FILENAME  }}' {input} > {output.CattedResult}
+        Rscript scripts/Plot_EQTLs_vs_PCs.R {output.CattedResult} {output.Plot}
+        """
 
 rule GetEqtlGenotypes:
     """For checking genotype vs phenotype R-ggplot boxplots for eqtls"""
@@ -478,11 +467,12 @@ rule MakeFastQTL_input:
         """
         # Make genotypes vcf
         plink2 --bfile eQTL_mapping/plink/ForAssociationTesting  --recode vcf-iid --allow-extra-chr --out eQTL_mapping/FastQTL/ForAssociationTesting
+        sed -i '1 s/3$/2/' eQTL_mapping/FastQTL/ForAssociationTesting.vcf
         bgzip eQTL_mapping/FastQTL/ForAssociationTesting.vcf && tabix -p vcf {output.vcf}
 
         # Make phenotypes bed
         paste <(awk 'NR>1' {input.gene_loc} | sort) <(awk 'NR>1' {input.phenotypes} | sort) | perl -lne '/^.+?\\t(.+)$/ and print  "$1"' | bedtools sort -i - > eQTL_mapping/FastQTL/ForAssociationTesting.bed
-        bgzip eQTL_mapping/ForAssociationTesting.bed && tabix -p bed {output.bed}
+        bgzip eQTL_mapping/FastQTL/ForAssociationTesting.bed && tabix -p bed {output.bed}
         """
 
 # rule prepare_vcf_for_VerifyBamID:

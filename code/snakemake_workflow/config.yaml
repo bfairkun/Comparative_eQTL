@@ -107,10 +107,10 @@ eQTL_mapping:
         # If CovariatesDir is set to default, will try all combinations of
         # covariates as definied by the following number of PCs and continue
         # with the model that maximizes eqtls.
-        GenotypePC_min: 3
-        GenotypePC_max: 3
+        GenotypePC_min: 0
+        GenotypePC_max: 0
         RNASeqPC_min: 0
-        RNASeqPC_max: 10
+        RNASeqPC_max: 13
     gene_x_SNP_FDR: 0.1
     # FDR threshold for counting number of significant eQTLs at the level of
     # SNP-gene pairs
