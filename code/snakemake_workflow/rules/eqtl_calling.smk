@@ -47,14 +47,30 @@ rule filter_plink_file_for_testing:
     log:
         "logs/eQTL_mapping/filter_plink_file_for_testing.log"
     params:
-        stdparams = "--keep-fam eQTL_mapping/plink/KeepFam.txt",
-        extra = '--remove eQTL_mapping/plink/Remove.txt --maf 0.10 --geno --hwe 1e-7.5'
+        stdparams = "--keep-fam eQTL_mapping/plink/KeepFam.txt --memory 28000",
+        extra = '--remove eQTL_mapping/plink/Remove.txt --maf 0.1 --geno --hwe 1e-7.5'
     shell:
         """
         plink --bfile eQTL_mapping/plink/Unfiltered  --allow-extra-chr --make-bed --out eQTL_mapping/plink/ForAssociationTesting.temp {params.stdparams} {params.extra} &> {log}
         mv eQTL_mapping/plink/ForAssociationTesting.temp.bed {output.bed}
         mv eQTL_mapping/plink/ForAssociationTesting.temp.bim {output.bim}
         mv eQTL_mapping/plink/ForAssociationTesting.temp.fam {output.fam}
+        """
+
+rule make_plink_file_for_GRM:
+    """Note that GRM will ignore individuals with a missing phenotype -9 in the fam file"""
+    input:
+        bed = "eQTL_mapping/plink/Unfiltered.bed"
+    output:
+        bed = "eQTL_mapping/Kinship/ForGRM.bed",
+        fam = "eQTL_mapping/Kinship/ForGRM.fam"
+    params:
+        stdparams = "--keep-fam eQTL_mapping/plink/KeepFam.txt",
+        extra = '--remove eQTL_mapping/plink/Remove.txt --maf 0.05 --geno --hwe 1e-7.5'
+    shell:
+        """
+        plink --bfile eQTL_mapping/plink/Unfiltered  --allow-extra-chr --make-bed --out eQTL_mapping/Kinship/ForGRM {params.stdparams} {params.extra}
+        sed -i 's/-9$/1/' {output.fam}
         """
 
 rule GetGeneLevelLocation:
@@ -154,16 +170,17 @@ rule convert_expression_matrix_to_fam:
 
 rule prune_plink_files_for_GRM:
     input:
-        bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
-        fam = "eQTL_mapping/plink/ForAssociationTesting.fam"
+        bed = "eQTL_mapping/Kinship/ForGRM.bed",
     output:
         bed =  "eQTL_mapping/Kinship/ForAssociationTesting.pruned.bed",
+        fam = "eQTL_mapping/Kinship/ForAssociationTesting.pruned.fam"
     log:
         "logs/eQTL_mapping/prune_plink_files.log"
     shell:
         """
-        plink --bfile eQTL_mapping/plink/ForAssociationTesting --allow-extra-chr --indep-pairwise 50 5 0.5 &> {log}
-        plink --bfile eQTL_mapping/plink/ForAssociationTesting --allow-extra-chr --extract plink.prune.in --make-bed --out eQTL_mapping/Kinship/ForAssociationTesting.pruned &> {log}
+        plink --bfile eQTL_mapping/Kinship/ForGRM --allow-extra-chr --indep-pairwise 50 5 0.5 &> {log}
+        plink --bfile eQTL_mapping/Kinship/ForGRM  --allow-extra-chr --extract plink.prune.in --make-bed --out eQTL_mapping/Kinship/ForAssociationTesting.pruned &> {log}
+        sed -i 's/-9$/1/' {output.fam}
         rm plink.prune.in plink.prune.out
         """
 

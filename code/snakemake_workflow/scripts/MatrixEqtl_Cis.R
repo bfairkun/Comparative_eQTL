@@ -20,13 +20,13 @@ ouput_QQ <- args[8]
 permuted_output_filename <- args[9]
 permuted_output_QQ <- args[10]
 
-SNP_file_name <- "code/snakemake_workflow/scratch/Test.snps"
-snps_location_file_name <- "code/snakemake_workflow/scratch/Test.snploc"
-expression_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
-gene_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
-covariates_file_name <- "output/Covariates/0GenotypePCs_and_11RNASeqPCs.covariates"
-errorCovariance_file <- "code/snakemake_workflow/eQTL_mapping/Kinship/GRM.cXX.txt"
-output_file_name_cis = tempfile()
+# SNP_file_name <- "code/snakemake_workflow/scratch/Test.snps"
+# snps_location_file_name <- "code/snakemake_workflow/scratch/Test.snploc"
+# expression_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
+# gene_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
+# covariates_file_name <- "output/Covariates/0GenotypePCs_and_11RNASeqPCs.covariates"
+# errorCovariance_file <- "code/snakemake_workflow/eQTL_mapping/Kinship/GRM.cXX.txt"
+# output_file_name_cis = tempfile()
 
 # Linear model to use, modelANOVA, modelLINEAR, or modelLINEAR_CROSS
 useModel = modelLINEAR; # modelANOVA, modelLINEAR, or modelLINEAR_CROSS

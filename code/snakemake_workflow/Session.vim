@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit rules/eqtl_calling.smk
+edit rules/sqtl_calling.smk
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -38,18 +38,19 @@ normal! zt
 1
 normal! 0
 tabnext 1
-badd +125 config.yaml
-badd +9 Snakefile
-badd +424 rules/eqtl_calling.smk
+badd +63 Snakefile
+badd +1 rules/sqtl_calling.smk
+badd +7 scripts/MakeMetaPlot.sh
+badd +50 rules/eqtl_calling.smk
+badd +131 config.yaml
 badd +36 rules/RNASeqMapping.smk
-badd +84 cluster-config.json
 badd +1 .gitignore
 badd +24 scratch/TODO.txt
 badd +7 scripts/StandardizeAndQuantileNormalize.py
 badd +79 rules/calling.smk
-badd +42 rules/common.smk
-badd +23 rules/sqtl_calling.smk
-badd +8 scripts/MakeMetaPlot.sh
+badd +24 rules/common.smk
+badd +38 ~/CurrentProjects/recurrent-splicing-identification/rules/leafcutter.smk
+badd +3 scratch/chromsomseblacklist.txt
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif
