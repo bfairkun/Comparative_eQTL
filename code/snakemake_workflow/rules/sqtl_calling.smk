@@ -50,20 +50,81 @@ rule leafcutter_prepare_phenotype_table:
         counts = "sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz",
         blacklist_chromosomes = "scratch/chromsomseblacklist.txt"
     output:
-        "sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.qqnorm_Catted.txt"
+        phenotypes = "sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.qqnorm_Catted.txt",
+        PCs = "sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.PCs"
     shell:
         """
         ~/miniconda3/bin/python2.7 ~/CurrentProjects/leafcutter/scripts/prepare_phenotype_table.py -p 13 --ChromosomeBlackList {input.blacklist_chromosomes}  {input.counts}
 
-        cat <(head -1 sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.qqnorm_chr3) <(awk 'FNR>1' sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.qqnorm_chr*) > 
+        cat <(head -1 sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.qqnorm_chr3) <(awk 'FNR>1' sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.qqnorm_chr*) > {output.phenotypes}
         """
 
-rule preapre_MatrixEQTL_for_sQTL:
+rule prepare_MatrixEQTL_for_sQTL:
     input:
-        "sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.qqnorm_Catted.txt"
+        phenotypes = "sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.qqnorm_Catted.txt",
+        fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
     output:
         phenotypes = "sQTL_mapping/MatrixEQTL/sQTL_phenoTable.txt",
+        phenotypesReordered = "sQTL_mapping/MatrixEQTL/sQTL_phenoTable.Reordered.txt",
         intron_locs = "sQTL_mapping/MatrixEQTL/sQTL_intron.locs"
+    shell:
+        """
+        cut -d $'\\t' -f 4- {input} > {output.phenotypes}
+        awk -F'\\t' -v OFS='\\t' '{{ split($1,a,":"); print $1, a[1], a[2], a[3] }}' {input.phenotypes} > {output.intron_locs}
+        Rscript scripts/ReorderPhenotypeTableForMatrixEQTL.R {output.phenotypes} {input.fam} {output.phenotypesReordered}
+        """
+
+MatrixSQTLModels = expand("sQTL_mapping/MatrixEQTL/Results/Results.PCs.{B}.covariates.txt", B= list(range (1, config["eQTL_mapping"]["CovariatePCs"]["RNASeqPC_max"] + 1) ))
+MatrixSQTLCovariates = expand("sQTL_mapping/Covariates/FromLeafcutter.PCs.{M}.covariates.txt", M=list(range (1, config["eQTL_mapping"]["CovariatePCs"]["RNASeqPC_max"] + 1)))
+
+rule make_covariate_file_sQTL:
+    """
+    Use R to make covariate file that matches order of fam file
+    """
+    input:
+        fam = config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
+        leafcutterPCs = "sQTL_mapping/leafcutter/clustering/leafcutter_perind.counts.gz.PCs",
+    output:
+        MatrixSQTLCovariates
+    shell:
+        """
+        Rscript scripts/SelectNtoM_PCs_toCovariateFiles.R  {input.leafcutterPCs} {input.fam} sQTL_mapping/Covariates/FromLeafcutter.PCs. 0 {config[eQTL_mapping][CovariatePCs][RNASeqPC_max]}
+        """
+
+rule MatrixEQTL_sQTL:
+    """Matrix EQTL script performs one cis-eqtl scan with real data and one
+    scan with permutated sample labels for phenotypes for an empirical null."""
+    input:
+        snps = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
+        snp_locs = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
+        phenotypes = "sQTL_mapping/MatrixEQTL/sQTL_phenoTable.Reordered.txt",
+        gene_loc = "sQTL_mapping/MatrixEQTL/sQTL_intron.locs",
+        covariates = "sQTL_mapping/Covariates/FromLeafcutter.PCs.{covariate_set}.covariates.txt",
+        GRM = CovarianceMatrix,
+    output:
+        results = "sQTL_mapping/MatrixEQTL/Results/Results.PCs.{covariate_set}.covariates.txt",
+        fig = "sQTL_mapping/MatrixEQTL/Results/images/Results.{covariate_set}.png",
+        permutated_fig = "sQTL_mapping/MatrixEQTL/Results/images/PermutatedResults.{covariate_set}.png",
+        permuted_results = "sQTL_mapping/MatrixEQTL/Results/PermutatedResults.{covariate_set}.txt",
+    log:
+        "logs/sQTL_mapping/MatrixEQTL/{covariate_set}.log"
+    shell:
+        """
+        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {output.permutated_fig} 250000 &> {log}
+        """
+
+rule PlotPCsVsSQTLs:
+    input:
+        MatrixSQTLModels
+    output:
+        CattedResult = "sQTL_mapping/MatrixEQTL/Results/ConcatenatedResult.txt",
+        Plot = "sQTL_mapping/MatrixEQTL/Results/images/PCsVsSQTLs.pdf"
+    log:
+        "logs/sQTL_mapping/PlotPCsVsEQTLs.log"
+    shell:
+        """
+        awk -F'\\t' -v OFS='\\t' 'FNR>1 && $6<0.3 {{ print $1,$2,$3,$4,$5,$6,FILENAME  }}' {input} > {output.CattedResult}
+        Rscript scripts/Plot_EQTLs_vs_PCs.R {output.CattedResult} {output.Plot}
+        """
 
 
-# rule MatrixEQTL_for_sQTL:

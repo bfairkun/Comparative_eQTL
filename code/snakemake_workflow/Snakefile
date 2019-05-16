@@ -4,6 +4,7 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "sQTL_mapping/MatrixEQTL/Results/images/PCsVsSQTLs.pdf",
         # "logs/eQTL_mapping/collect_Gemma_batchlogs.log",
         "eQTL_mapping/MatrixEQTL/Results/images/PCsVsEQTLs.pdf",
         "eQTL_mapping/Kinship/GRM.cXX.txt",

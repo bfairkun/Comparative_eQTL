@@ -19,6 +19,7 @@ output_file_name_cis <- args[7]
 ouput_QQ <- args[8]
 permuted_output_filename <- args[9]
 permuted_output_QQ <- args[10]
+cisDistance <- args[11]
 
 # SNP_file_name <- "code/snakemake_workflow/scratch/Test.snps"
 # snps_location_file_name <- "code/snakemake_workflow/scratch/Test.snploc"
@@ -43,7 +44,8 @@ errorCovariance <- as.matrix(read.table(errorCovariance_file,sep='\t'))
 
 
 # Distance for local gene-SNP pairs
-cisDist = 250000;
+cisDist = as.numeric(cisDistance);
+print(cisDist)
 
 ## Load genotype data
 

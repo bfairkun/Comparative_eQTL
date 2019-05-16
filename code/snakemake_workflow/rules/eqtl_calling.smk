@@ -410,7 +410,7 @@ rule make_covariate_file:
         "logs/eQTL_mapping/make_covariate_file/{NumGenotypePCs}GenotypePCs_and_{NumRNASeqPCs}RNASeqPCs.covariates.txt.log"
     shell:
         """
-        Rscript ../../analysis/20190427_MakeCovariateFiles.R {input.EmptyFam} {input.MetadataExcel} {input.ExpressionMatrix} {wildcards.NumRNASeqPCs} {input.GenotypePCs} {wildcards.NumGenotypePCs} {output} &> {log}
+        Rscript ../../analysis/20190427_MakeCovariateFiles.NoSex.R {input.EmptyFam} {input.MetadataExcel} {input.ExpressionMatrix} {wildcards.NumRNASeqPCs} {input.GenotypePCs} {wildcards.NumGenotypePCs} {output} &> {log}
         """
 
 if config["eQTL_mapping"]["model_type"] == "lm":
@@ -437,7 +437,7 @@ rule MatrixEQTL:
         "logs/eQTL_mapping/MatrixEQTL/{covariate_set}.log"
     shell:
         """
-        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {output.permutated_fig} &> {log}
+        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {output.permutated_fig} 250000 &> {log}
         """
 
 rule PlotPCsVsEQTLs:

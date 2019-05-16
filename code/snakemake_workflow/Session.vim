@@ -31,17 +31,17 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 25) / 50)
+let s:l = 77 - ((19 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+77
 normal! 0
 tabnext 1
-badd +63 Snakefile
-badd +1 rules/sqtl_calling.smk
+badd +16 rules/eqtl_calling.smk
+badd +62 Snakefile
+badd +77 rules/sqtl_calling.smk
 badd +7 scripts/MakeMetaPlot.sh
-badd +50 rules/eqtl_calling.smk
 badd +131 config.yaml
 badd +36 rules/RNASeqMapping.smk
 badd +1 .gitignore
@@ -51,6 +51,7 @@ badd +79 rules/calling.smk
 badd +24 rules/common.smk
 badd +38 ~/CurrentProjects/recurrent-splicing-identification/rules/leafcutter.smk
 badd +3 scratch/chromsomseblacklist.txt
+badd +80 ../../analysis/20190427_MakeCovariateFiles.NoSex.R
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif
@@ -62,7 +63,6 @@ if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &so = s:so_save | let &siso = s:siso_save
-nohlsearch
 let g:this_session = v:this_session
 let g:this_obsession = v:this_session
 let g:this_obsession_status = 2
