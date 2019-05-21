@@ -100,9 +100,10 @@ me = Matrix_eQTL_main(
   pvalue.hist = "qqplot",
   min.pv.by.genesnp = FALSE,
   noFDRsaveMemory = FALSE);
+print('done with real pass')
 
 #Transform Pvalues to Qvalues
-#If pi_0 is close to 1 (which is is in eQTL calling), BH-p will be equal to Q-value within precision of saved digits.
+#If pi_0 is close to 1 (which is often case in eQTL calling), BH-p will be equal to Q-value within precision of saved digits.
 me$cis$eqtls$qvalue <-
   qvalue(me$cis$eqtls$pvalue)$qvalues
 
@@ -139,6 +140,7 @@ permuted = Matrix_eQTL_main(
   pvalue.hist = "qqplot",
   min.pv.by.genesnp = FALSE,
   noFDRsaveMemory = FALSE);
+print('done with permutation pass')
 
 permuted$cis$eqtls %>%
   filter(pvalue < pvOutputThreshold_cis ) %>%

@@ -96,6 +96,10 @@
   {"mem" : 42000},
 
   "MatrixEQTL":
-  {"mem" : 12000}
+  {"mem" : 24000},
+
+  "MatrixEQTL_sQTL":
+  {"mem" : 18000}
+
 
 }

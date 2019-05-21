@@ -69,8 +69,8 @@ rule prepare_MatrixEQTL_for_sQTL:
         intron_locs = "sQTL_mapping/MatrixEQTL/sQTL_intron.locs"
     shell:
         """
-        cut -d $'\\t' -f 4- {input} > {output.phenotypes}
-        awk -F'\\t' -v OFS='\\t' '{{ split($1,a,":"); print $1, a[1], a[2], a[3] }}' {input.phenotypes} > {output.intron_locs}
+        cut -d $'\\t' -f 4- {input.phenotypes} > {output.phenotypes}
+        awk -F'\\t' -v OFS='\\t' 'BEGIN {{ print "gene", "chr", "start", "stop" }} NR>1 {{ split($4,a,":"); print $4, a[1], a[2], a[3] }}' {input.phenotypes} > {output.intron_locs}
         Rscript scripts/ReorderPhenotypeTableForMatrixEQTL.R {output.phenotypes} {input.fam} {output.phenotypesReordered}
         """
 
@@ -110,7 +110,7 @@ rule MatrixEQTL_sQTL:
         "logs/sQTL_mapping/MatrixEQTL/{covariate_set}.log"
     shell:
         """
-        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {output.permutated_fig} 250000 &> {log}
+        Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {output.permutated_fig} 100000 &> {log}
         """
 
 rule PlotPCsVsSQTLs:
