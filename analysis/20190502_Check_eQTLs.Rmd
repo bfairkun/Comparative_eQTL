@@ -1,0 +1,164 @@
+---
+title: "20190502_Check_eQTLs"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries, message=F, warning=F}
+library(plyr)
+library(tidyverse)
+library(knitr)
+library(data.table)
+
+```
+
+
+My third pass at eqtl mapping was as follows: Genotypes filtered for MAF>0.5 & GenotypingRate>0.9, HWE-pvalue<10e-7.5. ~9.5M variants passed these filter. Gene expression as log(CPM), filtering for genes with 80% of samples > 10 reads on the gene. CPM was then standardized across individuals and quantile normalized to a normal distribution across genes. Sample MD_And was dropped from analysis because it was [previously shown]() to be an outlier that caused spurious associations. Association testing used the following linear mixed model for each cis-variant-gene-pair (cis definied as <1Mb from gene):
+
+\[
+Y =Wα+xβ+u+ε
+\]
+
+where $Y$ is gene expression as $log(TPM)$, $W$ covariates include first three genotype principal components (to account for population structure) as well as 4 RNA-seq PCs, Sex, an interceptm and 3 genotype PCs. $x$ is coded as 0,1,2, $U \sim MVN(0,\sigma^2 K)$ where $K$ an centered kinship matrix made from gemma software.
+
+Association testing was implemented in the R package 'MatrixEQTL'. I can see clear enrichment of small P-values compared to a single-pass label-permutated null.
+(Insert images here).
+
+For this analysis I somewhat arbitraily choose a P-value threshold to further examine hits of 1e-6 since this is where I see deviation from the permutated null. At this threshold, I estimate FDR~20% (num of hits in real data versus permuted.)
+
+![Permuted null.](assets/20190502_PermutatedResults.3GenotypePCs_and_4RNASeqPCs.covariates.png)
+
+![Real data.](assets/20190502_Results.3GenotypePCs_and_4RNASeqPCs.covariates.png)
+
+
+
+
+```{r make-tidy-data}
+# Read in genotypes for eQTLs
+Genotypes <- read.table("../data/PastAnalysesDataToKeep/20190502_SigQTLs.genotypes.txt.raw", header=T, check.names = F, stringsAsFactors = F)
+colnames(Genotypes) <- sub("_.*", "", colnames(Genotypes))
+# Genotypes[!duplicated(as.list(Genotypes))]
+kable(Genotypes[1:10,1:10])
+
+
+#Make sure there aren't duplicate columns
+length(colnames(Genotypes))
+length(unique(colnames(Genotypes)))
+
+# Read in eQTLs from MatrixEQTL output (already filtered for FDR<0.1)
+eQTLs <- read.table("../data/PastAnalysesDataToKeep/20190502_SigQTLs.txt", header=T)
+kable(head(eQTLs))
+
+SampleList <- read.table("../output/ForAssociationTesting.temp.fam")$V2
+
+# This count table is the log10(TPM); no standardization or quantile normalization
+# Read in phenotypes, from count table
+CountTable <- read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1) %>% 
+  t() %>%
+  as.data.frame() %>%
+  rownames_to_column(var = "FID") %>%
+  filter(FID %in% SampleList)
+kable(CountTable[1:10, 1:10])
+
+MergedData <- left_join(Genotypes, CountTable, by=c("IID" = "FID"))  %>% 
+  as.data.frame()
+```
+
+```{r checks}
+#eqtls, ordered from most significant at top
+kable(head(eQTLs))
+
+# betas for these
+hist(eQTLs$beta, breaks=20)
+
+#how many snps
+length(unique(eQTLs$SNP))
+
+#how many genes
+length(unique(eQTLs$gene))
+
+# Expression box plot, stratified by genotype. For a fe of top of the list snp-gene pairs (most significant)
+MyBoxplot <- function(DataFrame, Labels.name, SNP.name, Gene.name){
+  data.frame(Genotype = DataFrame[[SNP.name]],
+    Phenotype = DataFrame[[Gene.name]],
+    FID=DataFrame[[Labels.name]]) %>%
+    ggplot(aes(x=factor(Genotype), y=Phenotype, label=FID)) +
+    geom_boxplot(outlier.shape = NA) +
+    geom_text(position=position_jitter(width=0.25), alpha=1, size=2) +
+    scale_y_continuous(name=paste("log10(CPM)", Gene.name)) +
+    xlab(SNP.name)
+}
+
+MyBoxplot(MergedData, "IID", as.character("ID.1.126465756.T.C"), as.character("ENSPTRG00000001061"))
+
+
+set.seed(1)
+RandomSampleOfEqtls <- eQTLs %>% sample_n(20) %>% select(SNP, gene, beta)
+kable(RandomSampleOfEqtls)
+
+for(i in 1:nrow(RandomSampleOfEqtls)) {
+  try(
+    print(MyBoxplot(MergedData, "IID", as.character(RandomSampleOfEqtls$SNP[i]), as.character(RandomSampleOfEqtls$gene[i])))
+  )
+}
+```
+
+```{r CompareWithGtexEgenes}
+# List of chimp tested genes
+ChimpTestedGenes <- rownames(read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1))
+
+
+ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+kable(head(ChimpToHumanGeneMap))
+
+# Of this ortholog list, how many genes are one2one
+table(ChimpToHumanGeneMap$Chimpanzee.homology.type)
+OneToOneMap <- ChimpToHumanGeneMap %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one")
+
+# Read gtex heart egene list
+GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F) %>%
+  mutate(gene_id_stable = gsub(".\\d+$","",gene_id)) %>%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %>%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %>%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+
+length(GtexHeartEgenes$gene_id_stable)
+length(OneToOneMap$Gene.stable.ID)
+length(intersect(GtexHeartEgenes$gene_id_stable, OneToOneMap$Gene.stable.ID))
+
+HumanSigGenes <- GtexHeartEgenes %>%
+  filter(qval<0.05) %>%
+  pull(chimp_id)
+
+HumanNonSigGenes <- GtexHeartEgenes %>%
+  filter(qval>0.05) %>%
+  pull(chimp_id)
+
+ChimpSigGenes <- GtexHeartEgenes %>%
+  filter(chimp_id %in% eQTLs$gene) %>%
+  pull(chimp_id)
+
+ChimpNonSigGenes <- GtexHeartEgenes %>%
+  filter(! chimp_id %in% eQTLs$gene) %>%
+  pull(chimp_id)
+
+
+
+matrix( c( length(intersect(ChimpSigGenes,HumanSigGenes)),length(intersect(HumanSigGenes,ChimpNonSigGenes)),
+         length(intersect(ChimpSigGenes,HumanNonSigGenes)), length(intersect(ChimpNonSigGenes,HumanNonSigGenes)), nrow = 2))
+
+ContigencyTable <- matrix(c(15,4225,18,7328), nrow=2)
+
+#Contigency table of one to one orthologs tested in both chimps and humans of whether significant in humans, or chimps, or both, or neither
+ContigencyTable
+fisher.test(ContigencyTable)
+
+```
+
+
+

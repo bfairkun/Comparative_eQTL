@@ -20,6 +20,7 @@ Welcome to my research website.
 ### Expression data
 - [Check that RNA-seq data segregates by biological sample over sequencing flow cell](20190325_MergingRNASeqLanes.html)
 - [Checking RNA-seq data for covariates](20190320_Check-RNAseq-PCs.html)
+- [STAR Aligner vs kallisto pseudoaligner for gene quantification](20190429_RNASeqSTAR_quantifications.html)
 
 ### Prepare data for eQTL testing
 - [Make phenotype table for testing](20190327_MakeFamPhenotypeFile.html)
@@ -29,3 +30,9 @@ Welcome to my research website.
 - [first iteration](20190412_Check_eQTLs.html): description: lmm with KING-robust GRM thresholded at 0, and 3 genotype PCs
 - [Check residuals after regressing out some covariates](20190421_RegressOutRNASeqPCs.html)
 - [second iteration](20190424_Check_eQTLs.html): description: lm with 5 genotype PCs (PCs 4 and 5 takes into account some first hand relatedness) and more stringent genotype filtering. Also, outlier sample MD_And dropped from analysis
+- [Third iteration](20190428_Check_eQTLs.html)
+- [fourth iteration](20190502_Check_eQTLs.html): description, lmm with 4 PCs and 3 Genotype PCs, used STAR RNA-seq CPM for less outliers. Fixed big bug that was permuting samples, resulting in no true hits in previous iterations. Here I used standardization and qqnorm.
+
+### Conservation and GO analysis
+- [GO analysis, FDR=0.1](20190521_eQTL_CrossSpeciesEnrichment.html) overlap enrichment analysis of eGenes across humans and chumps, and gene ontology analysis of eGenes based on eGene classification defined at FDR=0.1 threshold
+- [Conservation analysis, FDR=0.1](20190606_eGene_Conservation.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1

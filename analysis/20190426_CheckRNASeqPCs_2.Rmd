@@ -152,7 +152,7 @@ First the continuous confounders
 ```{r continuous_confounders}
 
 # Grab first 10 PCs
-PCs_to_test <- Merged[,2:11]
+PCs_to_test <- Merged[,2:15]
 kable(head(PCs_to_test))
 
 # Grab potential continuous confounders that make sense to test
@@ -222,6 +222,7 @@ ggplot(Merged, aes(x=factor(RNA.Extract_date), y=PC2, label=Label)) +
 ggplot(Merged, aes(x=factor(RNA.Library.prep.batch), y=PC2)) + 
   geom_boxplot() +
   geom_jitter(position=position_jitter(width=.1, height=0))
+
 
 ggplot(Merged, aes(factor(RNA.Extract_date))) + 
   geom_bar(aes(fill = factor(RNA.Library.prep.batch)))
