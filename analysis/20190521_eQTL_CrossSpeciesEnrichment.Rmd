@@ -18,6 +18,7 @@ library(ggpmisc)
 library("clusterProfiler")
 library("org.Hs.eg.db")
 library(gridExtra)
+library(enrichplot)
 
 ```
 
@@ -96,10 +97,10 @@ HumanFDR <- 0.1
 ChimpFDR <- 0.1
 
 # Filter human eGenes by qval threshold
-# HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% pull(chimp_id)
+HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% pull(chimp_id)
 
 # Filter human eGenes by topN qval
-HumanSigGenes <- GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% pull(chimp_id)
+# HumanSigGenes <- GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% pull(chimp_id)
 
 # Filter human eGeness by qval threshold then topN betas 
 # HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% top_n(1000, abs(slope)) %>% pull(chimp_id)
@@ -465,7 +466,7 @@ ego.mf <- enrichGO(gene = foreground,
                  pAdjustMethod = "BH", 
                  pvalueCutoff  = 0.01,
                  qvalueCutoff  = 0.05)
-kable(summary(ego.mf))
+kable(head(as.data.frame(ego.mf)))
 
 ego.bp <- enrichGO(gene = foreground,
                  universe = background,
@@ -475,7 +476,7 @@ ego.bp <- enrichGO(gene = foreground,
                  pAdjustMethod = "BH", 
                  pvalueCutoff  = 0.01,
                  qvalueCutoff  = 0.05)
-kable(summary(ego.bp))
+kable(head(as.data.frame(ego.bp)))
 
 ego.cc <- enrichGO(gene = foreground,
                  universe = background,
@@ -485,7 +486,7 @@ ego.cc <- enrichGO(gene = foreground,
                  pAdjustMethod = "BH", 
                  pvalueCutoff  = 0.01,
                  qvalueCutoff  = 0.05)
-kable(summary(ego.cc))
+kable(head(as.data.frame(ego.cc)))
 ```
 
 Nothing enriched by this comparison of gene sets. Perhaps a more appropriate foreground/background set is:
@@ -508,7 +509,7 @@ ego.mf <- enrichGO(gene = foreground,
                  pAdjustMethod = "BH", 
                  pvalueCutoff  = 0.01,
                  qvalueCutoff  = 0.05)
-kable(summary(ego.mf))
+kable(head(as.data.frame(ego.mf)))
 
 ego.bp <- enrichGO(gene = foreground,
                  universe = background,
@@ -518,7 +519,7 @@ ego.bp <- enrichGO(gene = foreground,
                  pAdjustMethod = "BH", 
                  pvalueCutoff  = 0.01,
                  qvalueCutoff  = 0.05)
-kable(summary(ego.bp))
+kable(head(as.data.frame(ego.bp)))
 
 ego.cc <- enrichGO(gene = foreground,
                  universe = background,
@@ -528,7 +529,7 @@ ego.cc <- enrichGO(gene = foreground,
                  pAdjustMethod = "BH", 
                  pvalueCutoff  = 0.01,
                  qvalueCutoff  = 0.05)
-kable(summary(ego.cc))
+kable(head(as.data.frame(ego.cc)))
 
 dotplot(ego.mf, font.size=8)
 dotplot(ego.bp, font.size=8)
@@ -560,7 +561,7 @@ ego.mf <- enrichGO(gene = foreground,
                  pAdjustMethod = "BH", 
                  pvalueCutoff  = 0.01,
                  qvalueCutoff  = 0.05)
-kable(summary(ego.mf))
+kable(head(as.data.frame(ego.mf)))
 
 ego.bp <- enrichGO(gene = foreground,
                  universe = background,
@@ -570,7 +571,7 @@ ego.bp <- enrichGO(gene = foreground,
                  pAdjustMethod = "BH", 
                  pvalueCutoff  = 0.01,
                  qvalueCutoff  = 0.05)
-kable(summary(ego.bp))
+kable(head(as.data.frame(ego.bp)))
 
 ego.cc <- enrichGO(gene = foreground,
                  universe = background,
@@ -580,7 +581,7 @@ ego.cc <- enrichGO(gene = foreground,
                  pAdjustMethod = "BH", 
                  pvalueCutoff  = 0.01,
                  qvalueCutoff  = 0.05)
-kable(summary(ego.cc))
+kable(head(as.data.frame(ego.cc)))
 
 dotplot(ego.mf, font.size=8)
 dotplot(ego.bp, font.size=8)
@@ -608,23 +609,19 @@ gsego.cc.shared <- gseGO(gene = GeneList,
                  maxGSSize = 500,
                  # pvalueCutoff=0.8,
                  ont = "CC")
-as.data.frame(gsego.cc.shared)
+kable(head(as.data.frame(gsego.cc.shared)))
 
 dotplot(gsego.cc.shared, font.size=8, showCategory=15)
 gseaplot(gsego.cc.shared, geneSetID = "GO:0042611", pvalue_table = TRUE)
 ```
 
+That was still a work in progress that I may come back to one day... For now I will perform GSEA on ranked gene lists based on chimp FDR.
+
+First, create chimp-qval-ordered gene list for genes that are human eGenes
+I expect this to return similar results as gene overlap analysis with forground as shared eGenes and background as all all genes tested. So this should return MHC complex among other things.
+
 
 ```{r}
-# HumanOrderedGenes <- GtexHeartEgenes %>%
-#   arrange(qval) %>%
-#   filter(!chimp_id %in% ChimpSigGenes)
-# GeneList <- log10(HumanOrderedGenes$qval) * -1
-# names(GeneList) <- as.character(ChimpToHuman.ID(HumanOrderedGenes$chimp_id))
-
-
-#Create chimp-qval-ordered gene list for genes that are human eGenes
-#I expect this to return similar results as gene overlap analysis with forground as shared eGenes and background as all all genes tested. So this should return MHC complex among other things.
 Chimp_OrderedGenes <- eQTLs %>%
     group_by(gene) %>% 
     dplyr::slice(which.min(qvalue)) %>%
@@ -641,20 +638,22 @@ gsego.cc.shared <- gseGO(gene = GeneList,
                  keyType = 'ENSEMBL',
                  maxGSSize = 500,
                  # pvalueCutoff=0.8,
-                 ont = "CC")
-as.data.frame(gsego.cc.shared)
+                 ont = "CC",
+                 nPerm = 10000)
+kable(head(as.data.frame(gsego.cc.shared)))
 
 dotplot(gsego.cc.shared, font.size=8, showCategory=15)
-gseaplot(gsego.cc.shared, geneSetID = "GO:0042611", pvalue_table = TRUE)
+gseaplot2(gsego.cc.shared, geneSetID = c("GO:0042611", "GO:0042613", "GO:0032588"), title="Shared eGenes ordered by chimp -log(qvalue)", pvalue_table = TRUE)
 
+```
+Ok that does return MHC as expect. Now I will create chimp-qval-ordered gene list for genes that are not human eGenes. I expect this to not return MHC. Instead,I expect this to return similar results as gene overlap analysis with forground as chimp-specific eGenes and background as all chimp-eGenes (nucleic acid binding, etc).
 
-
-#Create chimp-qval-ordered gene list for genes that are not human eGenes.
-#I expect this to return similar results as gene overlap analysis with forground as chimp-specific eGenes and background as all chimp-eGenes.
+```{r}
 Chimp_OrderedGenes <- eQTLs %>%
     group_by(gene) %>% 
     dplyr::slice(which.min(qvalue)) %>%
     filter(gene %in% GtexHeartEgenes$chimp_id) %>%
+    filter(qvalue<0.2) %>%
     arrange(qvalue) %>%
     filter(!gene %in% HumanSigGenes)
 GeneList <- log10(Chimp_OrderedGenes$qvalue) * -1
@@ -665,31 +664,95 @@ gsego.cc.chimpspecific <- gseGO(gene = GeneList,
                  keyType = 'ENSEMBL',
                  maxGSSize = 500,
                  pvalueCutoff=0.8,
-                 ont = "CC")
-as.data.frame(gsego.cc.chimpspecific)
+                 ont = "BP")
+kable(head(as.data.frame(gsego.cc.chimpspecific)))
 
-gseaplot(gsego.cc.chimpspecific, geneSetID = "GO:0042611", pvalue_table = TRUE)
-gseaplot(gsego.cc.chimpspecific, geneSetID = "GO:0042611", pvalue_table = TRUE)
-dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=15)
+```
 
+Ok that returned nothing, even at more relaxed pvalue thresholds (not shown) I can see the top terms do not have anything to do with nucleic acid binding like the previous gene overlap enrichment analysis results that compared chimp-specific-eGene (foreground) to all chimp eGenes (universe background).
 
-# Chimp_OrderedGenes <- eQTLs %>%
-#     group_by(gene) %>% 
-#     dplyr::slice(which.min(qvalue)) %>%
-#     filter(gene %in% GtexHeartEgenes$chimp_id) %>%
-#     arrange(qvalue) %>%
-#     filter(!gene %in% HumanSigGenes)
-# GeneList <- log10(Chimp_OrderedGenes$qvalue) * -1
-# names(GeneList) <- as.character(ChimpToHuman.ID(Chimp_OrderedGenes$gene))
-# 
-# gsego.cc.shared <- gseGO(gene = GeneList,
-#                  OrgDb = org.Hs.eg.db,
-#                  keyType = 'ENSEMBL',
-#                  maxGSSize = 500,
-#                  pvalueCutoff=0.8,
-#                  ont = "CC")
-# as.data.frame(gsego.cc.shared)
-# 
-# gseaplot(gsego.cc.shared, geneSetID = "GO:0042611", pvalue_table = TRUE)
+By partitioning the GSEA analyses into "human eGene" ranked gene list and "not human eGene" ranked gene list, what I was really trying to get at is the semi-quantitative difference in eGene character. Essentially these are paired analyses, though GSEA does not have any natural way to run a paired analysis on two gene sets. Perhaps a better way to do this is to make a single gene list based on the difference in eGene ranks between the two species. Since GSEA is based on non-parametric rank orders, I think this is still somewhat reasonable to do. For example, if qvalues are ranked lowest to highest in both species (rank=1 being most significant), and I subtract the chimp ranking from the human ranking, I am left with the more chimp specific eGenes with a higher number. I will implement this idea below:
 
+```{r}
+Chimp_OrderedGenes <- eQTLs %>%
+    group_by(gene) %>% 
+    dplyr::slice(which.min(qvalue)) %>%
+    filter(gene %in% GtexHeartEgenes$chimp_id) %>%
+    left_join(GtexHeartEgenes, by=c("gene"="chimp_id")) %>%
+    dplyr::select(gene, qvalue, qval) %>% as.data.frame() %>%
+    mutate(ChimpRank = dense_rank(qvalue)) %>%
+    mutate(HumanRank = dense_rank(qval)) %>%
+    mutate(RankDifference = HumanRank-ChimpRank) %>%
+    arrange(desc(RankDifference))
+GeneList <- Chimp_OrderedGenes$RankDifference
+names(GeneList) <- as.character(ChimpToHuman.ID(Chimp_OrderedGenes$gene))
+    
+gsego.cc.chimpspecific <- gseGO(gene = GeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 pvalueCutoff=0.8,
+                 ont = "BP")
+kable(head(as.data.frame(gsego.cc.chimpspecific)))
+# gseaplot(gsego.cc.chimpspecific, geneSetID = "GO:0001501", pvalue_table = TRUE)
+# dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=15)
+```
+Nothing is significant by any notable treshold by this method...
+
+Perhaps I need to limit the gene set to genes which were called as eGenes in chimps, since many too many chimp non-eGenes may contribute to noise.
+
+```{r}
+Chimp_OrderedGenes <- eQTLs %>%
+    group_by(gene) %>% 
+    dplyr::slice(which.min(qvalue)) %>%
+    filter(gene %in% GtexHeartEgenes$chimp_id) %>%
+    filter(qvalue <0.1) %>%
+    left_join(GtexHeartEgenes, by=c("gene"="chimp_id")) %>%
+    dplyr::select(gene, qvalue, qval) %>% as.data.frame() %>%
+    mutate(ChimpRank = dense_rank(qvalue)) %>%
+    mutate(HumanRank = dense_rank(qval)) %>%
+    mutate(RankDifference = HumanRank-ChimpRank) %>%
+    arrange(desc(RankDifference))
+GeneList <- Chimp_OrderedGenes$RankDifference
+names(GeneList) <- as.character(ChimpToHuman.ID(Chimp_OrderedGenes$gene))
+    
+gsego.cc.chimpspecific <- gseGO(gene = GeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "BP",
+                 nPerm = 10000)
+kable(head(as.data.frame(gsego.cc.chimpspecific), 15))
+gseaplot2(gsego.cc.chimpspecific, geneSetID = c("GO:0006366","GO:0044260"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
+
+dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=38)
+```
+Alright. Great. that analysis recapitulated the gene overlap analysis of [foreground=Chimp-specific-eGenes; background=all-chimp-eGenes] in the sense that terms like 'gene transcription' pop up.
+
+Now let's try the reciprocal; where we look for what is enriched in human-specific eGenes, (again where the metric to order the gene list is a difference in ranks.)... Still a work-in-progress
+
+```{r, eval=F}
+Chimp_OrderedGenes <- eQTLs %>%
+    group_by(gene) %>% 
+    dplyr::slice(which.min(qvalue)) %>%
+    filter(gene %in% GtexHeartEgenes$chimp_id) %>%
+    filter(qvalue <0.1) %>%
+    left_join(GtexHeartEgenes, by=c("gene"="chimp_id")) %>%
+    dplyr::select(gene, qvalue, qval) %>% as.data.frame() %>%
+    mutate(ChimpRank = dense_rank(qvalue)) %>%
+    mutate(HumanRank = dense_rank(qval)) %>%
+    mutate(RankDifference = HumanRank-ChimpRank) %>%
+    arrange(desc(RankDifference))
+GeneList <- Chimp_OrderedGenes$RankDifference
+names(GeneList) <- as.character(ChimpToHuman.ID(Chimp_OrderedGenes$gene))
+    
+gsego.cc.chimpspecific <- gseGO(gene = GeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "BP")
+kable(head(as.data.frame(gsego.cc.chimpspecific), 15))
+gseaplot2(gsego.cc.chimpspecific, geneSetID = c("GO:0006357", "GO:0006355"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
+
+dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=35)
 ```
