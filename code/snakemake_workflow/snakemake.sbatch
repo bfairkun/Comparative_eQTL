@@ -5,8 +5,8 @@
 
 #SBATCH --job-name=snakemake
 #SBATCH --output=/home/bjf79/slurm_stdout_logs/project1_repo_snakemake.txt
-#SBATCH --time=4-00:00:00
-#SBATCH --partition=gilad
+#SBATCH --time=1-00:00:00
+#SBATCH --partition=broadwl
 #SBATCH --mem=4G
 #SBATCH --tasks-per-node=4
 

@@ -133,3 +133,16 @@ MockDataMaker:
     SampleListForMockData: "MockDataSampleList.tsv"
     #Ras gene
     Region: "11:450,056-466,155"
+
+PowerAnalysis:
+    RNASeqFileList: "DE_gene_power_analysis_SampleList.tsv"
+    Human_ref:
+        genome_fasta: "/project2/gilad/bjf79/genomes/GRCh38_Ensembl/Sequence/Homo_sapiens.GRCh38.dna_sm.chromosome.all.fa"
+        genome_gtf: "/project2/gilad/bjf79/genomes/GRCh38_Ensembl/Annotations/Homo_sapiens.GRCh38.94.chr.gtf"
+        genome_dir: "/project2/gilad/bjf79/genomes/GRCh38_Ensembl/STAR_genomedir/"
+    Subread:
+        Human_gtf:
+            "/project2/gilad/bjf79/genomes/2017_July_ortho/2017_July_ortho_human.gtf"
+        Chimp_gtf:
+            "/project2/gilad/bjf79/genomes/2017_July_ortho/2017_July_ortho_chimp.nochr.gtf"
+    #Chimp reference genome defined earlier

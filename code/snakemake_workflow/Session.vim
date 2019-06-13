@@ -12,8 +12,12 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit cluster-config.json
+edit rules/PowerAnalysis.smk
 set splitbelow splitright
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
 set nosplitbelow
 set nosplitright
 wincmd t
@@ -21,6 +25,8 @@ set winminheight=0
 set winheight=1
 set winminwidth=0
 set winwidth=1
+exe '1resize ' . ((&lines * 24 + 25) / 51)
+exe '2resize ' . ((&lines * 24 + 25) / 51)
 argglobal
 setlocal fdm=manual
 setlocal fde=0
@@ -31,27 +37,51 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 99 - ((43 * winheight(0) + 25) / 50)
+let s:l = 1 - ((0 * winheight(0) + 12) / 24)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-99
-normal! 013|
+1
+normal! 0
+wincmd w
+argglobal
+if bufexists("config.yaml") | buffer config.yaml | else | edit config.yaml | endif
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 143 - ((16 * winheight(0) + 12) / 24)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+143
+normal! 012|
+wincmd w
+exe '1resize ' . ((&lines * 24 + 25) / 51)
+exe '2resize ' . ((&lines * 24 + 25) / 51)
 tabnext 1
-badd +425 rules/eqtl_calling.smk
-badd +63 Snakefile
+badd +82 rules/PowerAnalysis.smk
+badd +7 Snakefile
+badd +143 config.yaml
+badd +33 rules/RNASeqMapping.smk
+badd +106 cluster-config.json
+badd +145 rules/eqtl_calling.smk
 badd +66 rules/sqtl_calling.smk
 badd +7 scripts/MakeMetaPlot.sh
-badd +84 config.yaml
-badd +36 rules/RNASeqMapping.smk
 badd +1 .gitignore
 badd +24 scratch/TODO.txt
 badd +7 scripts/StandardizeAndQuantileNormalize.py
 badd +79 rules/calling.smk
-badd +24 rules/common.smk
+badd +43 rules/common.smk
 badd +38 ~/CurrentProjects/recurrent-splicing-identification/rules/leafcutter.smk
-badd +3 scratch/chromsomseblacklist.txt
-badd +0 cluster-config.json
+badd +1 ~/CurrentProjects/201905_MPESeq/rules/STAR_Alignment.smk
+badd +8 ~/CurrentProjects/201905_MPESeq/rules/common.smk
+badd +12 snakemake.sbatch
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif

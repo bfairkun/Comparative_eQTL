@@ -4,6 +4,9 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        expand("PowerAnalysis/Subread/{species}.subread.txt", species=["Human", "Chimp"]),
+        expand(config["temp_files_prefix"] + "PowerAnalysisBams/{PowerAnalysisSample}/Aligned.sortedByCoord.out.bam", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
+        expand(config["temp_files_prefix"] + "PowerAnalysisFastq/{PowerAnalysisSample}.fastq.gz", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
         "sQTL_mapping/MatrixEQTL/Results/images/PCsVsSQTLs.pdf",
         # "logs/eQTL_mapping/collect_Gemma_batchlogs.log",
         "eQTL_mapping/MatrixEQTL/Results/images/PCsVsEQTLs.pdf",
@@ -60,5 +63,6 @@ include: "rules/populationstructure.smk"
 #include: "rules/stats.smk"
 include: "rules/eqtl_calling.smk"
 include: "rules/sqtl_calling.smk"
+include: "rules/PowerAnalysis.smk"
 # include: "rules/qc.smk"
 #include: "rules/annotation.smk"

@@ -99,7 +99,12 @@
   {"mem" : 24000},
 
   "MatrixEQTL_sQTL":
-  {"mem" : 18000}
+  {"mem" : 18000},
 
+  "STAR_make_index_human":
+  {"mem" : 68000, "tasks-per-node" : 5, "partition" : "bigmem2"},
+
+  "STAR_alignment_PowerAnalysis":
+  {"partition" : "broadwl", "mem": 58000, "tasks-per-node" : 10}
 
 }

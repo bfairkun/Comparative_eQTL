@@ -40,6 +40,8 @@ with open(config["RNASeqFileList"]) as RNASeqFileList_fh:
         RNASeqSampleToFastq_dict[samplename].append(filepath)
         RNASeqBasenameToFastq[os.path.basename(filepath)] = filepath
 
+PowerAnalysisFastqFrame = pd.read_csv(config["PowerAnalysis"]["RNASeqFileList"],sep='\t', index_col=0)
+
 ##### Wildcard constraints #####
 wildcard_constraints:
     vartype="snvs|indels",
