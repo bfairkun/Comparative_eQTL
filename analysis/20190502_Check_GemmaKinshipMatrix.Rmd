@@ -1,0 +1,28 @@
+---
+title: "CheckGemmaKinshipMatrix"
+author: "Ben Fair"
+date: "5/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries, message=F, warning=F}
+library(tidyverse)
+library(knitr)
+library(data.table)
+library(reshape2)
+library(gplots)
+
+```
+
+```{r read-data}
+K <- read.table("../output/PopulationStructure/GRM.cXX.txt", sep='\t')
+Ksamples <- read.table("../output/ForAssociationTesting.temp.fam")$V2
+rownames(K) <- Ksamples
+colnames(K) <- Ksamples
+
+heatmap.2(as.matrix(K), dendrogram='none', trace="none")
+```

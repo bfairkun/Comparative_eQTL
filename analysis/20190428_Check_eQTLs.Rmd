@@ -62,7 +62,7 @@ hist(eQTLs$beta, breaks=20)
 ```
 Not sure what to make of that multi-modal distribution of betas (Two peaks around 0 might be expected, but I wasn't expecting another peak at ~5). Maybe most of these eqtls are the snps in LD that are associated with the same gene...
 
-```{r checks}
+```{r checks-2}
 #how many snps
 length(unique(eQTLs$SNP))
 

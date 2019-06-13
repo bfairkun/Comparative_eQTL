@@ -1,0 +1,258 @@
+---
+title: "20190606_eGene_conservation"
+author: "Ben Fair"
+date: "6/6/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load-libraries, message=F, warning=F}
+library(plyr)
+library(tidyverse)
+library(knitr)
+library(data.table)
+library(ggpmisc)
+library("clusterProfiler")
+library("org.Hs.eg.db")
+library(gridExtra)
+# library(ggpubr)
+
+```
+
+
+
+Here the dataset is eQTLs called from a model with the following pre-testing filters/transformations/checks:
+
+- cis-window=250kB
+- MAF>10%
+- genes tested must have >6 reads in 80% of samples
+- lmm with genetic relatedness matrix produced by gemma
+- Gene expression is standardized and normalized
+- 10PCs added as covariates
+- FDR estimated by Storey's qvalue
+- Pvalues well calibrated under a permutated null
+
+First, Read in the data...
+```{r read-data}
+eQTLs <- read.table(gzfile("../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz"), header=T)
+kable(head(eQTLs))
+
+# List of chimp tested genes
+ChimpTestedGenes <- rownames(read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1))
+
+ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+kable(head(ChimpToHumanGeneMap))
+
+# Of this ortholog list, how many genes are one2one
+table(ChimpToHumanGeneMap$Chimpanzee.homology.type)
+OneToOneMap <- ChimpToHumanGeneMap %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one") %>%
+  distinct(Chimpanzee.gene.stable.ID, .keep_all = TRUE)
+
+# Read gtex heart egene list
+# Only consider those that were tested in both species and are one2one orthologs
+GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F) %>%
+  mutate(gene_id_stable = gsub(".\\d+$","",gene_id)) %>%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %>%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %>%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+ChimpToHuman.ID <- function(Chimp.ID){
+  #function to convert chimp ensembl to human ensembl gene ids
+  return(
+    plyr::mapvalues(Chimp.ID, OneToOneMap$Chimpanzee.gene.stable.ID, OneToOneMap$Gene.stable.ID, warn_missing = F)
+  )}
+```
+
+Now compare with GTEx by making 2x2 contigency table (eGene/not-eGene in Chimp/human). The odds ratio from this table is symetrical.
+
+```{r Count-eQTLs}
+HumanFDR <- 0.1
+ChimpFDR <- 0.1
+
+#Get chimp eQTLs
+Chimp_eQTLs <- eQTLs %>%
+  filter(qvalue<ChimpFDR)
+
+# Count chimp eGenes
+length(unique(Chimp_eQTLs$gene))
+
+# Count human eGenes
+length(GtexHeartEgenes %>% filter(qval< HumanFDR) %>% pull(chimp_id))
+
+# Count number genes tested in both species (already filtered for 1to1 orthologs)
+length(GtexHeartEgenes$gene_id_stable)
+
+```
+
+The number of human eGenes is huge (about half of all tested genes) and GTEx over-powered compared to chimp. With huge power, everything is an eGene and the eGene classification becomes devoid of meaningful information. So I will play with different ways to classify human eGenes.
+
+```{r CompareWithGtexEgenes}
+
+#Change FDR thresholds or take top N eGenes by qvalue
+HumanTopN <- 600
+HumanFDR <- 0.1
+ChimpFDR <- 0.1
+
+# Filter human eGenes by qval threshold
+HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% pull(chimp_id)
+
+# Filter human eGenes by topN qval
+HumanSigGenes <- GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% pull(chimp_id)
+
+# Filter human eGeness by qval threshold then topN betas 
+# HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% top_n(1000, abs(slope)) %>% pull(chimp_id)
+
+HumanNonSigGenes <- GtexHeartEgenes %>%
+  filter(!chimp_id %in% HumanSigGenes) %>%
+  pull(chimp_id)
+
+ChimpSigGenes <- GtexHeartEgenes %>%
+  filter(chimp_id %in% Chimp_eQTLs$gene) %>%
+  pull(chimp_id)
+
+ChimpNonSigGenes <- GtexHeartEgenes %>%
+  filter(! chimp_id %in% Chimp_eQTLs$gene) %>%
+  pull(chimp_id)
+
+
+
+ContigencyTable <- matrix( c( length(intersect(ChimpSigGenes,HumanSigGenes)),
+                              length(intersect(HumanSigGenes,ChimpNonSigGenes)),
+                              length(intersect(ChimpSigGenes,HumanNonSigGenes)),
+                              length(intersect(ChimpNonSigGenes,HumanNonSigGenes))), 
+                           nrow = 2)
+
+rownames(ContigencyTable) <- c("Chimp eGene", "Not Chimp eGene")
+colnames(ContigencyTable) <- c("Human eGene", "Not human eGene")
+
+#what is qval threshold for human eGene classification in this contigency table
+print(GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% top_n(1, qval) %>% pull(qval))
+
+#Contigency table of one to one orthologs tested in both chimps and humans of whether significant in humans, or chimps, or both, or neither
+ContigencyTable
+
+#One-sided Fisher test for greater overlap than expected by chance
+fisher.test(ContigencyTable, alternative="greater")
+```
+
+The above contingency table and one-sided fisher test indicated a greater-than-chance overlap between the sets of eGenes in chimp and human.
+
+
+```{r dnds-ratio-comparison}
+
+#Chimp eGenes vs non chimp eGenes
+ToPlot <- GtexHeartEgenes %>%
+  mutate(group = case_when(
+        chimp_id %in% ChimpSigGenes ~ "chimp.eGene",
+        !chimp_id %in% ChimpSigGenes ~ "not.chimp.eGene")) %>%
+left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID")) %>%
+mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee)
+Chimp.dNdS.plot <- ggplot(ToPlot, aes(color=group,x=dN.dS)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("dN/dS") +
+  scale_x_continuous(trans='log10', limits=c(0.01,10)) +
+  annotate("text", x = 1, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, dN.dS ~ group, alternative="greater")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+Chimp.identity.plot <- ggplot(ToPlot, aes(color=group, x=100-X.id..query.gene.identical.to.target.Chimpanzee.gene)) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(trans='log1p', limits=c(0,100), expand=expand_scale()) +
+  ylab("Cumulative frequency") +
+  xlab("Percent non-identitical amino acid between chimp and human") +
+  annotate("text", x = 10, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, X.id..query.gene.identical.to.target.Chimpanzee.gene ~ group, alternative="less")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Human eGenes vs non human eGenes
+ToPlot <- GtexHeartEgenes %>%
+  mutate(group = case_when(
+        chimp_id %in% HumanSigGenes ~ "human.eGene",
+        !chimp_id %in% HumanSigGenes ~ "not.human.eGene")) %>%
+left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID")) %>%
+mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee)
+Human.dNdS.plot <- ggplot(ToPlot, aes(color=group,x=dN.dS)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("dN/dS") +
+  scale_x_continuous(trans='log10', limits=c(0.01,10)) +
+  annotate("text", x = 1, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, dN.dS ~ group, alternative="greater")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+Human.identity.plot <- ggplot(ToPlot, aes(color=group, x=100-X.id..query.gene.identical.to.target.Chimpanzee.gene)) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(trans='log1p', limits=c(0,100), expand=expand_scale()) +
+  ylab("Cumulative frequency") +
+  xlab("Percent non-identitical amino acid between chimp and human") +
+  annotate("text", x = 10, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, X.id..query.gene.identical.to.target.Chimpanzee.gene ~ group, alternative="less")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs human-specific eGenes
+ToPlot <- GtexHeartEgenes %>%
+  mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(HumanSigGenes, ChimpSigGenes) ~ "human.specific.eGene")) %>%
+  filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(HumanSigGenes, ChimpSigGenes)))%>%
+left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID")) %>%
+mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee)
+Shared.human.dNdS.plot <- ggplot(ToPlot, aes(color=group,x=dN.dS)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("dN/dS") +
+  scale_x_continuous(trans='log10', limits=c(0.01,10)) +
+  annotate("text", x = 1, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, dN.dS ~ group, alternative="less")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+Shared.human.identity.plot <- ggplot(ToPlot, aes(color=group, x=100-X.id..query.gene.identical.to.target.Chimpanzee.gene)) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(trans='log1p', limits=c(0,100), expand=expand_scale()) +
+  ylab("Cumulative frequency") +
+  xlab("Percent non-identitical amino acid between chimp and human") +
+  annotate("text", x = 10, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, X.id..query.gene.identical.to.target.Chimpanzee.gene ~ group, alternative="greater")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs chimp-specific eGenes
+ToPlot <- GtexHeartEgenes %>%
+  left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID")) %>%
+mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee) %>%
+mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(ChimpSigGenes, HumanSigGenes) ~ "chimp.specific.eGene")) %>%
+dplyr::filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(ChimpSigGenes, HumanSigGenes)))
+Shared.chimp.dNdS.plot <- ggplot(ToPlot, aes(color=group,x=dN.dS)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("dN/dS") +
+  scale_x_continuous(trans='log10', limits=c(0.01,10)) +
+  annotate("text", x = 1, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, dN.dS ~ group, alternative="less")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+Shared.chimp.identity.plot <- ggplot(ToPlot, aes(color=group, x=100-X.id..query.gene.identical.to.target.Chimpanzee.gene+0.001)) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(trans='log1p', limits=c(0,100), expand=expand_scale()) +
+  ylab("Cumulative frequency") +
+  xlab("Percent non-identitical amino acid between chimp and human") +
+  annotate("text", x = 10, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, X.id..query.gene.identical.to.target.Chimpanzee.gene ~ group, alternative="greater")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+Chimp.dNdS.plot
+Chimp.identity.plot
+Human.dNdS.plot
+Human.identity.plot
+Shared.human.dNdS.plot
+Shared.human.identity.plot
+Shared.chimp.dNdS.plot
+Shared.chimp.identity.plot
+
+```
+
+Some general and unsurprising conclusions:
+
+eGenes are less conserved than non eGenes, and species shared eGenes are less conserved than species specific eGenes.

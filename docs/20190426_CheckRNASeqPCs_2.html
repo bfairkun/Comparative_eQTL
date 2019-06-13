@@ -75,9 +75,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -195,8 +193,6 @@ $(document).ready(function () {
   menuAnchor.closest('li.dropdown').addClass('active');
 });
 </script>
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -344,8 +340,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -354,6 +348,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -414,15 +418,15 @@ div.section {
 
 
 <h1 class="title toc-ignore">04272019_CheckRNASeqPCs_2</h1>
-<h4 class="author"><em>Ben Fair</em></h4>
-<h4 class="date"><em>4/27/2019</em></h4>
+<h4 class="author">Ben Fair</h4>
+<h4 class="date">4/27/2019</h4>
 
 </div>
 
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -431,7 +435,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -440,31 +444,31 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-05-02
+<strong>Last updated:</strong> 2019-06-11
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
 </p>
 <p>
 This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
-  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.2.0). The <em>Report</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.3.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
 </p>
 <hr>
 </div>
-<div id="report" class="tab-pane fade">
+<div id="checks" class="tab-pane fade">
 <div id="workflowr-checks" class="panel-group">
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -519,10 +523,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9a1ab6e1cf9db9868b66c811ca01373c419085detargetblank9a1ab6ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/9a1ab6e1cf9db9868b66c811ca01373c419085de" target="_blank">9a1ab6e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree1f5f2ed5edb4cf28b69fe9a9f6ada48ff28bb20dtargetblank1f5f2eda"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/1f5f2ed5edb4cf28b69fe9a9f6ada48ff28bb20d" target="_blank">1f5f2ed</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9a1ab6e1cf9db9868b66c811ca01373c419085detargetblank9a1ab6ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree1f5f2ed5edb4cf28b69fe9a9f6ada48ff28bb20dtargetblank1f5f2eda" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -533,21 +537,31 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/.DS_Store
+    Ignored:    analysis/20190521_eQTL_CrossSpeciesEnrichment_cache/
     Ignored:    analysis_temp/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
     Ignored:    data/.DS_Store
     Ignored:    data/PastAnalysesDataToKeep/.DS_Store
     Ignored:    docs/.DS_Store
+    Ignored:    docs/assets/.DS_Store
 
 Untracked files:
+    Untracked:  analysis/20190502_Check_GemmaKinshipMatrix.Rmd
     Untracked:  analysis/20190502_Check_eQTLs.Rmd
+    Untracked:  analysis/20190521_eQTL_CrossSpeciesEnrichment.Rmd
+    Untracked:  analysis/20190606_eGene_Conservation.Rmd
     Untracked:  analysis_temp/20190412_Check_eQTLs.Rmd
+    Untracked:  analysis_temp/PlayingWithGOAnalysis.R
     Untracked:  data/PastAnalysesDataToKeep/20190428_log10TPM.txt.gz
-    Untracked:  docs/assets/
-    Untracked:  docs/figure/20190429_RNASeqSTAR_quantifications.Rmd/
-    Untracked:  docs/figure/20190502_Check_eQTLs.Rmd/
+    Untracked:  docs/figure/20190521_eQTL_CrossSpeciesEnrichment.Rmd/
+    Untracked:  docs/figure/20190606_eGene_Conservation.Rmd/
 
 Unstaged changes:
     Deleted:    analysis/20190412_Check_eQTLs.Rmd
+    Modified:   analysis/20190426_CheckRNASeqPCs_2.Rmd
+    Modified:   analysis/20190428_Check_eQTLs.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -586,6 +600,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/20190426_CheckRNASeqPCs_2.html" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+<td>
+update site
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -904,8 +935,10 @@ kable(head(GenotypePCs))</code></pre>
 </tbody>
 </table>
 <pre class="r"><code># Read in other metadata
-OtherMetadata &lt;- as.data.frame(read_excel(&quot;../data/Metadata.xlsx&quot;))
-kable(head(OtherMetadata))</code></pre>
+OtherMetadata &lt;- as.data.frame(read_excel(&quot;../data/Metadata.xlsx&quot;))</code></pre>
+<pre><code>New names:
+* `` -&gt; ...19</code></pre>
+<pre class="r"><code>kable(head(OtherMetadata))</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -927,7 +960,7 @@ kable(head(OtherMetadata))</code></pre>
 <th align="left">DNA.Sequencin.Barcode</th>
 <th align="left">DNA.Extract_date</th>
 <th align="right">Age</th>
-<th align="left">X__1</th>
+<th align="left">…19</th>
 <th align="left">Post.mortem.time.interval</th>
 <th align="right">RIN</th>
 <th align="left">Viral.status</th>
@@ -1162,7 +1195,7 @@ kable(head(Metadata))</code></pre>
 <th align="left">DNA.Sequencin.Barcode</th>
 <th align="left">DNA.Extract_date</th>
 <th align="right">Age</th>
-<th align="left">X__1</th>
+<th align="left">…19</th>
 <th align="left">Post.mortem.time.interval</th>
 <th align="right">RIN</th>
 <th align="left">Viral.status</th>
@@ -1429,7 +1462,386 @@ for (i in sample(1:nrow(CountTable), 5, replace=F)){
   qqnorm(Phenotype, main=rownames(CountTable)[i])
   qqline(Phenotype)
 }</code></pre>
-<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-6.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-7.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-8.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-9.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-1.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-2">
+Past versions of unnamed-chunk-1-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-2.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-3">
+Past versions of unnamed-chunk-1-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-3.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-4">
+Past versions of unnamed-chunk-1-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-4.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-5">
+Past versions of unnamed-chunk-1-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-5.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-6">
+Past versions of unnamed-chunk-1-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-6.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-7.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-7">
+Past versions of unnamed-chunk-1-7.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-7" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-7.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-8.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-8">
+Past versions of unnamed-chunk-1-8.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-8" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-8.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-9.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-9">
+Past versions of unnamed-chunk-1-9.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-9" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-9.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-10.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-10">
+Past versions of unnamed-chunk-1-10.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-10" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-10.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># Pick a some randome column numbers to plot. these distributions (of all expressed genes in an individual) should be normal since they are quantile normalized.
 for (i in sample(1:ncol(CountTable), 3, replace=F)){
   Phenotype &lt;- as.numeric(CountTable[,i])
@@ -1437,7 +1849,234 @@ for (i in sample(1:ncol(CountTable), 3, replace=F)){
   qqnorm(Phenotype, main=colnames(CountTable)[i])
   qqline(Phenotype)
 }</code></pre>
-<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-11.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-12.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-13.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-14.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-15.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-16.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-11.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-11">
+Past versions of unnamed-chunk-1-11.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-11" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-11.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-12.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-12">
+Past versions of unnamed-chunk-1-12.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-12" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-12.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-13.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-13">
+Past versions of unnamed-chunk-1-13.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-13" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-13.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-14.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-14">
+Past versions of unnamed-chunk-1-14.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-14" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-14.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-15.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-15">
+Past versions of unnamed-chunk-1-15.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-15" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-15.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-16.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-16">
+Past versions of unnamed-chunk-1-16.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-16" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-1-16.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Plot correlation matrix before standardization and qqnorm.</p>
 <pre class="r"><code>CountTableNoNorm &lt;- read.table(gzfile(&#39;../data/PastAnalysesDataToKeep/20190428_log10TPM.txt.gz&#39;), header=T, check.names=FALSE, row.names = 1)
 CorMatrix &lt;- CountTableNoNorm %&gt;%
@@ -1449,10 +2088,121 @@ RNA.Library.prep.batch &lt;- as.character(unclass(factor(plyr::mapvalues(row.nam
 # Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
 heatmap.2(CorMatrix, trace=&quot;none&quot;, ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-2-1.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>qplot(CountTableNoNorm$`4X0267`, CountTableNoNorm$`4X0212`)</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-2">
+Past versions of unnamed-chunk-2-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-2-2.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>qplot(CountTableNoNorm$Little_R, CountTableNoNorm$`4X0212`)</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-3">
+Past versions of unnamed-chunk-2-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-2-3.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># What is mean correlation
 mean(CorMatrix)</code></pre>
 <pre><code>[1] 0.9346274</code></pre>
@@ -1466,6 +2216,43 @@ RNA.Library.prep.batch &lt;- as.character(unclass(factor(plyr::mapvalues(row.nam
 # Heatmap of correlation. Row colors for RNA extraction batch, column colors for RNA library prep batch
 heatmap.2(CorMatrix, trace=&quot;none&quot;, ColSideColors=RNAExtractionDate, RowSideColors = RNA.Library.prep.batch)</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-3-1.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># What is mean correlation
 mean(CorMatrix)</code></pre>
 <pre><code>[1] 0.0131308</code></pre>
@@ -1512,6 +2299,43 @@ Proportion of Variance 0.000e+00
 Cumulative Proportion  1.000e+00</code></pre>
 <pre class="r"><code>screeplot(pca_results, main=&quot;scree plot of PCA&quot;)</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/pca-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-1">
+Past versions of pca-1.png
+</button>
+</p>
+<div id="fig-pca-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/pca-1.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># Merge with metadata
 Merged &lt;- merge(pca_results$x, Metadata, by.x = &quot;row.names&quot;, by.y = &quot;Individual.ID&quot;, all=TRUE)
 kable(head(Merged))</code></pre>
@@ -1575,7 +2399,7 @@ kable(head(Merged))</code></pre>
 <th align="left">DNA.Sequencin.Barcode</th>
 <th align="left">DNA.Extract_date</th>
 <th align="right">Age</th>
-<th align="left">X__1</th>
+<th align="left">…19</th>
 <th align="left">Post.mortem.time.interval</th>
 <th align="right">RIN</th>
 <th align="left">Viral.status</th>
@@ -2072,18 +2896,129 @@ ggplot(Merged, aes(x=PC2, y=PC1, color=factor(RNA.Extract_date), label=Row.names
   geom_point() +
   geom_text_repel(size=2.5)</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/pca-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-2">
+Past versions of pca-2.png
+</button>
+</p>
+<div id="fig-pca-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/pca-2.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(Merged, aes(x=PC1, y=PC2, color=factor(RNA.Library.prep.batch), label=Row.names)) + 
   geom_point() +
   geom_text_repel(size=2.5)</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/pca-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-3">
+Past versions of pca-3.png
+</button>
+</p>
+<div id="fig-pca-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/pca-3.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(Merged, aes(x=PC2, y=PC1, color=Age, label=Row.names)) + 
   geom_point() +
   geom_text_repel(size=2.5)</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/pca-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-pca-4">
+Past versions of pca-4.png
+</button>
+</p>
+<div id="fig-pca-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/pca-4.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Can already see maybe something with the RNA extraction batch in first PC… Now I am going to look more systematically for significant correlations between potential observed confounders in the Metadata and the first 10 principle components. Will use Pearsons’s correlation to test continuous continuous confounders, will use anova for categorical confounders.</p>
 <p>First the continuous confounders</p>
 <pre class="r"><code># Grab first 10 PCs
-PCs_to_test &lt;- Merged[,2:11]
+PCs_to_test &lt;- Merged[,2:15]
 kable(head(PCs_to_test))</code></pre>
 <table>
 <thead>
@@ -2098,6 +3033,10 @@ kable(head(PCs_to_test))</code></pre>
 <th align="right">PC8</th>
 <th align="right">PC9</th>
 <th align="right">PC10</th>
+<th align="right">PC11</th>
+<th align="right">PC12</th>
+<th align="right">PC13</th>
+<th align="right">PC14</th>
 </tr>
 </thead>
 <tbody>
@@ -2112,6 +3051,10 @@ kable(head(PCs_to_test))</code></pre>
 <td align="right">-6.086724</td>
 <td align="right">26.7928698</td>
 <td align="right">-11.498029</td>
+<td align="right">9.405888</td>
+<td align="right">-4.187123</td>
+<td align="right">-12.145145</td>
+<td align="right">-6.252464</td>
 </tr>
 <tr class="even">
 <td align="right">-26.89597</td>
@@ -2124,6 +3067,10 @@ kable(head(PCs_to_test))</code></pre>
 <td align="right">7.936016</td>
 <td align="right">-0.6354965</td>
 <td align="right">11.864536</td>
+<td align="right">-7.933379</td>
+<td align="right">24.696077</td>
+<td align="right">5.460629</td>
+<td align="right">-3.740944</td>
 </tr>
 <tr class="odd">
 <td align="right">-29.77820</td>
@@ -2136,6 +3083,10 @@ kable(head(PCs_to_test))</code></pre>
 <td align="right">9.528283</td>
 <td align="right">-14.7587833</td>
 <td align="right">26.583439</td>
+<td align="right">-13.804533</td>
+<td align="right">7.950232</td>
+<td align="right">12.935148</td>
+<td align="right">1.757393</td>
 </tr>
 <tr class="even">
 <td align="right">-51.39185</td>
@@ -2148,6 +3099,10 @@ kable(head(PCs_to_test))</code></pre>
 <td align="right">17.004977</td>
 <td align="right">7.1826759</td>
 <td align="right">-30.828229</td>
+<td align="right">-27.411625</td>
+<td align="right">31.722105</td>
+<td align="right">-9.249130</td>
+<td align="right">-9.854308</td>
 </tr>
 <tr class="odd">
 <td align="right">-62.33852</td>
@@ -2160,6 +3115,10 @@ kable(head(PCs_to_test))</code></pre>
 <td align="right">-19.583242</td>
 <td align="right">-5.4979372</td>
 <td align="right">1.585372</td>
+<td align="right">-8.799630</td>
+<td align="right">-29.366938</td>
+<td align="right">13.754492</td>
+<td align="right">-1.453955</td>
 </tr>
 <tr class="even">
 <td align="right">-68.68134</td>
@@ -2172,6 +3131,10 @@ kable(head(PCs_to_test))</code></pre>
 <td align="right">-22.198197</td>
 <td align="right">-33.6189279</td>
 <td align="right">-23.040870</td>
+<td align="right">18.494698</td>
+<td align="right">-20.952720</td>
+<td align="right">11.472863</td>
+<td align="right">-6.511476</td>
 </tr>
 </tbody>
 </table>
@@ -2276,6 +3239,43 @@ Spearman_test_results$p %&gt;%
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/continuous_confounders-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-continuous_confounders-1">
+Past versions of continuous_confounders-1.png
+</button>
+</p>
+<div id="fig-continuous_confounders-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/continuous_confounders-1.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>And the categorical confounders…</p>
 <pre class="r"><code># Grab potential categorical confounders that make sense to test
 Categorical_confounders_to_test &lt;- Merged[,c(&quot;Viral.status&quot;, &quot;SX&quot;,&quot;RNA.Extract_date&quot;, &quot;RNA.Library.prep.batch&quot;, &quot;Source&quot;)]
@@ -2426,24 +3426,210 @@ Pvalues %&gt;%
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/categorical_confounders-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-categorical_confounders-1">
+Past versions of categorical_confounders-1.png
+</button>
+</p>
+<div id="fig-categorical_confounders-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/categorical_confounders-1.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Plot some of the significant PC-metadata associations for a better look…</p>
 <pre class="r"><code>ggplot(Merged, aes(x=factor(RNA.Extract_date), y=PC2, label=Label)) + 
   geom_boxplot() +
   geom_jitter(position=position_jitter(width=.2, height=0))</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-4-1.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(Merged, aes(x=factor(RNA.Library.prep.batch), y=PC2)) + 
   geom_boxplot() +
   geom_jitter(position=position_jitter(width=.1, height=0))</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-2">
+Past versions of unnamed-chunk-4-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-4-2.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(Merged, aes(factor(RNA.Extract_date))) + 
   geom_bar(aes(fill = factor(RNA.Library.prep.batch)))</code></pre>
-<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /> Strongest effect seems to be related to batch… RNA library prep batch and RNA extraction batch (date) both covary with a top PC. Have to check with Claudia that the last batch was a different extraction method (Trizol vs RNEasy).</p>
+<p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-3">
+Past versions of unnamed-chunk-4-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-4-3.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Strongest effect seems to be related to batch… RNA library prep batch and RNA extraction batch (date) both covary with a top PC. Have to check with Claudia that the last batch was a different extraction method (Trizol vs RNEasy).</p>
 <pre class="r"><code>ggplot(Merged, aes(x=RIN, y=PC5, label=Label, color=factor(Source))) +
   geom_point() +
   geom_text_repel(size=2.5)</code></pre>
 <p><img src="figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/8ab5bbfa4ea16595aba2ac3f91dd3294605851b2/docs/figure/20190426_CheckRNASeqPCs_2.Rmd/unnamed-chunk-5-1.png" target="_blank">8ab5bbf</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-05-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>PC5 is somewhat correlated with RIN and source.</p>
-<br> <br>
+<br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
@@ -2466,33 +3652,33 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] gplots_3.0.1    reshape2_1.4.3  knitr_1.22      ggrepel_0.8.0  
- [5] psych_1.8.10    forcats_0.4.0   stringr_1.4.0   dplyr_0.8.0.1  
- [9] purrr_0.3.2     readr_1.3.1     tidyr_0.8.2     tibble_2.1.1   
-[13] tidyverse_1.2.1 readxl_1.1.0    ggfortify_0.4.5 ggplot2_3.1.0  
+ [1] gplots_3.0.1.1  reshape2_1.4.3  knitr_1.23      ggrepel_0.8.1  
+ [5] psych_1.8.12    forcats_0.4.0   stringr_1.4.0   dplyr_0.8.1    
+ [9] purrr_0.3.2     readr_1.3.1     tidyr_0.8.3     tibble_2.1.1   
+[13] tidyverse_1.2.1 readxl_1.3.1    ggfortify_0.4.7 ggplot2_3.1.1  
 [17] corrplot_0.84  
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.1         lubridate_1.7.4    lattice_0.20-38   
  [4] gtools_3.8.1       assertthat_0.2.1   rprojroot_1.3-2   
- [7] digest_0.6.18      R6_2.4.0           cellranger_1.1.0  
-[10] plyr_1.8.4         backports_1.1.3    evaluate_0.13     
-[13] highr_0.8          httr_1.4.0         pillar_1.3.1      
-[16] rlang_0.3.3        lazyeval_0.2.2     rstudioapi_0.10   
-[19] gdata_2.18.0       whisker_0.3-2      rmarkdown_1.11    
+ [7] digest_0.6.19      R6_2.4.0           cellranger_1.1.0  
+[10] plyr_1.8.4         backports_1.1.4    evaluate_0.13     
+[13] highr_0.8          httr_1.4.0         pillar_1.4.0      
+[16] rlang_0.3.4        lazyeval_0.2.2     rstudioapi_0.10   
+[19] gdata_2.18.0       whisker_0.3-2      rmarkdown_1.13    
 [22] labeling_0.3       foreign_0.8-71     munsell_0.5.0     
-[25] broom_0.5.1        compiler_3.5.1     modelr_0.1.4      
-[28] xfun_0.6           pkgconfig_2.0.2    mnormt_1.5-5      
+[25] broom_0.5.2        compiler_3.5.1     modelr_0.1.4      
+[28] xfun_0.7           pkgconfig_2.0.2    mnormt_1.5-5      
 [31] htmltools_0.3.6    tidyselect_0.2.5   gridExtra_2.3     
-[34] workflowr_1.2.0    crayon_1.3.4       withr_2.1.2       
-[37] bitops_1.0-6       grid_3.5.1         nlme_3.1-137      
-[40] jsonlite_1.6       gtable_0.3.0       git2r_0.24.0      
+[34] workflowr_1.3.0    crayon_1.3.4       withr_2.1.2       
+[37] bitops_1.0-6       grid_3.5.1         nlme_3.1-140      
+[40] jsonlite_1.6       gtable_0.3.0       git2r_0.25.2      
 [43] magrittr_1.5       scales_1.0.0       KernSmooth_2.23-15
-[46] cli_1.1.0          stringi_1.4.3      fs_1.2.6          
+[46] cli_1.1.0          stringi_1.4.3      fs_1.3.1          
 [49] xml2_1.2.0         generics_0.0.2     tools_3.5.1       
 [52] glue_1.3.1         hms_0.4.2          parallel_3.5.1    
-[55] yaml_2.2.0         colorspace_1.4-1   caTools_1.17.1.1  
-[58] rvest_0.3.2        haven_2.1.0       </code></pre>
+[55] yaml_2.2.0         colorspace_1.4-1   caTools_1.17.1.2  
+[58] rvest_0.3.4        haven_2.1.0       </code></pre>
 </div>
 
 
