@@ -143,8 +143,9 @@ The above contingency table and one-sided fisher test indicated a greater-than-c
 A few plots might give me a better intuition for thinking about the data...
 ```{r random-plots}
 # Plot betas vs qval for GTEx for qval<0.1
-GtexHeartEgenes %>% filter(qval<0.1) %>%
-ggplot(aes(x=slope, y=-log10(qval))) +
+GtexHeartEgenes %>%
+  filter(qval<0.1) %>%
+  ggplot(aes(x=slope, y=-log10(qval))) +
          geom_point(alpha=0.05)
 
 
@@ -706,12 +707,12 @@ Chimp_OrderedGenes <- eQTLs %>%
     group_by(gene) %>% 
     dplyr::slice(which.min(qvalue)) %>%
     filter(gene %in% GtexHeartEgenes$chimp_id) %>%
-    filter(qvalue <0.1) %>%
     left_join(GtexHeartEgenes, by=c("gene"="chimp_id")) %>%
     dplyr::select(gene, qvalue, qval) %>% as.data.frame() %>%
     mutate(ChimpRank = dense_rank(qvalue)) %>%
     mutate(HumanRank = dense_rank(qval)) %>%
     mutate(RankDifference = HumanRank-ChimpRank) %>%
+    filter(qvalue <0.1) %>%
     arrange(desc(RankDifference))
 GeneList <- Chimp_OrderedGenes$RankDifference
 names(GeneList) <- as.character(ChimpToHuman.ID(Chimp_OrderedGenes$gene))
@@ -721,15 +722,48 @@ gsego.cc.chimpspecific <- gseGO(gene = GeneList,
                  keyType = 'ENSEMBL',
                  maxGSSize = 500,
                  ont = "BP",
-                 nPerm = 10000)
-kable(head(as.data.frame(gsego.cc.chimpspecific), 15))
+                 nPerm = 100000)
+kable(head(as.data.frame(gsego.cc.chimpspecific), 2))
 gseaplot2(gsego.cc.chimpspecific, geneSetID = c("GO:0006366","GO:0044260"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
 
 dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=38)
+
+
 ```
 Alright. Great. that analysis recapitulated the gene overlap analysis of [foreground=Chimp-specific-eGenes; background=all-chimp-eGenes] in the sense that terms like 'gene transcription' pop up.
 
-Now let's try the reciprocal; where we look for what is enriched in human-specific eGenes, (again where the metric to order the gene list is a difference in ranks.)... Still a work-in-progress
+Let's look at some of the genes in this GO category that are at the top of this ranked metric (have more eGene character in chimp than human)
+
+```{r}
+gsea.results <- as.data.frame(gsego.cc.chimpspecific)
+PolII.genes.in.set <- gsea.results %>% 
+  filter(Description=="transcription by RNA polymerase II") %>% 
+  pull(core_enrichment) %>%
+  strsplit("/") %>% unlist() %>%
+  mapIds(org.Hs.eg.db, keys=., column="SYMBOL", keytype="ENSEMBL", multiVals="first")
+
+PolII.genes.in.set
+```
+CTCF (ENSG00000102974) and HSF1 (ENSG00000185122) sticks out as something interesting and recognizeable genes. Also, quite a few zinc-finger proteins (ZNF821, ZNF551, ZNF250, ZFP82, ZNF256, PRDM10) Let's see exactly where they are on this ranked list...
+```{r}
+
+# All the top genes by this difference in ranks ordered gene list
+GeneSymbolAdded <- Chimp_OrderedGenes %>% 
+  mutate(geneSymbol = mapIds(org.Hs.eg.db, keys=ChimpToHuman.ID(gene), column="SYMBOL", keytype="ENSEMBL", multiVals="first") )
+GeneSymbolAdded %>% head(40) %>% kable()
+
+# The "interesting genes" that are in the PolII regulation of transcription gene set
+GeneSymbolAdded %>% 
+  filter(geneSymbol %in% PolII.genes.in.set) %>% kable()
+
+
+```
+
+CTCF and other zinc fingers are among the top in the list (some top chimp eGenes but not for human). This surprises me considering I think of CTCF as so conserved across large evolutionary distance. I will have to look back at more raw data to reassure myself that these chimp eQTLs are real.
+
+
+
+Now let's try a reciprocal analysis; where we look for what is enriched in human-specific eGenes, (again where the metric to order the gene list is a difference in ranks.)... Still a work-in-progress
 
 ```{r, eval=F}
 Chimp_OrderedGenes <- eQTLs %>%
@@ -750,9 +784,11 @@ gsego.cc.chimpspecific <- gseGO(gene = GeneList,
                  OrgDb = org.Hs.eg.db,
                  keyType = 'ENSEMBL',
                  maxGSSize = 500,
-                 ont = "BP")
+                 ont = "BP",
+                 nPerm = 10000)
 kable(head(as.data.frame(gsego.cc.chimpspecific), 15))
 gseaplot2(gsego.cc.chimpspecific, geneSetID = c("GO:0006357", "GO:0006355"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
 
-dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=35)
+dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=60)
+
 ```
