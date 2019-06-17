@@ -40,7 +40,7 @@ with open(config["RNASeqFileList"]) as RNASeqFileList_fh:
         RNASeqSampleToFastq_dict[samplename].append(filepath)
         RNASeqBasenameToFastq[os.path.basename(filepath)] = filepath
 
-PowerAnalysisFastqFrame = pd.read_csv(config["PowerAnalysis"]["RNASeqFileList"],sep='\t', index_col=0)
+PowerAnalysisFastqFrame = pd.read_csv(config["PowerAnalysis"]["RNASeqFileList"],sep='\t', index_col=0, comment='#')
 
 ##### Wildcard constraints #####
 wildcard_constraints:
@@ -49,7 +49,8 @@ wildcard_constraints:
     unit="|".join(units["unit"]),
     contig="|".join(contigs),
     freebayes_region_chunk="|".join(freebayes_region_chunks),
-    freebayes_chunk_coords="|".join([i.split(".")[1] for i in freebayes_region_chunks])
+    freebayes_chunk_coords="|".join([i.split(".")[1] for i in freebayes_region_chunks]),
+    species="Chimp|Human"
 
 
 ##### Helper functions #####

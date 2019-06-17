@@ -454,10 +454,20 @@ rule PlotPCsVsEQTLs:
         Rscript scripts/Plot_EQTLs_vs_PCs.R {output.CattedResult} {output.Plot}
         """
 
+rule GetBestModel:
+    input:
+        CattedResult = "eQTL_mapping/MatrixEQTL/Results/ConcatenatedResult.txt",
+    output:
+        "eQTL_mapping/MatrixEQTL/Results/BestModelResults.txt"
+    shell:
+        """
+        cat $(cat {input.CattedResult} | awk -F'\\t' '$6<0.1 {{print $7}}' | sort | uniq -c | sort -nr | head -1 | awk '{{print $2}}') > {output}
+        """
+
 rule GetEqtlGenotypes:
     """For checking genotype vs phenotype R-ggplot boxplots for eqtls"""
     input:
-        eqtls = "eQTL_mapping/MatrixEQTL/Results.BestModelResults.txt",
+        eqtls = "eQTL_mapping/MatrixEQTL/Results/BestModelResults.txt",
         plink_bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
     output:
         sig_genotypes = config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw",

@@ -105,8 +105,8 @@ eQTL_mapping:
     # eqtl_calling.smk portion of the pipeline.
     CovariatePCs:
         # If CovariatesDir is set to default, will try all combinations of
-        # covariates as definied by the following number of PCs and continue
-        # with the model that maximizes eqtls.
+        # covariates as definied by the following number of PCs and make a plot
+        # of number of PCs versus number eGenes
         GenotypePC_min: 0
         GenotypePC_max: 0
         RNASeqPC_min: 0
