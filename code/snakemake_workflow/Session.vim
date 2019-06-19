@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit rules/eqtl_calling.smk
+edit rules/PowerAnalysis.smk
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -31,19 +31,19 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 53 - ((39 * winheight(0) + 25) / 50)
+let s:l = 140 - ((17 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-53
+140
 normal! 0
 tabnext 1
-badd +4 rules/PowerAnalysis.smk
-badd +12 Snakefile
-badd +114 config.yaml
+badd +67 Snakefile
+badd +17 rules/PowerAnalysis.smk
+badd +138 config.yaml
 badd +33 rules/RNASeqMapping.smk
 badd +1 cluster-config.json
-badd +464 rules/eqtl_calling.smk
+badd +145 rules/eqtl_calling.smk
 badd +66 rules/sqtl_calling.smk
 badd +7 scripts/MakeMetaPlot.sh
 badd +1 .gitignore
@@ -54,7 +54,6 @@ badd +8 rules/common.smk
 badd +38 ~/CurrentProjects/recurrent-splicing-identification/rules/leafcutter.smk
 badd +1 ~/CurrentProjects/201905_MPESeq/rules/STAR_Alignment.smk
 badd +12 snakemake.sbatch
-badd +3 rules/eQTL_analysis.smk
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0
   silent exe 'bwipe ' . s:wipebuf
 endif
