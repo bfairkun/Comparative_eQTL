@@ -37,3 +37,7 @@ Welcome to my research website.
 - [GO analysis, FDR=0.1](20190521_eQTL_CrossSpeciesEnrichment.html) overlap enrichment analysis of eGenes across humans and chumps, and gene ontology analysis of eGenes based on eGene classification defined at FDR=0.1 threshold
 - [Conservation analysis, FDR=0.1](20190606_eGene_Conservation.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1
 - [Conservation analysis, HumanTop600_eGenes](20190606_eGene_Conservation_TopN.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1 for chimp and top600 qvalue genes for human.
+- [Conservation analysis, most high-variance genes](20190617_ExpressionVarianceOfEgenes.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on within species variance of expression. A useful comparison for the similar analysis above.
+
+### Power analysis for inter-species differential expression
+- [PowerAnalysisFromOrinalDataset](20190613_PowerAnalysis.html) DE gene analysis based on subsampling ~39 chimp samples & 50 human samples (mostly GTEx)... Note that there are some outlier samples that I want to purge in later iterations of this analysis.
