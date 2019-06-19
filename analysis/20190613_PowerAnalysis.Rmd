@@ -17,7 +17,7 @@ library(corrplot)
 library(gplots)
 library(pROC)
 library(qvalue)
-
+library(reshape2)
 
 ```
 
@@ -288,7 +288,7 @@ ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(
 #   # scale_y_continuous(limits=c(0,5))
 #   theme_bw()
 
-data.frame(coefficients=as.numeric(efit$coefficients), pval=as.numeric(efit$p.value), signif=decideTests(efit)) %>%
+data.frame(coefficients=as.numeric(True.efit$coefficients), pval=as.numeric(True.efit$p.value), signif=decideTests(True.efit)) %>%
 ggplot(aes(x=coefficients, y=-log10(pval), color=factor(DE))) +
   geom_point() +
   scale_x_continuous(limits=c(-5,5))

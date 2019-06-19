@@ -1,0 +1,83 @@
+---
+title: "20190617_ExpressionVarianceOfEgenes"
+author: "Ben Fair"
+date: "6/17/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+For my own understanding of what it means to be an eGene, I wanted to plot from my chimp data the variance in expression levels of eGenes vs non eGenes. This is an important component to if it is reasonable to intepret eGene character as a proxy for stabilizing selection and/or low expression variance genes.
+
+The way I will go about this is looking at the original count table of CPM for all tested genes, and plot the mean/variance trend with eGenes as a different color.
+
+```{r load-libraries, message=F, warning=F}
+library(tidyverse)
+
+eQTLs <- read.table("../output/MatrixEQTL_sig_eqtls.txt", header=T)
+CountTable <- as.matrix(read.table("../output/ExpressionMatrix.un-normalized.txt.gz", header=T))
+
+ToPlot <- as.data.frame(CountTable) %>%
+  rownames_to_column("gene") %>%
+  mutate(log.cpm.mean=apply(CountTable,1,mean),
+         log.cpm.var=apply(CountTable,1,var),
+         eGene=(gene %in% eQTLs$gene)) %>%
+  mutate(CV=log.cpm.mean/sqrt(log.cpm.var))
+
+ToPlot %>%
+  ggplot(aes(x=log.cpm.mean, y=log.cpm.var, color=eGene)) +
+  geom_point(alpha=0.5)
+
+```
+
+Maybe a different way to look at this trend will be more clear
+```{r}
+wilcox.test(data=ToPlot, CV ~ eGene)
+ToPlot %>%
+  ggplot(aes(x=CV, color=eGene)) +
+  stat_ecdf(geom = "step")
+```
+
+eGenes have higher coefficient of variation
+
+```{r}
+wilcox.test(data=ToPlot, log.cpm.mean ~ eGene)
+ToPlot %>%
+  ggplot(aes(x=log.cpm.mean, color=eGene)) +
+  stat_ecdf(geom = "step")
+```
+but actually lower expression level
+
+But all being said, the effect size is to the point where eGene character I think is only modest evidence for lack of stabilizing selection. Maybe the thing to do is to check the correlation between selection on coding regions (dN/dS or percent identity between two species) and the variance within a species to see if that signal is stronger than for eGene character.
+
+```{r}
+ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+
+# Of this ortholog list, how many genes are one2one
+table(ChimpToHumanGeneMap$Chimpanzee.homology.type)
+OneToOneMap <- ChimpToHumanGeneMap %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one") %>%
+  distinct(Chimpanzee.gene.stable.ID, .keep_all = TRUE)
+
+ChimpToHuman.ID <- function(Chimp.ID){
+  #function to convert chimp ensembl to human ensembl gene ids
+  return(
+    plyr::mapvalues(Chimp.ID, OneToOneMap$Chimpanzee.gene.stable.ID, OneToOneMap$Gene.stable.ID, warn_missing = F)
+  )}
+
+ToPlotAdded <- ToPlot %>%
+  left_join(OneToOneMap, by=c("gene"="Chimpanzee.gene.stable.ID")) %>%
+  mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee,
+       rank = dense_rank(desc(CV))) %>%
+  mutate(TopN.Var.Genes=rank<300) %>%
+  ggplot(aes(x=100-X.id..query.gene.identical.to.target.Chimpanzee.gene, color=TopN.Var.Genes)) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(trans='log1p')
+```
+
+Surprising to me, chimp expression coefficient of variation (n=39) doesn't separate dN/dS or percent identity better than chimp eGene classificiation. There are a couple things I should probably change about the above analysis to make it a more fair comparison to the eGene classificiation: I should be considering variation in TPM
+
+
+
