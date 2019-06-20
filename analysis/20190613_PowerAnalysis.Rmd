@@ -18,17 +18,20 @@ library(gplots)
 library(pROC)
 library(qvalue)
 library(reshape2)
+library(gridExtra)
 
 ```
 
 39 Chimp heart RNA-seq datasets (from this project as well as from Pavlovic et al 2018) as well as 10 human heart RNA-seq datasets (from Pavlovic et al) and 39 randomly selected GTEx left ventricle heart RNA-seq datasets were trimmed to same read length (single end, 75bp) and aligned to the respective genomes. Gene counts were obtained with subread software using gene annotations based only on orthologous exons (Pavlovic et al 2018). Here I will perform differential gene expression analysis to understand the relationship between read depth and number of individuals (samples) needed to identify cross-species differentially expressed genes.
 
 ```{r read-data}
-CountTableChimp <- read.table(gzfile('../data/PowerAnalysisCountTable.Chimp.subread.txt.gz'), header=T, check.names=FALSE, skip=1)
+CountTableChimpFile <- '../output/PowerAnalysisCountTable.Chimp.25000000.subread.txt.gz'
+CountTableChimp <- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)
 colnames(CountTableChimp) <- paste0("C.", colnames(CountTableChimp))
 kable(CountTableChimp[1:10,1:10])
 
-CountTableHuman <- read.table(gzfile('../data/PowerAnalysisCountTable.Human.subread.txt.gz'), header=T, check.names=FALSE, skip=1)
+CountTableHumanFile <- '../output/PowerAnalysisCountTable.Human.25000000.subread.txt.gz'
+CountTableHuman <- read.table(gzfile(CountTableHumanFile), header=T, check.names=FALSE, skip=1)
 colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
 kable(CountTableHuman[1:10,1:10])
 
@@ -67,7 +70,7 @@ d0 <- calcNormFactors(d0)
 #Note: calcNormFactors doesn’t normalize the data, it just calculates normalization factors for use downstream.
 #Filter low-expressed genes
 
-cutoff <- 2
+cutoff <- 8
 drop <- which(apply(cpm(d0), 1, max) < cutoff)
 d <- d0[-drop,] 
 dim(d) # number of genes left
@@ -84,6 +87,12 @@ y <- voom(d, mm, plot = T, normalize.method="cyclicloess")
 ```
 
 In fact some of these samples seemed to have gotten worse. I'll just throw these out of future analysis.
+
+```{r}
+HumanSamplesToDrop <- c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186")
+ChimpSamplesToDrop <- c("Little_R")
+```
+
 
 Anway, now that voom calculated mean/variance relationship from count values, I will now normalize for gene length differences between species (Convert cpm to rpkm). As per the voom publication (Law et al 2014) log-cpm values output by voom can be converted to log-rpkm by subtracting the log2 gene length in kilobases. For this I will make a matrix of gene lengths based on chimp orthologous exon length and human orthologous exon lengths to subtract the correct length for each species from the count matrix output by voom.
 
@@ -129,11 +138,18 @@ Ok, seems like the above workflow for identifying DE genes is set up reasonably.
 
 
 ```{r}
-DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, FC.NullInterval, drop)
+DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, FC.NullInterval, drop, ChimpSampleDrop=NULL, HumanSampleDrop=NULL)
   #if SubsampleSize parameter == 0, use full table, otherwise, subsample from it
   {
    FullChimpData <- read.table(gzfile(ChimpCountTableFile), header=T, check.names=FALSE, skip=1)
    FullHumanData <- read.table(gzfile(HumanCountTableFile), header=T, check.names=FALSE, skip=1)
+   
+  if (!is.null(ChimpSampleDrop)){
+     FullChimpData <- FullChimpData %>% dplyr::select(-ChimpSampleDrop)
+   }   
+  if (!is.null(HumanSampleDrop)){
+     FullHumanData <- FullHumanData %>% dplyr::select(-HumanSampleDrop)
+   }
 
    if (SubsampleSize==0){
      CountTableChimp <- FullChimpData
@@ -144,11 +160,13 @@ DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize
    } else {
      CountTableChimp <- FullChimpData %>% dplyr::select(c(1:6, sample(7:length(FullChimpData), SubsampleSize)))
      colnames(CountTableChimp) <- paste0("C.", colnames(CountTableChimp))
-
+     
      CountTableHuman <- FullHumanData %>% dplyr::select(c(1:6, sample(7:length(FullHumanData), SubsampleSize)))
      colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
    }
    
+   
+
 
 
 CombinedTable <- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=c("C.Geneid"="H.Geneid")) %>%
@@ -176,14 +194,16 @@ efit <- treat(tmp, lfc = FC.NullInterval)
 return(efit)
 }
 
+
+
 ```
 
 Now that I have a function to do all of the DE gene analysis, use the function with a smaller sample size and check results:
 
 ```{r}
 #20 samples
-Subsampled.DE.results <- DE.Subsampled('../data/PowerAnalysisCountTable.Chimp.subread.txt.gz',
-              '../data/PowerAnalysisCountTable.Human.subread.txt.gz',
+Subsampled.DE.results <- DE.Subsampled(CountTableChimpFile,
+              CountTableHumanFile,
               20, 0, drop)
 summary(decideTests(Subsampled.DE.results))
 
@@ -198,8 +218,8 @@ median(abs(True.efit$coefficients[TrueResponse==SubSampledResponse & SubSampledR
 
 
 #5 samples
-Subsampled.DE.results <- DE.Subsampled('../data/PowerAnalysisCountTable.Chimp.subread.txt.gz',
-              '../data/PowerAnalysisCountTable.Human.subread.txt.gz',
+Subsampled.DE.results <- DE.Subsampled(CountTableChimpFile,
+              CountTableHumanFile,
               5, 0, drop)
 summary(decideTests(Subsampled.DE.results))
 
@@ -216,18 +236,18 @@ median(abs(True.efit$coefficients[TrueResponse==SubSampledResponse & SubSampledR
 Now I will systematically do this for varying sample sizes and make some final plots
 ```{r}
 #Note there is some randomness in subsampling samples. So much so that sometimes it effects results wherein 4 samples might yield more DE genes than 2 if you get unluck and pick "bad" samples in the 4
-set.seed(0)
+set.seed(1)
 
 
 #Interval for null hypothesis
 FC.NullInterval <- log2(1.0)
 
 #True results are those using all samples
-True.efit <- DE.Subsampled('../data/PowerAnalysisCountTable.Chimp.subread.txt.gz',
-              '../data/PowerAnalysisCountTable.Human.subread.txt.gz',
-              0, FC.NullInterval, drop)
+True.efit <- DE.Subsampled(CountTableChimpFile,
+              CountTableHumanFile,
+              0, FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
 
-SampleSizes <- c(2,4,8,16,24,32,39)
+SampleSizes <- c(2,4,8,16,24,32,38)
 FDRLevels <- c(0.01, 0.05, 0.1)
 
 
@@ -238,9 +258,9 @@ EffectSizesToPlot <- data.frame()
 
 for (i in seq_along(SampleSizes)){
   paste0("processing ", SampleSizes[i])
-  Results <- DE.Subsampled('../data/PowerAnalysisCountTable.Chimp.subread.txt.gz',
-              '../data/PowerAnalysisCountTable.Human.subread.txt.gz',
-              SampleSizes[i], FC.NullInterval, drop)
+  Results <- DE.Subsampled(CountTableChimpFile,
+              CountTableHumanFile,
+              SampleSizes[i], FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
   
   RocCurveData <- as.data.frame(coords(roc(response=as.vector(abs(TrueResponse)), quiet=T, predictor=as.numeric(Results$p.value), plot=F), transpose=F))
   RocCurveData$samplesize <- SampleSizes[i]
@@ -280,6 +300,7 @@ ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
 ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
   # geom_violin()
   geom_boxplot() +
+  ylab("Effect Size of True positive DE genes\n|log2(FC)|") +
   # scale_y_continuous(limits=c(0,5))
   theme_bw()
   
@@ -323,4 +344,128 @@ A<- sample_count_table(CombinedTable,2200000)
 This is still a work in progress... It seems that sampling without replcement from a large count table actually takes an unreasonably long time (and probably uses a lot of memory)... Sampling without replacement could be faster in theory, but I'm not sure if that is still reasonable. There are some third party packages out there that do this, maybe I will try them out. Though, I don't see any that let you pick a number of reads to subsample as opposed to a proportion of reads to subsample (in other words, it wouldn't be easy to normalize read depth across samples). Maybe it will actually just be easier to realign everything at various read depths and make new count table files for each read depth if I want to incorporate normalizing and adjusting read depths into this analysis.
 
 
-Update: What I turned out doing is sampling from the original alignment bam file to varying depths, normalizing such that each sample has an equal number of aligned reads. Then count tables were generated (one table for chimp, one for human), and the jist of this differential expression pipeline in R was wrapped into an Rscript that takes as input the count table, and as output spits out figures for ROC curves and such for DE power after randomly subsampling the samples (columns) of the count table at various sample sizes. This script was then incorporated into the snakemake for this repo.
+Update: What I turned out doing is sampling from the original alignment bam file to varying depths, normalizing such that each sample has an equal number of aligned reads. Then count tables were generated (one table for chimp, one for human), and the block of code that makes roc curves and other plots for different numbers of samples was repeated below using those smaller count tables (but still using the full count tabe as to determine "true" responses)
+
+```{r}
+###25M reads for each sample
+
+RocCurveDataToPlot <- data.frame()
+DEGeneCountToPlot <- matrix(nrow=length(SampleSizes), ncol=length(FDRLevels))
+rownames(DEGeneCountToPlot) <- SampleSizes
+EffectSizesToPlot <- data.frame()
+
+ReadDepthControlledChimpCountFile <- "../output/PowerAnalysisCountTable.Chimp.25000000.subread.txt.gz"
+ReadDepthControlledHumanCountFile <- "../output/PowerAnalysisCountTable.Human.25000000.subread.txt.gz"
+
+for (i in seq_along(SampleSizes)){
+  paste0("processing ", SampleSizes[i])
+  Results <- DE.Subsampled(ReadDepthControlledChimpCountFile,
+              ReadDepthControlledHumanCountFile,
+              SampleSizes[i], FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+  
+  RocCurveData <- as.data.frame(coords(roc(response=as.vector(abs(TrueResponse)), quiet=T, predictor=as.numeric(Results$p.value), plot=F), transpose=F))
+  RocCurveData$samplesize <- SampleSizes[i]
+  RocCurveDataToPlot <- rbind(RocCurveDataToPlot, RocCurveData)
+  
+  for (j in seq_along(FDRLevels)){
+    
+    SubSampledResponse <- decideTests(Results, p.value=FDRLevels[j])
+    
+    DEGeneCountToPlot[i,j] <- sum(table(SubSampledResponse)[c("-1","1")])
+    
+    if (length(table(TrueResponse==SubSampledResponse & SubSampledResponse!=0)) > 1){
+      EffectSizes.df <-data.frame(EffectSizes=abs(True.efit$coefficients[TrueResponse==SubSampledResponse & SubSampledResponse!=0]), FDR=FDRLevels[j], SampleSize=SampleSizes[i])
+      EffectSizesToPlot <- rbind(EffectSizesToPlot, EffectSizes.df)
+    }
+
+    
+  }
+}
+
+ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
+  geom_line() +
+  theme_bw()
+
+DEGeneCountToPlot.df<-as.data.frame(DEGeneCountToPlot)
+colnames(DEGeneCountToPlot.df) <- FDRLevels
+DEGeneCountToPlot.df$SampleSize <- rownames(DEGeneCountToPlot.df)
+DEGeneCountToPlot.df$SampleSize
+DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] <- 0
+DEGeneCountToPlot.df %>% melt() %>%
+  dplyr::rename(Number.DE.genes=value, FDR=variable) %>%
+ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
+  geom_line() +
+  theme_bw()
+
+
+ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
+  # geom_violin()
+  geom_boxplot() +
+  ylab("Effect Size of True positive DE genes\n|log2(FC)|") +
+  # scale_y_continuous(limits=c(0,5))
+  theme_bw()
+
+```
+
+
+```{r}
+###5M reads for each sample
+
+RocCurveDataToPlot <- data.frame()
+DEGeneCountToPlot <- matrix(nrow=length(SampleSizes), ncol=length(FDRLevels))
+rownames(DEGeneCountToPlot) <- SampleSizes
+EffectSizesToPlot <- data.frame()
+
+ReadDepthControlledChimpCountFile <- "../output/PowerAnalysisCountTable.Chimp.10000000.subread.txt.gz"
+ReadDepthControlledHumanCountFile <- "../output/PowerAnalysisCountTable.Human.10000000.subread.txt.gz"
+
+for (i in seq_along(SampleSizes)){
+  paste0("processing ", SampleSizes[i])
+  Results <- DE.Subsampled(ReadDepthControlledChimpCountFile,
+              ReadDepthControlledHumanCountFile,
+              SampleSizes[i], FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+  
+  RocCurveData <- as.data.frame(coords(roc(response=as.vector(abs(TrueResponse)), quiet=T, predictor=as.numeric(Results$p.value), plot=F), transpose=F))
+  RocCurveData$samplesize <- SampleSizes[i]
+  RocCurveDataToPlot <- rbind(RocCurveDataToPlot, RocCurveData)
+  
+  for (j in seq_along(FDRLevels)){
+    
+    SubSampledResponse <- decideTests(Results, p.value=FDRLevels[j])
+    
+    DEGeneCountToPlot[i,j] <- sum(table(SubSampledResponse)[c("-1","1")])
+    
+    if (length(table(TrueResponse==SubSampledResponse & SubSampledResponse!=0)) > 1){
+      EffectSizes.df <-data.frame(EffectSizes=abs(True.efit$coefficients[TrueResponse==SubSampledResponse & SubSampledResponse!=0]), FDR=FDRLevels[j], SampleSize=SampleSizes[i])
+      EffectSizesToPlot <- rbind(EffectSizesToPlot, EffectSizes.df)
+    }
+
+    
+  }
+}
+
+ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
+  geom_line() +
+  theme_bw()
+
+DEGeneCountToPlot.df<-as.data.frame(DEGeneCountToPlot)
+colnames(DEGeneCountToPlot.df) <- FDRLevels
+DEGeneCountToPlot.df$SampleSize <- rownames(DEGeneCountToPlot.df)
+DEGeneCountToPlot.df$SampleSize
+DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] <- 0
+DEGeneCountToPlot.df %>% melt() %>%
+  dplyr::rename(Number.DE.genes=value, FDR=variable) %>%
+ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
+  geom_line() +
+  theme_bw()
+
+
+ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
+  # geom_violin()
+  geom_boxplot() +
+  ylab("Effect Size of True positive DE genes\n|log2(FC)|") +
+  # scale_y_continuous(limits=c(0,5))
+  theme_bw()
+
+```
+
