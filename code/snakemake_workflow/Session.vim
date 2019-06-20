@@ -31,15 +31,15 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 140 - ((17 * winheight(0) + 25) / 50)
+let s:l = 128 - ((34 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-140
+128
 normal! 0
 tabnext 1
-badd +67 Snakefile
-badd +17 rules/PowerAnalysis.smk
+badd +114 rules/PowerAnalysis.smk
+badd +7 Snakefile
 badd +138 config.yaml
 badd +33 rules/RNASeqMapping.smk
 badd +1 cluster-config.json

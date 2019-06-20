@@ -111,7 +111,7 @@ rule PowerAnalysisSubreadCount:
         GetSamplesBySpecies
     output:
         Output = "PowerAnalysis/Subread/{species}.subread.txt.gz",
-        OutputGit = config["gitinclude_output"] + "PowerAnalysisCountTable.{species}.subread.txt.gz",
+        OutputGit = config["gitinclude_output"] + "PowerAnalysisFullCountTable.{species}.subread.txt.gz",
         OutputSummary = "PowerAnalysis/Subread/{species}.subread.txt.summary"
     log:
         "logs/PowerAnalysis/SubreadCount/{species}.txt"

@@ -5,6 +5,8 @@ include: "rules/common.smk"
 rule all:
     input:
         expand("PowerAnalysis/Subread/{species}.{depth}.subread.txt.gz", species=["Human", "Chimp"], depth=[10000000,25000000]),
+        expand(config["gitinclude_output"] + "PowerAnalysisFullCountTable.{species}.subread.txt.gz", species=["Human", "Chimp"]),
+
         "PowerAnalysis/Multiqc/multiqc_report.html",
         expand(config["temp_files_prefix"] + "PowerAnalysisBams/{PowerAnalysisSample}/Aligned.sortedByCoord.out.bam", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
         expand(config["temp_files_prefix"] + "PowerAnalysisFastq/{PowerAnalysisSample}.fastq.gz", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
