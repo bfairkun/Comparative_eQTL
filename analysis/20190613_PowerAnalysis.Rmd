@@ -25,12 +25,12 @@ library(gridExtra)
 39 Chimp heart RNA-seq datasets (from this project as well as from Pavlovic et al 2018) as well as 10 human heart RNA-seq datasets (from Pavlovic et al) and 39 randomly selected GTEx left ventricle heart RNA-seq datasets were trimmed to same read length (single end, 75bp) and aligned to the respective genomes. Gene counts were obtained with subread software using gene annotations based only on orthologous exons (Pavlovic et al 2018). Here I will perform differential gene expression analysis to understand the relationship between read depth and number of individuals (samples) needed to identify cross-species differentially expressed genes.
 
 ```{r read-data}
-CountTableChimpFile <- '../output/PowerAnalysisCountTable.Chimp.25000000.subread.txt.gz'
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
 CountTableChimp <- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)
 colnames(CountTableChimp) <- paste0("C.", colnames(CountTableChimp))
 kable(CountTableChimp[1:10,1:10])
 
-CountTableHumanFile <- '../output/PowerAnalysisCountTable.Human.25000000.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
 CountTableHuman <- read.table(gzfile(CountTableHumanFile), header=T, check.names=FALSE, skip=1)
 colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
 kable(CountTableHuman[1:10,1:10])
@@ -70,7 +70,7 @@ d0 <- calcNormFactors(d0)
 #Note: calcNormFactors doesn’t normalize the data, it just calculates normalization factors for use downstream.
 #Filter low-expressed genes
 
-cutoff <- 8
+cutoff <- 6
 drop <- which(apply(cpm(d0), 1, max) < cutoff)
 d <- d0[-drop,] 
 dim(d) # number of genes left
@@ -83,13 +83,12 @@ heatmap.2(trace="none", ColSideColors=SpeciesFactor)
 
 mm <- model.matrix(~0 + SpeciesFactor)
 y <- voom(d, mm, plot = T, normalize.method="cyclicloess")
-
 ```
 
-In fact some of these samples seemed to have gotten worse. I'll just throw these out of future analysis.
+In fact some of these samples seemed to have gotten worse. I'll just throw these out of future analysis... I threw out the human samples that were outliers, as well as LittleR which was a clear chimp outlier, then I kept throwing out more human samples (by lowest read depth) until we got a dataset of 38 chimp and 38 humans
 
 ```{r}
-HumanSamplesToDrop <- c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186")
+HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
 ChimpSamplesToDrop <- c("Little_R")
 ```
 
@@ -165,10 +164,6 @@ DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize
      colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
    }
    
-   
-
-
-
 CombinedTable <- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=c("C.Geneid"="H.Geneid")) %>%
   column_to_rownames("C.Geneid") %>% as.matrix()
 
@@ -193,8 +188,6 @@ tmp <- contrasts.fit(fit, contrasts=contr)
 efit <- treat(tmp, lfc = FC.NullInterval)
 return(efit)
 }
-
-
 
 ```
 
@@ -238,6 +231,14 @@ Now I will systematically do this for varying sample sizes and make some final p
 #Note there is some randomness in subsampling samples. So much so that sometimes it effects results wherein 4 samples might yield more DE genes than 2 if you get unluck and pick "bad" samples in the 4
 set.seed(1)
 
+#Genes to drop. Needs to be re-evaluated after dropping outlier samples
+CountTableChimp <- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1) %>% dplyr::select(-ChimpSamplesToDrop)
+CountTableHuman <- read.table(gzfile(CountTableHumanFile), header=T, check.names=FALSE, skip=1) %>% dplyr::select(-HumanSamplesToDrop)
+CountTableFull <- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by="Geneid") %>%
+  column_to_rownames("Geneid") %>% as.matrix() %>% DGEList() %>% calcNormFactors()
+cutoff <- 6
+drop <- which(apply(cpm(CountTableFull), 1, max) < cutoff)
+d <- CountTableFull[-drop,] 
 
 #Interval for null hypothesis
 FC.NullInterval <- log2(1.0)
@@ -246,6 +247,7 @@ FC.NullInterval <- log2(1.0)
 True.efit <- DE.Subsampled(CountTableChimpFile,
               CountTableHumanFile,
               0, FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+TrueResponse <- decideTests(True.efit, p.value=0.05)
 
 SampleSizes <- c(2,4,8,16,24,32,38)
 FDRLevels <- c(0.01, 0.05, 0.1)
@@ -257,7 +259,7 @@ rownames(DEGeneCountToPlot) <- SampleSizes
 EffectSizesToPlot <- data.frame()
 
 for (i in seq_along(SampleSizes)){
-  paste0("processing ", SampleSizes[i])
+  print(paste0("processing sample size = ", SampleSizes[i]))
   Results <- DE.Subsampled(CountTableChimpFile,
               CountTableHumanFile,
               SampleSizes[i], FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
@@ -265,6 +267,7 @@ for (i in seq_along(SampleSizes)){
   RocCurveData <- as.data.frame(coords(roc(response=as.vector(abs(TrueResponse)), quiet=T, predictor=as.numeric(Results$p.value), plot=F), transpose=F))
   RocCurveData$samplesize <- SampleSizes[i]
   RocCurveDataToPlot <- rbind(RocCurveDataToPlot, RocCurveData)
+  
   
   for (j in seq_along(FDRLevels)){
     
@@ -281,33 +284,63 @@ for (i in seq_along(SampleSizes)){
   }
 }
 
-ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
+RocCurve <- function(RocCurveData.df){
+  RocCurveLandmarks<-RocCurveDataToPlot %>%
+  group_by(samplesize) %>%
+  filter(abs(threshold - 0.01) == min(abs(threshold - 0.01)) |
+          abs(threshold - 0.05) == min(abs(threshold - 0.05)) |
+          abs(threshold - 0.1) == min(abs(threshold - 0.1))
+         ) %>%
+  ungroup() %>%
+  mutate(threshold=signif(threshold, digits=1)) %>%
+  mutate(FDR=factor(threshold))
+  
+  PlotOut <- ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
   geom_line() +
+  geom_point(data=RocCurveLandmarks, aes(x=1-specificity, y=sensitivity, color=factor(samplesize), shape=FDR)) +
+  xlab("false positive rate (1-sensitivity)") +
+  ylab("true positive rate (sensitivity)") +
+  scale_colour_discrete(name  ="Sample size") +
   theme_bw()
+  return(PlotOut)
+}
 
-DEGeneCountToPlot.df<-as.data.frame(DEGeneCountToPlot)
+
+DEGeneCountPlot <- function(DEGeneCount.df){
+  DEGeneCountToPlot.df<-as.data.frame(DEGeneCount.df)
 colnames(DEGeneCountToPlot.df) <- FDRLevels
 DEGeneCountToPlot.df$SampleSize <- rownames(DEGeneCountToPlot.df)
 DEGeneCountToPlot.df$SampleSize
 DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] <- 0
-DEGeneCountToPlot.df %>% melt() %>%
+PlotOut<-DEGeneCountToPlot.df %>% melt() %>%
   dplyr::rename(Number.DE.genes=value, FDR=variable) %>%
 ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
   geom_line() +
+  geom_point() +
+  xlab("Sample size") +
+  ylab("Number DE genes") +
   theme_bw()
+return(PlotOut)
+}
 
 
-ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
+EffectSizesPlot <- function(EffectSizesToPlot.df){
+  PlotOut <- ggplot(EffectSizesToPlot.df, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
   # geom_violin()
   geom_boxplot() +
-  ylab("Effect Size of True positive DE genes\n|log2(FC)|") +
-  # scale_y_continuous(limits=c(0,5))
+  ylab(expression(atop("Effect-size of true positive DE genes",'|log'[2]*'(FoldChange)|'))) +
+    xlab("Sample size") +
+  scale_colour_discrete(name  ="FDR") +
   theme_bw()
-  
-# ggplot(EffectSizesToPlot, aes(x=as.numeric(SampleSize), y=median(EffectSizes), color=factor(FDR), group=factor(FDR))) +
-#   geom_line() +
-#   # scale_y_continuous(limits=c(0,5))
-#   theme_bw()
+  return(PlotOut)
+}
+EffectSizesPlot(EffectSizesToPlot)
+
+DEGeneCountPlot(DEGeneCountToPlot)
+
+
+RocCurve(RocCurveDataToPlot)
+
 
 data.frame(coefficients=as.numeric(True.efit$coefficients), pval=as.numeric(True.efit$p.value), signif=decideTests(True.efit)) %>%
 ggplot(aes(x=coefficients, y=-log10(pval), color=factor(DE))) +
@@ -382,28 +415,9 @@ for (i in seq_along(SampleSizes)){
   }
 }
 
-ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
-  geom_line() +
-  theme_bw()
-
-DEGeneCountToPlot.df<-as.data.frame(DEGeneCountToPlot)
-colnames(DEGeneCountToPlot.df) <- FDRLevels
-DEGeneCountToPlot.df$SampleSize <- rownames(DEGeneCountToPlot.df)
-DEGeneCountToPlot.df$SampleSize
-DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] <- 0
-DEGeneCountToPlot.df %>% melt() %>%
-  dplyr::rename(Number.DE.genes=value, FDR=variable) %>%
-ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
-  geom_line() +
-  theme_bw()
-
-
-ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
-  # geom_violin()
-  geom_boxplot() +
-  ylab("Effect Size of True positive DE genes\n|log2(FC)|") +
-  # scale_y_continuous(limits=c(0,5))
-  theme_bw()
+RocCurve(RocCurveDataToPlot)
+DEGeneCountPlot(DEGeneCountToPlot)
+EffectSizesPlot(EffectSizesToPlot)
 
 ```
 
@@ -444,28 +458,9 @@ for (i in seq_along(SampleSizes)){
   }
 }
 
-ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
-  geom_line() +
-  theme_bw()
-
-DEGeneCountToPlot.df<-as.data.frame(DEGeneCountToPlot)
-colnames(DEGeneCountToPlot.df) <- FDRLevels
-DEGeneCountToPlot.df$SampleSize <- rownames(DEGeneCountToPlot.df)
-DEGeneCountToPlot.df$SampleSize
-DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] <- 0
-DEGeneCountToPlot.df %>% melt() %>%
-  dplyr::rename(Number.DE.genes=value, FDR=variable) %>%
-ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
-  geom_line() +
-  theme_bw()
-
-
-ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
-  # geom_violin()
-  geom_boxplot() +
-  ylab("Effect Size of True positive DE genes\n|log2(FC)|") +
-  # scale_y_continuous(limits=c(0,5))
-  theme_bw()
+RocCurve(RocCurveDataToPlot)
+DEGeneCountPlot(DEGeneCountToPlot)
+EffectSizesPlot(EffectSizesToPlot)
 
 ```
 

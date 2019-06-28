@@ -444,7 +444,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-06-20
+<strong>Last updated:</strong> 2019-06-27
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -535,10 +535,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree0a2a4b1c183e1048f882dc8ce51b87a3638b5e1etargetblank0a2a4b1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/0a2a4b1c183e1048f882dc8ce51b87a3638b5e1e" target="_blank">0a2a4b1</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree58e7cb62acf159856f0bfa88dd0b19e642787d71targetblank58e7cb6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/58e7cb62acf159856f0bfa88dd0b19e642787d71" target="_blank">58e7cb6</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree0a2a4b1c183e1048f882dc8ce51b87a3638b5e1etargetblank0a2a4b1a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree58e7cb62acf159856f0bfa88dd0b19e642787d71targetblank58e7cb6a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -550,7 +550,6 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/20190521_eQTL_CrossSpeciesEnrichment_cache/
-    Ignored:    analysis/figure/
     Ignored:    analysis_temp/.DS_Store
     Ignored:    code/.DS_Store
     Ignored:    code/snakemake_workflow/.DS_Store
@@ -599,6 +598,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/analysis/20190613_PowerAnalysis.Rmd" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+<td>
+updated power analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/20190613_PowerAnalysis.html" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+<td>
+updated power analysis
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -667,7 +700,7 @@ library(qvalue)
 library(reshape2)
 library(gridExtra)</code></pre>
 <p>39 Chimp heart RNA-seq datasets (from this project as well as from Pavlovic et al 2018) as well as 10 human heart RNA-seq datasets (from Pavlovic et al) and 39 randomly selected GTEx left ventricle heart RNA-seq datasets were trimmed to same read length (single end, 75bp) and aligned to the respective genomes. Gene counts were obtained with subread software using gene annotations based only on orthologous exons (Pavlovic et al 2018). Here I will perform differential gene expression analysis to understand the relationship between read depth and number of individuals (samples) needed to identify cross-species differentially expressed genes.</p>
-<pre class="r"><code>CountTableChimpFile &lt;- &#39;../output/PowerAnalysisCountTable.Chimp.25000000.subread.txt.gz&#39;
+<pre class="r"><code>CountTableChimpFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz&#39;
 CountTableChimp &lt;- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)
 colnames(CountTableChimp) &lt;- paste0(&quot;C.&quot;, colnames(CountTableChimp))
 kable(CountTableChimp[1:10,1:10])</code></pre>
@@ -680,10 +713,10 @@ kable(CountTableChimp[1:10,1:10])</code></pre>
 <th align="left">C.End</th>
 <th align="left">C.Strand</th>
 <th align="right">C.Length</th>
+<th align="right">C.4x0519</th>
 <th align="right">C.4x373</th>
-<th align="right">C.95A014</th>
-<th align="right">C.676</th>
-<th align="right">C.554_2</th>
+<th align="right">C.476</th>
+<th align="right">C.4x0025</th>
 </tr>
 </thead>
 <tbody>
@@ -697,7 +730,7 @@ kable(CountTableChimp[1:10,1:10])</code></pre>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="right">2</td>
+<td align="right">4</td>
 </tr>
 <tr class="even">
 <td align="left">ENSG00000217801</td>
@@ -706,10 +739,10 @@ kable(CountTableChimp[1:10,1:10])</code></pre>
 <td align="left">177043;177864;178052;178718;179678;180035;180758</td>
 <td align="left">+;+;+;+;+;+;+</td>
 <td align="right">824</td>
+<td align="right">8</td>
 <td align="right">3</td>
 <td align="right">1</td>
 <td align="right">6</td>
-<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">ENSG00000237330</td>
@@ -718,9 +751,9 @@ kable(CountTableChimp[1:10,1:10])</code></pre>
 <td align="left">186330</td>
 <td align="left">-</td>
 <td align="right">289</td>
+<td align="right">3</td>
 <td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1</td>
+<td align="right">2</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
@@ -743,7 +776,7 @@ kable(CountTableChimp[1:10,1:10])</code></pre>
 <td align="left">+</td>
 <td align="right">95</td>
 <td align="right">0</td>
-<td align="right">0</td>
+<td align="right">1</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
@@ -757,7 +790,7 @@ kable(CountTableChimp[1:10,1:10])</code></pre>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">ENSG00000198976</td>
@@ -778,8 +811,8 @@ kable(CountTableChimp[1:10,1:10])</code></pre>
 <td align="left">358497</td>
 <td align="left">+</td>
 <td align="right">988</td>
-<td align="right">2</td>
 <td align="right">0</td>
+<td align="right">3</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
@@ -792,8 +825,8 @@ kable(CountTableChimp[1:10,1:10])</code></pre>
 <td align="right">1291</td>
 <td align="right">0</td>
 <td align="right">0</td>
+<td align="right">2</td>
 <td align="right">0</td>
-<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="left">ENSG00000186891</td>
@@ -802,14 +835,14 @@ kable(CountTableChimp[1:10,1:10])</code></pre>
 <td align="left">387860;388847;389827;390192;390717</td>
 <td align="left">+;+;+;+;+</td>
 <td align="right">1363</td>
-<td align="right">45</td>
-<td align="right">4</td>
-<td align="right">8</td>
-<td align="right">11</td>
+<td align="right">46</td>
+<td align="right">73</td>
+<td align="right">20</td>
+<td align="right">28</td>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>CountTableHumanFile &lt;- &#39;../output/PowerAnalysisCountTable.Human.25000000.subread.txt.gz&#39;
+<pre class="r"><code>CountTableHumanFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Human.subread.txt.gz&#39;
 CountTableHuman &lt;- read.table(gzfile(CountTableHumanFile), header=T, check.names=FALSE, skip=1)
 colnames(CountTableHuman) &lt;- paste0(&quot;H.&quot;, colnames(CountTableHuman))
 kable(CountTableHuman[1:10,1:10])</code></pre>
@@ -822,10 +855,10 @@ kable(CountTableHuman[1:10,1:10])</code></pre>
 <th align="left">H.End</th>
 <th align="left">H.Strand</th>
 <th align="right">H.Length</th>
-<th align="right">H.SRR599380</th>
-<th align="right">H.59511</th>
 <th align="right">H.SRR1477033</th>
-<th align="right">H.62606</th>
+<th align="right">H.SRR598148</th>
+<th align="right">H.SRR601645</th>
+<th align="right">H.SRR599086</th>
 </tr>
 </thead>
 <tbody>
@@ -836,10 +869,10 @@ kable(CountTableHuman[1:10,1:10])</code></pre>
 <td align="left">959309</td>
 <td align="left">-</td>
 <td align="right">95</td>
-<td align="right">12</td>
-<td align="right">10</td>
-<td align="right">14</td>
-<td align="right">11</td>
+<td align="right">31</td>
+<td align="right">20</td>
+<td align="right">25</td>
+<td align="right">25</td>
 </tr>
 <tr class="even">
 <td align="left">ENSG00000188157</td>
@@ -849,9 +882,9 @@ kable(CountTableHuman[1:10,1:10])</code></pre>
 <td align="left">+</td>
 <td align="right">225</td>
 <td align="right">12</td>
+<td align="right">9</td>
+<td align="right">16</td>
 <td align="right">14</td>
-<td align="right">6</td>
-<td align="right">11</td>
 </tr>
 <tr class="odd">
 <td align="left">ENSG00000273443</td>
@@ -862,7 +895,7 @@ kable(CountTableHuman[1:10,1:10])</code></pre>
 <td align="right">706</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="right">0</td>
+<td align="right">1</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
@@ -872,10 +905,10 @@ kable(CountTableHuman[1:10,1:10])</code></pre>
 <td align="left">1063566;1064401;1064589;1066667;1067646;1068003;1068724</td>
 <td align="left">+;+;+;+;+;+;+</td>
 <td align="right">824</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">6</td>
 </tr>
 <tr class="odd">
 <td align="left">ENSG00000237330</td>
@@ -885,7 +918,7 @@ kable(CountTableHuman[1:10,1:10])</code></pre>
 <td align="left">-</td>
 <td align="right">292</td>
 <td align="right">0</td>
-<td align="right">1</td>
+<td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
@@ -945,9 +978,9 @@ kable(CountTableHuman[1:10,1:10])</code></pre>
 <td align="left">+</td>
 <td align="right">987</td>
 <td align="right">0</td>
+<td align="right">2</td>
 <td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
+<td align="right">3</td>
 </tr>
 </tbody>
 </table>
@@ -988,6 +1021,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/read-data-1.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/read-data-1.png" target="_blank">c3dbe5a</a>
 </td>
 <td>
@@ -1007,148 +1051,148 @@ kable(cpm[1:10,1:10])</code></pre>
 <thead>
 <tr class="header">
 <th></th>
+<th align="right">C.4x0519</th>
 <th align="right">C.4x373</th>
-<th align="right">C.95A014</th>
-<th align="right">C.676</th>
-<th align="right">C.554_2</th>
-<th align="right">C.456</th>
+<th align="right">C.476</th>
+<th align="right">C.4x0025</th>
+<th align="right">C.438</th>
+<th align="right">C.462</th>
+<th align="right">C.4X0354</th>
 <th align="right">C.503</th>
-<th align="right">C.4x0043</th>
-<th align="right">C.570</th>
-<th align="right">C.4X0095</th>
-<th align="right">C.4x523</th>
+<th align="right">C.317</th>
+<th align="right">C.623</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>ENSG00000273443</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-2.0666967</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-2.772420</td>
-<td align="right">-4.402683</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-2.9878446</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-4.502081</td>
+<td align="right">-5.898265</td>
 </tr>
 <tr class="even">
 <td>ENSG00000217801</td>
-<td align="right">-1.659074</td>
-<td align="right">-2.841283</td>
-<td align="right">-0.6087941</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-0.5631552</td>
-<td align="right">-2.198895</td>
-<td align="right">-1.537341</td>
-<td align="right">-3.016478</td>
+<td align="right">-2.526536</td>
+<td align="right">-2.606798</td>
+<td align="right">-5.106758</td>
+<td align="right">-2.4683065</td>
+<td align="right">-3.779182</td>
+<td align="right">-5.898265</td>
+<td align="right">-1.435153</td>
+<td align="right">-5.898265</td>
+<td align="right">-2.466340</td>
+<td align="right">-4.430240</td>
 </tr>
 <tr class="odd">
 <td>ENSG00000237330</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-2.7496282</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
+<td align="right">-3.726191</td>
+<td align="right">-5.898265</td>
+<td align="right">-4.598573</td>
+<td align="right">-5.8982646</td>
+<td align="right">-5.898265</td>
+<td align="right">-2.243109</td>
+<td align="right">-3.087604</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
 </tr>
 <tr class="even">
 <td>ENSG00000223823</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.8982646</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
 </tr>
 <tr class="odd">
 <td>ENSG00000207730</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
+<td align="right">-5.898265</td>
+<td align="right">-3.923604</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.8982646</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
 </tr>
 <tr class="even">
 <td>ENSG00000207607</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-2.8059958</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.8982646</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
 </tr>
 <tr class="odd">
 <td>ENSG00000198976</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.8982646</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
 </tr>
 <tr class="even">
 <td>ENSG00000272141</td>
-<td align="right">-2.140163</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
+<td align="right">-5.898265</td>
+<td align="right">-2.606798</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.8982646</td>
+<td align="right">-4.480297</td>
+<td align="right">-5.898265</td>
+<td align="right">-3.087604</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
 </tr>
 <tr class="odd">
 <td>ENSG00000205231</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.4026833</td>
-<td align="right">-2.8059958</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-2.1382998</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
-<td align="right">-4.402683</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-4.598573</td>
+<td align="right">-5.8982646</td>
+<td align="right">-5.898265</td>
+<td align="right">-4.605609</td>
+<td align="right">-2.194266</td>
+<td align="right">-5.898265</td>
+<td align="right">-5.898265</td>
+<td align="right">-4.430240</td>
 </tr>
 <tr class="even">
 <td>ENSG00000186891</td>
-<td align="right">2.031303</td>
-<td align="right">-1.264262</td>
-<td align="right">-0.2199978</td>
-<td align="right">0.1376718</td>
-<td align="right">-1.624826</td>
-<td align="right">-2.760991</td>
-<td align="right">1.5922154</td>
-<td align="right">-2.198895</td>
-<td align="right">-1.537341</td>
-<td align="right">1.315537</td>
+<td align="right">-0.122964</td>
+<td align="right">1.849365</td>
+<td align="right">-1.933162</td>
+<td align="right">-0.3551216</td>
+<td align="right">-2.955590</td>
+<td align="right">-1.815252</td>
+<td align="right">2.310149</td>
+<td align="right">-1.943911</td>
+<td align="right">-1.653950</td>
+<td align="right">-3.243077</td>
 </tr>
 </tbody>
 </table>
@@ -1182,6 +1226,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/read-data-2.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/read-data-2.png" target="_blank">c3dbe5a</a>
 </td>
 <td>
@@ -1204,11 +1259,11 @@ d0 &lt;- calcNormFactors(d0)
 #Note: calcNormFactors doesn’t normalize the data, it just calculates normalization factors for use downstream.
 #Filter low-expressed genes
 
-cutoff &lt;- 8
+cutoff &lt;- 6
 drop &lt;- which(apply(cpm(d0), 1, max) &lt; cutoff)
 d &lt;- d0[-drop,] 
 dim(d) # number of genes left</code></pre>
-<pre><code>[1] 13097    88</code></pre>
+<pre><code>[1] 13754    88</code></pre>
 <pre class="r"><code>plotMDS(d, col = as.numeric(SpeciesFactor))</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
@@ -1233,6 +1288,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-1.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-1.png" target="_blank">c3dbe5a</a>
@@ -1272,6 +1338,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-2.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-2.png" target="_blank">c3dbe5a</a>
@@ -1314,6 +1391,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-3.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-3.png" target="_blank">c3dbe5a</a>
 </td>
 <td>
@@ -1354,6 +1442,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-4.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-4.png" target="_blank">c3dbe5a</a>
 </td>
 <td>
@@ -1367,8 +1466,8 @@ Benjmain Fair
 </table>
 </div>
 </div>
-<p>In fact some of these samples seemed to have gotten worse. I’ll just throw these out of future analysis.</p>
-<pre class="r"><code>HumanSamplesToDrop &lt;- c(&quot;SRR1507229&quot;,&quot;SRR603918&quot;, &quot;SRR1478149&quot;, &quot;SRR598509&quot;, &quot;SRR613186&quot;)
+<p>In fact some of these samples seemed to have gotten worse. I’ll just throw these out of future analysis… I threw out the human samples that were outliers, as well as LittleR which was a clear chimp outlier, then I kept throwing out more human samples (by lowest read depth) until we got a dataset of 38 chimp and 38 humans</p>
+<pre class="r"><code>HumanSamplesToDrop &lt;- c(c(&quot;SRR1507229&quot;,&quot;SRR603918&quot;, &quot;SRR1478149&quot;, &quot;SRR598509&quot;, &quot;SRR613186&quot;), c(&quot;SRR1489693&quot;, &quot;SRR598148&quot;, &quot;59167&quot;, &quot;SRR1478900&quot;, &quot;SRR1474730&quot;, &quot;61317&quot;))
 ChimpSamplesToDrop &lt;- c(&quot;Little_R&quot;)</code></pre>
 <p>Anway, now that voom calculated mean/variance relationship from count values, I will now normalize for gene length differences between species (Convert cpm to rpkm). As per the voom publication (Law et al 2014) log-cpm values output by voom can be converted to log-rpkm by subtracting the log2 gene length in kilobases. For this I will make a matrix of gene lengths based on chimp orthologous exon length and human orthologous exon lengths to subtract the correct length for each species from the count matrix output by voom.</p>
 <pre class="r"><code>rep.col&lt;-function(x,n){
@@ -1407,6 +1506,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-1.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-1.png" target="_blank">c3dbe5a</a>
@@ -1570,19 +1680,56 @@ y$E &lt;- y$E - GeneLengthMatrix[rownames(y$E),]
 fit&lt;- lmFit(y, mm)
 plotSA(fit)</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-2">
+Past versions of unnamed-chunk-3-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-2.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>head(coef(fit))</code></pre>
 <pre><code>                SpeciesFactor1 SpeciesFactor2
-ENSG00000186891     -0.5042645     -2.9843307
-ENSG00000186827      2.1923203      1.5926387
-ENSG00000078808      4.9196758      5.2185157
-ENSG00000176022      3.0372329      2.8850147
-ENSG00000184163     -0.1085559     -0.5281716
-ENSG00000160087      2.4507578      2.5740626</code></pre>
+ENSG00000186891     -0.6204116     -3.1289432
+ENSG00000186827      2.2447828      1.5864495
+ENSG00000078808      4.9231110      5.2194360
+ENSG00000176022      3.0607593      2.9003148
+ENSG00000184163     -0.0235633     -0.5707886
+ENSG00000160087      2.4483810      2.5814250</code></pre>
 <pre class="r"><code>head(y$E[,1])</code></pre>
 <pre><code>ENSG00000186891 ENSG00000186827 ENSG00000078808 ENSG00000176022 
-      1.9909430       3.8369592       4.6769123       2.9626243 
+     -0.4126992       1.6727615       4.9028512       2.8890203 
 ENSG00000184163 ENSG00000160087 
-      0.4987694       2.4420370 </code></pre>
+     -3.6177805       2.1925140 </code></pre>
 <pre class="r"><code>contr &lt;- makeContrasts(DE=SpeciesFactor1-SpeciesFactor2, levels = mm)
 
 tmp &lt;- contrasts.fit(fit, contrasts=contr)
@@ -1591,12 +1738,49 @@ True.efit &lt;- treat(tmp, lfc = FC.NullInterval)
 
 summary(decideTests(True.efit))</code></pre>
 <pre><code>         DE
-Down   4402
-NotSig 4279
-Up     4416</code></pre>
+Down   4713
+NotSig 4352
+Up     4689</code></pre>
 <pre class="r"><code>TrueResponse &lt;- decideTests(True.efit)
 plotMD(True.efit, column=1, zero.weights = F)</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-3">
+Past versions of unnamed-chunk-3-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-3.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Ok, seems like the above workflow for identifying DE genes is set up reasonably… Now let’s repeat with less samples and see what changes. First, I will wrap all of the above analysis into a function with a sample size parameter:</p>
 <pre class="r"><code>DE.Subsampled &lt;-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, FC.NullInterval, drop, ChimpSampleDrop=NULL, HumanSampleDrop=NULL)
   #if SubsampleSize parameter == 0, use full table, otherwise, subsample from it
@@ -1625,10 +1809,6 @@ plotMD(True.efit, column=1, zero.weights = F)</code></pre>
      colnames(CountTableHuman) &lt;- paste0(&quot;H.&quot;, colnames(CountTableHuman))
    }
    
-   
-
-
-
 CombinedTable &lt;- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=c(&quot;C.Geneid&quot;=&quot;H.Geneid&quot;)) %&gt;%
   column_to_rownames(&quot;C.Geneid&quot;) %&gt;% as.matrix()
 
@@ -1660,9 +1840,9 @@ Subsampled.DE.results &lt;- DE.Subsampled(CountTableChimpFile,
               20, 0, drop)
 summary(decideTests(Subsampled.DE.results))</code></pre>
 <pre><code>         DE
-Down   3848
-NotSig 5494
-Up     3755</code></pre>
+Down   3801
+NotSig 6098
+Up     3855</code></pre>
 <pre class="r"><code>RocCurveData &lt;- coords(roc(response=as.vector(abs(TrueResponse)), predictor=Subsampled.DE.results$p.value, plot=F))</code></pre>
 <pre><code>Setting levels: control = 0, case = 1</code></pre>
 <pre><code>Warning in roc.default(response = as.vector(abs(TrueResponse)), predictor
@@ -1699,6 +1879,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-1.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-1.png" target="_blank">c3dbe5a</a>
@@ -1743,6 +1934,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-2.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-2.png" target="_blank">c3dbe5a</a>
 </td>
 <td>
@@ -1757,16 +1959,16 @@ Benjmain Fair
 </div>
 </div>
 <pre class="r"><code>median(abs(True.efit$coefficients[TrueResponse==SubSampledResponse &amp; SubSampledResponse!=0]))</code></pre>
-<pre><code>[1] 0.7031364</code></pre>
+<pre><code>[1] 0.7373539</code></pre>
 <pre class="r"><code>#5 samples
 Subsampled.DE.results &lt;- DE.Subsampled(CountTableChimpFile,
               CountTableHumanFile,
               5, 0, drop)
 summary(decideTests(Subsampled.DE.results))</code></pre>
-<pre><code>         DE
-Down   1538
-NotSig 9911
-Up     1648</code></pre>
+<pre><code>          DE
+Down    1076
+NotSig 11542
+Up      1136</code></pre>
 <pre class="r"><code>RocCurveData &lt;- coords(roc(response=as.vector(abs(TrueResponse)), predictor=Subsampled.DE.results$p.value, plot=F))</code></pre>
 <pre><code>Setting levels: control = 0, case = 1</code></pre>
 <pre><code>Warning in roc.default(response = as.vector(abs(TrueResponse)), predictor
@@ -1803,6 +2005,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-3.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-3.png" target="_blank">c3dbe5a</a>
@@ -1847,6 +2060,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-4.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/c3dbe5a11f848a94299edef3e9f2117f256fe270/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-4.png" target="_blank">c3dbe5a</a>
 </td>
 <td>
@@ -1861,11 +2085,19 @@ Benjmain Fair
 </div>
 </div>
 <pre class="r"><code>median(abs(True.efit$coefficients[TrueResponse==SubSampledResponse &amp; SubSampledResponse!=0]))</code></pre>
-<pre><code>[1] 1.014835</code></pre>
+<pre><code>[1] 1.23068</code></pre>
 <p>Now I will systematically do this for varying sample sizes and make some final plots</p>
 <pre class="r"><code>#Note there is some randomness in subsampling samples. So much so that sometimes it effects results wherein 4 samples might yield more DE genes than 2 if you get unluck and pick &quot;bad&quot; samples in the 4
 set.seed(1)
 
+#Genes to drop. Needs to be re-evaluated after dropping outlier samples
+CountTableChimp &lt;- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1) %&gt;% dplyr::select(-ChimpSamplesToDrop)
+CountTableHuman &lt;- read.table(gzfile(CountTableHumanFile), header=T, check.names=FALSE, skip=1) %&gt;% dplyr::select(-HumanSamplesToDrop)
+CountTableFull &lt;- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=&quot;Geneid&quot;) %&gt;%
+  column_to_rownames(&quot;Geneid&quot;) %&gt;% as.matrix() %&gt;% DGEList() %&gt;% calcNormFactors()
+cutoff &lt;- 6
+drop &lt;- which(apply(cpm(CountTableFull), 1, max) &lt; cutoff)
+d &lt;- CountTableFull[-drop,] 
 
 #Interval for null hypothesis
 FC.NullInterval &lt;- log2(1.0)
@@ -1874,6 +2106,7 @@ FC.NullInterval &lt;- log2(1.0)
 True.efit &lt;- DE.Subsampled(CountTableChimpFile,
               CountTableHumanFile,
               0, FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+TrueResponse &lt;- decideTests(True.efit, p.value=0.05)
 
 SampleSizes &lt;- c(2,4,8,16,24,32,38)
 FDRLevels &lt;- c(0.01, 0.05, 0.1)
@@ -1885,7 +2118,7 @@ rownames(DEGeneCountToPlot) &lt;- SampleSizes
 EffectSizesToPlot &lt;- data.frame()
 
 for (i in seq_along(SampleSizes)){
-  paste0(&quot;processing &quot;, SampleSizes[i])
+  print(paste0(&quot;processing sample size = &quot;, SampleSizes[i]))
   Results &lt;- DE.Subsampled(CountTableChimpFile,
               CountTableHumanFile,
               SampleSizes[i], FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
@@ -1893,6 +2126,7 @@ for (i in seq_along(SampleSizes)){
   RocCurveData &lt;- as.data.frame(coords(roc(response=as.vector(abs(TrueResponse)), quiet=T, predictor=as.numeric(Results$p.value), plot=F), transpose=F))
   RocCurveData$samplesize &lt;- SampleSizes[i]
   RocCurveDataToPlot &lt;- rbind(RocCurveDataToPlot, RocCurveData)
+  
   
   for (j in seq_along(FDRLevels)){
     
@@ -1907,43 +2141,225 @@ for (i in seq_along(SampleSizes)){
 
     
   }
+}</code></pre>
+<pre><code>[1] &quot;processing sample size = 2&quot;
+[1] &quot;processing sample size = 4&quot;
+[1] &quot;processing sample size = 8&quot;
+[1] &quot;processing sample size = 16&quot;
+[1] &quot;processing sample size = 24&quot;
+[1] &quot;processing sample size = 32&quot;
+[1] &quot;processing sample size = 38&quot;</code></pre>
+<pre class="r"><code>RocCurve &lt;- function(RocCurveData.df){
+  RocCurveLandmarks&lt;-RocCurveDataToPlot %&gt;%
+  group_by(samplesize) %&gt;%
+  filter(abs(threshold - 0.01) == min(abs(threshold - 0.01)) |
+          abs(threshold - 0.05) == min(abs(threshold - 0.05)) |
+          abs(threshold - 0.1) == min(abs(threshold - 0.1))
+         ) %&gt;%
+  ungroup() %&gt;%
+  mutate(threshold=signif(threshold, digits=1)) %&gt;%
+  mutate(FDR=factor(threshold))
+  
+  PlotOut &lt;- ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
+  geom_line() +
+  geom_point(data=RocCurveLandmarks, aes(x=1-specificity, y=sensitivity, color=factor(samplesize), shape=FDR)) +
+  xlab(&quot;false positive rate (1-sensitivity)&quot;) +
+  ylab(&quot;true positive rate (sensitivity)&quot;) +
+  scale_colour_discrete(name  =&quot;Sample size&quot;) +
+  theme_bw()
+  return(PlotOut)
 }
 
-ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
-  geom_line() +
-  theme_bw()</code></pre>
-<p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>DEGeneCountToPlot.df&lt;-as.data.frame(DEGeneCountToPlot)
+
+DEGeneCountPlot &lt;- function(DEGeneCount.df){
+  DEGeneCountToPlot.df&lt;-as.data.frame(DEGeneCount.df)
 colnames(DEGeneCountToPlot.df) &lt;- FDRLevels
 DEGeneCountToPlot.df$SampleSize &lt;- rownames(DEGeneCountToPlot.df)
-DEGeneCountToPlot.df$SampleSize</code></pre>
-<pre><code>[1] &quot;2&quot;  &quot;4&quot;  &quot;8&quot;  &quot;16&quot; &quot;24&quot; &quot;32&quot; &quot;38&quot;</code></pre>
-<pre class="r"><code>DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] &lt;- 0
-DEGeneCountToPlot.df %&gt;% melt() %&gt;%
+DEGeneCountToPlot.df$SampleSize
+DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] &lt;- 0
+PlotOut&lt;-DEGeneCountToPlot.df %&gt;% melt() %&gt;%
   dplyr::rename(Number.DE.genes=value, FDR=variable) %&gt;%
 ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
   geom_line() +
-  theme_bw()</code></pre>
-<pre><code>Using SampleSize as id variables</code></pre>
-<p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
+  geom_point() +
+  xlab(&quot;Sample size&quot;) +
+  ylab(&quot;Number DE genes&quot;) +
+  theme_bw()
+return(PlotOut)
+}
+
+
+EffectSizesPlot &lt;- function(EffectSizesToPlot.df){
+  PlotOut &lt;- ggplot(EffectSizesToPlot.df, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
   # geom_violin()
   geom_boxplot() +
-  ylab(&quot;Effect Size of True positive DE genes\n|log2(FC)|&quot;) +
-  # scale_y_continuous(limits=c(0,5))
-  theme_bw()</code></pre>
+  ylab(expression(atop(&quot;Effect-size of true positive DE genes&quot;,&#39;|log&#39;[2]*&#39;(FoldChange)|&#39;))) +
+    xlab(&quot;Sample size&quot;) +
+  scale_colour_discrete(name  =&quot;FDR&quot;) +
+  theme_bw()
+  return(PlotOut)
+}
+EffectSizesPlot(EffectSizesToPlot)</code></pre>
+<p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-1.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>DEGeneCountPlot(DEGeneCountToPlot)</code></pre>
+<pre><code>Using SampleSize as id variables</code></pre>
+<p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-2">
+Past versions of unnamed-chunk-6-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-2.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>RocCurve(RocCurveDataToPlot)</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># ggplot(EffectSizesToPlot, aes(x=as.numeric(SampleSize), y=median(EffectSizes), color=factor(FDR), group=factor(FDR))) +
-#   geom_line() +
-#   # scale_y_continuous(limits=c(0,5))
-#   theme_bw()
-
-data.frame(coefficients=as.numeric(True.efit$coefficients), pval=as.numeric(True.efit$p.value), signif=decideTests(True.efit)) %&gt;%
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-3">
+Past versions of unnamed-chunk-6-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-3.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>data.frame(coefficients=as.numeric(True.efit$coefficients), pval=as.numeric(True.efit$p.value), signif=decideTests(True.efit)) %&gt;%
 ggplot(aes(x=coefficients, y=-log10(pval), color=factor(DE))) +
   geom_point() +
   scale_x_continuous(limits=c(-5,5))</code></pre>
-<pre><code>Warning: Removed 116 rows containing missing values (geom_point).</code></pre>
+<pre><code>Warning: Removed 150 rows containing missing values (geom_point).</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-4">
+Past versions of unnamed-chunk-6-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-4.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>I probably also want to explore how read depth plays into this, especially considering some samples were much more sparse than others. Here I’ll try to write a function to subsample without replacement the read counts from the original count table.</p>
 <pre class="r"><code>sample_species &lt;- function(counts,n) {
   num_species &lt;- length(counts)
@@ -2002,30 +2418,124 @@ for (i in seq_along(SampleSizes)){
   }
 }
 
-ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
-  geom_line() +
-  theme_bw()</code></pre>
+RocCurve(RocCurveDataToPlot)</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>DEGeneCountToPlot.df&lt;-as.data.frame(DEGeneCountToPlot)
-colnames(DEGeneCountToPlot.df) &lt;- FDRLevels
-DEGeneCountToPlot.df$SampleSize &lt;- rownames(DEGeneCountToPlot.df)
-DEGeneCountToPlot.df$SampleSize</code></pre>
-<pre><code>[1] &quot;2&quot;  &quot;4&quot;  &quot;8&quot;  &quot;16&quot; &quot;24&quot; &quot;32&quot; &quot;38&quot;</code></pre>
-<pre class="r"><code>DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] &lt;- 0
-DEGeneCountToPlot.df %&gt;% melt() %&gt;%
-  dplyr::rename(Number.DE.genes=value, FDR=variable) %&gt;%
-ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
-  geom_line() +
-  theme_bw()</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-1.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>DEGeneCountPlot(DEGeneCountToPlot)</code></pre>
 <pre><code>Using SampleSize as id variables</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
-  # geom_violin()
-  geom_boxplot() +
-  ylab(&quot;Effect Size of True positive DE genes\n|log2(FC)|&quot;) +
-  # scale_y_continuous(limits=c(0,5))
-  theme_bw()</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-2">
+Past versions of unnamed-chunk-8-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-2.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>EffectSizesPlot(EffectSizesToPlot)</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-3">
+Past versions of unnamed-chunk-8-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-3.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>###5M reads for each sample
 
 RocCurveDataToPlot &lt;- data.frame()
@@ -2061,30 +2571,124 @@ for (i in seq_along(SampleSizes)){
   }
 }
 
-ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
-  geom_line() +
-  theme_bw()</code></pre>
+RocCurve(RocCurveDataToPlot)</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>DEGeneCountToPlot.df&lt;-as.data.frame(DEGeneCountToPlot)
-colnames(DEGeneCountToPlot.df) &lt;- FDRLevels
-DEGeneCountToPlot.df$SampleSize &lt;- rownames(DEGeneCountToPlot.df)
-DEGeneCountToPlot.df$SampleSize</code></pre>
-<pre><code>[1] &quot;2&quot;  &quot;4&quot;  &quot;8&quot;  &quot;16&quot; &quot;24&quot; &quot;32&quot; &quot;38&quot;</code></pre>
-<pre class="r"><code>DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] &lt;- 0
-DEGeneCountToPlot.df %&gt;% melt() %&gt;%
-  dplyr::rename(Number.DE.genes=value, FDR=variable) %&gt;%
-ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
-  geom_line() +
-  theme_bw()</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-1.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>DEGeneCountPlot(DEGeneCountToPlot)</code></pre>
 <pre><code>Using SampleSize as id variables</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>ggplot(EffectSizesToPlot, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
-  # geom_violin()
-  geom_boxplot() +
-  ylab(&quot;Effect Size of True positive DE genes\n|log2(FC)|&quot;) +
-  # scale_y_continuous(limits=c(0,5))
-  theme_bw()</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-2">
+Past versions of unnamed-chunk-9-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-2.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>EffectSizesPlot(EffectSizesToPlot)</code></pre>
 <p><img src="figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-3">
+Past versions of unnamed-chunk-9-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-3.png" target="_blank">d3b5499</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
