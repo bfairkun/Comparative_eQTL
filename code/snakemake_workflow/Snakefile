@@ -4,7 +4,8 @@ include: "rules/common.smk"
 
 rule all:
     input:
-        "MiscOutput/LocusZoomPlot",
+        "../../output/SharedPolymorphisms.shared.chimpeqtls.txt",
+        # "MiscOutput/LocusZoomPlot",
         "MiscOutput/ForAssociationTesting.chromsrenamed.vcf.gz",
         "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt",
         expand("PowerAnalysis/Subread/{species}.{depth}.subread.txt.gz", species=["Human", "Chimp"], depth=[10000000,25000000]),

@@ -103,3 +103,25 @@ rule LocusZoom:
         """
         grep 'ENSPTRG00000000104' eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt | awk -v OFS='\\t' -F'\\t' 'BEGIN{{print "MarkerName", "P-value"}} {{split($1,a,"."); print "chr"a[2]":"a[3], $5}}' | python2.7 /project/gilad/bjf79/software/locuszoom/bin/locuszoom --build PanTro5 --refgene ENSPTRG00000000104 --flank 250kb --metal - -p locuszoomtest  -v --source samples --pop MyPop --cache None
         """
+
+# rule GetHumanFullEqtlResults:
+#     output:
+#     shell:
+#         """
+#         wget
+#         """
+
+# rule GetHumanLeadSnpsForMatchedWindowSize:
+
+rule GetEqtlResultsForSharedPolymorphisms:
+    input:
+        eqtls = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt",
+        shared_polymorhisms = "../../data/LeflerSharedPolymorphisms.PanTro5.bed"
+    output:
+        shared = "../../output/SharedPolymorphisms.shared.chimpeqtls.txt",
+        random = "../../output/SharedPolymorphisms.random.chimpeqtls.txt"
+    shell:
+        """
+        sed 's/^chr//g' {input.shared_polymorhisms} | awk -F'\\t' '{{print "ID."$1"."$2}}' | grep -f - {input.eqtls} > {output.shared}
+        awk 'NR>1' {input.eqtls} | shuf -n 1000 > {output.random}
+        """

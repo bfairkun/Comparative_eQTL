@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit rules/eQTL_analysis.smk
+edit Snakefile
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -31,16 +31,16 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 95 - ((4 * winheight(0) + 25) / 50)
+let s:l = 1 - ((0 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-95
-normal! 011|
+1
+normal! 0
 tabnext 1
+badd +121 rules/eQTL_analysis.smk
+badd +1 Snakefile
 badd +116 rules/populationstructure.smk
-badd +7 Snakefile
-badd +76 rules/eQTL_analysis.smk
 badd +112 cluster-config.json
 badd +101 scripts/MatrixEqtl_Cis.AllPvals.R
 badd +59 rules/eqtl_calling.smk
@@ -68,6 +68,7 @@ if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &so = s:so_save | let &siso = s:siso_save
+nohlsearch
 let g:this_session = v:this_session
 let g:this_obsession = v:this_session
 let g:this_obsession_status = 2
