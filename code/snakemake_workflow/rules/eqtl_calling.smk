@@ -440,6 +440,27 @@ rule MatrixEQTL:
         Rscript scripts/MatrixEqtl_Cis.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} {output.permuted_results} {output.permutated_fig} 250000 &> {log}
         """
 
+rule MatrixEQTL_BestModelFromConfigFullResults:
+    """
+    Matrix eQTL with full output for every snp-gene pair.
+    """
+    input:
+        snps = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
+        snp_locs = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
+        phenotypes = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
+        gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
+        covariates = config["eQTL_mapping"]["CovariatesForFullOutput"],
+        GRM = CovarianceMatrix,
+    output:
+        results = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt",
+        fig = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/images/Results.png",
+    log:
+        "logs/eQTL_mapping/MatrixEQTL/ConfigCovariateModel.log"
+    shell:
+        """
+        Rscript scripts/MatrixEqtl_Cis.AllPvals.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} 250000 &> {log}
+        """
+
 rule PlotPCsVsEQTLs:
     input:
         MatrixEQTLModels

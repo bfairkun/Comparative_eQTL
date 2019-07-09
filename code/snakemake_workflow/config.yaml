@@ -122,6 +122,9 @@ eQTL_mapping:
     ParallelizationFactor: 100
     # Used in permutation testing. Number of jobs to break up the eQTL calling
     # (with permutations) across various compute nodes
+    CovariatesForFullOutput: "../../output/Covariates/0GenotypePCs_and_10RNASeqPCs.covariates"
+    #Run matrix eqtl once and ouput summary statistics for every snp-gene pair
+    #using this covariates file.
 
 
 
@@ -146,3 +149,6 @@ PowerAnalysis:
         Chimp_gtf:
             "/project2/gilad/bjf79/genomes/2017_July_ortho/2017_July_ortho_chimp.nochr.gtf"
     #Chimp reference genome defined earlier
+
+LocusZoomDirectoryPath:
+    "/project/gilad/bjf79/software/locuszoom/"

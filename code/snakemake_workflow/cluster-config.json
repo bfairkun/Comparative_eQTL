@@ -105,6 +105,9 @@
   {"mem" : 68000, "tasks-per-node" : 5, "partition" : "bigmem2"},
 
   "STAR_alignment_PowerAnalysis":
-  {"partition" : "broadwl", "mem": 58000, "tasks-per-node" : 10}
+  {"partition" : "broadwl", "mem": 58000, "tasks-per-node" : 10},
+
+  "MatrixEQTL_BestModelFromConfigFullResults":
+  {"mem" : 24000}
 
 }

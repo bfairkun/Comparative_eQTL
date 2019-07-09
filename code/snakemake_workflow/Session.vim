@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit rules/PowerAnalysis.smk
+edit rules/eQTL_analysis.smk
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -31,19 +31,22 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 128 - ((34 * winheight(0) + 25) / 50)
+let s:l = 95 - ((4 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-128
-normal! 0
+95
+normal! 011|
 tabnext 1
-badd +114 rules/PowerAnalysis.smk
+badd +116 rules/populationstructure.smk
 badd +7 Snakefile
-badd +138 config.yaml
+badd +76 rules/eQTL_analysis.smk
+badd +112 cluster-config.json
+badd +101 scripts/MatrixEqtl_Cis.AllPvals.R
+badd +59 rules/eqtl_calling.smk
+badd +128 rules/PowerAnalysis.smk
+badd +153 config.yaml
 badd +33 rules/RNASeqMapping.smk
-badd +1 cluster-config.json
-badd +145 rules/eqtl_calling.smk
 badd +66 rules/sqtl_calling.smk
 badd +7 scripts/MakeMetaPlot.sh
 badd +1 .gitignore
@@ -65,7 +68,6 @@ if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &so = s:so_save | let &siso = s:siso_save
-nohlsearch
 let g:this_session = v:this_session
 let g:this_obsession = v:this_session
 let g:this_obsession_status = 2
