@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit Snakefile
+edit rules/eqtl_calling.smk
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -38,14 +38,15 @@ normal! zt
 1
 normal! 0
 tabnext 1
-badd +121 rules/eQTL_analysis.smk
-badd +1 Snakefile
-badd +116 rules/populationstructure.smk
+badd +76 rules/eQTL_analysis.smk
+badd +12 Snakefile
+badd +49 /project/gilad/bjf79/software/locusZoomWithLD/locuszoom/conf/m2zfast.conf
+badd +59 rules/populationstructure.smk
 badd +112 cluster-config.json
 badd +101 scripts/MatrixEqtl_Cis.AllPvals.R
-badd +59 rules/eqtl_calling.smk
+badd +1 rules/eqtl_calling.smk
 badd +128 rules/PowerAnalysis.smk
-badd +153 config.yaml
+badd +154 config.yaml
 badd +33 rules/RNASeqMapping.smk
 badd +66 rules/sqtl_calling.smk
 badd +7 scripts/MakeMetaPlot.sh

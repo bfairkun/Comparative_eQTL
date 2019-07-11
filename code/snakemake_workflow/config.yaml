@@ -151,4 +151,4 @@ PowerAnalysis:
     #Chimp reference genome defined earlier
 
 LocusZoomDirectoryPath:
-    "/project/gilad/bjf79/software/locuszoom/"
+    "/project/gilad/bjf79/software/locusZoomWithLD/locuszoom/"

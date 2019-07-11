@@ -189,12 +189,14 @@ rule Make_GRM:
     input:
         bed =  "eQTL_mapping/Kinship/ForAssociationTesting.pruned.bed",
     output:
-        GRM = "eQTL_mapping/Kinship/GRM.cXX.txt"
+        GRM = "eQTL_mapping/Kinship/GRM.cXX.txt",
+        GRM_ouput = "../../output/GRM.cXX.txt"
     log:
         "logs/eQTL_mapping/make_GRM.log"
     shell:
         """
         gemma -gk 1 -bfile eQTL_mapping/Kinship/ForAssociationTesting.pruned -o GRM -outdir eQTL_mapping/Kinship &> {log}
+        cp {output.GRM} {output.GRM_output}
         """
 
 rule Make_King_GRM:
