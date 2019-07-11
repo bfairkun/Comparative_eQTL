@@ -47,7 +47,7 @@ Welcome to my research website.
 - [First crude analysis](20190627_DiffContactsEgenes.html) In this analysis I asked whether the there is a correlation between the rank difference in eGenes between species, and the difference in the sum of contacts in each species' cis-window for each gene
 - There was a slight but significant correlation, but I worry about a potential bias introduced by the fact that eGene significance for humans was based on cis-eQTL calling with a 1MB window and chimp was a 250kB window. I should control for this.
 - [Check that human lead snps in 250kB window are reasonable](20190708_DiffContactsEgenes_CisWindowControlled.html)
-- [After controlling for cis-window-size](20190708_DiffContactsEgenes_CisWindowControlled.html)
+- [After controlling for cis-window-size](20190808_HumanLeadSnps.html)
 
 ### Shared polymorphic loci
 - [QQ Plot of species shared polymorphisms](20190708_SpeciesSharedPolymorphisms_InitialQQPlot.html) Of all the shared polymorphic loci (putative targets of balancing selection), do they have inflated cis-eQTL P-values compared to a random set of snp-gene tests.
