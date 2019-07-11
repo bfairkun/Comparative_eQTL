@@ -1,0 +1,134 @@
+---
+title: "20190627_DiffContactsWithEgenes"
+author: "Ben Fair"
+date: "6/27/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+```{r load-libraries}
+library(tidyverse)
+library(knitr)
+library(corrplot)
+library(gplots)
+library(pROC)
+library(qvalue)
+library(reshape2)
+library(gridExtra)
+```
+
+
+
+
+```{r}
+SampleA<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_A-21792_10kb_norm.gz"), sep='\t')
+SampleB<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_B-28126_10kb_norm.gz"), sep='\t')
+SampleC<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_C-3649_10kb_norm.gz"), sep='\t')
+SampleD<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_D-40300_10kb_norm.gz"), sep='\t')
+SampleE<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_E-28815_10kb_norm.gz"), sep='\t')
+SampleF<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_F-28834_10kb_norm.gz"), sep='\t')
+SampleG<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_G-3624_10kb_norm.gz"), sep='\t')
+SampleH<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_H-3651_10kb_norm.gz"), sep='\t')
+
+HumanInteractions <- data.frame(H.Score = rowSums(cbind(SampleA, SampleB, SampleE, SampleF))) %>%
+  rownames_to_column() %>%
+  mutate(HumanID = gsub("(.+?)\\..+?", "\\1", rowname, perl=T))
+
+
+ChimpInteractions <- data.frame(C.Score = rowSums(cbind(SampleC, SampleD, SampleG, SampleH))) %>%
+  rownames_to_column("ChimpID")
+
+
+```
+
+
+Ok now read in eQTL data...
+
+```{r}
+eQTLs <- read.table(gzfile("../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz"), header=T)
+
+# List of chimp tested genes
+ChimpTestedGenes <- rownames(read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1))
+
+ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+kable(head(ChimpToHumanGeneMap))
+
+# Of this ortholog list, how many genes are one2one
+table(ChimpToHumanGeneMap$Chimpanzee.homology.type)
+OneToOneMap <- ChimpToHumanGeneMap %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one")
+
+HumanLeadSnps <- read.table(gzfile('../data/Heart_Left_Ventricle.v7.250kB.leadsnps.txt.gz'), col.names = c("gene", "snp", "tss.dist", "ma_samples", "ma_count", "maf", "p", "slope", "slope_se"))
+
+
+# Read gtex heart egene list
+# Only consider those that were tested in both species and are one2one orthologs
+GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F) %>% 
+  left_join(HumanLeadSnps, by=c("gene_id"="gene")) %>%
+  mutate(gene_id_stable = gsub(".\\d+$","",gene_id)) %>%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %>%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %>%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+ChimpToHuman.ID <- function(Chimp.ID){
+  #function to convert chimp ensembl to human ensembl gene ids
+  return(
+    plyr::mapvalues(Chimp.ID, OneToOneMap$Chimpanzee.gene.stable.ID, OneToOneMap$Gene.stable.ID, warn_missing = F)
+  )}
+```
+
+
+First question: do the ~300 chimp eGenes have more contacts in their cis-window in chimp
+
+```{r}
+
+Chimp_OrderedGenes <- eQTLs %>%
+    group_by(gene) %>% 
+    dplyr::slice(which.min(qvalue)) %>%
+    filter(gene %in% GtexHeartEgenes$chimp_id) %>%
+    left_join(GtexHeartEgenes, by=c("gene"="chimp_id")) %>%
+    dplyr::select(gene, qvalue, p) %>% as.data.frame() %>%
+    mutate(ChimpRank = dense_rank(qvalue)) %>%
+    mutate(HumanRank = dense_rank(p)) %>%
+    mutate(RankDifference = HumanRank-ChimpRank) %>%
+    filter(qvalue <0.1) %>%
+    mutate(HumanID=ChimpToHuman.ID(gene))
+
+# OneToOneMap %>%
+#   inner_join(HumanInteractions, by=c("Gene.stable.ID"="HumanId")) %>% dim()
+#   inner_join(ChimpInteractions, by=c("Chimpanzee.gene.stable.ID"="ChimpID")) %>% dim()
+#   right_join(Chimp_OrderedGenes, by=c("Chimpanzee.gene.stable.ID"="gene")) %>% dim()
+
+Chimp_OrderedGenes.WithContactInfo <- Chimp_OrderedGenes %>%
+  left_join(HumanInteractions, by=c("HumanID")) %>%
+  left_join(ChimpInteractions, by=c("gene"="ChimpID")) %>% 
+  mutate(InteractionDifference=H.Score - C.Score)
+
+  
+ggplot(Chimp_OrderedGenes.WithContactInfo, aes(x=InteractionDifference)) +
+  stat_ecdf(geom = "step") +
+  xlab("Difference in contacts over chimp eGene cis-windows\n(Positive means more contact in chimp)") +
+  ylab("Cumulative frequency") +
+  theme_bw()
+  
+ggplot(Chimp_OrderedGenes.WithContactInfo, aes(x=RankDifference, y=InteractionDifference)) +
+  geom_point() +
+  theme_bw() +
+  xlab("Rank Difference in eGene significance\nMore in human <--  --> More in chimp") +
+  ylab("Differential contacts in cis window\nMore in human <--  --> More in chimp") +
+  geom_smooth(method='lm',formula=y~x)
+
+cor.test(x=Chimp_OrderedGenes.WithContactInfo$RankDifference, y=Chimp_OrderedGenes.WithContactInfo$InteractionDifference, method="spearman")
+
+contacts.v.eGene.lm = lm(InteractionDifference ~ RankDifference, data=Chimp_OrderedGenes.WithContactInfo)
+summary(contacts.v.eGene.lm)
+plot(contacts.v.eGene.lm)
+```
+
+With this procedure, the correlation was weaker. The earlier observation, that chimp eGenes have more dna contacts in their cis-windows in chimp, is not robustly detected.
+
+
+The perhaps more sensitive way to ask a slightly different question, is this: do chimp eQTL snps (or conversely human eQTL snps), have more contacts between TSS and SNP in its respective species?

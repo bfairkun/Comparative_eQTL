@@ -1,0 +1,32 @@
+---
+title: "20190708_HumanLeadSnps"
+author: "Ben Fair"
+date: "7/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+The Gtex summary statistics I had been using previously are per-gene qvalues based on permutation test using lead snp to ask if a gene has an eQTL. This was all based on the GTEx v7 pipeline which tests for cis-eQTLs in 1MB window from TSS. However, since my chimp eQTL calling pipeline is based on a 250kB cis-window, this may bias the results of my [previous analysis]() where I concluded that Chimp eGenes have more DNA contacts in the 250kb cis-window in chimp than in human. To address this possible bias, I want to repeat the analysis with human eGene significance values based on a matched cis-window size (250kb). Therefore, I downloaded the full summary statistic table for human left-ventrical eQTLs (all snp-gene pairs) and obtained the lead snp for each gene. this will be used as my-gene level significance value in human. Note that my subsequent analysis is based on ranks of pvalues, so having pvalues that are not well calibrated isn't as important as getting the ranks of genes right.
+
+Below, I just want to check that there is some rank-correlation (as I would expect) between the lead-snp pvalues (when snps confined to a 250kb window), and the gene-level qvalue based on permutation test.
+
+```{r}
+library(tidyverse)
+HumanLeadSnps <- read.table(gzfile('../data/Heart_Left_Ventricle.v7.250kB.leadsnps.txt.gz'), col.names = c("gene", "snp", "tss.dist", "ma_samples", "ma_count", "maf", "p", "slope", "slope_se"))
+
+GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+
+Merged <- left_join(GtexHeartEgenes, HumanLeadSnps, by=c("gene_id"="gene"))
+
+ggplot(Merged, aes(x=-log10(qval), y=-log10(p))) +
+  geom_point(alpha=0.5)
+
+
+cor.test(Merged$p, Merged$qval, method='spearman')
+
+```
+
+The correlation is reassuring... I will move on with a repeat of my previous analysis based on these 250kb window lead snp pvalues in humans.

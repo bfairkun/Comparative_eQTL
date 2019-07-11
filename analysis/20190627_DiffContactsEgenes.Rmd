@@ -1,0 +1,153 @@
+---
+title: "20190627_DiffContactsWithEgenes"
+author: "Ben Fair"
+date: "6/27/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+```{r load-libraries}
+library(tidyverse)
+library(knitr)
+library("edgeR")
+library(corrplot)
+library(gplots)
+library(pROC)
+library(qvalue)
+library(reshape2)
+library(gridExtra)
+```
+
+As an initial pass at testing the hypothesis that Chimp-specific cis-eGenes have more DNA contacts at those cis-windows than humans in those same cis-windows, I looked at chimp/human differential contact windows from Eres et al and intersected in with my list of Chimp eGene locations (+/- 100kb). Then I looked at the sum of effect sizes within each of those windows.
+
+```{r}
+DataIn <- read.table("../data/DCContactsInEgenes.bed", col.names = c("chr", "start", "stop", "gene", "blank", "strand", "chrContact", "startContact", "beta", "nameContact", "beta", "strandContact"), sep='\t', row.names = NULL)
+
+GroupedData <- DataIn %>%
+  group_by(stop) %>%
+  summarise(BetaSum = sum(beta))
+
+ggplot(GroupedData, aes(x=BetaSum)) +
+  stat_ecdf(geom = "step") +
+  xlab("Differential contact effect size sum over Chimp eGenes cis-window\n(Negative means more contact in chimp)") +
+  ylab("Cumulative frequency") +
+  theme_bw()
+
+wilcox.test(GroupedData$BetaSum, mu = 0, alternative = "less")
+```
+
+
+Ok it seems there is a subtle but significant shift in that chimp eGenes have more differential contacts a way that slightly favors high connectivity in chimps.
+
+To explore this more carefully, Ittai gave me a list of Homer-normalized contact data (not just significant differential contacts and effect sizes) for all his 8 samples (4 human, 4 chimp) for the cis-window surrounding each eGene (+/- 250kb).
+
+From this I can estimate connectivity within a cis window as the sum of all Homer normalized contact scores within a species. Then I will look at the difference between that sum between species, and ask if it is correlated with some species measure of eGene character.
+
+First, read in Ittai's Homer normalized contact data for each individual in both chimp and human...
+
+```{r}
+SampleA<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_A-21792_10kb_norm.gz"), sep='\t')
+SampleB<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_B-28126_10kb_norm.gz"), sep='\t')
+SampleC<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_C-3649_10kb_norm.gz"), sep='\t')
+SampleD<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_D-40300_10kb_norm.gz"), sep='\t')
+SampleE<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_E-28815_10kb_norm.gz"), sep='\t')
+SampleF<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_F-28834_10kb_norm.gz"), sep='\t')
+SampleG<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_G-3624_10kb_norm.gz"), sep='\t')
+SampleH<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_H-3651_10kb_norm.gz"), sep='\t')
+
+HumanInteractions <- data.frame(H.Score = rowSums(cbind(SampleA, SampleB, SampleE, SampleF))) %>%
+  rownames_to_column() %>%
+  mutate(HumanID = gsub("(.+?)\\..+?", "\\1", rowname, perl=T))
+
+
+ChimpInteractions <- data.frame(C.Score = rowSums(cbind(SampleC, SampleD, SampleG, SampleH))) %>%
+  rownames_to_column("ChimpID")
+
+
+```
+
+
+Ok now read in eQTL data...
+
+```{r}
+eQTLs <- read.table(gzfile("../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz"), header=T)
+
+# List of chimp tested genes
+ChimpTestedGenes <- rownames(read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1))
+
+ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+kable(head(ChimpToHumanGeneMap))
+
+# Of this ortholog list, how many genes are one2one
+table(ChimpToHumanGeneMap$Chimpanzee.homology.type)
+OneToOneMap <- ChimpToHumanGeneMap %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one")
+
+# Read gtex heart egene list
+# Only consider those that were tested in both species and are one2one orthologs
+GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F) %>%
+  mutate(gene_id_stable = gsub(".\\d+$","",gene_id)) %>%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %>%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %>%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+ChimpToHuman.ID <- function(Chimp.ID){
+  #function to convert chimp ensembl to human ensembl gene ids
+  return(
+    plyr::mapvalues(Chimp.ID, OneToOneMap$Chimpanzee.gene.stable.ID, OneToOneMap$Gene.stable.ID, warn_missing = F)
+  )}
+```
+
+
+First question: do the ~300 chimp eGenes have more contacts in their cis-window in chimp
+
+```{r}
+
+Chimp_OrderedGenes <- eQTLs %>%
+    group_by(gene) %>% 
+    dplyr::slice(which.min(qvalue)) %>%
+    filter(gene %in% GtexHeartEgenes$chimp_id) %>%
+    left_join(GtexHeartEgenes, by=c("gene"="chimp_id")) %>%
+    dplyr::select(gene, qvalue, qval) %>% as.data.frame() %>%
+    mutate(ChimpRank = dense_rank(qvalue)) %>%
+    mutate(HumanRank = dense_rank(qval)) %>%
+    mutate(RankDifference = HumanRank-ChimpRank) %>%
+    filter(qvalue <0.1) %>%
+    mutate(HumanID=ChimpToHuman.ID(gene))
+
+# OneToOneMap %>%
+#   inner_join(HumanInteractions, by=c("Gene.stable.ID"="HumanId")) %>% dim()
+#   inner_join(ChimpInteractions, by=c("Chimpanzee.gene.stable.ID"="ChimpID")) %>% dim()
+#   right_join(Chimp_OrderedGenes, by=c("Chimpanzee.gene.stable.ID"="gene")) %>% dim()
+
+Chimp_OrderedGenes.WithContactInfo <- Chimp_OrderedGenes %>%
+  left_join(HumanInteractions, by=c("HumanID")) %>%
+  left_join(ChimpInteractions, by=c("gene"="ChimpID")) %>% 
+  mutate(InteractionDifference=H.Score - C.Score)
+
+  
+ggplot(Chimp_OrderedGenes.WithContactInfo, aes(x=InteractionDifference)) +
+  stat_ecdf(geom = "step") +
+  xlab("Difference in contacts over chimp eGene cis-windows\n(Positive means more contact in chimp)") +
+  ylab("Cumulative frequency") +
+  theme_bw()
+  
+ggplot(Chimp_OrderedGenes.WithContactInfo, aes(x=RankDifference, y=InteractionDifference)) +
+  geom_point() +
+  theme_bw() +
+  xlab("Rank Difference in eGene significance\nMore in human <--  --> More in chimp") +
+  ylab("Differential contacts in cis window\nMore in human <--  --> More in chimp") +
+  geom_smooth(method='lm',formula=y~x)
+
+cor.test(x=Chimp_OrderedGenes.WithContactInfo$RankDifference, y=Chimp_OrderedGenes.WithContactInfo$InteractionDifference, method="spearman")
+
+contacts.v.eGene.lm = lm(InteractionDifference ~ RankDifference, data=Chimp_OrderedGenes.WithContactInfo)
+summary(contacts.v.eGene.lm)
+plot(contacts.v.eGene.lm)
+```
+
+Ok yes, there is a slight correlation between chimp eGene character, and contacts in chimp. Now I am going to take a different approach to ask a similar question: Do lead chimp eQTLs have more contacts between a gene and its promoter window than human.
+
