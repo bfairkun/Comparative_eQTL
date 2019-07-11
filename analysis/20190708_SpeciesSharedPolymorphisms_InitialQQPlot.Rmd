@@ -1,0 +1,42 @@
+---
+title: "20190708_SpeciesSharedPolymorphisms_QQPlot"
+author: "Ben Fair"
+date: "7/9/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Lefler et al observed a number of species shared haplotpes (at least two shared snps) between chimp and human, which could be mainted through balancing selection. The targets of the selection were not always clear, and often the shared snps were non-coding, leading the authors to propose that they control gene expression. Some of the shared snps are in LD with eQTLs identified in human monocytes. Here I will check if I see these snps are eQTLs in my chimp heart samples. As an initial look at this, here I will plot a QQ-plot from my initial eQTL calling pipeline (250kb cis-window) for all snp-gene pairs for snps that were species shared polymorphisms, and a random sample of snp-gene pairs.
+
+```{r}
+library(tidyverse)
+
+shared.snps <- read.table('../output/SharedPolymorphisms.shared.chimpeqtls.txt', col.names = c('snp','gene','beta','stat','p','fdr','q'))
+
+random.snps <- read.table('../output/SharedPolymorphisms.random.chimpeqtls.txt', col.names = c('snp','gene','beta','stat','p','fdr','q'))
+
+ggplot(random.snps, aes(color="Random chimp variants", y=-log10(sort(p)), x=-log10(1:length(p)/length(p)))) +
+  geom_point() +
+  geom_point(data=shared.snps, aes(color="Variants shared with human")) +
+  xlab("-log10(Theoretical-Pvalues)") +
+  ylab("-log10(Observed-Pvalues)") +
+  geom_abline() +
+  theme_bw() +
+  theme(legend.position="bottom") +
+  theme(legend.title=element_blank())
+
+
+wilcox.test(random.snps$p, shared.snps$p, alternative='greater')
+
+```
+
+A few things to note that I could do more carefully to assess if the shared polymorphisms are acting as eQTLs:
+
+- a lot of the snps are not within 250kb of the target gene that they may be acting through. For example, the snps around FREM/GYPE locus are probably acting throuh GYPE, as this, like HLA, is involved in pathogen defense and under odd selection constraints. This is what Lefler proposed. However, the I did not test that snp-gene pair.
+- I should make some locus zoom plots in human and chimp for heart, since maybe these snps don't even act as eqtls in human heart.
+- IGFBP7 (ENSPTRP00000027670) might be a particularly interesting example of a putative balanced eQTL from Lefler et al to make a locuszoom plot for both species, as in GTEx it is a left-ventricle heart specific eQTL. However I see now this snp was not called in my chimp data. Maybe a locuszoom plot will still see tags. Why this snp was genotyped could also point to a genotype error... For example, it could be a duplicated region in the genome that was thrown out of my snp-calling pipeline but not Lefler et al's.
+- May be worthwhile making the same plot from human GTEx data for multiple tissues, since my chimp data is relatively underpowered.
+
