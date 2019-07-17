@@ -251,6 +251,9 @@ Shared.human.identity.plot
 Shared.chimp.dNdS.plot
 Shared.chimp.identity.plot
 
+ToPlot <- GtexHeartEgenes %>%
+  left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID"))
+
 ```
 
 Some general and unsurprising conclusions:

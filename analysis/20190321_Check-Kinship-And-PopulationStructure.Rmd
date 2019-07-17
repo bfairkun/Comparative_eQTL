@@ -94,3 +94,41 @@ Yerkes.Matrix['495',] %>%
   t() %>% kable()
 ```
 Can eliminate 495, 724, 462 as they are all also part of my cohort, and not related to 554.
+
+
+
+## Update for presentation:
+make same scatter plot (kinship estimated from wgs vs kinship from pedigree) based on the gemma-derived kinship matrix that i actually used for eqtl calling
+
+```{r}
+SampleLabels <- read.table('../output/ForAssociationTesting.temp.fam', stringsAsFactors = F)$V2
+GemmaMatrix <- as.matrix(read.table('../output/GRM.cXX.txt'))
+colnames(GemmaMatrix) <- SampleLabels
+row.names(GemmaMatrix) <- SampleLabels
+
+KSort <- melt(GemmaMatrix) %>%
+  mutate(ID1=as.character(Var1), ID2=as.character(Var2)) %>%
+  mutate(Teams = paste(pmin(ID1, ID2), pmax(ID1, ID2), sep= " - ")) %>%
+  distinct(Teams, .keep_all=T)
+YSort <- YerkesKinship_from_pedigree %>%
+  mutate(Teams = paste(pmin(ind1, ind2), pmax(ind1, ind2), sep= " - ")) %>%
+  distinct(Teams, .keep_all=T)
+# Merge and plot
+Merged <- merge(KSort, YSort, by="Teams")
+Merged$label <- Merged$Team
+Merged$label[Merged$coeff==0] <- ""
+
+Merged %>%
+  filter(!ID1==ID2) %>%
+ggplot(aes(x=coeff, y=value*2, label=label)) +
+  geom_point() +
+  geom_abline(slope=1, intercept=0, color="red") +
+  geom_text_repel(size=2.5) +
+  xlab("Kinship from Yerkes pedigree") +
+  ylab("Kinship from WGS (GEMMA)") +
+  theme_bw()
+  # geom_jitter()
+
+
+```
+

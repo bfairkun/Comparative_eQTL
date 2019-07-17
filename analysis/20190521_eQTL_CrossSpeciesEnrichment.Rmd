@@ -37,27 +37,7 @@ Here the dataset is eQTLs called from a model with the following pre-testing fil
 
 First, Read in the data...
 ```{r read-data}
-eQTLs <- read.table(gzfile("../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz"), header=T)
-kable(head(eQTLs))
 
-# List of chimp tested genes
-ChimpTestedGenes <- rownames(read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1))
-
-ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
-kable(head(ChimpToHumanGeneMap))
-
-# Of this ortholog list, how many genes are one2one
-table(ChimpToHumanGeneMap$Chimpanzee.homology.type)
-OneToOneMap <- ChimpToHumanGeneMap %>%
-  filter(Chimpanzee.homology.type=="ortholog_one2one")
-
-# Read gtex heart egene list
-# Only consider those that were tested in both species and are one2one orthologs
-GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F) %>%
-  mutate(gene_id_stable = gsub(".\\d+$","",gene_id)) %>%
-  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %>%
-  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %>%
-  filter(chimp_id %in% ChimpTestedGenes)
 
 ChimpToHuman.ID <- function(Chimp.ID){
   #function to convert chimp ensembl to human ensembl gene ids
@@ -153,8 +133,7 @@ HumanAndChimpEffectSizes <- Chimp_eQTLs %>%
     group_by(gene) %>%
     dplyr::slice(which.min(qvalue)) %>% 
     ungroup() %>%
-    left_join((GtexHeartEgenes %>% filter(qval<0.1)), by=c("gene"="chimp_id")) %>%
-    dplyr::select(gene, slope, beta)
+    left_join((GtexHeartEgenes %>% filter(qval<0.1)), by=c("gene"="chimp_id"))
 
 # For shared eGenes, are scatter plot of absolute value of betas
 ggplot(HumanAndChimpEffectSizes, aes(x=log10(abs(slope)), y=log10(abs(beta)))) +
@@ -167,9 +146,38 @@ ggplot(HumanAndChimpEffectSizes, aes(x=log10(abs(slope)), y=log10(abs(beta)))) +
   ylab("Chimp |beta|")
 
 cor.test(HumanAndChimpEffectSizes$slope, HumanAndChimpEffectSizes$beta,method='spearman')
+
+#Let's see how Pvalue correlate too
+ggplot(HumanAndChimpEffectSizes, aes(x=-log10(pvalue), y=-log10(pval_nominal))) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  theme_bw()
+
+cor.test(HumanAndChimpEffectSizes$pvalue, HumanAndChimpEffectSizes$pval_nominal,method='spearman')
+
+
+
 ```
 
-Effect sizes for cross-species eGenes appear uncorrelated. This might at first appear at odds with the greater-than-chance overlap for the same set of eGenes across sepecies. However, one explanation is that the above effect sizes analysis didn't consider non eGenes for which the null of effect-size=0 could not be rejected.
+Effect sizes for cross-species eGenes appear uncorrelated. This might at first appear at odds with the greater-than-chance overlap for the same set of eGenes across sepecies. However, one explanation is that the above effect sizes analysis didn't consider non eGenes for which the null of effect-size=0 could not be rejected. Let's include all genes test and plot Pvalues.
+
+```{r}
+
+EGenes.joined <- eQTLs %>%
+    group_by(gene) %>% 
+    dplyr::slice(which.min(qvalue)) %>%
+    inner_join(GtexHeartEgenes, by=c("gene"="chimp_id"))
+
+R<-cor(-log10(EGenes.joined$pvalue), -log10(EGenes.joined$pval_nominal), method="pearson")
+lb1 <- paste("~R^2==~", round(R**2,2))
+ggplot(EGenes.joined, aes(y=-log10(pvalue), x=-log10(pval_nominal)))+
+  geom_point() +
+  xlab('-log10(HumanHeart.Pvalue)') +
+  ylab('-log10(ChimpHeart.Pvalue)') +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+```
+
 
 OK, so now I will perform the same Odds ratio estimate and Fisher exact test for different thresholds/quantiles of the human data ordered by significance.
 
@@ -371,7 +379,7 @@ colnames(OddsRatioMatrix) <- TopChimpEgeneCountList
 
 melt(OddsRatioMatrix) %>%
   dplyr::rename(OddsRatio=value) %>%
-ggplot(aes(x=as.numeric(Var1),y=as.numeric(Var2), fill=OddsRatio)) +
+ggplot(aes(x=as.numeric(Var1),y=as.numeric(Var2), fill=log2(OddsRatio))) +
   geom_raster(interpolate=F) +
   xlab("Top N human eGenes") +
   ylab("Top N chimp eGenes") +
@@ -396,6 +404,99 @@ ggplot(aes(x=as.numeric(Var1),y=as.numeric(Var2), fill=OddsRatio)) +
   theme_bw() +
   theme(legend.position="bottom")
 
+
+## Same plot but as log2(OddsRatio)
+melt(OddsRatioMatrix) %>%
+  dplyr::rename(OddsRatio=value) %>%
+ggplot(aes(x=as.numeric(Var1),y=as.numeric(Var2), fill=log2(OddsRatio))) +
+  geom_raster(interpolate=F) +
+  xlab("Top N human eGenes") +
+  ylab("Top N chimp eGenes") +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_fill_distiller(palette = "Spectral", limits = c(-1,9)) +
+  theme_bw() +
+  theme(legend.position="bottom")
+
+```
+
+
+As a comparison, it might be valuable to make the same plot for a couple pairs of GTEx tissues. Perhaps Heart and adipose tissue (two very different tissues), and heart and skeletal muscle (two very similar tissues).
+
+```{r}
+
+
+# adipose ordered eGenes
+Tissue.1.Orig <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+Tissue.2.Orig <- read.table("../data/Adipose_Subcutaneous.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+
+#Filter to get genes tested in both
+Tissue.1 <- Tissue.1.Orig %>% filter(gene_id %in% Tissue.2.Orig$gene_id)
+Tissue.2 <- Tissue.2.Orig %>% filter(gene_id %in% Tissue.1.Orig$gene_id)
+
+#Plot correlation of pvalues
+
+Joined <- inner_join(Tissue.1, Tissue.2, by="gene_id")
+R<-cor(-log10(Tissue.1$pval_nominal), -log10(Tissue.2$pval_nominal), method="pearson")
+lb1 <- paste("~R^2==~", round(R**2,2))
+ggplot(Joined, aes(x=-log10(pval_nominal.x), y=-log10(pval_nominal.y)))+
+  geom_point() +
+  xlab('-log10(Heart.Pvalue)') +
+  ylab('-log10(Adipose.Pvalue)') +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+
+LengthOut=60
+
+Tissue1.EgeneCount <- Tissue.1 %>% filter(qval<0.05) %>% top_n(-5000, qval) %>% pull(qval) %>% length()
+Tissue2.EgeneCount <- Tissue.2 %>% filter(qval<0.05) %>% top_n(-5000, qval) %>% pull(qval) %>% length()
+Tissue1.EgeneCountList <- round(seq(1,Tissue1.EgeneCount, by=200))[-1]
+Tissue2.EgeneCountList <- round(seq(1,Tissue2.EgeneCount, by=200))[-1]
+
+OddsRatioMatrix <- matrix(nrow = length(Tissue1.EgeneCountList), ncol = length(Tissue2.EgeneCountList))
+
+for (i in seq_along(Tissue1.EgeneCountList)){
+  Tissue1.TopN <- Tissue1.EgeneCountList[i]
+
+# Filter human eGenes by topN qval
+Tissue.1.SigGenes <- Tissue.1 %>% top_n(-Tissue1.TopN, qval) %>% pull(gene_id)
+
+Tissue.1.NonSigGenes <- Tissue.1 %>%
+  filter(!gene_id %in% Tissue.1.SigGenes) %>%
+  pull(gene_id)
+
+for (j in seq_along(Tissue2.EgeneCountList)){
+  Tissue2.TopN <- Tissue2.EgeneCountList[j]
+  
+  Tissue.2.SigGenes <- Tissue.2 %>% top_n(-Tissue2.TopN, qval) %>% pull(gene_id)
+  Tissue.2.NonSigGenes <- Tissue.2 %>%
+    filter(!gene_id %in% Tissue.2.SigGenes) %>%
+    pull(gene_id)
+  
+  ContigencyTable <- matrix( c( length(intersect(Tissue.1.SigGenes,Tissue.2.SigGenes)),
+                              length(intersect(Tissue.1.SigGenes,Tissue.2.NonSigGenes)),
+                              length(intersect(Tissue.1.NonSigGenes,Tissue.2.SigGenes)),
+                              length(intersect(Tissue.1.NonSigGenes,Tissue.2.NonSigGenes))), 
+                           nrow = 2)
+  A<-fisher.test(ContigencyTable, conf.int=F)
+  OddsRatioMatrix[i,j] <- (as.numeric(A$estimate))
+}
+}
+
+row.names(OddsRatioMatrix) <- Tissue1.EgeneCountList
+colnames(OddsRatioMatrix) <- Tissue2.EgeneCountList
+
+melt(OddsRatioMatrix) %>%
+  dplyr::rename(OddsRatio=value) %>%
+ggplot(aes(x=as.numeric(Var1),y=as.numeric(Var2), fill=log2(OddsRatio))) +
+  geom_raster(interpolate=F) +
+  xlab("Top N heart eGenes") +
+  ylab("Top N adipose eGenes") +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0)) +
+  scale_fill_distiller(palette = "Spectral", limits = c(-1,9)) +
+  theme_bw() +
+  theme(legend.position="bottom")
 ```
 
 
