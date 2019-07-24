@@ -292,7 +292,7 @@ gsego.cc.chimp.high.var <- gseGO(gene = SortedGeneList,
 A<-as.data.frame(gsego.cc.chimp.high.var)
 bp2 <- simplify(gsego.cc.chimp.high.var, cutoff=0.7, by="p.adjust", select_fun=min)
 
-gseaplot2(gsego.cc.chimp.high.var, geneSetID = c("GO:0002263", "GO:0061061"), title="ChimpVariance - HumanVariance", pvalue_table = TRUE)
+gseaplot2(gsego.cc.chimp.high.var, geneSetID = c("GO:0002263", "GO:0061061", "GO:0072538", "GO:0000076"), title="ChimpVariance - HumanVariance", pvalue_table = TRUE)
 
 dotplot(bp2, font.size=8, showCategory=10)
 
@@ -305,26 +305,86 @@ gsego.all.chimp.high.var <- gseGO(gene = SortedGeneList,
                  ont = "ALL",
                  nPerm = 100000)
 A<-as.data.frame(gsego.all.chimp.high.var)
-A %>% as.data.frame() %>% filter(ONTOLOGY=="MF") %>% dplyr::select(Description)
+A %>% as.data.frame() %>% dplyr::select(ONTOLOGY, ID, Description, enrichmentScore) %>% arrange(desc(abs(enrichmentScore))) %>% head(20)
+
+A %>% as.data.frame() %>% dplyr::select(ONTOLOGY, ID, Description, enrichmentScore) %>% arrange(desc(abs(enrichmentScore))) %>% head(20)
+
 bp2 <- simplify(gsego.all.chimp.high.var, cutoff=0.7, by="p.adjust", select_fun=min)
+
+bp2 %>% as.data.frame() %>% dplyr::select(ONTOLOGY, ID, Description, enrichmentScore) %>% arrange(desc(abs(enrichmentScore))) %>% head(20)
+
+
 
 table(A$ONTOLOGY)
 A$ID
 
 ```
 
-Lets sort reverse and do GSEA
+Keep in mind GSEA finds both enrichment at both top and bottom of the list. MHC complex is on here, with higher enrichment in chimp
 
 ```{r}
-gsego.all.human.high.var <- gseGO(gene = (sort(SortedGeneList)*-1),
+CC.gsea <- gseGO(gene = SortedGeneList,
                  OrgDb = org.Hs.eg.db,
                  keyType = 'ENSEMBL',
                  maxGSSize = 500,
-                 ont = "ALL",
+                 ont = "CC",
                  nPerm = 100000)
-A<-as.data.frame(gsego.all.human.high.var)
-A %>% as.data.frame() %>% filter(ONTOLOGY=="MF") %>% dplyr::select(Description)
-bp2 <- simplify(gsego.all.human.high.var, cutoff=0.7, by="p.adjust", select_fun=min)
+
+BP.gsea <- gseGO(gene = SortedGeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "BP",
+                 nPerm = 1000000)
+
+MF.gsea <- gseGO(gene = SortedGeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "MF",
+                 nPerm = 100000)
+
+CC.gsea.simplified <- as.data.frame(simplify(CC.gsea))
+CC.gsea.simplified$OntologyCategory <- "Cellular.Component"
+BP.gsea.simplified <- as.data.frame(simplify(BP.gsea))
+BP.gsea.simplified$OntologyCategory <- "Biological.Process"
+MF.gsea.simplified <- as.data.frame(simplify(MF.gsea))
+MF.gsea.simplified$OntologyCategory <- "Molecular.Function"
+
+Combined <- rbind(
+      CC.gsea.simplified,
+      BP.gsea.simplified,
+      MF.gsea.simplified)
+
+Combined %>% 
+  group_by(OntologyCategory) %>%
+  top_n(n = 5, wt = abs(enrichmentScore)) %>%
+  ungroup() %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  facet_grid(OntologyCategory~., scales = "free") +
+  scale_colour_gradient(low="red", high="black") +
+  facet_grid(OntologyCategory~., scales = "free") +
+  labs(color = "Adjusted P-value") +
+  theme_bw()
+
+Combined %>% 
+  group_by(OntologyCategory) %>%
+  top_n(n = -7, wt = qvalues) %>%
+  top_n(n = 7, wt = setSize) %>%
+  ungroup() %>%
+  # group_by(OntologyCategory) %>%
+  # sample_n(8) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  facet_grid(OntologyCategory~., scales = "free") +
+  # scale_colour_gradient(low="red", high="black") +
+  # labs(color = "Adjusted P-value") +
+  theme_bw()
+
+
 ```
 
 

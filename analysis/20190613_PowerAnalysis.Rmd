@@ -298,7 +298,7 @@ RocCurve <- function(RocCurveData.df){
   PlotOut <- ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
   geom_line() +
   geom_point(data=RocCurveLandmarks, aes(x=1-specificity, y=sensitivity, color=factor(samplesize), shape=FDR)) +
-  xlab("false positive rate (1-sensitivity)") +
+  xlab("false positive rate (1-specificity)") +
   ylab("true positive rate (sensitivity)") +
   scale_colour_discrete(name  ="Sample size") +
   theme_bw()

@@ -75,9 +75,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -195,8 +193,6 @@ $(document).ready(function () {
   menuAnchor.closest('li.dropdown').addClass('active');
 });
 </script>
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -344,8 +340,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -354,6 +348,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -414,15 +418,15 @@ div.section {
 
 
 <h1 class="title toc-ignore">Check RNA-seq PCs</h1>
-<h4 class="author"><em>Ben Fair</em></h4>
-<h4 class="date"><em>3/20/2019</em></h4>
+<h4 class="author">Ben Fair</h4>
+<h4 class="date">3/20/2019</h4>
 
 </div>
 
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -431,7 +435,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -440,31 +444,31 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-04-03
+<strong>Last updated:</strong> 2019-07-24
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
 </p>
 <p>
 This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
-  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.2.0). The <em>Report</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
 </p>
 <hr>
 </div>
-<div id="report" class="tab-pane fade">
+<div id="checks" class="tab-pane fade">
 <div id="workflowr-checks" class="panel-group">
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </div>
 </div>
 </div>
@@ -519,10 +523,22 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreefc37682444bda6468e6954c8273d93fdca385897targetblankfc37682a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/fc37682444bda6468e6954c8273d93fdca385897" target="_blank">fc37682</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreefc37682444bda6468e6954c8273d93fdca385897targetblankfc37682a" class="panel-collapse collapse">
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreef469d6a4f228d33964d6e1facee2b7d3d4c54617targetblankf469d6aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/f469d6a4f228d33964d6e1facee2b7d3d4c54617" target="_blank">f469d6a</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreef469d6a4f228d33964d6e1facee2b7d3d4c54617targetblankf469d6aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -532,23 +548,25 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    analysis/figure/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/20190521_eQTL_CrossSpeciesEnrichment_cache/
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    docs/.DS_Store
+    Ignored:    docs/assets/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/20190321_Check-Kinship-And-PopulationStructure.Rmd
-    Untracked:  analysis/20190325_MergingRNASeqLanes.Rmd
-    Untracked:  analysis/20190326_Admixture.Rmd
-    Untracked:  analysis/20190326_PCA.Rmd
-    Untracked:  analysis/20190327_MakeFamAndCovariateFiles.Rmd
-    Untracked:  analysis/20190327_MakeFamPhenotypeFile.Rmd
-    Untracked:  docs/figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/
-    Untracked:  docs/figure/20190325_MergingRNASeqLanes.Rmd/
-    Untracked:  docs/figure/20190326_PCA.Rmd/
+    Untracked:  GSEA_eQTL.pdf
+    Untracked:  Rplot01.pdf
 
 Unstaged changes:
-    Deleted:    ._workflowr.yml.swp
-    Modified:   analysis/20190320_Check-RNAseq-PCs.Rmd
-    Modified:   analysis/index.Rmd
+    Modified:   analysis/20190521_eQTL_CrossSpeciesEnrichment.Rmd
+    Modified:   analysis/20190613_PowerAnalysis.Rmd
+    Modified:   analysis/20190708_DiffContactsEgenes_CisWindowControlled.Rmd
+    Modified:   analysis/20190716_VarianceInsteadOfEgenes.Rmd
 
 </code></pre>
 <p>
@@ -561,9 +579,86 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f469d6a4f228d33964d6e1facee2b7d3d4c54617/analysis/20190321_Check-Kinship-And-PopulationStructure.Rmd" target="_blank">f469d6a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-16
+</td>
+<td>
+new analyses
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e5923352fa1aeb42041e564534e8e145011d505d/analysis/20190321_Check-Kinship-And-PopulationStructure.Rmd" target="_blank">e592335</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-03
+</td>
+<td>
+build site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/e5923352fa1aeb42041e564534e8e145011d505d/docs/20190321_Check-Kinship-And-PopulationStructure.html" target="_blank">e592335</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-03
+</td>
+<td>
+build site
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -708,9 +803,20 @@ kable(head(Kinship_from_KING.WGS))</code></pre>
 <td align="right">-0.0702</td>
 <td align="right">0</td>
 </tr>
+<tr class="odd">
+<td align="left">Plot the kinship matrix obta</td>
+<td align="left">ined from Y</td>
+<td align="left">erkes ped</td>
+<td align="right">igree data</td>
+<td align="right">, as</td>
+<td align="right">well a</td>
+<td align="right">s the mat</td>
+<td align="right">rix obtai</td>
+<td align="right">ned from w</td>
+<td align="right">hole genome SNP data…</td>
+</tr>
 </tbody>
 </table>
-<p>Plot the kinship matrix obtained from Yerkes pedigree data, as well as the matrix obtained from whole genome SNP data…</p>
 <pre class="r"><code>Yerkes.Matrix &lt;-acast(YerkesKinship_from_pedigree, ind1 ~ ind2, value.var=&quot;coeff&quot;, fill=0)
 melt(Yerkes.Matrix) %&gt;%
   ggplot(aes(x=Var1, y=Var2, fill=value)) +
@@ -718,6 +824,43 @@ melt(Yerkes.Matrix) %&gt;%
     scale_fill_gradient(low=&quot;blue&quot;, high=&quot;red&quot;, limits=c(-0.5, 0.5)) +
     theme(text = element_text(size=4), axis.text.x = element_text(angle=90, hjust=1))</code></pre>
 <p><img src="figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e5923352fa1aeb42041e564534e8e145011d505d/docs/figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/unnamed-chunk-1-1.png" target="_blank">e592335</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>WGS.Matrix &lt;- acast(Kinship_from_KING.WGS, ID1 ~ ID2, value.var=&quot;Kinship&quot;, fill=0) + acast(Kinship_from_KING.WGS, ID2 ~ ID1, value.var=&quot;Kinship&quot;, fill=0)
 melt(WGS.Matrix) %&gt;%
   ggplot(aes(x=Var1, y=Var2, fill=value)) +
@@ -725,6 +868,43 @@ melt(WGS.Matrix) %&gt;%
     scale_fill_gradient(low=&quot;blue&quot;, high=&quot;red&quot;, limits=c(-0.5, 0.5)) +
     theme(text = element_text(size=7), axis.text.x = element_text(angle=90, hjust=1))</code></pre>
 <p><img src="figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/unnamed-chunk-1-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-2">
+Past versions of unnamed-chunk-1-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e5923352fa1aeb42041e564534e8e145011d505d/docs/figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/unnamed-chunk-1-2.png" target="_blank">e592335</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Let’s fix a known sample mislabel… 554_2 is actually 554. And 554 is actually unknown.</p>
 <pre class="r"><code>Kinship_from_KING.WGS$ID1 &lt;- mapvalues(Kinship_from_KING.WGS$ID1, from=c(&quot;554_2&quot;), to=c(&quot;554&quot;))
 Kinship_from_KING.WGS$ID2 &lt;- mapvalues(Kinship_from_KING.WGS$ID2, from=c(&quot;554_2&quot;), to=c(&quot;554&quot;))</code></pre>
@@ -746,6 +926,43 @@ ggplot(Merged, aes(x=coeff, y=Kinship, label=label)) +
   xlab(&quot;Kinship from Yerkes pedigree&quot;) +
   ylab(&quot;Kinship from WGS (KING algorithm)&quot;)</code></pre>
 <p><img src="figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e5923352fa1aeb42041e564534e8e145011d505d/docs/figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/unnamed-chunk-3-1.png" target="_blank">e592335</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-04-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>  # geom_jitter()</code></pre>
 <p>The expected value of Kinships coefficients from KING seem to match pedigree info, with the exception of sample 554 (not to be confused with 554_2 which for purposes of matching KING coefficients to pedigree coefficients we relabelled as 554) which we had prior knowledge to be a mislabelled sample… Hence why 554 is unrelated to a point labelled 554 (actually 554_2). Assuming sample 554 came from Yerkes, we might be able to correlate its kinship coefficients to other Yerkes chimps to help identify it. Bryan Pavlovic already did this for me by looking at the kinship matrices by hand and concluded that 554 is most likely Booka, but here I will repeat that analysis…</p>
 <pre class="r"><code># Find who 554 is related to from whole genome SNP data.
@@ -773,9 +990,16 @@ WGS.Matrix[&#39;554&#39;,] %&gt;%
 <td align="right">0.0348</td>
 <td align="right">0.0328</td>
 </tr>
+<tr class="even">
+<td align="right">…554 lo</td>
+<td align="right">oks relat</td>
+<td align="right">ed to 495</td>
+<td align="right">(Amos),</td>
+<td align="right">perhaps 2</td>
+<td align="right">nd or 3rd degree relationship</td>
+</tr>
 </tbody>
 </table>
-<p>…554 looks related to 495 (Amos), perhaps 2nd or 3rd degree relationship</p>
 <pre class="r"><code># Find who to Amos is related from Yerkes Pedigree
 Yerkes.Matrix[&#39;495&#39;,] %&gt;%
   sort(decreasing=T) %&gt;%
@@ -829,9 +1053,62 @@ Yerkes.Matrix[&#39;495&#39;,] %&gt;%
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
+<tr class="even">
+<td align="right">Can el</td>
+<td align="right">iminate</td>
+<td align="right">495, 72</td>
+<td align="right">4, 462 a</td>
+<td align="right">s they a</td>
+<td align="right">re all al</td>
+<td align="right">so part o</td>
+<td align="right">f my c</td>
+<td align="right">ohort,</td>
+<td align="right">and n</td>
+<td align="right">ot rel</td>
+<td align="right">ated t</td>
+<td align="right">o 554.</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+</tr>
 </tbody>
 </table>
-Can eliminate 495, 724, 462 as they are all also part of my cohort, and not related to 554. <br> <br>
+<div id="update-for-presentation" class="section level2">
+<h2>Update for presentation:</h2>
+<p>make same scatter plot (kinship estimated from wgs vs kinship from pedigree) based on the gemma-derived kinship matrix that i actually used for eqtl calling</p>
+<pre class="r"><code>SampleLabels &lt;- read.table(&#39;../output/ForAssociationTesting.temp.fam&#39;, stringsAsFactors = F)$V2
+GemmaMatrix &lt;- as.matrix(read.table(&#39;../output/GRM.cXX.txt&#39;))
+colnames(GemmaMatrix) &lt;- SampleLabels
+row.names(GemmaMatrix) &lt;- SampleLabels
+
+KSort &lt;- melt(GemmaMatrix) %&gt;%
+  mutate(ID1=as.character(Var1), ID2=as.character(Var2)) %&gt;%
+  mutate(Teams = paste(pmin(ID1, ID2), pmax(ID1, ID2), sep= &quot; - &quot;)) %&gt;%
+  distinct(Teams, .keep_all=T)
+YSort &lt;- YerkesKinship_from_pedigree %&gt;%
+  mutate(Teams = paste(pmin(ind1, ind2), pmax(ind1, ind2), sep= &quot; - &quot;)) %&gt;%
+  distinct(Teams, .keep_all=T)
+# Merge and plot
+Merged &lt;- merge(KSort, YSort, by=&quot;Teams&quot;)
+Merged$label &lt;- Merged$Team
+Merged$label[Merged$coeff==0] &lt;- &quot;&quot;
+
+Merged %&gt;%
+  filter(!ID1==ID2) %&gt;%
+ggplot(aes(x=coeff, y=value*2, label=label)) +
+  geom_point() +
+  geom_abline(slope=1, intercept=0, color=&quot;red&quot;) +
+  geom_text_repel(size=2.5) +
+  xlab(&quot;Kinship from Yerkes pedigree&quot;) +
+  ylab(&quot;Kinship from WGS (GEMMA)&quot;) +
+  theme_bw()</code></pre>
+<p><img src="figure/20190321_Check-Kinship-And-PopulationStructure.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  # geom_jitter()</code></pre>
+<br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
 <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
@@ -854,24 +1131,26 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] ggrepel_0.8.0   knitr_1.22      readxl_1.1.0    forcats_0.4.0  
- [5] stringr_1.4.0   dplyr_0.8.0.1   purrr_0.3.2     readr_1.3.1    
- [9] tidyr_0.8.2     tibble_2.1.1    ggplot2_3.1.0   tidyverse_1.2.1
+ [1] ggrepel_0.8.1   knitr_1.23      readxl_1.3.1    forcats_0.4.0  
+ [5] stringr_1.4.0   dplyr_0.8.1     purrr_0.3.2     readr_1.3.1    
+ [9] tidyr_0.8.3     tibble_2.1.3    ggplot2_3.1.1   tidyverse_1.2.1
 [13] reshape2_1.4.3  plyr_1.8.4     
 
 loaded via a namespace (and not attached):
- [1] tidyselect_0.2.5 xfun_0.6         haven_2.1.0      lattice_0.20-38 
+ [1] tidyselect_0.2.5 xfun_0.7         haven_2.1.0      lattice_0.20-38 
  [5] colorspace_1.4-1 generics_0.0.2   htmltools_0.3.6  yaml_2.2.0      
- [9] rlang_0.3.3      pillar_1.3.1     glue_1.3.1       withr_2.1.2     
-[13] modelr_0.1.4     munsell_0.5.0    gtable_0.3.0     workflowr_1.2.0 
-[17] cellranger_1.1.0 rvest_0.3.2      evaluate_0.13    labeling_0.3    
-[21] highr_0.8        broom_0.5.1      Rcpp_1.0.1       scales_1.0.0    
-[25] backports_1.1.3  jsonlite_1.6     fs_1.2.6         hms_0.4.2       
-[29] digest_0.6.18    stringi_1.4.3    grid_3.5.1       rprojroot_1.3-2 
+ [9] rlang_0.3.4      pillar_1.4.1     glue_1.3.1       withr_2.1.2     
+[13] modelr_0.1.4     munsell_0.5.0    gtable_0.3.0     workflowr_1.4.0 
+[17] cellranger_1.1.0 rvest_0.3.4      evaluate_0.14    labeling_0.3    
+[21] highr_0.8        broom_0.5.2      Rcpp_1.0.1       scales_1.0.0    
+[25] backports_1.1.4  jsonlite_1.6     fs_1.3.1         hms_0.4.2       
+[29] digest_0.6.19    stringi_1.4.3    grid_3.5.1       rprojroot_1.3-2 
 [33] cli_1.1.0        tools_3.5.1      magrittr_1.5     lazyeval_0.2.2  
-[37] crayon_1.3.4     pkgconfig_2.0.2  xml2_1.2.0       lubridate_1.7.4 
-[41] assertthat_0.2.1 rmarkdown_1.11   httr_1.4.0       rstudioapi_0.10 
-[45] R6_2.4.0         nlme_3.1-137     git2r_0.24.0     compiler_3.5.1  </code></pre>
+[37] crayon_1.3.4     whisker_0.3-2    pkgconfig_2.0.2  xml2_1.2.0      
+[41] lubridate_1.7.4  assertthat_0.2.1 rmarkdown_1.13   httr_1.4.0      
+[45] rstudioapi_0.10  R6_2.4.0         nlme_3.1-140     git2r_0.25.2    
+[49] compiler_3.5.1  </code></pre>
+</div>
 </div>
 
 
