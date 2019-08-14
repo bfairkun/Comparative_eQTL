@@ -37,7 +37,27 @@ Here the dataset is eQTLs called from a model with the following pre-testing fil
 
 First, Read in the data...
 ```{r read-data}
+eQTLs <- read.table(gzfile("../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz"), header=T)
+kable(head(eQTLs))
 
+# List of chimp tested genes
+	ChimpTestedGenes <- rownames(read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1))
+	
+	ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+	kable(head(ChimpToHumanGeneMap))
+	
+	# Of this ortholog list, how many genes are one2one
+	table(ChimpToHumanGeneMap$Chimpanzee.homology.type)
+	OneToOneMap <- ChimpToHumanGeneMap %>%
+	  filter(Chimpanzee.homology.type=="ortholog_one2one")
+	
+	# Read gtex heart egene list
+	# Only consider those that were tested in both species and are one2one orthologs
+	GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F) %>%
+	  mutate(gene_id_stable = gsub(".\\d+$","",gene_id)) %>%
+	  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %>%
+	  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %>%
+	  filter(chimp_id %in% ChimpTestedGenes)
 
 ChimpToHuman.ID <- function(Chimp.ID){
   #function to convert chimp ensembl to human ensembl gene ids
@@ -751,6 +771,7 @@ gseaplot2(gsego.cc.shared, geneSetID = c("GO:0042611", "GO:0042613", "GO:0032588
 Ok that does return MHC as expect. Now I will create chimp-qval-ordered gene list for genes that are not human eGenes. I expect this to not return MHC. Instead,I expect this to return similar results as gene overlap analysis with forground as chimp-specific eGenes and background as all chimp-eGenes (nucleic acid binding, etc).
 
 ```{r}
+
 Chimp_OrderedGenes <- eQTLs %>%
     group_by(gene) %>% 
     dplyr::slice(which.min(qvalue)) %>%
@@ -803,17 +824,20 @@ Nothing is significant by any notable treshold by this method...
 
 Perhaps I need to limit the gene set to genes which were called as eGenes in chimps, since many too many chimp non-eGenes may contribute to noise.
 
-```{r}
+```{r GoodOne}
+#Relative rank instead of rank
 Chimp_OrderedGenes <- eQTLs %>%
     group_by(gene) %>% 
     dplyr::slice(which.min(qvalue)) %>%
     filter(gene %in% GtexHeartEgenes$chimp_id) %>%
     left_join(GtexHeartEgenes, by=c("gene"="chimp_id")) %>%
     dplyr::select(gene, qvalue, qval) %>% as.data.frame() %>%
-    mutate(ChimpRank = dense_rank(qvalue)) %>%
-    mutate(HumanRank = dense_rank(qval)) %>%
-    mutate(RankDifference = HumanRank-ChimpRank) %>%
     filter(qvalue <0.1) %>%
+    mutate(ChimpRank = dense_rank(qvalue)) %>%
+    mutate(ChimpRelativeRank = ChimpRank/max(ChimpRank)) %>%
+    mutate(HumanRank = dense_rank(qval)) %>%
+    mutate(HumanRelativeRank = HumanRank/max(HumanRank)) %>%
+    mutate(RankDifference = HumanRank-ChimpRank) %>%
     arrange(desc(RankDifference))
 GeneList <- Chimp_OrderedGenes$RankDifference
 names(GeneList) <- as.character(ChimpToHuman.ID(Chimp_OrderedGenes$gene))
@@ -825,12 +849,113 @@ gsego.cc.chimpspecific <- gseGO(gene = GeneList,
                  ont = "BP",
                  nPerm = 100000)
 kable(head(as.data.frame(gsego.cc.chimpspecific), 2))
-gseaplot2(gsego.cc.chimpspecific, geneSetID = c("GO:0006366","GO:0044260"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
+gseaplot2(gsego.cc.chimpspecific, geneSetID = c("GO:0006366","GO:0006355"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
 
 dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=38)
-
-
 ```
+
+Now let's do the GSEA more carefully (covering all Gene Ontology categories; BP, MF, CC) and plot it together for a more pretty figure.
+
+```{r eval=F}
+#put eval=F as temporary fix since this block throws an error since some GSEA results return zero hits, so cbind doesn't work
+CC.gsea <- gseGO(gene = GeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "CC",
+                 nPerm = 100000)
+
+BP.gsea <- gseGO(gene = GeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "BP",
+                 nPerm = 1000000)
+
+MF.gsea <- gseGO(gene = GeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "MF",
+                 nPerm = 100000)
+
+CC.gsea.simplified <- as.data.frame(simplify(CC.gsea))
+# CC.gsea.simplified$OntologyCategory <- "Cellular.Component"
+BP.gsea.simplified <- as.data.frame(simplify(BP.gsea))
+BP.gsea.simplified$OntologyCategory <- "Biological.Process"
+MF.gsea.simplified <- as.data.frame(simplify(MF.gsea))
+# MF.gsea.simplified$OntologyCategory <- "Molecular.Function"
+
+Combined <- rbind(
+      CC.gsea.simplified,
+      BP.gsea.simplified,
+      MF.gsea.simplified)
+
+Combined %>% 
+  group_by(OntologyCategory) %>%
+  # top_n(n = 5, wt = abs(enrichmentScore)) %>%
+  ungroup() %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  facet_grid(OntologyCategory~., scales = "free") +
+  scale_colour_gradient(low="red", high="black") +
+  facet_grid(OntologyCategory~., scales = "free") +
+  labs(color = "Adjusted P-value") +
+  theme_bw()
+
+Combined %>% 
+  group_by(OntologyCategory) %>%
+  top_n(n = -7, wt = qvalues) %>%
+  top_n(n = 7, wt = setSize) %>%
+  ungroup() %>%
+  # group_by(OntologyCategory) %>%
+  # sample_n(8) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  facet_grid(OntologyCategory~., scales = "free") +
+  # scale_colour_gradient(low="red", high="black") +
+  # labs(color = "Adjusted P-value") +
+  theme_bw()
+```
+
+Maybe I should have been using relative (percentile ranks) instead of ranks
+
+```{r}
+#Relative rank instead of rank
+Chimp_OrderedGenes <- eQTLs %>%
+    group_by(gene) %>% 
+    dplyr::slice(which.min(qvalue)) %>%
+    filter(gene %in% GtexHeartEgenes$chimp_id) %>%
+    left_join(GtexHeartEgenes, by=c("gene"="chimp_id")) %>%
+    dplyr::select(gene, qvalue, qval) %>% as.data.frame() %>%
+    filter(qvalue <0.1) %>%
+    mutate(ChimpRank = dense_rank(qvalue)) %>%
+    mutate(ChimpRelativeRank = ChimpRank/max(ChimpRank)) %>%
+    mutate(HumanRank = dense_rank(qval)) %>%
+    mutate(HumanRelativeRank = HumanRank/max(HumanRank)) %>%
+    mutate(RelativeRankDifference = HumanRelativeRank-ChimpRelativeRank) %>%
+    mutate(RankDifference = HumanRank-ChimpRank) %>%
+  
+    arrange(desc(RankDifference))
+GeneList <- Chimp_OrderedGenes$RankDifference
+names(GeneList) <- as.character(ChimpToHuman.ID(Chimp_OrderedGenes$gene))
+    
+gsego.cc.chimpspecific <- gseGO(gene = GeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "BP",
+                 nPerm = 100000)
+kable(head(as.data.frame(gsego.cc.chimpspecific), 2))
+gseaplot2(gsego.cc.chimpspecific, geneSetID = c("GO:1903506"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
+simplified <- simplify(gsego.cc.chimpspecific)
+dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=37)
+```
+
+
+
 Alright. Great. that analysis recapitulated the gene overlap analysis of [foreground=Chimp-specific-eGenes; background=all-chimp-eGenes] in the sense that terms like 'gene transcription' pop up.
 
 Let's look at some of the genes in this GO category that are at the top of this ranked metric (have more eGene character in chimp than human)
@@ -846,6 +971,7 @@ PolII.genes.in.set <- gsea.results %>%
 PolII.genes.in.set
 ```
 CTCF (ENSG00000102974) and HSF1 (ENSG00000185122) sticks out as something interesting and recognizeable genes. Also, quite a few zinc-finger proteins (ZNF821, ZNF551, ZNF250, ZFP82, ZNF256, PRDM10) Let's see exactly where they are on this ranked list...
+
 ```{r}
 
 # All the top genes by this difference in ranks ordered gene list
@@ -860,7 +986,7 @@ GeneSymbolAdded %>%
 
 ```
 
-CTCF and other zinc fingers are among the top in the list (some top chimp eGenes but not for human). This surprises me considering I think of CTCF as so conserved across large evolutionary distance. I will have to look back at more raw data to reassure myself that these chimp eQTLs are real.
+CTCF and other zinc fingers are among the top in the list (some top chimp eGenes but not for human). This surprises me considering I think of CTCF as so conserved across large evolutionary distance. I will have to look back at more raw data to reassure myself that these chimp eQTLs are real. Also have to keep in mind zinc fingers are one of most common motifs in genome, and there is a GO term for this, so the abundance of zinc-finger proteins may not be meaningful enrichment.
 
 
 

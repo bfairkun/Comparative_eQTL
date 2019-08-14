@@ -444,7 +444,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-07-11
+<strong>Last updated:</strong> 2019-08-06
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -468,7 +468,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -535,10 +535,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree1e57d2352dcedcdc056b36d995bcb0dd1fd93dcftargetblank1e57d23a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/1e57d2352dcedcdc056b36d995bcb0dd1fd93dcf" target="_blank">1e57d23</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreee9747fe1160eea2ddd59d851d92d4f18ddd9d35dtargetblanke9747fea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/e9747fe1160eea2ddd59d851d92d4f18ddd9d35d" target="_blank">e9747fe</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree1e57d2352dcedcdc056b36d995bcb0dd1fd93dcftargetblank1e57d23a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreee9747fe1160eea2ddd59d851d92d4f18ddd9d35dtargetblanke9747fea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -550,20 +550,24 @@ Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/20190521_eQTL_CrossSpeciesEnrichment_cache/
+    Ignored:    analysis/figure/
     Ignored:    analysis_temp/.DS_Store
     Ignored:    code/.DS_Store
     Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    code/snakemake_workflow/rules/.eQTL_analysis.smk.swp
     Ignored:    data/.DS_Store
     Ignored:    data/PastAnalysesDataToKeep/.DS_Store
     Ignored:    docs/.DS_Store
     Ignored:    docs/assets/.DS_Store
 
-Untracked files:
-    Untracked:  analysis/20190627_DiffContactsEgenes.Rmd
-    Untracked:  analysis/20190708_DiffContactsEgenes_CisWindowControlled.Rmd
-    Untracked:  analysis/20190708_SpeciesSharedPolymorphisms_InitialQQPlot.Rmd
-    Untracked:  analysis/20190808_HumanLeadSnps.Rmd
-    Untracked:  docs/figure/20190627_DiffContactsEgenes.Rmd/
+Unstaged changes:
+    Modified:   analysis/20190521_eQTL_CrossSpeciesEnrichment.Rmd
+    Modified:   analysis/20190627_DiffContactsEgenes.Rmd
+    Modified:   analysis/20190708_DiffContactsEgenes_CisWindowControlled.Rmd
+    Modified:   analysis/20190716_VarianceInsteadOfEgenes.Rmd
+    Modified:   analysis/index.Rmd
+    Modified:   code/snakemake_workflow/Session.vim
+    Modified:   code/snakemake_workflow/rules/eQTL_analysis.smk
 
 </code></pre>
 <p>
@@ -576,9 +580,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/34e6b4f4c30464c6c32619d985b9663b392de4fb/analysis/20190627_DiffContactsEgenes.Rmd" target="_blank">34e6b4f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/34e6b4f4c30464c6c32619d985b9663b392de4fb/docs/20190627_DiffContactsEgenes.html" target="_blank">34e6b4f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+<td>
+update site
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -605,6 +669,43 @@ ggplot(GroupedData, aes(x=BetaSum)) +
   ylab(&quot;Cumulative frequency&quot;) +
   theme_bw()</code></pre>
 <p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/34e6b4f4c30464c6c32619d985b9663b392de4fb/docs/figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-1-1.png" target="_blank">34e6b4f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>wilcox.test(GroupedData$BetaSum, mu = 0, alternative = &quot;less&quot;)</code></pre>
 <pre><code>
     Wilcoxon signed rank test
@@ -624,6 +725,10 @@ SampleE&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindo
 SampleF&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_F-28834_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
 SampleG&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_G-3624_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
 SampleH&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_H-3651_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
+
+ChimpInteractionSums &lt;- SampleC + SampleD + SampleG + SampleH
+HumanInteractionSums &lt;- SampleA + SampleB + SampleE + SampleF
+
 
 HumanInteractions &lt;- data.frame(H.Score = rowSums(cbind(SampleA, SampleB, SampleE, SampleF))) %&gt;%
   rownames_to_column() %&gt;%
@@ -788,6 +893,43 @@ ggplot(Chimp_OrderedGenes.WithContactInfo, aes(x=InteractionDifference)) +
   ylab(&quot;Cumulative frequency&quot;) +
   theme_bw()</code></pre>
 <p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/34e6b4f4c30464c6c32619d985b9663b392de4fb/docs/figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-1.png" target="_blank">34e6b4f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>ggplot(Chimp_OrderedGenes.WithContactInfo, aes(x=RankDifference, y=InteractionDifference)) +
   geom_point() +
   theme_bw() +
@@ -795,6 +937,43 @@ ggplot(Chimp_OrderedGenes.WithContactInfo, aes(x=InteractionDifference)) +
   ylab(&quot;Differential contacts in cis window\nMore in human &lt;--  --&gt; More in chimp&quot;) +
   geom_smooth(method=&#39;lm&#39;,formula=y~x)</code></pre>
 <p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-2">
+Past versions of unnamed-chunk-4-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/34e6b4f4c30464c6c32619d985b9663b392de4fb/docs/figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-2.png" target="_blank">34e6b4f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cor.test(x=Chimp_OrderedGenes.WithContactInfo$RankDifference, y=Chimp_OrderedGenes.WithContactInfo$InteractionDifference, method=&quot;spearman&quot;)</code></pre>
 <pre><code>
     Spearman&#39;s rank correlation rho
@@ -827,8 +1006,220 @@ Residual standard error: 55.08 on 167 degrees of freedom
 Multiple R-squared:  0.02951,   Adjusted R-squared:  0.0237 
 F-statistic: 5.078 on 1 and 167 DF,  p-value: 0.02553</code></pre>
 <pre class="r"><code>plot(contacts.v.eGene.lm)</code></pre>
-<p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-5.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-6.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Ok yes, there is a slight correlation between chimp eGene character, and contacts in chimp. Now I am going to take a different approach to ask a similar question: Do lead chimp eQTLs have more contacts between a gene and its promoter window than human.</p>
+<p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-3">
+Past versions of unnamed-chunk-4-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/34e6b4f4c30464c6c32619d985b9663b392de4fb/docs/figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-3.png" target="_blank">34e6b4f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-4">
+Past versions of unnamed-chunk-4-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/34e6b4f4c30464c6c32619d985b9663b392de4fb/docs/figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-4.png" target="_blank">34e6b4f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-5">
+Past versions of unnamed-chunk-4-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/34e6b4f4c30464c6c32619d985b9663b392de4fb/docs/figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-5.png" target="_blank">34e6b4f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-6.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-6">
+Past versions of unnamed-chunk-4-6.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-6" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/34e6b4f4c30464c6c32619d985b9663b392de4fb/docs/figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-4-6.png" target="_blank">34e6b4f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ok yes, there is a slight correlation between chimp eGene character, and contacts in chimp. Now I am going to take a different approach to ask a similar question: Do lead chimp eQTL SNPs have more contacts between a gene and its promoter window than human.</p>
+<p>First, I will read in genomic corrdinates of chimp genes, so I can identify which the correct hi-C interaction point between the SNP-containing 10kb window and the gene promoter for chimp data. Then, I will need to liftover the top eQTL-SNPs into human coordinates (and their human gene names) and identify the orthologous Hi-C interaction point. Finally, I will test if these distributions are significantly different, with the expectation that the chimp eQTL SNPs will have stronger contacts in chimp. The recipricol analysis (human centric) will also be useful.</p>
+<pre class="r"><code>#read in gene coordinates of chimp genes
+ChimpGeneLocs &lt;- read.table(&quot;../data/ChimpEgenes.bed&quot;, col.names = c(&quot;chrom&quot;, &quot;start&quot;, &quot;stop&quot;, &quot;gene&quot;, &quot;score&quot;, &quot;strand&quot;)) %&gt;%
+  mutate(TSS.Coord = case_when(
+    strand == &quot;+&quot; ~ start,
+    strand == &quot;-&quot; ~ stop
+  ))
+
+# Get lead snps for eQTLs, find the HiC bin number.
+Top.Chimp.eQTL.SNPs &lt;- eQTLs %&gt;%
+    group_by(gene) %&gt;%
+    filter(qvalue &lt;0.1) %&gt;%
+    dplyr::slice(which.min(qvalue)) %&gt;%
+    filter(gene %in% GtexHeartEgenes$chimp_id) %&gt;%
+    dplyr::select(c(&quot;snps&quot;, &quot;gene&quot;, &quot;qvalue&quot;)) %&gt;%
+    mutate(snp.pos = as.numeric(gsub(&quot;ID.[0-9A-B]+.(\\d+).[GCTA]+.[GCTA]+&quot;, &quot;\\1&quot;, snps, perl=T))) %&gt;%
+    left_join(ChimpGeneLocs, by=&quot;gene&quot;) %&gt;%
+    filter(!is.na(TSS.Coord)) %&gt;%
+    mutate(DistanceToTSS = snp.pos - TSS.Coord) %&gt;%
+    mutate(ChimpHiC.bin=round(DistanceToTSS/10000)+26) %&gt;%
+    filter(ChimpHiC.bin&gt;0 &amp; ChimpHiC.bin&lt;51)
+  # #if minus strand to reverse
+  #   mutate(ChimpHiC.bin2 = case_when(
+  #     strand == &quot;+&quot; ~ ChimpHiC.bin,
+  #     strand == &quot;-&quot; ~ 51-ChimpHiC.bin
+  #   ))
+  
+
+#Check that eQTL snps enriched near TSS as expected
+hist(Top.Chimp.eQTL.SNPs$DistanceToTSS, breaks=100, xlim=c(-250000,250000))</code></pre>
+<p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Without lifting over snp positions to human to get most comparable bins, just compare bins as is (I&#39;m guessing for most snps the lifted over bins will be the same).
+
+ChimpeQTL.Interactions.Chimp &lt;- NULL
+ChimpeQTL.Interactions.Human&lt;- NULL
+for (i in 1:dim(Top.Chimp.eQTL.SNPs)[1]){
+  # print(Top.Chimp.eQTL.SNPs$ChimpHiC.bin[i])
+  ChimpInteractionScore &lt;- (ChimpInteractionSums[Top.Chimp.eQTL.SNPs$gene[i], Top.Chimp.eQTL.SNPs$ChimpHiC.bin[i]])
+  HumanInteractionScore &lt;- (HumanInteractionSums[ChimpToHuman.ID(Top.Chimp.eQTL.SNPs$gene[i]), Top.Chimp.eQTL.SNPs$ChimpHiC.bin[i]])
+
+  ChimpeQTL.Interactions.Chimp &lt;- append(ChimpeQTL.Interactions.Chimp, ChimpInteractionScore)
+  ChimpeQTL.Interactions.Human &lt;- append(ChimpeQTL.Interactions.Human, HumanInteractionScore)
+
+}
+
+hist(ChimpeQTL.Interactions.Chimp - ChimpeQTL.Interactions.Human)</code></pre>
+<p><img src="figure/20190627_DiffContactsEgenes.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Test if interactions for chimp lead snps to their promoter are systematically greater in chimp. Paired t-test seems appropriate.
+t.test(ChimpeQTL.Interactions.Chimp,ChimpeQTL.Interactions.Human, paired=T)</code></pre>
+<pre><code>
+    Paired t-test
+
+data:  ChimpeQTL.Interactions.Chimp and ChimpeQTL.Interactions.Human
+t = -0.75752, df = 232, p-value = 0.4495
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.5115782  0.2274391
+sample estimates:
+mean of the differences 
+             -0.1420696 </code></pre>
+<p>Ok no signal to be seen. Still to do the analysis properly, I should liftover the lead chimp snps to human genome, and identify the relevant Hi-C interaction points from lifted snp positions. Additionally, I need to verify that the Hi-C matrix is always low-coordinate to high-coordinate, regardless of the gene orientation. Alternatively, one explanation is that species-specific eGenes have more contacts in their neghborhood (as the linear association above suggests) but the specific eQTL-promoter contacts are too noisy to detect. Alternatively, the linear association could be a false positive or associated by some alternate explanation that eludes me.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -866,18 +1257,19 @@ loaded via a namespace (and not attached):
 [13] evaluate_0.14      httr_1.4.0         highr_0.8         
 [16] pillar_1.4.1       rlang_0.3.4        lazyeval_0.2.2    
 [19] readxl_1.3.1       rstudioapi_0.10    gdata_2.18.0      
-[22] rmarkdown_1.13     labeling_0.3       splines_3.5.1     
-[25] munsell_0.5.0      broom_0.5.2        compiler_3.5.1    
-[28] modelr_0.1.4       xfun_0.7           pkgconfig_2.0.2   
-[31] htmltools_0.3.6    tidyselect_0.2.5   workflowr_1.4.0   
-[34] crayon_1.3.4       withr_2.1.2        bitops_1.0-6      
-[37] grid_3.5.1         nlme_3.1-140       jsonlite_1.6      
-[40] gtable_0.3.0       git2r_0.25.2       magrittr_1.5      
-[43] scales_1.0.0       KernSmooth_2.23-15 cli_1.1.0         
-[46] stringi_1.4.3      fs_1.3.1           xml2_1.2.0        
-[49] generics_0.0.2     tools_3.5.1        glue_1.3.1        
-[52] hms_0.4.2          yaml_2.2.0         colorspace_1.4-1  
-[55] caTools_1.17.1.2   rvest_0.3.4        haven_2.1.0       </code></pre>
+[22] whisker_0.3-2      rmarkdown_1.13     labeling_0.3      
+[25] splines_3.5.1      munsell_0.5.0      broom_0.5.2       
+[28] compiler_3.5.1     modelr_0.1.4       xfun_0.7          
+[31] pkgconfig_2.0.2    htmltools_0.3.6    tidyselect_0.2.5  
+[34] workflowr_1.4.0    crayon_1.3.4       withr_2.1.2       
+[37] bitops_1.0-6       grid_3.5.1         nlme_3.1-140      
+[40] jsonlite_1.6       gtable_0.3.0       git2r_0.25.2      
+[43] magrittr_1.5       scales_1.0.0       KernSmooth_2.23-15
+[46] cli_1.1.0          stringi_1.4.3      fs_1.3.1          
+[49] xml2_1.2.0         generics_0.0.2     tools_3.5.1       
+[52] glue_1.3.1         hms_0.4.2          yaml_2.2.0        
+[55] colorspace_1.4-1   caTools_1.17.1.2   rvest_0.3.4       
+[58] haven_2.1.0       </code></pre>
 </div>
 
 

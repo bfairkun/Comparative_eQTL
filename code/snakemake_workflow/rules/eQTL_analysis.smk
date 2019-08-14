@@ -288,30 +288,25 @@ rule GetAllSnpGenePairsForLeflerSharedPolymorphisms:
         awk 'NR>1' {input.eqtl_results} | shuf -n 1000 > {output.Random}
         """
 
-rule GetSnpsForLeflerSharedPolymorphisms:
-    input:
-        SharedPolymorphisms = "../../data/LeflerSharedPolymorphisms.PanTro5.bed",
-        Vcf = "MiscOutput/ForAssociationTesting.chromsrenamed.vcf.gz",
-        chromsizes = "../../data/PanTro5.chrome.sizes",
-        PlinkFile = "eQTL_mapping/plink/ForAssociationTesting.bed"
+rule DownloadGTExSummaryStatsAllTissues:
     output:
-        SharedSnps = "eQTL_mapping/SharedPolymorphisms/SharedSNPsToTest.vcf.gz",
-        MatchedSnps = "eQTL_mapping/SharedPolymorphisms/MatchedSNPsToTest.vcf.gz",
-        SharedSnpsList = "eQTL_mapping/SharedPolymorphisms/SharedSnps.snps",
-        MatchedSnpsList = "eQTL_mapping/SharedPolymorphisms/MatchedSnps.snps"
+        expand()
     log:
-        "logs/eQTL_mapping/GetSharedSNPs.log"
+        "logs/DownloadGTExSummaryStats.log"
     shell:
         """
-        #Count number of shared SNPs to that pass eQTL test filters
-        SnpCount=$(bedtools slop -i {input.SharedPolymorphisms} -r 1 -l 1 -g {input.chromsizes} | sed -e 's/^chr//' | bcftools view -H -R - {input.Vcf} )
-
-        #Get shared snps
-        bedtools slop -i {input.SharedPolymorphisms} -r 1 -l 1 -g {input.chromsizes} | sed -e 's/^chr//' | bcftools view -H -R - {input.Vcf} | awk -F '\\t' '{{ print $3 }}' > {output.SharedSnpsList}
-
-        #Get matched snps (not in LD but within 10kb)
-        plink --bfile eQTL_mapping/plink/ForAssociationTesting --r2 --ld-snp-list {output.SharedSnpsList} --ld-window-kb 10 --ld-window 99999 --ld-window-r2 0 --allow-extra-chr --out eQTL_mapping/SharedPolymorphisms/Shared
-        awk -v OFS='\\t' '{{print $3,$6,$7}}' | awk -F'\\t' 'NR>1 && $3<0.2 {{ print $1, $2, $3 }}' | shuf | awk '!+[$1]++ {{ print $2 }}' > {output.MatchedSnpsList}
+        wget ...*
         """
 
-#bedtools slop -i ../../data/LeflerSharedPolymorphisms.PanTro5.bed -r 1 -l 1 -g ../../data/PanTro5.chrome.sizes | sed -e 's/^chr//' | bcftools view -H -R - eQTL_mapping/FastQTL/ForAssociationTesting.vcf.gz | awk -F'\t' '{print $3}' | head
+
+rule MergeGTExSummaryStatsAllTissues:
+    input:
+        expand()
+    log:
+        "logs/CombineGTExSummaryStats.log"
+    output:
+        ""
+    shell:
+        """
+
+        """

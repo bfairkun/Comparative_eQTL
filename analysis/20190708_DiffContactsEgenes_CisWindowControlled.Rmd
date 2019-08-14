@@ -86,16 +86,18 @@ First question: do the ~300 chimp eGenes have more contacts in their cis-window 
 ```{r}
 
 Chimp_OrderedGenes <- eQTLs %>%
+    mutate(HumanID = ChimpToHuman.ID(gene)) %>%
     group_by(gene) %>% 
     dplyr::slice(which.min(qvalue)) %>%
     filter(gene %in% GtexHeartEgenes$chimp_id) %>%
     left_join(GtexHeartEgenes, by=c("gene"="chimp_id")) %>%
-    dplyr::select(gene, qvalue, p) %>% as.data.frame() %>%
-    mutate(ChimpRank = dense_rank(qvalue)) %>%
-    mutate(HumanRank = dense_rank(p)) %>%
-    mutate(RankDifference = HumanRank-ChimpRank) %>%
+    dplyr::select(gene, qvalue, p, qval, HumanID) %>% as.data.frame() %>%
     filter(qvalue <0.1) %>%
-    mutate(HumanID=ChimpToHuman.ID(gene))
+    mutate(ChimpRank = dense_rank(qvalue)) %>%
+    mutate(ChimpRelativeRank = ChimpRank/max(ChimpRank)) %>%
+    mutate(HumanRank = dense_rank(qval)) %>%
+    mutate(HumanRelativeRank = HumanRank/max(HumanRank)) %>%
+    mutate(RankDifference = HumanRank-ChimpRank)
 
 # OneToOneMap %>%
 #   inner_join(HumanInteractions, by=c("Gene.stable.ID"="HumanId")) %>% dim()
@@ -121,7 +123,7 @@ ggplot(Chimp_OrderedGenes.WithContactInfo, aes(x=RankDifference, y=InteractionDi
   ylab("Differential contacts in cis window\nMore in human <--  --> More in chimp") +
   geom_smooth(method='lm',formula=y~x)
 
-cor.test(x=Chimp_OrderedGenes.WithContactInfo$RankDifference, y=Chimp_OrderedGenes.WithContactInfo$InteractionDifference, method="spearman")
+cor.test(x=Chimp_OrderedGenes.WithContactInfo$RankDifference, y=Chimp_OrderedGenes.WithContactInfo$InteractionDifference, method="pearson")
 
 contacts.v.eGene.lm = lm(InteractionDifference ~ RankDifference, data=Chimp_OrderedGenes.WithContactInfo)
 summary(contacts.v.eGene.lm)

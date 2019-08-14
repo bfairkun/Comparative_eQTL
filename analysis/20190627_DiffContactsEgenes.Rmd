@@ -58,6 +58,10 @@ SampleF<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_b
 SampleG<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_G-3624_10kb_norm.gz"), sep='\t')
 SampleH<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_H-3651_10kb_norm.gz"), sep='\t')
 
+ChimpInteractionSums <- SampleC + SampleD + SampleG + SampleH
+HumanInteractionSums <- SampleA + SampleB + SampleE + SampleF
+
+
 HumanInteractions <- data.frame(H.Score = rowSums(cbind(SampleA, SampleB, SampleE, SampleF))) %>%
   rownames_to_column() %>%
   mutate(HumanID = gsub("(.+?)\\..+?", "\\1", rowname, perl=T))
@@ -149,5 +153,60 @@ summary(contacts.v.eGene.lm)
 plot(contacts.v.eGene.lm)
 ```
 
-Ok yes, there is a slight correlation between chimp eGene character, and contacts in chimp. Now I am going to take a different approach to ask a similar question: Do lead chimp eQTLs have more contacts between a gene and its promoter window than human.
+Ok yes, there is a slight correlation between chimp eGene character, and contacts in chimp. Now I am going to take a different approach to ask a similar question: Do lead chimp eQTL SNPs have more contacts between a gene and its promoter window than human.
 
+First, I will read in genomic corrdinates of chimp genes, so I can identify which the correct hi-C interaction point between the SNP-containing 10kb window and the gene promoter for chimp data. Then, I will need to liftover the top eQTL-SNPs into human coordinates (and their human gene names) and identify the orthologous Hi-C interaction point. Finally, I will test if these distributions are significantly different, with the expectation that the chimp eQTL SNPs will have stronger contacts in chimp. The recipricol analysis (human centric) will also be useful.
+
+```{r}
+#read in gene coordinates of chimp genes
+ChimpGeneLocs <- read.table("../data/ChimpEgenes.bed", col.names = c("chrom", "start", "stop", "gene", "score", "strand")) %>%
+  mutate(TSS.Coord = case_when(
+    strand == "+" ~ start,
+    strand == "-" ~ stop
+  ))
+
+# Get lead snps for eQTLs, find the HiC bin number.
+Top.Chimp.eQTL.SNPs <- eQTLs %>%
+    group_by(gene) %>%
+    filter(qvalue <0.1) %>%
+    dplyr::slice(which.min(qvalue)) %>%
+    filter(gene %in% GtexHeartEgenes$chimp_id) %>%
+    dplyr::select(c("snps", "gene", "qvalue")) %>%
+    mutate(snp.pos = as.numeric(gsub("ID.[0-9A-B]+.(\\d+).[GCTA]+.[GCTA]+", "\\1", snps, perl=T))) %>%
+    left_join(ChimpGeneLocs, by="gene") %>%
+    filter(!is.na(TSS.Coord)) %>%
+    mutate(DistanceToTSS = snp.pos - TSS.Coord) %>%
+    mutate(ChimpHiC.bin=round(DistanceToTSS/10000)+26) %>%
+    filter(ChimpHiC.bin>0 & ChimpHiC.bin<51)
+  # #if minus strand to reverse
+  #   mutate(ChimpHiC.bin2 = case_when(
+  #     strand == "+" ~ ChimpHiC.bin,
+  #     strand == "-" ~ 51-ChimpHiC.bin
+  #   ))
+  
+
+#Check that eQTL snps enriched near TSS as expected
+hist(Top.Chimp.eQTL.SNPs$DistanceToTSS, breaks=100, xlim=c(-250000,250000))
+
+#Without lifting over snp positions to human to get most comparable bins, just compare bins as is (I'm guessing for most snps the lifted over bins will be the same).
+
+ChimpeQTL.Interactions.Chimp <- NULL
+ChimpeQTL.Interactions.Human<- NULL
+for (i in 1:dim(Top.Chimp.eQTL.SNPs)[1]){
+  # print(Top.Chimp.eQTL.SNPs$ChimpHiC.bin[i])
+  ChimpInteractionScore <- (ChimpInteractionSums[Top.Chimp.eQTL.SNPs$gene[i], Top.Chimp.eQTL.SNPs$ChimpHiC.bin[i]])
+  HumanInteractionScore <- (HumanInteractionSums[ChimpToHuman.ID(Top.Chimp.eQTL.SNPs$gene[i]), Top.Chimp.eQTL.SNPs$ChimpHiC.bin[i]])
+
+  ChimpeQTL.Interactions.Chimp <- append(ChimpeQTL.Interactions.Chimp, ChimpInteractionScore)
+  ChimpeQTL.Interactions.Human <- append(ChimpeQTL.Interactions.Human, HumanInteractionScore)
+
+}
+
+hist(ChimpeQTL.Interactions.Chimp - ChimpeQTL.Interactions.Human)
+
+#Test if interactions for chimp lead snps to their promoter are systematically greater in chimp. Paired t-test seems appropriate.
+t.test(ChimpeQTL.Interactions.Chimp,ChimpeQTL.Interactions.Human, paired=T)
+
+```
+
+Ok no signal to be seen. Still to do the analysis properly, I should liftover the lead chimp snps to human genome, and identify the relevant Hi-C interaction points from lifted snp positions. Additionally, I need to verify that the Hi-C matrix is always low-coordinate to high-coordinate, regardless of the gene orientation. Alternatively, one explanation is that species-specific eGenes have more contacts in their neghborhood (as the linear association above suggests) but the specific eQTL-promoter contacts are too noisy to detect. Alternatively, the linear association could be a false positive or associated by some alternate explanation that eludes me.
