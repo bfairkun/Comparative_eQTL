@@ -426,7 +426,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -435,7 +435,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -444,10 +444,10 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-06-27
+<strong>Last updated:</strong> 2019-08-06
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -463,12 +463,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </div>
 </div>
 </div>
@@ -535,10 +535,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree58e7cb62acf159856f0bfa88dd0b19e642787d71targetblank58e7cb6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/58e7cb62acf159856f0bfa88dd0b19e642787d71" target="_blank">58e7cb6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreee9747fe1160eea2ddd59d851d92d4f18ddd9d35dtargetblanke9747fea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/e9747fe1160eea2ddd59d851d92d4f18ddd9d35d" target="_blank">e9747fe</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree58e7cb62acf159856f0bfa88dd0b19e642787d71targetblank58e7cb6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreee9747fe1160eea2ddd59d851d92d4f18ddd9d35dtargetblanke9747fea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -553,13 +553,20 @@ Ignored files:
     Ignored:    analysis_temp/.DS_Store
     Ignored:    code/.DS_Store
     Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    code/snakemake_workflow/rules/.eQTL_analysis.smk.swp
     Ignored:    data/.DS_Store
     Ignored:    data/PastAnalysesDataToKeep/.DS_Store
     Ignored:    docs/.DS_Store
     Ignored:    docs/assets/.DS_Store
 
 Unstaged changes:
-    Modified:   analysis/20190613_PowerAnalysis.Rmd
+    Modified:   analysis/20190521_eQTL_CrossSpeciesEnrichment.Rmd
+    Modified:   analysis/20190627_DiffContactsEgenes.Rmd
+    Modified:   analysis/20190708_DiffContactsEgenes_CisWindowControlled.Rmd
+    Modified:   analysis/20190716_VarianceInsteadOfEgenes.Rmd
+    Modified:   analysis/index.Rmd
+    Modified:   code/snakemake_workflow/Session.vim
+    Modified:   code/snakemake_workflow/rules/eQTL_analysis.smk
 
 </code></pre>
 <p>
@@ -598,6 +605,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e9747fe1160eea2ddd59d851d92d4f18ddd9d35d/analysis/20190613_PowerAnalysis.Rmd" target="_blank">e9747fe</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-24
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/analysis/20190613_PowerAnalysis.Rmd" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/20190613_PowerAnalysis.html" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+<td>
+update site
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1021,6 +1079,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/read-data-1.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/read-data-1.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -1226,6 +1295,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/read-data-2.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/read-data-2.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -1290,6 +1370,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-1.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-1.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -1338,6 +1429,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-2.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-2.png" target="_blank">d3b5499</a>
@@ -1391,6 +1493,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-3.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-3.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -1440,6 +1553,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-4.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-1-4.png" target="_blank">d3b5499</a>
@@ -1704,6 +1828,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-2.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-2.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -1766,6 +1901,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-3.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-3-3.png" target="_blank">d3b5499</a>
@@ -1881,6 +2027,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-1.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-1.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -1932,6 +2089,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-2.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-2.png" target="_blank">d3b5499</a>
@@ -2007,6 +2175,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-3.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-3.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -2058,6 +2237,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-4.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-5-4.png" target="_blank">d3b5499</a>
@@ -2163,7 +2353,7 @@ for (i in seq_along(SampleSizes)){
   PlotOut &lt;- ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
   geom_line() +
   geom_point(data=RocCurveLandmarks, aes(x=1-specificity, y=sensitivity, color=factor(samplesize), shape=FDR)) +
-  xlab(&quot;false positive rate (1-sensitivity)&quot;) +
+  xlab(&quot;false positive rate (1-specificity)&quot;) +
   ylab(&quot;true positive rate (sensitivity)&quot;) +
   scale_colour_discrete(name  =&quot;Sample size&quot;) +
   theme_bw()
@@ -2225,6 +2415,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-1.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-1.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -2265,6 +2466,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-2.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-2.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -2302,6 +2514,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-3.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-3.png" target="_blank">d3b5499</a>
@@ -2345,6 +2568,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-4.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-6-4.png" target="_blank">d3b5499</a>
@@ -2444,6 +2678,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-1.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-1.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -2484,6 +2729,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-2.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-2.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -2521,6 +2777,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-3.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-8-3.png" target="_blank">d3b5499</a>
@@ -2597,6 +2864,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-1.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-1.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -2637,6 +2915,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-2.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-2.png" target="_blank">d3b5499</a>
 </td>
 <td>
@@ -2674,6 +2963,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e8a225ba58eac9e72d32ffa236fbdb033fecef54/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-3.png" target="_blank">e8a225b</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-06-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/d3b5499f878d9fdcd16fb8c1d2c718fcca899a6b/docs/figure/20190613_PowerAnalysis.Rmd/unnamed-chunk-9-3.png" target="_blank">d3b5499</a>

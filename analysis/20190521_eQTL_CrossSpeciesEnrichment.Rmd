@@ -824,7 +824,7 @@ Nothing is significant by any notable treshold by this method...
 
 Perhaps I need to limit the gene set to genes which were called as eGenes in chimps, since many too many chimp non-eGenes may contribute to noise.
 
-```{r}
+```{r GoodOne}
 #Relative rank instead of rank
 Chimp_OrderedGenes <- eQTLs %>%
     group_by(gene) %>% 
@@ -849,14 +849,15 @@ gsego.cc.chimpspecific <- gseGO(gene = GeneList,
                  ont = "BP",
                  nPerm = 100000)
 kable(head(as.data.frame(gsego.cc.chimpspecific), 2))
-gseaplot2(gsego.cc.chimpspecific, geneSetID = c("GO:0006366","GO:0010468", "GO:0016567"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
+gseaplot2(gsego.cc.chimpspecific, geneSetID = c("GO:0006366","GO:0006355"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
 
 dotplot(gsego.cc.chimpspecific, font.size=8, showCategory=38)
 ```
 
 Now let's do the GSEA more carefully (covering all Gene Ontology categories; BP, MF, CC) and plot it together for a more pretty figure.
 
-```{r}
+```{r eval=F}
+#put eval=F as temporary fix since this block throws an error since some GSEA results return zero hits, so cbind doesn't work
 CC.gsea <- gseGO(gene = GeneList,
                  OrgDb = org.Hs.eg.db,
                  keyType = 'ENSEMBL',
@@ -934,8 +935,8 @@ Chimp_OrderedGenes <- eQTLs %>%
     mutate(ChimpRelativeRank = ChimpRank/max(ChimpRank)) %>%
     mutate(HumanRank = dense_rank(qval)) %>%
     mutate(HumanRelativeRank = HumanRank/max(HumanRank)) %>%
-    mutate(RelativeRankDifference = ChimpRelativeRank-HumanRelativeRank) %>%
-    mutate(RankDifference = ChimpRank-HumanRank)
+    mutate(RelativeRankDifference = HumanRelativeRank-ChimpRelativeRank) %>%
+    mutate(RankDifference = HumanRank-ChimpRank) %>%
   
     arrange(desc(RankDifference))
 GeneList <- Chimp_OrderedGenes$RankDifference

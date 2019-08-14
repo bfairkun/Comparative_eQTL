@@ -273,3 +273,25 @@ rule GetAllSnpGenePairsForLeflerSharedPolymorphisms:
         """
         
 
+rule DownloadGTExSummaryStatsAllTissues:
+    output:
+        expand()
+    log:
+        "logs/DownloadGTExSummaryStats.log"
+    shell:
+        """
+        wget ...*
+        """
+
+
+rule MergeGTExSummaryStatsAllTissues:
+    input:
+        expand()
+    log:
+        "logs/CombineGTExSummaryStats.log"
+    output:
+        ""
+    shell:
+        """
+
+        """

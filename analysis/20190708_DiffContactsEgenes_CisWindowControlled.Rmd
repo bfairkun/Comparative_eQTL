@@ -123,7 +123,7 @@ ggplot(Chimp_OrderedGenes.WithContactInfo, aes(x=RankDifference, y=InteractionDi
   ylab("Differential contacts in cis window\nMore in human <--  --> More in chimp") +
   geom_smooth(method='lm',formula=y~x)
 
-cor.test(x=Chimp_OrderedGenes.WithContactInfo$RankDifference, y=Chimp_OrderedGenes.WithContactInfo$InteractionDifference, method="spearman")
+cor.test(x=Chimp_OrderedGenes.WithContactInfo$RankDifference, y=Chimp_OrderedGenes.WithContactInfo$InteractionDifference, method="pearson")
 
 contacts.v.eGene.lm = lm(InteractionDifference ~ RankDifference, data=Chimp_OrderedGenes.WithContactInfo)
 summary(contacts.v.eGene.lm)

@@ -204,10 +204,10 @@ Get.GeneSummaryStat.df <- function(Input.df){
 }
 
 
-CountTable.chimp <- CountTable$E %>% as.data.frame() %>% select(contains("C."))
+CountTable.chimp <- CountTable$E %>% as.data.frame() %>% dplyr::select(contains("C."))
 Chimp.summarystats <- Get.GeneSummaryStat.df(CountTable.chimp)
 
-CountTable.human <- CountTable$E %>% as.data.frame() %>% select(contains("H."))
+CountTable.human <- CountTable$E %>% as.data.frame() %>% dplyr::select(contains("H."))
 Human.summarystats <- Get.GeneSummaryStat.df(CountTable.human)
 
 # How does this statistic (std dev minus loess prediction) correlate across species
@@ -238,7 +238,7 @@ ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.tx
 ToPlot <- Chimp.summarystats %>%
   rownames_to_column() %>%
   left_join(ChimpToHumanGeneMap, by=c("rowname" = "Gene.stable.ID")) %>%
-  mutate(rank = dense_rank(desc(SD.minus.loess))) %>% 
+  mutate(rank = dense_rank(dplyr::desc(SD.minus.loess))) %>% 
   mutate(group = case_when(
                            rank>=500 ~ "NotTop500VarianceGene",
                            rank<=500 ~ "Top500VarianceGene")) %>%
@@ -282,6 +282,13 @@ RankedGeneList<-Chimp.summarystats$SD.minus.loess - Human.summarystats$SD.minus.
 names(RankedGeneList) <- rownames(Chimp.summarystats)
 SortedGeneList <- sort(RankedGeneList, decreasing=T)
 
+```
+
+GSEA analysis
+
+
+```{r}
+
 #bp  
 gsego.cc.chimp.high.var <- gseGO(gene = SortedGeneList,
                  OrgDb = org.Hs.eg.db,
@@ -309,9 +316,9 @@ A %>% as.data.frame() %>% dplyr::select(ONTOLOGY, ID, Description, enrichmentSco
 
 A %>% as.data.frame() %>% dplyr::select(ONTOLOGY, ID, Description, enrichmentScore) %>% arrange(desc(abs(enrichmentScore))) %>% head(20)
 
-bp2 <- simplify(gsego.all.chimp.high.var, cutoff=0.7, by="p.adjust", select_fun=min)
+# bp2 <- simplify(gsego.all.chimp.high.var, cutoff=0.7, by="p.adjust", select_fun=min)
 
-bp2 %>% as.data.frame() %>% dplyr::select(ONTOLOGY, ID, Description, enrichmentScore) %>% arrange(desc(abs(enrichmentScore))) %>% head(20)
+# bp2 %>% as.data.frame() %>% dplyr::select(ONTOLOGY, ID, Description, enrichmentScore) %>% arrange(desc(abs(enrichmentScore))) %>% head(20)
 
 
 
@@ -387,4 +394,63 @@ Combined %>%
 
 ```
 
+In addition to GSEA analysis, it might be worthwile to also try to correlate difference in variance metric to chromatin-interaction score:
 
+```{r}
+SampleA<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_A-21792_10kb_norm.gz"), sep='\t')
+SampleB<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_B-28126_10kb_norm.gz"), sep='\t')
+SampleC<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_C-3649_10kb_norm.gz"), sep='\t')
+SampleD<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_D-40300_10kb_norm.gz"), sep='\t')
+SampleE<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_E-28815_10kb_norm.gz"), sep='\t')
+SampleF<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_F-28834_10kb_norm.gz"), sep='\t')
+SampleG<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_G-3624_10kb_norm.gz"), sep='\t')
+SampleH<- read.csv(gzfile("../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_H-3651_10kb_norm.gz"), sep='\t')
+
+
+ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+kable(head(ChimpToHumanGeneMap))
+
+# Of this ortholog list, how many genes are one2one
+table(ChimpToHumanGeneMap$Chimpanzee.homology.type)
+OneToOneMap <- ChimpToHumanGeneMap %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one")
+ChimpToHuman.ID <- function(Chimp.ID){
+  #function to convert chimp ensembl to human ensembl gene ids
+  return(
+    plyr::mapvalues(Chimp.ID, OneToOneMap$Chimpanzee.gene.stable.ID, OneToOneMap$Gene.stable.ID, warn_missing = F)
+  )}
+
+HumanInteractions <- data.frame(H.Score = base::rowSums(cbind(SampleA, SampleB, SampleE, SampleF))) %>%
+  rownames_to_column() %>%
+  mutate(HumanID = gsub("(.+?)\\..+?", "\\1", rowname, perl=T))
+
+
+ChimpInteractions <- data.frame(C.Score = rowSums(cbind(SampleC, SampleD, SampleG, SampleH))) %>%
+  rownames_to_column() %>%
+  mutate(HumanID = ChimpToHuman.ID(rowname))
+
+
+ToPlot <- data.frame(SpeciesVarianceDiff = RankedGeneList) %>%
+  rownames_to_column() %>%
+  left_join(HumanInteractions, by=c("rowname"="HumanID")) %>%
+  left_join(ChimpInteractions, by=c("rowname"="HumanID")) %>% 
+  mutate(InteractionDifference=H.Score - C.Score) %>%
+  filter(!is.na(H.Score)) %>%
+  filter(!is.na(C.Score))
+
+ggplot(ToPlot, aes(x=SpeciesVarianceDiff, y=InteractionDifference)) +
+  geom_point() +
+  theme_bw() +
+  xlab("Variation in expression\nTighter in human <--  --> Tighter in chimp") +
+  ylab("Differential contacts in cis window\nMore in human <--  --> More in chimp") +
+  geom_smooth(method='lm',formula=y~x)
+
+cor.test(x=ToPlot$SpeciesVarianceDiff, y=ToPlot$InteractionDifference, method="spearman")
+
+contacts.v.eGene.lm = lm(InteractionDifference ~ SpeciesVarianceDiff, data=ToPlot)
+summary(contacts.v.eGene.lm)
+plot(contacts.v.eGene.lm)
+
+```
+
+Not significant. Perhaps most intuitive explanation is to why this relationship was significant with eGenes (species difference in neighborhood chromatin contacts partly explains species difference in cis-eGene rank) but not for variance (species difference in neghborhood chromatin contacts does not significantly explain any difference in within- species variance) is that the chromatin contacts only mediate cis-variance, while 80% of expression variance is in trans.
