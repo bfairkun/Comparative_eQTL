@@ -299,14 +299,13 @@ rule DownloadGTExSummaryStatsAllTissues:
         """
 
 
-rule MergeGTExSummaryStatsAllTissues:
-    input:
-        expand()
-    log:
-        "logs/CombineGTExSummaryStats.log"
-    output:
-        ""
-    shell:
-        """
-
-        """
+# rule MergeGTExSummaryStatsAllTissues:
+#     input:
+#         expand()
+#     log:
+#         "logs/CombineGTExSummaryStats.log"
+#     output:
+#         ""
+#     shell:
+#         """
+#         """
