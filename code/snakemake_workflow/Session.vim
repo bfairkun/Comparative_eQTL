@@ -12,7 +12,7 @@ set shortmess=aoO
 argglobal
 %argdel
 $argadd Snakefile
-edit rules/eqtl_calling.smk
+edit rules/eQTL_analysis.smk
 set splitbelow splitright
 set nosplitbelow
 set nosplitright
@@ -31,20 +31,20 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 1 - ((0 * winheight(0) + 25) / 50)
+let s:l = 317 - ((38 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+317
+normal! 0238|
 tabnext 1
-badd +76 rules/eQTL_analysis.smk
-badd +12 Snakefile
+badd +263 rules/populationstructure.smk
+badd +8 Snakefile
+badd +1 rules/eQTL_analysis.smk
+badd +527 rules/eqtl_calling.smk
 badd +49 /project/gilad/bjf79/software/locusZoomWithLD/locuszoom/conf/m2zfast.conf
-badd +59 rules/populationstructure.smk
 badd +112 cluster-config.json
 badd +101 scripts/MatrixEqtl_Cis.AllPvals.R
-badd +1 rules/eqtl_calling.smk
 badd +128 rules/PowerAnalysis.smk
 badd +154 config.yaml
 badd +33 rules/RNASeqMapping.smk

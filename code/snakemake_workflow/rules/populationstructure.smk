@@ -256,3 +256,8 @@ rule vcftools_relatedness2:
         vcftools --gzvcf {input} {params} --out PopulationSubstructure/out --relatedness2 &> {log}
         """
 
+rule bcftools_smplstats:
+    input:
+        vcf = "PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz",
+    output:
+        

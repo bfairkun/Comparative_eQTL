@@ -4,6 +4,7 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "eQTL_mapping/SharedPolymorphisms/MatchedSNPsToTest.vcf.gz",
         "MiscOutput/HumanLocusZoomPlot",
         "../../output/SharedPolymorphisms.shared.chimpeqtls.txt",
         "MiscOutput/HumanVcfs/YRI.vcf.gz",
