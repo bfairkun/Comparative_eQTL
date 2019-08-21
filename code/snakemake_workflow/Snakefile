@@ -4,10 +4,12 @@ include: "rules/common.smk"
 
 rule all:
     input:
-        "eQTL_mapping/SharedPolymorphisms/MatchedSNPsToTest.vcf.gz",
-        "MiscOutput/HumanLocusZoomPlot",
+        # "eQTL_mapping/SharedPolymorphisms/MatchedSNPsToTest.vcf.gz",
+        "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snploc",
+        "MiscOutput/allele_encodings.txt.gz",
+        # "MiscOutput/HumanLocusZoomPlot",
         "../../output/SharedPolymorphisms.shared.chimpeqtls.txt",
-        "MiscOutput/HumanVcfs/YRI.vcf.gz",
+        # "MiscOutput/HumanVcfs/YRI.vcf.gz",
         "MiscOutput/HumanVcfs/GEUVADIS.vcf.gz",
         "../../output/SharedPolymorphisms.shared.chimpeqtls.txt",
         # "MiscOutput/LocusZoomPlot",
@@ -17,8 +19,8 @@ rule all:
         expand(config["gitinclude_output"] + "PowerAnalysisFullCountTable.{species}.subread.txt.gz", species=["Human", "Chimp"]),
 
         "PowerAnalysis/Multiqc/multiqc_report.html",
-        expand(config["temp_files_prefix"] + "PowerAnalysisBams/{PowerAnalysisSample}/Aligned.sortedByCoord.out.bam", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
-        expand(config["temp_files_prefix"] + "PowerAnalysisFastq/{PowerAnalysisSample}.fastq.gz", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
+        # expand(config["temp_files_prefix"] + "PowerAnalysisBams/{PowerAnalysisSample}/Aligned.sortedByCoord.out.bam", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
+        # expand(config["temp_files_prefix"] + "PowerAnalysisFastq/{PowerAnalysisSample}.fastq.gz", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
         "sQTL_mapping/MatrixEQTL/Results/images/PCsVsSQTLs.pdf",
         config["gitinclude_output"] + "MatrixEQTL_sig_genotypes.raw",
         # "logs/eQTL_mapping/collect_Gemma_batchlogs.log",

@@ -288,15 +288,54 @@ rule GetAllSnpGenePairsForLeflerSharedPolymorphisms:
         awk 'NR>1' {input.eqtl_results} | shuf -n 1000 > {output.Random}
         """
 
-rule DownloadGTExSummaryStatsAllTissues:
+rule GetPlinkMAF:
+    input:
+        bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
     output:
-        expand()
-    log:
-        "logs/DownloadGTExSummaryStats.log"
+        frq = "MiscOutput/ForAssociationTesting.frq",
+        zipped = "MiscOutput/allele_encodings.txt.gz"
     shell:
         """
-        wget ...*
+        plink --freq --bfile eQTL_mapping/plink/ForAssociationTesting --allow-extra-chr --out MiscOutput/ForAssociationTesting
+        cat {output.frq} | awk -v OFS='\\t' '{{ print $2,$3,$4,$5 }}' | gzip - > {output.zipped}
         """
+
+rule GetSnpsMatchedToLeflerSharedPolymorphisms:
+    input:
+        SharedPolymorphisms = "../../data/LeflerSharedPolymorphisms.PanTro5.bed", 
+        Vcf = "eQTL_mapping/FastQTL/ForAssociationTesting.vcf.gz",
+        tbi = "eQTL_mapping/FastQTL/ForAssociationTesting.vcf.gz.tbi",
+        chromsizes = "../../data/PanTro5.chrome.sizes",
+        bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
+    output:
+        snps = "MiscOutput/SpeciesSharedSNPs.snps",
+        LD = "MiscOutput/SpeciesSharedSNPs.ld",
+        snp_loc = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snploc"
+    shell:
+        """
+        bedtools slop -i {input.SharedPolymorphisms} -r 1 -l 1 -g {input.chromsizes} | sed 's/^chr//' | bcftools view -H -R - {input.Vcf} > {output.snps}
+        plink --r2 with-freqs --bfile eQTL_mapping/plink/ForAssociationTesting --ld-snp-list {output.snps} --ld-window-kb 100 --ld-window-r2 0 --ld-window 99999 --allow-extra-chr --out MiscOutput/SpeciesSharedSNPs
+        Rscript scripts/GetLeflerMatchedSnps.R {output.LD} {output.snp_loc}
+        """
+        
+
+# bedtools slop -i ../../data/LeflerSharedPolymorphisms.PanTro5.bed -r 1 -l 1 -g ../../data/PanTro5.chrome.sizes | sed 's/^chr//' | bcftools view -H -R - eQTL_mapping/FastQTL/ForAssociationTesting.vcf.gz | awk -F'\t' '{print $3}' | head
+# rule GetMatchedPolymorphisms:
+#     input:
+#         "../../data/LeflerSharedPolymorphisms.PanTro5.bed"
+#     output:
+#         MatchedSnps = ""
+        
+
+# rule DownloadGTExSummaryStatsAllTissues:
+#     output:
+#         expand()
+#     log:
+#         "logs/DownloadGTExSummaryStats.log"
+#     shell:
+#         """
+#         wget ...*
+#         """
 
 
 # rule MergeGTExSummaryStatsAllTissues:
