@@ -1,0 +1,315 @@
+---
+title: "20190821_eGeneTissueCount"
+author: "Ben Fair"
+date: "8/21/2019"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+```{r load-libraries}
+library(tidyverse)
+library(knitr)
+```
+
+Are eGenes that are shared between humans and chimps more likely to be eGenes in many tissues?
+
+From a table of eGene qvalues across all GTEx tissues (GTEx v7 release), first get distribution of how many tissues each gene has a qval under some threshold
+
+```{r}
+GTEx <- read.table("../data/AllGTExTissues.egenes.txt", header=T, sep='\t')
+
+Threshold=0.1
+TissueEgeneCount <- data.frame(TissueCount=rowSums(GTEx[,-1]<=Threshold, na.rm=T), Gene.stable.ID=gsub("\\.\\d+", "", GTEx$gene_id, perl=T))
+
+
+hist(TissueEgeneCount$TissueCount, breaks=50)
+```
+
+From my data, plot this distribution (as a cumulative dist) after stratifying into human-specific eGenes, versus shared eGenes.
+
+```{r read-data}
+eQTLs <- read.table(gzfile("../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz"), header=T)
+kable(head(eQTLs))
+
+# List of chimp tested genes
+ChimpTestedGenes <- rownames(read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1))
+
+ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+kable(head(ChimpToHumanGeneMap))
+
+# Of this ortholog list, how many genes are one2one
+table(ChimpToHumanGeneMap$Chimpanzee.homology.type)
+OneToOneMap <- ChimpToHumanGeneMap %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one") %>%
+  distinct(Chimpanzee.gene.stable.ID, .keep_all = TRUE) %>%
+  left_join(TissueEgeneCount, by="Gene.stable.ID")
+
+# Read gtex heart egene list
+# Only consider those that were tested in both species and are one2one orthologs
+GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F) %>%
+  mutate(gene_id_stable = gsub(".\\d+$","",gene_id)) %>%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %>%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %>%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+ChimpToHuman.ID <- function(Chimp.ID){
+  #function to convert chimp ensembl to human ensembl gene ids
+  return(
+    plyr::mapvalues(Chimp.ID, OneToOneMap$Chimpanzee.gene.stable.ID, OneToOneMap$Gene.stable.ID, warn_missing = F)
+  )}
+
+HumanFDR <- 0.1
+ChimpFDR <- 0.1
+
+#Get chimp eQTLs
+Chimp_eQTLs <- eQTLs %>%
+  filter(qvalue<ChimpFDR)
+
+# Count chimp eGenes
+length(unique(Chimp_eQTLs$gene))
+
+# Count human eGenes
+length(GtexHeartEgenes %>% filter(qval< HumanFDR) %>% pull(chimp_id))
+
+# Count number genes tested in both species (already filtered for 1to1 orthologs)
+length(GtexHeartEgenes$gene_id_stable)
+
+```
+
+```{r CompareWithGtexEgenes}
+
+#Change FDR thresholds or take top N eGenes by qvalue
+HumanTopN <- 600
+HumanFDR <- 0.1
+ChimpFDR <- 0.1
+
+# Filter human eGenes by qval threshold
+HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% pull(chimp_id)
+
+# Filter human eGenes by topN qval
+# HumanSigGenes <- GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% pull(chimp_id)
+
+# Filter human eGeness by qval threshold then topN betas 
+# HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% top_n(1000, abs(slope)) %>% pull(chimp_id)
+
+HumanNonSigGenes <- GtexHeartEgenes %>%
+  filter(!chimp_id %in% HumanSigGenes) %>%
+  pull(chimp_id)
+
+ChimpSigGenes <- GtexHeartEgenes %>%
+  filter(chimp_id %in% Chimp_eQTLs$gene) %>%
+  pull(chimp_id)
+
+ChimpNonSigGenes <- GtexHeartEgenes %>%
+  filter(! chimp_id %in% Chimp_eQTLs$gene) %>%
+  pull(chimp_id)
+
+
+
+ContigencyTable <- matrix( c( length(intersect(ChimpSigGenes,HumanSigGenes)),
+                              length(intersect(HumanSigGenes,ChimpNonSigGenes)),
+                              length(intersect(ChimpSigGenes,HumanNonSigGenes)),
+                              length(intersect(ChimpNonSigGenes,HumanNonSigGenes))), 
+                           nrow = 2)
+
+rownames(ContigencyTable) <- c("Chimp eGene", "Not Chimp eGene")
+colnames(ContigencyTable) <- c("Human eGene", "Not human eGene")
+
+#what is qval threshold for human eGene classification in this contigency table
+print(GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% top_n(1, qval) %>% pull(qval))
+
+#Contigency table of one to one orthologs tested in both chimps and humans of whether significant in humans, or chimps, or both, or neither
+ContigencyTable
+
+#One-sided Fisher test for greater overlap than expected by chance
+fisher.test(ContigencyTable, alternative="greater")
+```
+
+```{r tissue-egene-count-comparison}
+
+#Chimp eGenes vs non chimp eGenes
+ToPlot <- GtexHeartEgenes %>%
+  mutate(group = case_when(
+        chimp_id %in% ChimpSigGenes ~ "chimp.eGene",
+        !chimp_id %in% ChimpSigGenes ~ "not.chimp.eGene")) %>%
+left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID"))
+Chimp.tissue.plot <- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  annotate("text", x = 40, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative="greater")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Human eGenes vs non human eGenes
+ToPlot <- GtexHeartEgenes %>%
+  mutate(group = case_when(
+        chimp_id %in% HumanSigGenes ~ "human.eGene",
+        !chimp_id %in% HumanSigGenes ~ "not.human.eGene")) %>%
+left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID"))
+Human.tissue.plot <- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  annotate("text", x = 40, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative="greater")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs human-specific eGenes
+ToPlot <- GtexHeartEgenes %>%
+  mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(HumanSigGenes, ChimpSigGenes) ~ "human.specific.eGene")) %>%
+  filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(HumanSigGenes, ChimpSigGenes)))%>%
+left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID"))
+Shared.human.tissue.plot <- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  annotate("text", x = 40, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative="less")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs chimp-specific eGenes
+ToPlot <- GtexHeartEgenes %>%
+  left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID")) %>%
+mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee) %>%
+mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(ChimpSigGenes, HumanSigGenes) ~ "chimp.specific.eGene")) %>%
+dplyr::filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(ChimpSigGenes, HumanSigGenes)))
+Shared.chimp.tissue.plot <- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  annotate("text", x = 40, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative="less")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+Chimp.tissue.plot
+Human.tissue.plot
+Shared.human.tissue.plot
+Shared.chimp.tissue.plot
+
+```
+
+
+Make same plots, but using top 600 human eGenes to classify heart eGene for purposes of species sharing.
+
+```{r}
+
+#Change FDR thresholds or take top N eGenes by qvalue
+HumanTopN <- 600
+HumanFDR <- 0.1
+ChimpFDR <- 0.1
+
+# Filter human eGenes by qval threshold
+# HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% pull(chimp_id)
+
+# Filter human eGenes by topN qval
+HumanSigGenes <- GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% pull(chimp_id)
+
+# Filter human eGeness by qval threshold then topN betas 
+# HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% top_n(1000, abs(slope)) %>% pull(chimp_id)
+
+HumanNonSigGenes <- GtexHeartEgenes %>%
+  filter(!chimp_id %in% HumanSigGenes) %>%
+  pull(chimp_id)
+
+ChimpSigGenes <- GtexHeartEgenes %>%
+  filter(chimp_id %in% Chimp_eQTLs$gene) %>%
+  pull(chimp_id)
+
+ChimpNonSigGenes <- GtexHeartEgenes %>%
+  filter(! chimp_id %in% Chimp_eQTLs$gene) %>%
+  pull(chimp_id)
+
+
+
+ContigencyTable <- matrix( c( length(intersect(ChimpSigGenes,HumanSigGenes)),
+                              length(intersect(HumanSigGenes,ChimpNonSigGenes)),
+                              length(intersect(ChimpSigGenes,HumanNonSigGenes)),
+                              length(intersect(ChimpNonSigGenes,HumanNonSigGenes))), 
+                           nrow = 2)
+
+rownames(ContigencyTable) <- c("Chimp eGene", "Not Chimp eGene")
+colnames(ContigencyTable) <- c("Human eGene", "Not human eGene")
+
+#what is qval threshold for human eGene classification in this contigency table
+print(GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% top_n(1, qval) %>% pull(qval))
+
+#Contigency table of one to one orthologs tested in both chimps and humans of whether significant in humans, or chimps, or both, or neither
+ContigencyTable
+
+#One-sided Fisher test for greater overlap than expected by chance
+fisher.test(ContigencyTable, alternative="greater")
+
+#Chimp eGenes vs non chimp eGenes
+ToPlot <- GtexHeartEgenes %>%
+  mutate(group = case_when(
+        chimp_id %in% ChimpSigGenes ~ "chimp.eGene",
+        !chimp_id %in% ChimpSigGenes ~ "not.chimp.eGene")) %>%
+left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID"))
+Chimp.tissue.plot <- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  annotate("text", x = 40, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative="greater")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Human eGenes vs non human eGenes
+ToPlot <- GtexHeartEgenes %>%
+  mutate(group = case_when(
+        chimp_id %in% HumanSigGenes ~ "human.eGene",
+        !chimp_id %in% HumanSigGenes ~ "not.human.eGene")) %>%
+left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID"))
+Human.tissue.plot <- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  annotate("text", x = 40, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative="greater")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs human-specific eGenes
+ToPlot <- GtexHeartEgenes %>%
+  mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(HumanSigGenes, ChimpSigGenes) ~ "human.specific.eGene")) %>%
+  filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(HumanSigGenes, ChimpSigGenes)))%>%
+left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID"))
+Shared.human.tissue.plot <- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  annotate("text", x = 40, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative="less")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs chimp-specific eGenes
+ToPlot <- GtexHeartEgenes %>%
+  left_join(OneToOneMap, by=c("chimp_id"="Chimpanzee.gene.stable.ID")) %>%
+mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee) %>%
+mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(ChimpSigGenes, HumanSigGenes) ~ "chimp.specific.eGene")) %>%
+dplyr::filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(ChimpSigGenes, HumanSigGenes)))
+Shared.chimp.tissue.plot <- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  annotate("text", x = 40, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative="less")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+Chimp.tissue.plot
+Human.tissue.plot
+Shared.human.tissue.plot
+Shared.chimp.tissue.plot
+```
+

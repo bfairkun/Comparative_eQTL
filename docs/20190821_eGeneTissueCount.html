@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Ben Fair" />
+
+
+<title>20190821_eGeneTissueCount</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">20190821_eGeneTissueCount</h1>
+<h4 class="author">Ben Fair</h4>
+<h4 class="date">8/21/2019</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-08-21
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreef2f994de3abb5e831a5808e1669ff88048bc33e2targetblankf2f994da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/f2f994de3abb5e831a5808e1669ff88048bc33e2" target="_blank">f2f994d</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreef2f994de3abb5e831a5808e1669ff88048bc33e2targetblankf2f994da" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/20190521_eQTL_CrossSpeciesEnrichment_cache/
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    docs/.DS_Store
+    Ignored:    docs/assets/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/20190821_eGeneTissueCount.Rmd
+    Untracked:  docs/figure/20190716_VarianceInsteadOfEgenes.Rmd/
+    Untracked:  docs/figure/20190821_eGeneTissueCount.Rmd/
+
+Unstaged changes:
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(tidyverse)
+library(knitr)</code></pre>
+<p>Are eGenes that are shared between humans and chimps more likely to be eGenes in many tissues?</p>
+<p>From a table of eGene qvalues across all GTEx tissues (GTEx v7 release), first get distribution of how many tissues each gene has a qval under some threshold</p>
+<pre class="r"><code>GTEx &lt;- read.table(&quot;../data/AllGTExTissues.egenes.txt&quot;, header=T, sep=&#39;\t&#39;)
+
+Threshold=0.1
+TissueEgeneCount &lt;- data.frame(TissueCount=rowSums(GTEx[,-1]&lt;=Threshold, na.rm=T), Gene.stable.ID=gsub(&quot;\\.\\d+&quot;, &quot;&quot;, GTEx$gene_id, perl=T))
+
+
+hist(TissueEgeneCount$TissueCount, breaks=50)</code></pre>
+<p><img src="figure/20190821_eGeneTissueCount.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>From my data, plot this distribution (as a cumulative dist) after stratifying into human-specific eGenes, versus shared eGenes.</p>
+<pre class="r"><code>eQTLs &lt;- read.table(gzfile(&quot;../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz&quot;), header=T)
+kable(head(eQTLs))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">snps</th>
+<th align="left">gene</th>
+<th align="right">beta</th>
+<th align="right">statistic</th>
+<th align="right">pvalue</th>
+<th align="right">FDR</th>
+<th align="right">qvalue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ID.1.126459696.ACCCTAGTAAG.A</td>
+<td align="left">ENSPTRG00000001061</td>
+<td align="right">3.570039</td>
+<td align="right">12.50828</td>
+<td align="right">0</td>
+<td align="right">3.5e-06</td>
+<td align="right">3.5e-06</td>
+</tr>
+<tr class="even">
+<td align="left">ID.1.126465687.TTGT.A</td>
+<td align="left">ENSPTRG00000001061</td>
+<td align="right">3.570039</td>
+<td align="right">12.50828</td>
+<td align="right">0</td>
+<td align="right">3.5e-06</td>
+<td align="right">3.5e-06</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.1.126465750.TG.CT</td>
+<td align="left">ENSPTRG00000001061</td>
+<td align="right">3.570039</td>
+<td align="right">12.50828</td>
+<td align="right">0</td>
+<td align="right">3.5e-06</td>
+<td align="right">3.5e-06</td>
+</tr>
+<tr class="even">
+<td align="left">ID.1.126465756.T.C</td>
+<td align="left">ENSPTRG00000001061</td>
+<td align="right">3.570039</td>
+<td align="right">12.50828</td>
+<td align="right">0</td>
+<td align="right">3.5e-06</td>
+<td align="right">3.5e-06</td>
+</tr>
+<tr class="odd">
+<td align="left">ID.1.126465766.C.A</td>
+<td align="left">ENSPTRG00000001061</td>
+<td align="right">3.570039</td>
+<td align="right">12.50828</td>
+<td align="right">0</td>
+<td align="right">3.5e-06</td>
+<td align="right">3.5e-06</td>
+</tr>
+<tr class="even">
+<td align="left">ID.1.126465774.G.A</td>
+<td align="left">ENSPTRG00000001061</td>
+<td align="right">3.570039</td>
+<td align="right">12.50828</td>
+<td align="right">0</td>
+<td align="right">3.5e-06</td>
+<td align="right">3.5e-06</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># List of chimp tested genes
+ChimpTestedGenes &lt;- rownames(read.table(&#39;../output/ExpressionMatrix.un-normalized.txt.gz&#39;, header=T, check.names=FALSE, row.names = 1))
+
+ChimpToHumanGeneMap &lt;- read.table(&quot;../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz&quot;, header=T, sep=&#39;\t&#39;, stringsAsFactors = F)
+kable(head(ChimpToHumanGeneMap))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Gene.stable.ID</th>
+<th align="left">Transcript.stable.ID</th>
+<th align="left">Chimpanzee.gene.stable.ID</th>
+<th align="left">Chimpanzee.gene.name</th>
+<th align="left">Chimpanzee.protein.or.transcript.stable.ID</th>
+<th align="left">Chimpanzee.homology.type</th>
+<th align="right">X.id..target.Chimpanzee.gene.identical.to.query.gene</th>
+<th align="right">X.id..query.gene.identical.to.target.Chimpanzee.gene</th>
+<th align="right">dN.with.Chimpanzee</th>
+<th align="right">dS.with.Chimpanzee</th>
+<th align="right">Chimpanzee.orthology.confidence..0.low..1.high.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000198888</td>
+<td align="left">ENST00000361390</td>
+<td align="left">ENSPTRG00000042641</td>
+<td align="left">MT-ND1</td>
+<td align="left">ENSPTRP00000061407</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">94.6541</td>
+<td align="right">94.6541</td>
+<td align="right">0.0267</td>
+<td align="right">0.5455</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000198763</td>
+<td align="left">ENST00000361453</td>
+<td align="left">ENSPTRG00000042626</td>
+<td align="left">MT-ND2</td>
+<td align="left">ENSPTRP00000061406</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">96.2536</td>
+<td align="right">96.2536</td>
+<td align="right">0.0185</td>
+<td align="right">0.7225</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000210127</td>
+<td align="left">ENST00000387392</td>
+<td align="left">ENSPTRG00000042642</td>
+<td align="left">MT-TA</td>
+<td align="left">ENSPTRT00000076396</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">100.0000</td>
+<td align="right">100.0000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000198804</td>
+<td align="left">ENST00000361624</td>
+<td align="left">ENSPTRG00000042657</td>
+<td align="left">MT-CO1</td>
+<td align="left">ENSPTRP00000061408</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">98.8304</td>
+<td align="right">98.8304</td>
+<td align="right">0.0065</td>
+<td align="right">0.5486</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000198712</td>
+<td align="left">ENST00000361739</td>
+<td align="left">ENSPTRG00000042660</td>
+<td align="left">MT-CO2</td>
+<td align="left">ENSPTRP00000061402</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">97.7974</td>
+<td align="right">97.7974</td>
+<td align="right">0.0106</td>
+<td align="right">0.5943</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000228253</td>
+<td align="left">ENST00000361851</td>
+<td align="left">ENSPTRG00000042653</td>
+<td align="left">MT-ATP8</td>
+<td align="left">ENSPTRP00000061400</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">94.1176</td>
+<td align="right">94.1176</td>
+<td align="right">0.0325</td>
+<td align="right">0.3331</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Of this ortholog list, how many genes are one2one
+table(ChimpToHumanGeneMap$Chimpanzee.homology.type)</code></pre>
+<pre><code>
+ortholog_many2many  ortholog_one2many   ortholog_one2one 
+              2278              19917             140351 </code></pre>
+<pre class="r"><code>OneToOneMap &lt;- ChimpToHumanGeneMap %&gt;%
+  filter(Chimpanzee.homology.type==&quot;ortholog_one2one&quot;) %&gt;%
+  distinct(Chimpanzee.gene.stable.ID, .keep_all = TRUE) %&gt;%
+  left_join(TissueEgeneCount, by=&quot;Gene.stable.ID&quot;)
+
+# Read gtex heart egene list
+# Only consider those that were tested in both species and are one2one orthologs
+GtexHeartEgenes &lt;- read.table(&quot;../data/Heart_Left_Ventricle.v7.egenes.txt.gz&quot;, header=T, sep=&#39;\t&#39;, stringsAsFactors = F) %&gt;%
+  mutate(gene_id_stable = gsub(&quot;.\\d+$&quot;,&quot;&quot;,gene_id)) %&gt;%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %&gt;%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %&gt;%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+ChimpToHuman.ID &lt;- function(Chimp.ID){
+  #function to convert chimp ensembl to human ensembl gene ids
+  return(
+    plyr::mapvalues(Chimp.ID, OneToOneMap$Chimpanzee.gene.stable.ID, OneToOneMap$Gene.stable.ID, warn_missing = F)
+  )}
+
+HumanFDR &lt;- 0.1
+ChimpFDR &lt;- 0.1
+
+#Get chimp eQTLs
+Chimp_eQTLs &lt;- eQTLs %&gt;%
+  filter(qvalue&lt;ChimpFDR)
+
+# Count chimp eGenes
+length(unique(Chimp_eQTLs$gene))</code></pre>
+<pre><code>[1] 336</code></pre>
+<pre class="r"><code># Count human eGenes
+length(GtexHeartEgenes %&gt;% filter(qval&lt; HumanFDR) %&gt;% pull(chimp_id))</code></pre>
+<pre><code>[1] 5410</code></pre>
+<pre class="r"><code># Count number genes tested in both species (already filtered for 1to1 orthologs)
+length(GtexHeartEgenes$gene_id_stable)</code></pre>
+<pre><code>[1] 11586</code></pre>
+<pre class="r"><code>#Change FDR thresholds or take top N eGenes by qvalue
+HumanTopN &lt;- 600
+HumanFDR &lt;- 0.1
+ChimpFDR &lt;- 0.1
+
+# Filter human eGenes by qval threshold
+HumanSigGenes &lt;- GtexHeartEgenes %&gt;% filter(qval&lt;HumanFDR) %&gt;% pull(chimp_id)
+
+# Filter human eGenes by topN qval
+# HumanSigGenes &lt;- GtexHeartEgenes %&gt;% top_n(-HumanTopN, qval) %&gt;% pull(chimp_id)
+
+# Filter human eGeness by qval threshold then topN betas 
+# HumanSigGenes &lt;- GtexHeartEgenes %&gt;% filter(qval&lt;HumanFDR) %&gt;% top_n(1000, abs(slope)) %&gt;% pull(chimp_id)
+
+HumanNonSigGenes &lt;- GtexHeartEgenes %&gt;%
+  filter(!chimp_id %in% HumanSigGenes) %&gt;%
+  pull(chimp_id)
+
+ChimpSigGenes &lt;- GtexHeartEgenes %&gt;%
+  filter(chimp_id %in% Chimp_eQTLs$gene) %&gt;%
+  pull(chimp_id)
+
+ChimpNonSigGenes &lt;- GtexHeartEgenes %&gt;%
+  filter(! chimp_id %in% Chimp_eQTLs$gene) %&gt;%
+  pull(chimp_id)
+
+
+
+ContigencyTable &lt;- matrix( c( length(intersect(ChimpSigGenes,HumanSigGenes)),
+                              length(intersect(HumanSigGenes,ChimpNonSigGenes)),
+                              length(intersect(ChimpSigGenes,HumanNonSigGenes)),
+                              length(intersect(ChimpNonSigGenes,HumanNonSigGenes))), 
+                           nrow = 2)
+
+rownames(ContigencyTable) &lt;- c(&quot;Chimp eGene&quot;, &quot;Not Chimp eGene&quot;)
+colnames(ContigencyTable) &lt;- c(&quot;Human eGene&quot;, &quot;Not human eGene&quot;)
+
+#what is qval threshold for human eGene classification in this contigency table
+print(GtexHeartEgenes %&gt;% top_n(-HumanTopN, qval) %&gt;% top_n(1, qval) %&gt;% pull(qval))</code></pre>
+<pre><code>[1] 5.83223e-12</code></pre>
+<pre class="r"><code>#Contigency table of one to one orthologs tested in both chimps and humans of whether significant in humans, or chimps, or both, or neither
+ContigencyTable</code></pre>
+<pre><code>                Human eGene Not human eGene
+Chimp eGene             145             135
+Not Chimp eGene        5265            6041</code></pre>
+<pre class="r"><code>#One-sided Fisher test for greater overlap than expected by chance
+fisher.test(ContigencyTable, alternative=&quot;greater&quot;)</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  ContigencyTable
+p-value = 0.04779
+alternative hypothesis: true odds ratio is greater than 1
+95 percent confidence interval:
+ 1.002643      Inf
+sample estimates:
+odds ratio 
+  1.232354 </code></pre>
+<pre class="r"><code>#Chimp eGenes vs non chimp eGenes
+ToPlot &lt;- GtexHeartEgenes %&gt;%
+  mutate(group = case_when(
+        chimp_id %in% ChimpSigGenes ~ &quot;chimp.eGene&quot;,
+        !chimp_id %in% ChimpSigGenes ~ &quot;not.chimp.eGene&quot;)) %&gt;%
+left_join(OneToOneMap, by=c(&quot;chimp_id&quot;=&quot;Chimpanzee.gene.stable.ID&quot;))
+Chimp.tissue.plot &lt;- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;TissueCount&quot;) +
+  annotate(&quot;text&quot;, x = 40, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative=&quot;greater&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Human eGenes vs non human eGenes
+ToPlot &lt;- GtexHeartEgenes %&gt;%
+  mutate(group = case_when(
+        chimp_id %in% HumanSigGenes ~ &quot;human.eGene&quot;,
+        !chimp_id %in% HumanSigGenes ~ &quot;not.human.eGene&quot;)) %&gt;%
+left_join(OneToOneMap, by=c(&quot;chimp_id&quot;=&quot;Chimpanzee.gene.stable.ID&quot;))
+Human.tissue.plot &lt;- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;TissueCount&quot;) +
+  annotate(&quot;text&quot;, x = 40, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative=&quot;greater&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs human-specific eGenes
+ToPlot &lt;- GtexHeartEgenes %&gt;%
+  mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ &quot;shared.eGene&quot;,
+        chimp_id %in% setdiff(HumanSigGenes, ChimpSigGenes) ~ &quot;human.specific.eGene&quot;)) %&gt;%
+  filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(HumanSigGenes, ChimpSigGenes)))%&gt;%
+left_join(OneToOneMap, by=c(&quot;chimp_id&quot;=&quot;Chimpanzee.gene.stable.ID&quot;))
+Shared.human.tissue.plot &lt;- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;TissueCount&quot;) +
+  annotate(&quot;text&quot;, x = 40, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative=&quot;less&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs chimp-specific eGenes
+ToPlot &lt;- GtexHeartEgenes %&gt;%
+  left_join(OneToOneMap, by=c(&quot;chimp_id&quot;=&quot;Chimpanzee.gene.stable.ID&quot;)) %&gt;%
+mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee) %&gt;%
+mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ &quot;shared.eGene&quot;,
+        chimp_id %in% setdiff(ChimpSigGenes, HumanSigGenes) ~ &quot;chimp.specific.eGene&quot;)) %&gt;%
+dplyr::filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(ChimpSigGenes, HumanSigGenes)))
+Shared.chimp.tissue.plot &lt;- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;TissueCount&quot;) +
+  annotate(&quot;text&quot;, x = 40, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative=&quot;less&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+Chimp.tissue.plot</code></pre>
+<p><img src="figure/20190821_eGeneTissueCount.Rmd/tissue-egene-count-comparison-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Human.tissue.plot</code></pre>
+<p><img src="figure/20190821_eGeneTissueCount.Rmd/tissue-egene-count-comparison-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Shared.human.tissue.plot</code></pre>
+<p><img src="figure/20190821_eGeneTissueCount.Rmd/tissue-egene-count-comparison-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Shared.chimp.tissue.plot</code></pre>
+<p><img src="figure/20190821_eGeneTissueCount.Rmd/tissue-egene-count-comparison-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Make same plots, but using top 600 human eGenes to classify heart eGene for purposes of species sharing.</p>
+<pre class="r"><code>#Change FDR thresholds or take top N eGenes by qvalue
+HumanTopN &lt;- 600
+HumanFDR &lt;- 0.1
+ChimpFDR &lt;- 0.1
+
+# Filter human eGenes by qval threshold
+# HumanSigGenes &lt;- GtexHeartEgenes %&gt;% filter(qval&lt;HumanFDR) %&gt;% pull(chimp_id)
+
+# Filter human eGenes by topN qval
+HumanSigGenes &lt;- GtexHeartEgenes %&gt;% top_n(-HumanTopN, qval) %&gt;% pull(chimp_id)
+
+# Filter human eGeness by qval threshold then topN betas 
+# HumanSigGenes &lt;- GtexHeartEgenes %&gt;% filter(qval&lt;HumanFDR) %&gt;% top_n(1000, abs(slope)) %&gt;% pull(chimp_id)
+
+HumanNonSigGenes &lt;- GtexHeartEgenes %&gt;%
+  filter(!chimp_id %in% HumanSigGenes) %&gt;%
+  pull(chimp_id)
+
+ChimpSigGenes &lt;- GtexHeartEgenes %&gt;%
+  filter(chimp_id %in% Chimp_eQTLs$gene) %&gt;%
+  pull(chimp_id)
+
+ChimpNonSigGenes &lt;- GtexHeartEgenes %&gt;%
+  filter(! chimp_id %in% Chimp_eQTLs$gene) %&gt;%
+  pull(chimp_id)
+
+
+
+ContigencyTable &lt;- matrix( c( length(intersect(ChimpSigGenes,HumanSigGenes)),
+                              length(intersect(HumanSigGenes,ChimpNonSigGenes)),
+                              length(intersect(ChimpSigGenes,HumanNonSigGenes)),
+                              length(intersect(ChimpNonSigGenes,HumanNonSigGenes))), 
+                           nrow = 2)
+
+rownames(ContigencyTable) &lt;- c(&quot;Chimp eGene&quot;, &quot;Not Chimp eGene&quot;)
+colnames(ContigencyTable) &lt;- c(&quot;Human eGene&quot;, &quot;Not human eGene&quot;)
+
+#what is qval threshold for human eGene classification in this contigency table
+print(GtexHeartEgenes %&gt;% top_n(-HumanTopN, qval) %&gt;% top_n(1, qval) %&gt;% pull(qval))</code></pre>
+<pre><code>[1] 5.83223e-12</code></pre>
+<pre class="r"><code>#Contigency table of one to one orthologs tested in both chimps and humans of whether significant in humans, or chimps, or both, or neither
+ContigencyTable</code></pre>
+<pre><code>                Human eGene Not human eGene
+Chimp eGene              28             252
+Not Chimp eGene         572           10734</code></pre>
+<pre class="r"><code>#One-sided Fisher test for greater overlap than expected by chance
+fisher.test(ContigencyTable, alternative=&quot;greater&quot;)</code></pre>
+<pre><code>
+    Fisher&#39;s Exact Test for Count Data
+
+data:  ContigencyTable
+p-value = 0.0006395
+alternative hypothesis: true odds ratio is greater than 1
+95 percent confidence interval:
+ 1.444504      Inf
+sample estimates:
+odds ratio 
+  2.084996 </code></pre>
+<pre class="r"><code>#Chimp eGenes vs non chimp eGenes
+ToPlot &lt;- GtexHeartEgenes %&gt;%
+  mutate(group = case_when(
+        chimp_id %in% ChimpSigGenes ~ &quot;chimp.eGene&quot;,
+        !chimp_id %in% ChimpSigGenes ~ &quot;not.chimp.eGene&quot;)) %&gt;%
+left_join(OneToOneMap, by=c(&quot;chimp_id&quot;=&quot;Chimpanzee.gene.stable.ID&quot;))
+Chimp.tissue.plot &lt;- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;TissueCount&quot;) +
+  annotate(&quot;text&quot;, x = 40, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative=&quot;greater&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Human eGenes vs non human eGenes
+ToPlot &lt;- GtexHeartEgenes %&gt;%
+  mutate(group = case_when(
+        chimp_id %in% HumanSigGenes ~ &quot;human.eGene&quot;,
+        !chimp_id %in% HumanSigGenes ~ &quot;not.human.eGene&quot;)) %&gt;%
+left_join(OneToOneMap, by=c(&quot;chimp_id&quot;=&quot;Chimpanzee.gene.stable.ID&quot;))
+Human.tissue.plot &lt;- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;TissueCount&quot;) +
+  annotate(&quot;text&quot;, x = 40, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative=&quot;greater&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs human-specific eGenes
+ToPlot &lt;- GtexHeartEgenes %&gt;%
+  mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ &quot;shared.eGene&quot;,
+        chimp_id %in% setdiff(HumanSigGenes, ChimpSigGenes) ~ &quot;human.specific.eGene&quot;)) %&gt;%
+  filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(HumanSigGenes, ChimpSigGenes)))%&gt;%
+left_join(OneToOneMap, by=c(&quot;chimp_id&quot;=&quot;Chimpanzee.gene.stable.ID&quot;))
+Shared.human.tissue.plot &lt;- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;TissueCount&quot;) +
+  annotate(&quot;text&quot;, x = 40, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative=&quot;less&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+#Shared eGenes vs chimp-specific eGenes
+ToPlot &lt;- GtexHeartEgenes %&gt;%
+  left_join(OneToOneMap, by=c(&quot;chimp_id&quot;=&quot;Chimpanzee.gene.stable.ID&quot;)) %&gt;%
+mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee) %&gt;%
+mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ &quot;shared.eGene&quot;,
+        chimp_id %in% setdiff(ChimpSigGenes, HumanSigGenes) ~ &quot;chimp.specific.eGene&quot;)) %&gt;%
+dplyr::filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(ChimpSigGenes, HumanSigGenes)))
+Shared.chimp.tissue.plot &lt;- ggplot(ToPlot, aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;TissueCount&quot;) +
+  annotate(&quot;text&quot;, x = 40, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, TissueCount ~ group, alternative=&quot;less&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+Chimp.tissue.plot</code></pre>
+<p><img src="figure/20190821_eGeneTissueCount.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Human.tissue.plot</code></pre>
+<p><img src="figure/20190821_eGeneTissueCount.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Shared.human.tissue.plot</code></pre>
+<p><img src="figure/20190821_eGeneTissueCount.Rmd/unnamed-chunk-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Shared.chimp.tissue.plot</code></pre>
+<p><img src="figure/20190821_eGeneTissueCount.Rmd/unnamed-chunk-2-4.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.14
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] knitr_1.23      forcats_0.4.0   stringr_1.4.0   dplyr_0.8.1    
+ [5] purrr_0.3.2     readr_1.3.1     tidyr_0.8.3     tibble_2.1.3   
+ [9] ggplot2_3.1.1   tidyverse_1.2.1
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.1       highr_0.8        cellranger_1.1.0 plyr_1.8.4      
+ [5] pillar_1.4.1     compiler_3.5.1   git2r_0.25.2     workflowr_1.4.0 
+ [9] tools_3.5.1      digest_0.6.19    lubridate_1.7.4  jsonlite_1.6    
+[13] evaluate_0.14    nlme_3.1-140     gtable_0.3.0     lattice_0.20-38 
+[17] pkgconfig_2.0.2  rlang_0.3.4      cli_1.1.0        rstudioapi_0.10 
+[21] yaml_2.2.0       haven_2.1.0      xfun_0.7         withr_2.1.2     
+[25] xml2_1.2.0       httr_1.4.0       hms_0.4.2        generics_0.0.2  
+[29] fs_1.3.1         rprojroot_1.3-2  grid_3.5.1       tidyselect_0.2.5
+[33] glue_1.3.1       R6_2.4.0         readxl_1.3.1     rmarkdown_1.13  
+[37] modelr_0.1.4     magrittr_1.5     backports_1.1.4  scales_1.0.0    
+[41] htmltools_0.3.6  rvest_0.3.4      assertthat_0.2.1 colorspace_1.4-1
+[45] labeling_0.3     stringi_1.4.3    lazyeval_0.2.2   munsell_0.5.0   
+[49] broom_0.5.2      crayon_1.3.4    </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

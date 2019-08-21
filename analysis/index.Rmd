@@ -37,6 +37,7 @@ Welcome to my research website.
 - [GO analysis, FDR=0.1](20190521_eQTL_CrossSpeciesEnrichment.html) overlap enrichment analysis of eGenes across humans and chumps, and gene ontology analysis of eGenes based on eGene classification defined at FDR=0.1 threshold. Also, a set of similar analyses using GSEA methodology, which is based on relative ranking of eGenes between species.
 - [Conservation analysis, FDR=0.1](20190606_eGene_Conservation.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1
 - [Conservation analysis, HumanTop600_eGenes](20190606_eGene_Conservation_TopN.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1 for chimp and top600 qvalue genes for human.
+- [Tissue sharing, both FDR=0.1 and Top600](20190821_eGeneTissueCount.html) analysis of number of GTEx tissues eGenes are detected in for shared and species specific eGenes. As before, I classify species specific and shared eGenes using either FDR=0.1 for both species, or using FDR-0.1 for chimp and top600 qvalue for human.
 - [Conservation analysis, most high-variance genes](20190617_ExpressionVarianceOfEgenes.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on within species variance of expression. A useful comparison for the similar analysis above.
 - []
 

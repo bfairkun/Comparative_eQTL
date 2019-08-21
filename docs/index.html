@@ -344,7 +344,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-07-11
+<strong>Last updated:</strong> 2019-08-21
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -375,10 +375,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree34e6b4f4c30464c6c32619d985b9663b392de4fbtargetblank34e6b4fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/34e6b4f4c30464c6c32619d985b9663b392de4fb" target="_blank">34e6b4f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreef2f994de3abb5e831a5808e1669ff88048bc33e2targetblankf2f994da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/f2f994de3abb5e831a5808e1669ff88048bc33e2" target="_blank">f2f994d</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree34e6b4f4c30464c6c32619d985b9663b392de4fbtargetblank34e6b4fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreef2f994de3abb5e831a5808e1669ff88048bc33e2targetblankf2f994da" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -397,6 +397,11 @@ Ignored files:
     Ignored:    data/PastAnalysesDataToKeep/.DS_Store
     Ignored:    docs/.DS_Store
     Ignored:    docs/assets/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/20190821_eGeneTissueCount.Rmd
+    Untracked:  docs/figure/20190716_VarianceInsteadOfEgenes.Rmd/
+    Untracked:  docs/figure/20190821_eGeneTissueCount.Rmd/
 
 Unstaged changes:
     Modified:   analysis/index.Rmd
@@ -438,6 +443,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/fdbae1200f387d38a61503dd2f2ce00b206ed3ae/analysis/index.Rmd" target="_blank">fdbae12</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-08-14
+</td>
+<td>
+updates
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/641b1d9e3bb86a49be929bf1d1f640c9a0744c25/analysis/index.Rmd" target="_blank">641b1d9</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/641b1d9e3bb86a49be929bf1d1f640c9a0744c25/docs/index.html" target="_blank">641b1d9</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-11
+</td>
+<td>
+update site
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -808,13 +864,15 @@ Start workflowr project.
 <li><a href="20190502_Check_eQTLs.html">fourth iteration</a>: description, lmm with 4 PCs and 3 Genotype PCs, used STAR RNA-seq CPM for less outliers. Fixed big bug that was permuting samples, resulting in no true hits in previous iterations. Here I used standardization and qqnorm.</li>
 </ul>
 </div>
-<div id="conservation-and-go-analysis" class="section level3">
-<h3>Conservation and GO analysis</h3>
+<div id="conservation-and-gogsea-analysis" class="section level3">
+<h3>Conservation and GO/GSEA analysis</h3>
 <ul>
-<li><a href="20190521_eQTL_CrossSpeciesEnrichment.html">GO analysis, FDR=0.1</a> overlap enrichment analysis of eGenes across humans and chumps, and gene ontology analysis of eGenes based on eGene classification defined at FDR=0.1 threshold</li>
+<li><a href="20190521_eQTL_CrossSpeciesEnrichment.html">GO analysis, FDR=0.1</a> overlap enrichment analysis of eGenes across humans and chumps, and gene ontology analysis of eGenes based on eGene classification defined at FDR=0.1 threshold. Also, a set of similar analyses using GSEA methodology, which is based on relative ranking of eGenes between species.</li>
 <li><a href="20190606_eGene_Conservation.html">Conservation analysis, FDR=0.1</a> analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1</li>
 <li><a href="20190606_eGene_Conservation_TopN.html">Conservation analysis, HumanTop600_eGenes</a> analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1 for chimp and top600 qvalue genes for human.</li>
+<li><a href="20190821_eGeneTissueCount.html">Tissue sharing, both FDR=0.1 and Top600</a> analysis of number of GTEx tissues eGenes are detected in for shared and species specific eGenes. As before, I classify species specific and shared eGenes using either FDR=0.1 for both species, or using FDR-0.1 for chimp and top600 qvalue for human.</li>
 <li><a href="20190617_ExpressionVarianceOfEgenes.html">Conservation analysis, most high-variance genes</a> analysis of conservation of coding sequence (percent identity and dN/dS) based on within species variance of expression. A useful comparison for the similar analysis above.</li>
+<li>[]</li>
 </ul>
 </div>
 <div id="power-analysis-for-inter-species-differential-expression" class="section level3">
@@ -829,8 +887,8 @@ Start workflowr project.
 <li>Do differential DNA contacts between species explain differences in eGene character between species.</li>
 <li><a href="20190627_DiffContactsEgenes.html">First crude analysis</a> In this analysis I asked whether the there is a correlation between the rank difference in eGenes between species, and the difference in the sum of contacts in each species’ cis-window for each gene</li>
 <li>There was a slight but significant correlation, but I worry about a potential bias introduced by the fact that eGene significance for humans was based on cis-eQTL calling with a 1MB window and chimp was a 250kB window. I should control for this.</li>
-<li><a href="20190708_DiffContactsEgenes_CisWindowControlled.html">Check that human lead snps in 250kB window are reasonable</a></li>
-<li><a href="20190808_HumanLeadSnps.html">After controlling for cis-window-size</a></li>
+<li><a href="20190808_HumanLeadSnps.html">Check that human lead snps in 250kB window are reasonable</a> As expected, the p-value for lead snps within 250kb is well correlated for the eGene p-value, with the exception that there are many genes with much lower eGene pvalues probably because there is a better SNP &gt;250kb away</li>
+<li><a href="20190708_DiffContactsEgenes_CisWindowControlled.html">After controlling for cis-window-size</a></li>
 </ul>
 </div>
 <div id="shared-polymorphic-loci" class="section level3">

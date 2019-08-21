@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Ben Fair" />
+
+
+<title>20190716_VarianceInsteadOfEgenes</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">20190716_VarianceInsteadOfEgenes</h1>
+<h4 class="author">Ben Fair</h4>
+<h4 class="date">7/16/2019</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-08-21
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreef2f994de3abb5e831a5808e1669ff88048bc33e2targetblankf2f994da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/f2f994de3abb5e831a5808e1669ff88048bc33e2" target="_blank">f2f994d</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreef2f994de3abb5e831a5808e1669ff88048bc33e2targetblankf2f994da" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/20190521_eQTL_CrossSpeciesEnrichment_cache/
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    docs/.DS_Store
+    Ignored:    docs/assets/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/20190821_eGeneTissueCount.Rmd
+    Untracked:  docs/figure/20190821_eGeneTissueCount.Rmd/
+
+Unstaged changes:
+    Modified:   analysis/index.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/fdbae1200f387d38a61503dd2f2ce00b206ed3ae/analysis/20190716_VarianceInsteadOfEgenes.Rmd" target="_blank">fdbae12</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-08-14
+</td>
+<td>
+updates
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e9747fe1160eea2ddd59d851d92d4f18ddd9d35d/analysis/20190716_VarianceInsteadOfEgenes.Rmd" target="_blank">e9747fe</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-24
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/f469d6a4f228d33964d6e1facee2b7d3d4c54617/analysis/20190716_VarianceInsteadOfEgenes.Rmd" target="_blank">f469d6a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-07-16
+</td>
+<td>
+new analyses
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>For all the analyses I have using different levels of eGene character as a proxy for stabilizing selection (to get at what genes expression levels are important, and which are allowed to vary), I want to also do the same with coefficient of variation(CV) (as opposed to eGene character which requires that we can explain the variation by a cis-SNP). Even though CV does not require a heritable component to gene expression (which would therefore not be a target of stabilizing selection), it is more easy to measure CV than cis-eQTL mapping, and we know that 80% of gene expression heritability is trans anyway, so prioritizing stabilizing selection targets by presence of cis-eGene quality really only adds minimal evidence for heritability.</p>
+<pre class="r"><code>library(tidyverse)
+library(knitr)
+library(&quot;edgeR&quot;)
+library(stats)
+library(corrplot)
+library(gplots)
+library(&quot;clusterProfiler&quot;)
+library(&quot;org.Hs.eg.db&quot;)
+library(enrichplot)
+
+
+
+
+# Helper function reference in body of later function
+rep.col&lt;-function(x,n){
+   matrix(rep(x,each=n), ncol=n, byrow=TRUE)
+}
+
+# Modified from the function in the PowerAnalysis Rmarkdown.
+# Function to return RPKM table from chimp and human datasets (n=38 each)
+# Use GenesToKeep argument to subset the same list that I compared for eQTLs
+GetRPKMCountTable &lt;-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, GenesToKeep, ChimpSampleDrop=NULL, HumanSampleDrop=NULL)
+  #if SubsampleSize parameter == 0, use full table, otherwise, subsample from it
+  {
+   FullChimpData &lt;- read.table(gzfile(ChimpCountTableFile), header=T, check.names=FALSE, skip=1)
+   FullHumanData &lt;- read.table(gzfile(HumanCountTableFile), header=T, check.names=FALSE, skip=1)
+   
+  if (!is.null(ChimpSampleDrop)){
+     FullChimpData &lt;- FullChimpData %&gt;% dplyr::select(-ChimpSampleDrop)
+   }   
+  if (!is.null(HumanSampleDrop)){
+     FullHumanData &lt;- FullHumanData %&gt;% dplyr::select(-HumanSampleDrop)
+   }
+
+   if (SubsampleSize==0){
+     CountTableChimp &lt;- FullChimpData
+     colnames(CountTableChimp) &lt;- paste0(&quot;C.&quot;, colnames(CountTableChimp))
+     CountTableHuman &lt;- FullHumanData
+     colnames(CountTableHuman) &lt;- paste0(&quot;H.&quot;, colnames(CountTableHuman))
+     
+   } else {
+     CountTableChimp &lt;- FullChimpData %&gt;% dplyr::select(c(1:6, sample(7:length(FullChimpData), SubsampleSize)))
+     colnames(CountTableChimp) &lt;- paste0(&quot;C.&quot;, colnames(CountTableChimp))
+     
+     CountTableHuman &lt;- FullHumanData %&gt;% dplyr::select(c(1:6, sample(7:length(FullHumanData), SubsampleSize)))
+     colnames(CountTableHuman) &lt;- paste0(&quot;H.&quot;, colnames(CountTableHuman))
+   }
+   
+CombinedTable &lt;- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=c(&quot;C.Geneid&quot;=&quot;H.Geneid&quot;)) %&gt;%
+  column_to_rownames(&quot;C.Geneid&quot;) %&gt;% as.matrix()
+
+SpeciesFactor &lt;- colnames(CombinedTable) %&gt;% substr(1,1) %&gt;% factor() %&gt;% unclass() %&gt;% as.character()
+
+d0 &lt;- DGEList(CombinedTable)
+d0 &lt;- calcNormFactors(d0)
+
+
+
+d &lt;- d0[GenesToKeep,]
+mm &lt;- model.matrix(~0 + SpeciesFactor)
+y &lt;- voom(d, mm, normalize.method=&quot;cyclicloess&quot;, plot=F)
+
+GeneLengths &lt;- inner_join(CountTableChimp[,c(&quot;C.Geneid&quot;, &quot;C.Length&quot;)], CountTableHuman[,c(&quot;H.Geneid&quot;, &quot;H.Length&quot;)], by=c(&quot;C.Geneid&quot;=&quot;H.Geneid&quot;))
+GeneLengthMatrix &lt;- cbind(
+  rep.col(log2(GeneLengths$C.Length/1000), length(CountTableChimp)-6),
+  rep.col(log2(GeneLengths$H.Length/1000), length(CountTableHuman)-6))
+rownames(GeneLengthMatrix) &lt;- GeneLengths$C.Geneid
+y$E &lt;- y$E - GeneLengthMatrix[rownames(y$E),]
+
+return(y)
+# return(d0)
+
+}</code></pre>
+<p>Get list of cis-eQTL tested genes that were tested in both chimps and humans and one-to-one orthologs and also in DE gene count tables (from reads mapped to ortho exons):</p>
+<pre class="r"><code>CountTableChimpFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz&#39;
+CountTableHumanFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Human.subread.txt.gz&#39;
+
+eQTLs &lt;- read.table(gzfile(&quot;../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz&quot;), header=T)
+
+# List of chimp tested genes
+ChimpTestedGenes &lt;- rownames(read.table(&#39;../output/ExpressionMatrix.un-normalized.txt.gz&#39;, header=T, check.names=FALSE, row.names = 1))
+
+ChimpToHumanGeneMap &lt;- read.table(&quot;../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz&quot;, header=T, sep=&#39;\t&#39;, stringsAsFactors = F)
+
+# Of this ortholog list, how many genes are one2one
+OneToOneMap &lt;- ChimpToHumanGeneMap %&gt;%
+  filter(Chimpanzee.homology.type==&quot;ortholog_one2one&quot;)
+
+# Read gtex heart egene list
+# Only consider those that were tested in both species and are one2one orthologs
+GtexHeartEgenes &lt;- read.table(&quot;../data/Heart_Left_Ventricle.v7.egenes.txt.gz&quot;, header=T, sep=&#39;\t&#39;, stringsAsFactors = F) %&gt;%
+  mutate(gene_id_stable = gsub(&quot;.\\d+$&quot;,&quot;&quot;,gene_id)) %&gt;%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %&gt;%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %&gt;%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+
+EgenesTested &lt;- gsub(&quot;\\..+&quot;, &quot;&quot;, GtexHeartEgenes$gene_id, perl=T)
+length(EgenesTested)</code></pre>
+<pre><code>[1] 11586</code></pre>
+<pre class="r"><code>GenesInDESet &lt;- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)$Geneid
+length(GenesInDESet)</code></pre>
+<pre><code>[1] 44125</code></pre>
+<pre class="r"><code>GeneList &lt;- intersect(as.character(GenesInDESet),EgenesTested)
+kable(head(GeneList))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000186827</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000078808</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000176022</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000184163</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000160087</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000131584</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>length(GeneList)</code></pre>
+<pre><code>[1] 11416</code></pre>
+<p>Ok, now get CountTable of 38 chimps, 38 humans (based on remapped data that maps to orthologous exons) of RPKM, and filtered for the outlier samples that I also left out of the DE gene power analysis</p>
+<pre class="r"><code>HumanSamplesToDrop &lt;- c(c(&quot;SRR1507229&quot;,&quot;SRR603918&quot;, &quot;SRR1478149&quot;, &quot;SRR598509&quot;, &quot;SRR613186&quot;), c(&quot;SRR1489693&quot;, &quot;SRR598148&quot;, &quot;59167&quot;, &quot;SRR1478900&quot;, &quot;SRR1474730&quot;, &quot;61317&quot;))
+ChimpSamplesToDrop &lt;- c(&quot;Little_R&quot;)
+
+
+
+
+CountTable &lt;- GetRPKMCountTable(CountTableChimpFile,
+              CountTableHumanFile,
+              0, GeneList, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+qplot(apply(CountTable,1,mean), sqrt(apply(CountTable,1,var)), alpha=0.05) +
+  geom_smooth(method=&quot;loess&quot;, show_guide = FALSE, se=F) +
+  xlab(&quot;Mean expression (log(RPKM)&quot;) +
+  ylab(&quot;Standard deviation&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>scatter.smooth(apply(CountTable,1,mean), sqrt(apply(CountTable,1,var)), color=&quot;red&quot;)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>CountTableNonLog &lt;- 2**CountTable$E
+
+
+qplot(apply(CountTableNonLog,1,mean), sqrt(apply(CountTableNonLog,1,var)/apply(CountTableNonLog,1,mean)), alpha=0.01)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-2-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ToPlot &lt;- data.frame(CV=sqrt(apply(CountTableNonLog,1,var)/apply(CountTableNonLog,1,mean)),
+                     mean = apply(CountTableNonLog,1,mean), 
+                     SDlogexpression = sqrt(apply(CountTable,1,var)),
+                     logmean = apply(CountTable,1,mean))
+
+# standard deviation vs expression (after log transforming RPKM), with CV as colors
+ggplot(ToPlot, aes(x=log(mean), y=SDlogexpression, color=log(CV))) +
+  geom_point()</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-2-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Coefficient of variation still doesn’t really capture the character I am going after (since all the high CV genes are highly expressed), which is how much does a gene vary relative to other genes at its expression level. For now (for simplicity) I may simply use the standard deviation (after log transformation as my metric to get at stabilizing selection)</p>
+<p>Below I will try fitting a loess mean-variance trend and rank genes according the how elevated they are above that trend</p>
+<pre class="r"><code>Gene.summarystats &lt;- data.frame(CV=sqrt(apply(CountTableNonLog,1,var)/apply(CountTableNonLog,1,mean)),
+                     mean = apply(CountTableNonLog,1,mean), 
+                     SDlogexpression = sqrt(apply(CountTable,1,var)),
+                     logmean = apply(CountTable,1,mean))
+
+Gene.summarystats.lo &lt;- loess(SDlogexpression ~ logmean, Gene.summarystats)
+Gene.summarystats$SD.minus.loess &lt;- Gene.summarystats$SDlogexpression - predict(Gene.summarystats.lo, Gene.summarystats$logmean)
+ggplot(Gene.summarystats, aes(x=logmean, y=SDlogexpression, color=SD.minus.loess)) +
+  geom_point() +
+  geom_smooth(method=&quot;loess&quot;, show_guide = FALSE, se=F) +
+  xlab(&quot;Mean expression (log(RPKM)&quot;) +
+  ylab(&quot;Standard deviation&quot;) +
+  scale_colour_gradient2(name = &quot;Residual from loess curve&quot;) +
+  theme_bw() +
+  theme(legend.position=&quot;bottom&quot;)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Alright that worked well, now do it for chimp, and again for human, and compare…</p>
+<pre class="r"><code>Get.GeneSummaryStat.df &lt;- function(Input.df){
+  My.Gene.summarystats &lt;- data.frame(mean = apply(Input.df,1,mean),
+                                  SD = sqrt(apply(Input.df,1,var)))
+  My.Gene.summarystats.lo &lt;- loess(SD ~ mean, My.Gene.summarystats)
+  My.Gene.summarystats$SD.minus.loess &lt;- My.Gene.summarystats$SD - predict(My.Gene.summarystats.lo, My.Gene.summarystats$mean)
+  return(My.Gene.summarystats)
+}
+
+
+CountTable.chimp &lt;- CountTable$E %&gt;% as.data.frame() %&gt;% dplyr::select(contains(&quot;C.&quot;))
+Chimp.summarystats &lt;- Get.GeneSummaryStat.df(CountTable.chimp)
+
+CountTable.human &lt;- CountTable$E %&gt;% as.data.frame() %&gt;% dplyr::select(contains(&quot;H.&quot;))
+Human.summarystats &lt;- Get.GeneSummaryStat.df(CountTable.human)
+
+# How does this statistic (std dev minus loess prediction) correlate across species
+R&lt;-cor(Chimp.summarystats$SD.minus.loess, Human.summarystats$SD.minus.loess, method=&quot;pearson&quot;)
+lb1 &lt;- paste(&quot;~R^2==~&quot;, round(R**2,2))
+qplot(Chimp.summarystats$SD.minus.loess, Human.summarystats$SD.minus.loess, alpha=0.05) +
+  xlab(&quot;Chimp&quot;) +
+  ylab(&quot;Human&quot;)+
+  annotate(&quot;text&quot;,x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>That correlation is surprisingly good. I should check that it isn’t a bug due to sample labels getting switched. Lets make correlation matrix of the original table to ensure that the chimp samples separate from the human samples.</p>
+<pre class="r"><code>cor(CountTable$E, method = c(&quot;spearman&quot;)) %&gt;%
+heatmap.2(trace=&quot;none&quot;)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok wow, I guess it really is the case that gene expression variance is very consistent. If there really isn’t a bug, and this statistic is measuring what it should, I expect it to correlate strongly to other measures of conservation like dN/dS or percent identity</p>
+<pre class="r"><code>ChimpToHumanGeneMap &lt;- read.table(&quot;../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz&quot;, header=T, sep=&#39;\t&#39;, stringsAsFactors = F) %&gt;% distinct(Gene.stable.ID, .keep_all = T)
+
+
+ToPlot &lt;- Chimp.summarystats %&gt;%
+  rownames_to_column() %&gt;%
+  left_join(ChimpToHumanGeneMap, by=c(&quot;rowname&quot; = &quot;Gene.stable.ID&quot;)) %&gt;%
+  mutate(rank = dense_rank(dplyr::desc(SD.minus.loess))) %&gt;% 
+  mutate(group = case_when(
+                           rank&gt;=500 ~ &quot;NotTop500VarianceGene&quot;,
+                           rank&lt;=500 ~ &quot;Top500VarianceGene&quot;)) %&gt;%
+  mutate(dN.dS = dN.with.Chimpanzee/dS.with.Chimpanzee)
+
+ggplot(ToPlot, aes(color=group, x=100-X.id..query.gene.identical.to.target.Chimpanzee.gene+0.001)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  scale_x_continuous(trans=&#39;log1p&#39;, limits=c(0,100), expand=expand_scale()) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;Percent non-identitical amino acid between chimp and human&quot;) +
+  annotate(&quot;text&quot;, x = 10, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, X.id..query.gene.identical.to.target.Chimpanzee.gene ~ group, alternative=&quot;greater&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#What is overall correlation (previous analysis, where I compared two groups based on a threshold categorization of the other variable, is not the most sensitive method)
+cor.test(ToPlot$X.id..query.gene.identical.to.target.Chimpanzee.gene, ToPlot$SD.minus.loess, method=&#39;spearman&#39;)</code></pre>
+<pre><code>
+    Spearman&#39;s rank correlation rho
+
+data:  ToPlot$X.id..query.gene.identical.to.target.Chimpanzee.gene and ToPlot$SD.minus.loess
+S = 2.667e+11, p-value = 6.336e-16
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+        rho 
+-0.07554831 </code></pre>
+<pre class="r"><code>ggplot(ToPlot, aes(y=SD.minus.loess, x=100-X.id..query.gene.identical.to.target.Chimpanzee.gene+0.001)) +
+  geom_point() +
+  scale_x_continuous(trans=&#39;log1p&#39;, limits=c(0,100), expand=expand_scale()) +
+  ylab(&quot;SD.minus.loess&quot;) +
+  xlab(&quot;Percent non-identitical amino acid between chimp and human&quot;) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggplot(ToPlot, aes(color=group,x=dN.dS)) +
+  stat_ecdf(geom = &quot;step&quot;) +
+  ylab(&quot;Cumulative frequency&quot;) +
+  xlab(&quot;dN/dS&quot;) +
+  scale_x_continuous(trans=&#39;log10&#39;, limits=c(0.01,10)) +
+  annotate(&quot;text&quot;, x = 1, y = 0.4, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=ToPlot, dN.dS ~ group, alternative=&quot;less&quot;)$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok now subtract the variance metric (Chimp - human) to get a ordered list of genes where higher numbers means more variance in chimp.</p>
+<pre class="r"><code>RankedGeneList&lt;-Chimp.summarystats$SD.minus.loess - Human.summarystats$SD.minus.loess
+names(RankedGeneList) &lt;- rownames(Chimp.summarystats)
+SortedGeneList &lt;- sort(RankedGeneList, decreasing=T)</code></pre>
+<p>GSEA analysis</p>
+<pre class="r"><code>#bp  
+gsego.cc.chimp.high.var &lt;- gseGO(gene = SortedGeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = &#39;ENSEMBL&#39;,
+                 maxGSSize = 500,
+                 ont = &quot;BP&quot;,
+                 nPerm = 100000)
+A&lt;-as.data.frame(gsego.cc.chimp.high.var)
+bp2 &lt;- simplify(gsego.cc.chimp.high.var, cutoff=0.7, by=&quot;p.adjust&quot;, select_fun=min)
+
+gseaplot2(gsego.cc.chimp.high.var, geneSetID = c(&quot;GO:0002263&quot;, &quot;GO:0061061&quot;, &quot;GO:0072538&quot;, &quot;GO:0000076&quot;), title=&quot;ChimpVariance - HumanVariance&quot;, pvalue_table = TRUE)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>dotplot(bp2, font.size=8, showCategory=10)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#all
+gsego.all.chimp.high.var &lt;- gseGO(gene = SortedGeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = &#39;ENSEMBL&#39;,
+                 maxGSSize = 500,
+                 ont = &quot;ALL&quot;,
+                 nPerm = 100000)
+A&lt;-as.data.frame(gsego.all.chimp.high.var)
+A %&gt;% as.data.frame() %&gt;% dplyr::select(ONTOLOGY, ID, Description, enrichmentScore) %&gt;% arrange(desc(abs(enrichmentScore))) %&gt;% head(20)</code></pre>
+<pre><code>   ONTOLOGY         ID
+1        CC GO:0042101
+2        BP GO:0045059
+3        CC GO:0071682
+4        CC GO:0042611
+5        BP GO:0090036
+6        BP GO:0000076
+7        MF GO:0042287
+8        BP GO:0033081
+9        BP GO:0046641
+10       BP GO:0045076
+11       BP GO:0043368
+12       MF GO:0022829
+13       BP GO:0034356
+14       BP GO:0032753
+15       BP GO:0072538
+16       MF GO:0042288
+17       CC GO:0042613
+18       BP GO:0032673
+19       BP GO:0045061
+20       BP GO:2000316
+                                                  Description
+1                                     T cell receptor complex
+2                            positive thymic T cell selection
+3                                     endocytic vesicle lumen
+4                                         MHC protein complex
+5                    regulation of protein kinase C signaling
+6                                  DNA replication checkpoint
+7                                         MHC protein binding
+8              regulation of T cell differentiation in thymus
+9      positive regulation of alpha-beta T cell proliferation
+10           regulation of interleukin-2 biosynthetic process
+11                                  positive T cell selection
+12                                 wide pore channel activity
+13 NAD biosynthesis via nicotinamide riboside salvage pathway
+14            positive regulation of interleukin-4 production
+15                           T-helper 17 type immune response
+16                                MHC class I protein binding
+17                               MHC class II protein complex
+18                     regulation of interleukin-4 production
+19                                    thymic T cell selection
+20             regulation of T-helper 17 type immune response
+   enrichmentScore
+1        0.8748100
+2        0.8312196
+3        0.8080349
+4        0.8049838
+5        0.8021597
+6       -0.8013554
+7        0.7915898
+8        0.7888677
+9        0.7872037
+10       0.7864955
+11       0.7844327
+12       0.7826594
+13       0.7786233
+14       0.7740712
+15       0.7729389
+16       0.7673605
+17       0.7664554
+18       0.7643274
+19       0.7596905
+20       0.7589618</code></pre>
+<pre class="r"><code>A %&gt;% as.data.frame() %&gt;% dplyr::select(ONTOLOGY, ID, Description, enrichmentScore) %&gt;% arrange(desc(abs(enrichmentScore))) %&gt;% head(20)</code></pre>
+<pre><code>   ONTOLOGY         ID
+1        CC GO:0042101
+2        BP GO:0045059
+3        CC GO:0071682
+4        CC GO:0042611
+5        BP GO:0090036
+6        BP GO:0000076
+7        MF GO:0042287
+8        BP GO:0033081
+9        BP GO:0046641
+10       BP GO:0045076
+11       BP GO:0043368
+12       MF GO:0022829
+13       BP GO:0034356
+14       BP GO:0032753
+15       BP GO:0072538
+16       MF GO:0042288
+17       CC GO:0042613
+18       BP GO:0032673
+19       BP GO:0045061
+20       BP GO:2000316
+                                                  Description
+1                                     T cell receptor complex
+2                            positive thymic T cell selection
+3                                     endocytic vesicle lumen
+4                                         MHC protein complex
+5                    regulation of protein kinase C signaling
+6                                  DNA replication checkpoint
+7                                         MHC protein binding
+8              regulation of T cell differentiation in thymus
+9      positive regulation of alpha-beta T cell proliferation
+10           regulation of interleukin-2 biosynthetic process
+11                                  positive T cell selection
+12                                 wide pore channel activity
+13 NAD biosynthesis via nicotinamide riboside salvage pathway
+14            positive regulation of interleukin-4 production
+15                           T-helper 17 type immune response
+16                                MHC class I protein binding
+17                               MHC class II protein complex
+18                     regulation of interleukin-4 production
+19                                    thymic T cell selection
+20             regulation of T-helper 17 type immune response
+   enrichmentScore
+1        0.8748100
+2        0.8312196
+3        0.8080349
+4        0.8049838
+5        0.8021597
+6       -0.8013554
+7        0.7915898
+8        0.7888677
+9        0.7872037
+10       0.7864955
+11       0.7844327
+12       0.7826594
+13       0.7786233
+14       0.7740712
+15       0.7729389
+16       0.7673605
+17       0.7664554
+18       0.7643274
+19       0.7596905
+20       0.7589618</code></pre>
+<pre class="r"><code># bp2 &lt;- simplify(gsego.all.chimp.high.var, cutoff=0.7, by=&quot;p.adjust&quot;, select_fun=min)
+
+# bp2 %&gt;% as.data.frame() %&gt;% dplyr::select(ONTOLOGY, ID, Description, enrichmentScore) %&gt;% arrange(desc(abs(enrichmentScore))) %&gt;% head(20)
+
+
+
+table(A$ONTOLOGY)</code></pre>
+<pre><code>
+ BP  CC  MF 
+336  32  16 </code></pre>
+<pre class="r"><code>A$ID</code></pre>
+<pre><code>  [1] &quot;GO:0032101&quot; &quot;GO:0030155&quot; &quot;GO:0002263&quot; &quot;GO:0001816&quot; &quot;GO:0045087&quot;
+  [6] &quot;GO:0002366&quot; &quot;GO:0061061&quot; &quot;GO:0009986&quot; &quot;GO:0051046&quot; &quot;GO:0002274&quot;
+ [11] &quot;GO:0019221&quot; &quot;GO:0050778&quot; &quot;GO:0006954&quot; &quot;GO:0031347&quot; &quot;GO:1903530&quot;
+ [16] &quot;GO:0046649&quot; &quot;GO:0001817&quot; &quot;GO:0002444&quot; &quot;GO:0002275&quot; &quot;GO:0043299&quot;
+ [21] &quot;GO:0036230&quot; &quot;GO:0042119&quot; &quot;GO:0050865&quot; &quot;GO:0002253&quot; &quot;GO:0009617&quot;
+ [26] &quot;GO:0002694&quot; &quot;GO:0002521&quot; &quot;GO:0002764&quot; &quot;GO:0098552&quot; &quot;GO:0042110&quot;
+ [31] &quot;GO:0002757&quot; &quot;GO:0051249&quot; &quot;GO:1903706&quot; &quot;GO:0022407&quot; &quot;GO:0098542&quot;
+ [36] &quot;GO:0002697&quot; &quot;GO:0050727&quot; &quot;GO:0002250&quot; &quot;GO:0007159&quot; &quot;GO:0030098&quot;
+ [41] &quot;GO:0002768&quot; &quot;GO:0050867&quot; &quot;GO:0050863&quot; &quot;GO:0002696&quot; &quot;GO:0002429&quot;
+ [46] &quot;GO:1903037&quot; &quot;GO:0051251&quot; &quot;GO:1902105&quot; &quot;GO:0060326&quot; &quot;GO:0070661&quot;
+ [51] &quot;GO:0022409&quot; &quot;GO:0034612&quot; &quot;GO:0009897&quot; &quot;GO:0030217&quot; &quot;GO:0002460&quot;
+ [56] &quot;GO:0032943&quot; &quot;GO:0046651&quot; &quot;GO:0042113&quot; &quot;GO:0002449&quot; &quot;GO:1903039&quot;
+ [61] &quot;GO:0050870&quot; &quot;GO:0070663&quot; &quot;GO:0002699&quot; &quot;GO:0032944&quot; &quot;GO:0050851&quot;
+ [66] &quot;GO:0050670&quot; &quot;GO:0034341&quot; &quot;GO:1903708&quot; &quot;GO:0002703&quot; &quot;GO:0030595&quot;
+ [71] &quot;GO:0051092&quot; &quot;GO:0071346&quot; &quot;GO:0045619&quot; &quot;GO:0050852&quot; &quot;GO:0002819&quot;
+ [76] &quot;GO:1902107&quot; &quot;GO:0045580&quot; &quot;GO:0046631&quot; &quot;GO:0006959&quot; &quot;GO:0032946&quot;
+ [81] &quot;GO:0050671&quot; &quot;GO:0001906&quot; &quot;GO:0046632&quot; &quot;GO:0060333&quot; &quot;GO:0045621&quot;
+ [86] &quot;GO:0001909&quot; &quot;GO:0034340&quot; &quot;GO:0045582&quot; &quot;GO:0042102&quot; &quot;GO:0060337&quot;
+ [91] &quot;GO:0071357&quot; &quot;GO:0033077&quot; &quot;GO:0003823&quot; &quot;GO:0045058&quot; &quot;GO:0032633&quot;
+ [96] &quot;GO:0032673&quot; &quot;GO:0043368&quot; &quot;GO:0042287&quot; &quot;GO:0042101&quot; &quot;GO:0004888&quot;
+[101] &quot;GO:0002446&quot; &quot;GO:0002283&quot; &quot;GO:0043312&quot; &quot;GO:0098797&quot; &quot;GO:0007052&quot;
+[106] &quot;GO:0045785&quot; &quot;GO:0001819&quot; &quot;GO:0018212&quot; &quot;GO:0050900&quot; &quot;GO:0018108&quot;
+[111] &quot;GO:0031349&quot; &quot;GO:0052547&quot; &quot;GO:0052548&quot; &quot;GO:0050730&quot; &quot;GO:0098802&quot;
+[116] &quot;GO:0042742&quot; &quot;GO:0070665&quot; &quot;GO:0002706&quot; &quot;GO:0002705&quot; &quot;GO:0048525&quot;
+[121] &quot;GO:0046637&quot; &quot;GO:0001910&quot; &quot;GO:0002287&quot; &quot;GO:0002293&quot; &quot;GO:0002294&quot;
+[126] &quot;GO:0072376&quot; &quot;GO:0042093&quot; &quot;GO:0006956&quot; &quot;GO:0001784&quot; &quot;GO:0032743&quot;
+[131] &quot;GO:0042611&quot; &quot;GO:0045088&quot; &quot;GO:0071356&quot; &quot;GO:0005539&quot; &quot;GO:0050792&quot;
+[136] &quot;GO:0002822&quot; &quot;GO:0030317&quot; &quot;GO:0097722&quot; &quot;GO:0046634&quot; &quot;GO:0072562&quot;
+[141] &quot;GO:0043367&quot; &quot;GO:0050853&quot; &quot;GO:0045622&quot; &quot;GO:0042692&quot; &quot;GO:1902850&quot;
+[146] &quot;GO:0045089&quot; &quot;GO:0101002&quot; &quot;GO:0017157&quot; &quot;GO:0042129&quot; &quot;GO:0048514&quot;
+[151] &quot;GO:0005509&quot; &quot;GO:0001525&quot; &quot;GO:0002286&quot; &quot;GO:0007517&quot; &quot;GO:0002683&quot;
+[156] &quot;GO:0031341&quot; &quot;GO:0046635&quot; &quot;GO:0002292&quot; &quot;GO:0010469&quot; &quot;GO:0019730&quot;
+[161] &quot;GO:0042098&quot; &quot;GO:0002526&quot; &quot;GO:0045445&quot; &quot;GO:0071621&quot; &quot;GO:1903901&quot;
+[166] &quot;GO:0032663&quot; &quot;GO:0033081&quot; &quot;GO:0050729&quot; &quot;GO:0097530&quot; &quot;GO:0019724&quot;
+[171] &quot;GO:0032103&quot; &quot;GO:0006027&quot; &quot;GO:0032609&quot; &quot;GO:0007051&quot; &quot;GO:0031294&quot;
+[176] &quot;GO:0072538&quot; &quot;GO:0030545&quot; &quot;GO:0031012&quot; &quot;GO:0006026&quot; &quot;GO:0002532&quot;
+[181] &quot;GO:0002709&quot; &quot;GO:0002285&quot; &quot;GO:0002708&quot; &quot;GO:0043903&quot; &quot;GO:0000076&quot;
+[186] &quot;GO:0000819&quot; &quot;GO:0031295&quot; &quot;GO:0048018&quot; &quot;GO:0032753&quot; &quot;GO:0071222&quot;
+[191] &quot;GO:0046641&quot; &quot;GO:0050866&quot; &quot;GO:0032623&quot; &quot;GO:0050864&quot; &quot;GO:0007059&quot;
+[196] &quot;GO:0010035&quot; &quot;GO:0060205&quot; &quot;GO:0043235&quot; &quot;GO:0000075&quot; &quot;GO:0001568&quot;
+[201] &quot;GO:0097529&quot; &quot;GO:0050731&quot; &quot;GO:0002695&quot; &quot;GO:0001818&quot; &quot;GO:0031983&quot;
+[206] &quot;GO:0098813&quot; &quot;GO:0000070&quot; &quot;GO:0016064&quot; &quot;GO:0140014&quot; &quot;GO:0002820&quot;
+[211] &quot;GO:0043044&quot; &quot;GO:0099003&quot; &quot;GO:0043408&quot; &quot;GO:0005819&quot; &quot;GO:0072539&quot;
+[216] &quot;GO:0043370&quot; &quot;GO:0005874&quot; &quot;GO:0001912&quot; &quot;GO:0000793&quot; &quot;GO:0000280&quot;
+[221] &quot;GO:0001772&quot; &quot;GO:1903900&quot; &quot;GO:0014706&quot; &quot;GO:0009435&quot; &quot;GO:0045059&quot;
+[226] &quot;GO:0042035&quot; &quot;GO:0030162&quot; &quot;GO:1901222&quot; &quot;GO:0090036&quot; &quot;GO:0045061&quot;
+[231] &quot;GO:0031343&quot; &quot;GO:0071219&quot; &quot;GO:0016079&quot; &quot;GO:2000116&quot; &quot;GO:0060538&quot;
+[236] &quot;GO:0035710&quot; &quot;GO:0009636&quot; &quot;GO:0032496&quot; &quot;GO:0045071&quot; &quot;GO:0030139&quot;
+[241] &quot;GO:0002823&quot; &quot;GO:0070670&quot; &quot;GO:0002673&quot; &quot;GO:0060537&quot; &quot;GO:0045309&quot;
+[246] &quot;GO:0042330&quot; &quot;GO:0055001&quot; &quot;GO:0070820&quot; &quot;GO:0019955&quot; &quot;GO:0002790&quot;
+[251] &quot;GO:0055002&quot; &quot;GO:0001539&quot; &quot;GO:0060285&quot; &quot;GO:0071556&quot; &quot;GO:0098553&quot;
+[256] &quot;GO:1903305&quot; &quot;GO:0017156&quot; &quot;GO:1902749&quot; &quot;GO:0071353&quot; &quot;GO:0032735&quot;
+[261] &quot;GO:0051250&quot; &quot;GO:0002707&quot; &quot;GO:0030101&quot; &quot;GO:2000514&quot; &quot;GO:0045076&quot;
+[266] &quot;GO:0008037&quot; &quot;GO:0002237&quot; &quot;GO:0006935&quot; &quot;GO:0032649&quot; &quot;GO:0042094&quot;
+[271] &quot;GO:0042108&quot; &quot;GO:0002228&quot; &quot;GO:0042089&quot; &quot;GO:0042107&quot; &quot;GO:0051301&quot;
+[276] &quot;GO:0002931&quot; &quot;GO:0032613&quot; &quot;GO:0055069&quot; &quot;GO:0060047&quot; &quot;GO:0032653&quot;
+[281] &quot;GO:0070372&quot; &quot;GO:0048489&quot; &quot;GO:0097480&quot; &quot;GO:0051146&quot; &quot;GO:0019674&quot;
+[286] &quot;GO:0002455&quot; &quot;GO:0071682&quot; &quot;GO:0043901&quot; &quot;GO:0034356&quot; &quot;GO:0046633&quot;
+[291] &quot;GO:0070371&quot; &quot;GO:0030449&quot; &quot;GO:2000257&quot; &quot;GO:0002920&quot; &quot;GO:1990266&quot;
+[296] &quot;GO:0045576&quot; &quot;GO:0030593&quot; &quot;GO:1904724&quot; &quot;GO:0071216&quot; &quot;GO:0006336&quot;
+[301] &quot;GO:2000316&quot; &quot;GO:0009611&quot; &quot;GO:0002824&quot; &quot;GO:0032733&quot; &quot;GO:0038061&quot;
+[306] &quot;GO:0097479&quot; &quot;GO:0046638&quot; &quot;GO:0010942&quot; &quot;GO:1904813&quot; &quot;GO:0051303&quot;
+[311] &quot;GO:0051310&quot; &quot;GO:2001233&quot; &quot;GO:0072525&quot; &quot;GO:0043410&quot; &quot;GO:0002821&quot;
+[316] &quot;GO:0050000&quot; &quot;GO:0002456&quot; &quot;GO:0042288&quot; &quot;GO:0034724&quot; &quot;GO:0032692&quot;
+[321] &quot;GO:0007186&quot; &quot;GO:0042267&quot; &quot;GO:0007080&quot; &quot;GO:0042613&quot; &quot;GO:0051091&quot;
+[326] &quot;GO:0045121&quot; &quot;GO:0003015&quot; &quot;GO:0050830&quot; &quot;GO:0090307&quot; &quot;GO:0044818&quot;
+[331] &quot;GO:0042100&quot; &quot;GO:0032691&quot; &quot;GO:0033628&quot; &quot;GO:0046596&quot; &quot;GO:0062023&quot;
+[336] &quot;GO:0002702&quot; &quot;GO:0031570&quot; &quot;GO:0008016&quot; &quot;GO:1901342&quot; &quot;GO:0030414&quot;
+[341] &quot;GO:0001501&quot; &quot;GO:0000302&quot; &quot;GO:0000779&quot; &quot;GO:1903539&quot; &quot;GO:0046640&quot;
+[346] &quot;GO:0051090&quot; &quot;GO:0045505&quot; &quot;GO:0098589&quot; &quot;GO:0000226&quot; &quot;GO:0019319&quot;
+[351] &quot;GO:0005796&quot; &quot;GO:0032418&quot; &quot;GO:0006094&quot; &quot;GO:0032729&quot; &quot;GO:0002704&quot;
+[356] &quot;GO:1903522&quot; &quot;GO:0009306&quot; &quot;GO:0034080&quot; &quot;GO:0061641&quot; &quot;GO:0002886&quot;
+[361] &quot;GO:0034728&quot; &quot;GO:0002758&quot; &quot;GO:0002793&quot; &quot;GO:0002711&quot; &quot;GO:0006882&quot;
+[366] &quot;GO:0007093&quot; &quot;GO:0098857&quot; &quot;GO:0007017&quot; &quot;GO:0010466&quot; &quot;GO:0001892&quot;
+[371] &quot;GO:0022829&quot; &quot;GO:0045335&quot; &quot;GO:0004715&quot; &quot;GO:0046364&quot; &quot;GO:0050663&quot;
+[376] &quot;GO:1900015&quot; &quot;GO:0017171&quot; &quot;GO:0045064&quot; &quot;GO:0030183&quot; &quot;GO:0019359&quot;
+[381] &quot;GO:0019363&quot; &quot;GO:0035821&quot; &quot;GO:0097237&quot; &quot;GO:0043062&quot;</code></pre>
+<p>Keep in mind GSEA finds both enrichment at both top and bottom of the list. MHC complex is on here, with higher enrichment in chimp</p>
+<pre class="r"><code>CC.gsea &lt;- gseGO(gene = SortedGeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = &#39;ENSEMBL&#39;,
+                 maxGSSize = 500,
+                 ont = &quot;CC&quot;,
+                 nPerm = 100000)
+
+BP.gsea &lt;- gseGO(gene = SortedGeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = &#39;ENSEMBL&#39;,
+                 maxGSSize = 500,
+                 ont = &quot;BP&quot;,
+                 nPerm = 1000000)
+
+MF.gsea &lt;- gseGO(gene = SortedGeneList,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = &#39;ENSEMBL&#39;,
+                 maxGSSize = 500,
+                 ont = &quot;MF&quot;,
+                 nPerm = 100000)
+
+CC.gsea.simplified &lt;- as.data.frame(simplify(CC.gsea))
+CC.gsea.simplified$OntologyCategory &lt;- &quot;Cellular.Component&quot;
+BP.gsea.simplified &lt;- as.data.frame(simplify(BP.gsea))
+BP.gsea.simplified$OntologyCategory &lt;- &quot;Biological.Process&quot;
+MF.gsea.simplified &lt;- as.data.frame(simplify(MF.gsea))
+MF.gsea.simplified$OntologyCategory &lt;- &quot;Molecular.Function&quot;
+
+Combined &lt;- rbind(
+      CC.gsea.simplified,
+      BP.gsea.simplified,
+      MF.gsea.simplified)
+
+Combined %&gt;% 
+  group_by(OntologyCategory) %&gt;%
+  top_n(n = 5, wt = abs(enrichmentScore)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  facet_grid(OntologyCategory~., scales = &quot;free&quot;) +
+  scale_colour_gradient(low=&quot;red&quot;, high=&quot;black&quot;) +
+  facet_grid(OntologyCategory~., scales = &quot;free&quot;) +
+  labs(color = &quot;Adjusted P-value&quot;) +
+  theme_bw()</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Combined %&gt;% 
+  group_by(OntologyCategory) %&gt;%
+  top_n(n = -7, wt = qvalues) %&gt;%
+  top_n(n = 7, wt = setSize) %&gt;%
+  ungroup() %&gt;%
+  # group_by(OntologyCategory) %&gt;%
+  # sample_n(8) %&gt;%
+  ggplot(aes(x=enrichmentScore, y=Description, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  facet_grid(OntologyCategory~., scales = &quot;free&quot;) +
+  # scale_colour_gradient(low=&quot;red&quot;, high=&quot;black&quot;) +
+  # labs(color = &quot;Adjusted P-value&quot;) +
+  theme_bw()</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>In addition to GSEA analysis, it might be worthwile to also try to correlate difference in variance metric to chromatin-interaction score:</p>
+<pre class="r"><code>SampleA&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_A-21792_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
+SampleB&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_B-28126_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
+SampleC&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_C-3649_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
+SampleD&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_D-40300_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
+SampleE&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_E-28815_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
+SampleF&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_F-28834_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
+SampleG&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_G-3624_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
+SampleH&lt;- read.csv(gzfile(&quot;../data/IttaiHomerInteractionScoresInCisWindows/adj_bins_25_H-3651_10kb_norm.gz&quot;), sep=&#39;\t&#39;)
+
+
+ChimpToHumanGeneMap &lt;- read.table(&quot;../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz&quot;, header=T, sep=&#39;\t&#39;, stringsAsFactors = F)
+kable(head(ChimpToHumanGeneMap))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Gene.stable.ID</th>
+<th align="left">Transcript.stable.ID</th>
+<th align="left">Chimpanzee.gene.stable.ID</th>
+<th align="left">Chimpanzee.gene.name</th>
+<th align="left">Chimpanzee.protein.or.transcript.stable.ID</th>
+<th align="left">Chimpanzee.homology.type</th>
+<th align="right">X.id..target.Chimpanzee.gene.identical.to.query.gene</th>
+<th align="right">X.id..query.gene.identical.to.target.Chimpanzee.gene</th>
+<th align="right">dN.with.Chimpanzee</th>
+<th align="right">dS.with.Chimpanzee</th>
+<th align="right">Chimpanzee.orthology.confidence..0.low..1.high.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000198888</td>
+<td align="left">ENST00000361390</td>
+<td align="left">ENSPTRG00000042641</td>
+<td align="left">MT-ND1</td>
+<td align="left">ENSPTRP00000061407</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">94.6541</td>
+<td align="right">94.6541</td>
+<td align="right">0.0267</td>
+<td align="right">0.5455</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000198763</td>
+<td align="left">ENST00000361453</td>
+<td align="left">ENSPTRG00000042626</td>
+<td align="left">MT-ND2</td>
+<td align="left">ENSPTRP00000061406</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">96.2536</td>
+<td align="right">96.2536</td>
+<td align="right">0.0185</td>
+<td align="right">0.7225</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000210127</td>
+<td align="left">ENST00000387392</td>
+<td align="left">ENSPTRG00000042642</td>
+<td align="left">MT-TA</td>
+<td align="left">ENSPTRT00000076396</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">100.0000</td>
+<td align="right">100.0000</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000198804</td>
+<td align="left">ENST00000361624</td>
+<td align="left">ENSPTRG00000042657</td>
+<td align="left">MT-CO1</td>
+<td align="left">ENSPTRP00000061408</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">98.8304</td>
+<td align="right">98.8304</td>
+<td align="right">0.0065</td>
+<td align="right">0.5486</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000198712</td>
+<td align="left">ENST00000361739</td>
+<td align="left">ENSPTRG00000042660</td>
+<td align="left">MT-CO2</td>
+<td align="left">ENSPTRP00000061402</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">97.7974</td>
+<td align="right">97.7974</td>
+<td align="right">0.0106</td>
+<td align="right">0.5943</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000228253</td>
+<td align="left">ENST00000361851</td>
+<td align="left">ENSPTRG00000042653</td>
+<td align="left">MT-ATP8</td>
+<td align="left">ENSPTRP00000061400</td>
+<td align="left">ortholog_one2one</td>
+<td align="right">94.1176</td>
+<td align="right">94.1176</td>
+<td align="right">0.0325</td>
+<td align="right">0.3331</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># Of this ortholog list, how many genes are one2one
+table(ChimpToHumanGeneMap$Chimpanzee.homology.type)</code></pre>
+<pre><code>
+ortholog_many2many  ortholog_one2many   ortholog_one2one 
+              2278              19917             140351 </code></pre>
+<pre class="r"><code>OneToOneMap &lt;- ChimpToHumanGeneMap %&gt;%
+  filter(Chimpanzee.homology.type==&quot;ortholog_one2one&quot;)
+ChimpToHuman.ID &lt;- function(Chimp.ID){
+  #function to convert chimp ensembl to human ensembl gene ids
+  return(
+    plyr::mapvalues(Chimp.ID, OneToOneMap$Chimpanzee.gene.stable.ID, OneToOneMap$Gene.stable.ID, warn_missing = F)
+  )}
+
+HumanInteractions &lt;- data.frame(H.Score = base::rowSums(cbind(SampleA, SampleB, SampleE, SampleF))) %&gt;%
+  rownames_to_column() %&gt;%
+  mutate(HumanID = gsub(&quot;(.+?)\\..+?&quot;, &quot;\\1&quot;, rowname, perl=T))
+
+
+ChimpInteractions &lt;- data.frame(C.Score = rowSums(cbind(SampleC, SampleD, SampleG, SampleH))) %&gt;%
+  rownames_to_column() %&gt;%
+  mutate(HumanID = ChimpToHuman.ID(rowname))
+
+
+ToPlot &lt;- data.frame(SpeciesVarianceDiff = RankedGeneList) %&gt;%
+  rownames_to_column() %&gt;%
+  left_join(HumanInteractions, by=c(&quot;rowname&quot;=&quot;HumanID&quot;)) %&gt;%
+  left_join(ChimpInteractions, by=c(&quot;rowname&quot;=&quot;HumanID&quot;)) %&gt;% 
+  mutate(InteractionDifference=H.Score - C.Score) %&gt;%
+  filter(!is.na(H.Score)) %&gt;%
+  filter(!is.na(C.Score))
+
+ggplot(ToPlot, aes(x=SpeciesVarianceDiff, y=InteractionDifference)) +
+  geom_point() +
+  theme_bw() +
+  xlab(&quot;Variation in expression\nTighter in human &lt;--  --&gt; Tighter in chimp&quot;) +
+  ylab(&quot;Differential contacts in cis window\nMore in human &lt;--  --&gt; More in chimp&quot;) +
+  geom_smooth(method=&#39;lm&#39;,formula=y~x)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cor.test(x=ToPlot$SpeciesVarianceDiff, y=ToPlot$InteractionDifference, method=&quot;spearman&quot;)</code></pre>
+<pre><code>
+    Spearman&#39;s rank correlation rho
+
+data:  ToPlot$SpeciesVarianceDiff and ToPlot$InteractionDifference
+S = 5.4814e+10, p-value = 0.811
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+         rho 
+-0.002880632 </code></pre>
+<pre class="r"><code>contacts.v.eGene.lm = lm(InteractionDifference ~ SpeciesVarianceDiff, data=ToPlot)
+summary(contacts.v.eGene.lm)</code></pre>
+<pre><code>
+Call:
+lm(formula = InteractionDifference ~ SpeciesVarianceDiff, data = ToPlot)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-207.59  -29.71   -2.91   28.14  336.83 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           5.3982     0.5857   9.217   &lt;2e-16 ***
+SpeciesVarianceDiff  -2.7851     3.0147  -0.924    0.356    
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 48.63 on 6894 degrees of freedom
+Multiple R-squared:  0.0001238, Adjusted R-squared:  -2.125e-05 
+F-statistic: 0.8535 on 1 and 6894 DF,  p-value: 0.3556</code></pre>
+<pre class="r"><code>plot(contacts.v.eGene.lm)</code></pre>
+<p><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/20190716_VarianceInsteadOfEgenes.Rmd/unnamed-chunk-10-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Not significant. Perhaps most intuitive explanation is to why this relationship was significant with eGenes (species difference in neighborhood chromatin contacts partly explains species difference in cis-eGene rank) but not for variance (species difference in neghborhood chromatin contacts does not significantly explain any difference in within- species variance) is that the chromatin contacts only mediate cis-variance, while 80% of expression variance is in trans.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.14
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] enrichplot_1.2.0       org.Hs.eg.db_3.7.0     AnnotationDbi_1.44.0  
+ [4] IRanges_2.16.0         S4Vectors_0.20.1       Biobase_2.42.0        
+ [7] BiocGenerics_0.28.0    clusterProfiler_3.10.1 gplots_3.0.1.1        
+[10] corrplot_0.84          edgeR_3.24.3           limma_3.38.3          
+[13] knitr_1.23             forcats_0.4.0          stringr_1.4.0         
+[16] dplyr_0.8.1            purrr_0.3.2            readr_1.3.1           
+[19] tidyr_0.8.3            tibble_2.1.3           ggplot2_3.1.1         
+[22] tidyverse_1.2.1       
+
+loaded via a namespace (and not attached):
+ [1] fgsea_1.8.0         colorspace_1.4-1    ggridges_0.5.1     
+ [4] rprojroot_1.3-2     qvalue_2.14.1       fs_1.3.1           
+ [7] rstudioapi_0.10     farver_1.1.0        urltools_1.7.3     
+[10] ggrepel_0.8.1       bit64_0.9-7         lubridate_1.7.4    
+[13] xml2_1.2.0          splines_3.5.1       GOSemSim_2.8.0     
+[16] polyclip_1.10-0     jsonlite_1.6        workflowr_1.4.0    
+[19] broom_0.5.2         GO.db_3.7.0         ggforce_0.2.2      
+[22] compiler_3.5.1      httr_1.4.0          rvcheck_0.1.3      
+[25] backports_1.1.4     assertthat_0.2.1    Matrix_1.2-17      
+[28] lazyeval_0.2.2      cli_1.1.0           tweenr_1.0.1       
+[31] htmltools_0.3.6     prettyunits_1.0.2   tools_3.5.1        
+[34] igraph_1.2.4.1      gtable_0.3.0        glue_1.3.1         
+[37] reshape2_1.4.3      DO.db_2.9           fastmatch_1.1-0    
+[40] Rcpp_1.0.1          cellranger_1.1.0    gdata_2.18.0       
+[43] nlme_3.1-140        ggraph_1.0.2        xfun_0.7           
+[46] rvest_0.3.4         gtools_3.8.1        DOSE_3.8.2         
+[49] europepmc_0.3       MASS_7.3-51.4       scales_1.0.0       
+[52] hms_0.4.2           RColorBrewer_1.1-2  yaml_2.2.0         
+[55] memoise_1.1.0       gridExtra_2.3       UpSetR_1.4.0       
+[58] triebeard_0.3.0     stringi_1.4.3       RSQLite_2.1.1      
+[61] highr_0.8           caTools_1.17.1.2    BiocParallel_1.16.6
+[64] rlang_0.3.4         pkgconfig_2.0.2     bitops_1.0-6       
+[67] evaluate_0.14       lattice_0.20-38     labeling_0.3       
+[70] cowplot_0.9.4       bit_1.1-14          tidyselect_0.2.5   
+[73] plyr_1.8.4          magrittr_1.5        R6_2.4.0           
+[76] generics_0.0.2      DBI_1.0.0           pillar_1.4.1       
+[79] haven_2.1.0         whisker_0.3-2       withr_2.1.2        
+[82] modelr_0.1.4        crayon_1.3.4        KernSmooth_2.23-15 
+[85] rmarkdown_1.13      viridis_0.5.1       progress_1.2.2     
+[88] locfit_1.5-9.1      grid_3.5.1          readxl_1.3.1       
+[91] data.table_1.12.2   blob_1.1.1          git2r_0.25.2       
+[94] digest_0.6.19       gridGraphics_0.4-1  munsell_0.5.0      
+[97] viridisLite_0.3.0   ggplotify_0.0.3    </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
