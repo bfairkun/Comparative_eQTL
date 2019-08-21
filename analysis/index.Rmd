@@ -39,7 +39,7 @@ Welcome to my research website.
 - [Conservation analysis, HumanTop600_eGenes](20190606_eGene_Conservation_TopN.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1 for chimp and top600 qvalue genes for human.
 - [Tissue sharing, both FDR=0.1 and Top600](20190821_eGeneTissueCount.html) analysis of number of GTEx tissues eGenes are detected in for shared and species specific eGenes. As before, I classify species specific and shared eGenes using either FDR=0.1 for both species, or using FDR-0.1 for chimp and top600 qvalue for human.
 - [Conservation analysis, most high-variance genes](20190617_ExpressionVarianceOfEgenes.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on within species variance of expression. A useful comparison for the similar analysis above.
-- []
+- [More thourough analyses looking at gene variance](20190716_VarianceInsteadOfEgenes.html) within and between species after adjusting for expression.
 
 ### Power analysis for inter-species differential expression
 - [PowerAnalysisFromOrinalDataset](20190613_PowerAnalysis.html) DE gene analysis based on subsampling ~39 chimp samples & 50 human samples (mostly GTEx)... Note that there are some outlier samples that I want to purge in later iterations of this analysis.
