@@ -228,6 +228,25 @@ rule ConcatHumanVcfHeaders_YRI:
         tabix -p vcf {output.vcf}
         """
 
+rule index_YRI_fromKenneth:
+    input: "/project2/gilad/kenneth/YRI/VCFs/genotypes/ALL.chr{MyChrom}_GRCh38.genotypes.20170504.vcf.gz"
+    output: "/project2/gilad/kenneth/YRI/VCFs/genotypes/ALL.chr{MyChrom}_GRCh38.genotypes.20170504.vcf.gz.tbi"
+    shell: "tabix -p vcf {input}"
+
+rule ConcatHumanVcf_YRI_fromKenneth:
+    input:
+        vcf = expand("/project2/gilad/kenneth/YRI/VCFs/genotypes/ALL.chr{MyChrom}_GRCh38.genotypes.20170504.vcf.gz", MyChrom=[str(i) for i in range(1,23)] + ['X']),
+        tbi =  expand("/project2/gilad/kenneth/YRI/VCFs/genotypes/ALL.chr{MyChrom}_GRCh38.genotypes.20170504.vcf.gz.tbi", MyChrom=[str(i) for i in range(1,23)] + ['X'])
+    output:
+        vcf = "MiscOutput/HumanVcfs/YRI.hg38.vcf.gz",
+        tbi = "MiscOutput/HumanVcfs/YRI.hg38.vcf.gz.tbi"
+    log:
+        "logs/Misc/ConcatHumanVcf_YRI_fromKenneth.log"
+    shell:
+        """
+        bcftools concat -a -O z {input.vcf} > {output.vcf} 2> {log}
+        tabix -p vcf {output.vcf}
+        """
 
 rule FixHumanVcfHeaders_GEUVADIS:
     input:
@@ -309,15 +328,55 @@ rule GetSnpsMatchedToLeflerSharedPolymorphisms:
         bed = "eQTL_mapping/plink/ForAssociationTesting.bed",
     output:
         snps = "MiscOutput/SpeciesSharedSNPs.snps",
+        shared_snp_loc = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc",
         LD = "MiscOutput/SpeciesSharedSNPs.ld",
         snp_loc = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snploc"
     shell:
         """
-        bedtools slop -i {input.SharedPolymorphisms} -r 1 -l 1 -g {input.chromsizes} | sed 's/^chr//' | bcftools view -H -R - {input.Vcf} > {output.snps}
+        bedtools slop -i {input.SharedPolymorphisms} -r 1 -l 1 -g {input.chromsizes} | sed 's/^chr//' | bcftools view -H -R - {input.Vcf} | awk -F'\\t' '{{ print $3 }}' | tee {output.snps} | awk -v OFS='\\t' 'BEGIN {{ print "snp", "chrom", "pos" }} {{ split($1,a,"."); print $1, a[2],a[3] }}' > {output.shared_snp_loc}
         plink --r2 with-freqs --bfile eQTL_mapping/plink/ForAssociationTesting --ld-snp-list {output.snps} --ld-window-kb 100 --ld-window-r2 0 --ld-window 99999 --allow-extra-chr --out MiscOutput/SpeciesSharedSNPs
         Rscript scripts/GetLeflerMatchedSnps.R {output.LD} {output.snp_loc}
         """
-        
+
+rule GetSpeciesSharedSNPGenotypesForMatrixEqtl:
+    input:
+        shared_snps  = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc",
+        shared_snps_matched = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snploc",
+        genotypes = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps"
+    output:
+        shared_snps_matched = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snps",
+        shared_snps = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps",
+    shell:
+        """
+        cat <(head -1 {input.genotypes}) <(awk -F'\\t' 'NR>1 {{ print $1 }}' {input.shared_snps} | grep -w -f - {input.genotypes}) > {output.shared_snps}
+        cat <(head -1 {input.genotypes}) <(awk -F'\\t' 'NR>1 {{ print $1 }}' {input.shared_snps_matched} | grep -w -f - {input.genotypes}) > {output.shared_snps_matched}
+        """
+
+rule MatrixEQTL_BestModelFromConfigFullResults_shared:
+    """
+    Matrix eQTL with full output for every snp-gene pair.
+    """
+    input:
+        snps = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps",
+        snp_locs = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc",
+        phenotypes = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
+        gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
+        covariates = config["eQTL_mapping"]["CovariatesForFullOutput"],
+        GRM = CovarianceMatrix,
+    output:
+        results = "eQTL_mapping/SharedPolymorphisms/MatrixEQTL.shared.results.txt",
+        fig = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/images/Results.png",
+    log:
+        "logs/eQTL_mapping/MatrixEQTL/ConfigCovariateModel.log"
+    shell:
+        """
+        Rscript scripts/MatrixEqtl_Cis.AllPvals.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} 250000 &> {log}
+        """
+
+
+# rule MatrixEQTL_SharedSNPs:
+#     input:
+
 
 # bedtools slop -i ../../data/LeflerSharedPolymorphisms.PanTro5.bed -r 1 -l 1 -g ../../data/PanTro5.chrome.sizes | sed 's/^chr//' | bcftools view -H -R - eQTL_mapping/FastQTL/ForAssociationTesting.vcf.gz | awk -F'\t' '{print $3}' | head
 # rule GetMatchedPolymorphisms:
