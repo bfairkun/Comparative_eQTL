@@ -38,8 +38,8 @@ normal! zt
 1
 normal! 0
 tabnext 1
-badd +388 rules/eQTL_analysis.smk
-badd +8 Snakefile
+badd +389 rules/eQTL_analysis.smk
+badd +9 Snakefile
 badd +76 rules/RNASeqMapping.smk
 badd +259 rules/populationstructure.smk
 badd +445 rules/eqtl_calling.smk

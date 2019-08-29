@@ -386,11 +386,15 @@ rule CalculateTissueSpecificity:
         TissueMatrixCondensedBrain = "Misc/CalculateTissueSpecificity/Matrix.CondensedBrain.tsv",
         tau = "../../output/TissueSpecificity/tau.txt",
         gini = "../../output/TissueSpecificity/gini.txt",
+        tau_log = "../../output/TissueSpecificity/tau.log.txt",
+        gini_log = "../../output/TissueSpecificity/gini.log.txt",
     shell:
         """
         Rscript scripts/SubsetGtexTissueMatrix.R {input} {output.TissueMatrixCondensedBrain}
         tspex {output.TissueMatrixCondensedBrain} {output.tau} tau
+        tspex --log {output.TissueMatrixCondensedBrain} {output.tau_log} tau
         tspex {output.TissueMatrixCondensedBrain} {output.gini} gini
+        tspex --log {output.TissueMatrixCondensedBrain} {output.gini_log} gini
         """
 
 
