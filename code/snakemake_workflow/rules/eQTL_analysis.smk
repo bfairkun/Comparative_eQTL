@@ -373,6 +373,27 @@ rule MatrixEQTL_BestModelFromConfigFullResults_shared:
         Rscript scripts/MatrixEqtl_Cis.AllPvals.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} 250000 &> {log}
         """
 
+rule wget_Gtex_tissue_MedianExpression:
+    output:
+        "../../data/GTEx_Analysis_2016-01-15_v7_RNASeQCv1.1.8_gene_median_tpm.gct.gz"
+    shell:
+        "wget -O {output} https://storage.googleapis.com/gtex_analysis_v7/rna_seq_data/GTEx_Analysis_2016-01-15_v7_RNASeQCv1.1.8_gene_median_tpm.gct.gz"
+
+rule CalculateTissueSpecificity:
+    input:
+        "../../data/GTEx_Analysis_2016-01-15_v7_RNASeQCv1.1.8_gene_median_tpm.gct.gz"
+    output:
+        TissueMatrixCondensedBrain = "Misc/CalculateTissueSpecificity/Matrix.CondensedBrain.tsv",
+        tau = "../../output/TissueSpecificity/tau.txt",
+        gini = "../../output/TissueSpecificity/gini.txt",
+    shell:
+        """
+        Rscript scripts/SubsetGtexTissueMatrix.R {input} {output.TissueMatrixCondensedBrain}
+        tspex {output.TissueMatrixCondensedBrain} {output.tau} tau
+        tspex {output.TissueMatrixCondensedBrain} {output.gini} gini
+        """
+
+
 
 # rule MatrixEQTL_SharedSNPs:
 #     input:

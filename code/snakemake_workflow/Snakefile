@@ -5,6 +5,7 @@ include: "rules/common.smk"
 rule all:
     input:
         # "eQTL_mapping/SharedPolymorphisms/MatchedSNPsToTest.vcf.gz",
+        "../../output/TissueSpecificity/gini.txt",
         "MiscOutput/HumanVcfs/YRI.hg38.vcf.gz",
         "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps",
         "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc",

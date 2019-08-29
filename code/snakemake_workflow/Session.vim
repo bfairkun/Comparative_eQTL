@@ -31,20 +31,20 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 318 - ((27 * winheight(0) + 25) / 50)
+let s:l = 1 - ((0 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-318
-normal! 09|
+1
+normal! 0
 tabnext 1
+badd +388 rules/eQTL_analysis.smk
 badd +8 Snakefile
-badd +313 rules/eQTL_analysis.smk
 badd +76 rules/RNASeqMapping.smk
 badd +259 rules/populationstructure.smk
-badd +527 rules/eqtl_calling.smk
+badd +445 rules/eqtl_calling.smk
 badd +49 /project/gilad/bjf79/software/locusZoomWithLD/locuszoom/conf/m2zfast.conf
-badd +112 cluster-config.json
+badd +1 cluster-config.json
 badd +101 scripts/MatrixEqtl_Cis.AllPvals.R
 badd +128 rules/PowerAnalysis.smk
 badd +154 config.yaml
