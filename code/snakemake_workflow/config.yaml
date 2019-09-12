@@ -42,13 +42,13 @@ ref:
   known-variants: /home/bjf79/myhome_gilad_rcc/genomes/Pan_tro_3.0_Ensembl/Variation/VCF/pan_troglodytes.vcf.gz
 
   #reference population vcf (deManuel_2016 data) to study population structure
-  reference-population-vcf: /project/gilad/bjf79/projects/Chimp_eQTL/GenotypeData/deManuel_2016_data/Clean_Callable_Pan_troglodytes-paniscus_Concat_1M_HWE_gls_Hetexcess.vcf.gz
-  reference-population-callablesites-bed: /project/gilad/bjf79/projects/Chimp_eQTL/GenotypeData/deManuel_2016_data/Pan_troglodytes-paniscus_callable.bed
+  reference-population-vcf: /project2/gilad/bjf79_project1/projects/Chimp_eQTL/GenotypeData/deManuel_2016_data/Clean_Callable_Pan_troglodytes-paniscus_Concat_1M_HWE_gls_Hetexcess.vcf.gz
+  reference-population-callablesites-bed: /project2/gilad/bjf79_project1/projects/Chimp_eQTL/GenotypeData/deManuel_2016_data/Pan_troglodytes-paniscus_callable.bed
 
   #deManuel_2016 data in PanTro4
   reference-population-liftover-need: true
 
-  chain-file: /home/bjf79/myhome_gilad_rcc/genomes/Pan_tro_3.0_Ensembl/Liftover/panTro4ToPanTro5.over.chain.reformatted.gz
+  chain-file: /project2/gilad/bjf79/genomes/Pan_tro_3.0_Ensembl/Liftover/panTro4ToPanTro5.over.chain.reformatted.gz
 
 variant_calling:
   # whether to call variants in small chunks (chunks smaller than the size of contigs) to increase parralelization on cluster. Each chunk called on a node. If false, will call variants by contig. All calls get merged into single vcf by the end.
@@ -117,11 +117,12 @@ eQTL_mapping:
     gene_FDR: 0.1
     # FDR threshold for counting number of significant eQTLs at the level of
     # eGenes (permutation testing done by FastQTL or MatrixEQTL script)
-    Permutations: 10000
+    PermutationChunkSize: 100
     # Number permutations of GTEx style permutations for identifying eGenes
-    ParallelizationFactor: 100
+    NumberPermutationChunks: 100
     # Used in permutation testing. Number of jobs to break up the eQTL calling
     # (with permutations) across various compute nodes
+    # The total number of permutations is equal to PermutationChunkSize*NumberPermutationChunks.
     CovariatesForFullOutput: "../../output/Covariates/0GenotypePCs_and_10RNASeqPCs.covariates"
     #Run matrix eqtl once and ouput summary statistics for every snp-gene pair
     #using this covariates file.
@@ -151,4 +152,4 @@ PowerAnalysis:
     #Chimp reference genome defined earlier
 
 LocusZoomDirectoryPath:
-    "/project/gilad/bjf79/software/locusZoomWithLD/locuszoom/"
+    "/project2/gilad/bjf79_project1/software/locusZoomWithLD/locuszoom/"
