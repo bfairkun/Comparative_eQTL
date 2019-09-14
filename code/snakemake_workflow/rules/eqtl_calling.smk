@@ -444,7 +444,7 @@ rule MatrixEQTL:
 
 rule MatrixEQTL_BestModelFromConfigFullResults:
     """
-    Matrix eQTL with full output for every snp-gene pair.
+    Matrix eQTL with full output for every snp-gene pair. Also with best p-value for each gene.
     """
     input:
         snps = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
@@ -455,6 +455,7 @@ rule MatrixEQTL_BestModelFromConfigFullResults:
         GRM = CovarianceMatrix,
     output:
         results = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt",
+        BestGenePvals = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/BestPvalueNonPermuted.txt",
         fig = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/images/Results.png",
     log:
         "logs/eQTL_mapping/MatrixEQTL/ConfigCovariateModel.log"
@@ -523,6 +524,39 @@ rule MakeFastQTL_input:
         # Make phenotypes bed
         paste <(awk 'NR>1' {input.gene_loc} | sort) <(awk 'NR>1' {input.phenotypes} | sort) | perl -lne '/^.+?\\t(.+)$/ and print  "$1"' | bedtools sort -i - > eQTL_mapping/FastQTL/ForAssociationTesting.bed
         bgzip eQTL_mapping/FastQTL/ForAssociationTesting.bed && tabix -p bed {output.bed}
+        """
+
+rule eQTL_permutations:
+    input:
+        snps = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
+        snp_locs = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
+        phenotypes = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
+        gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
+        covariates = config["eQTL_mapping"]["CovariatesForFullOutput"],
+        GRM = CovarianceMatrix,
+    output:
+        results = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Permutations/Chunk.{n}.txt",
+    params:
+        InitialSeed = GetInitialSeedNumberForPermutationChunk,
+        NumberPermutations = config["eQTL_mapping"]["PermutationChunkSize"]
+    log:
+        "logs/eQTL_mapping/MatrixEQTL/Permutations/Chunk.{n}.log"
+    shell:
+        """
+        Rscript scripts/MatrixEqtl_Cis_Permutations.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {params.NumberPermutations} {params.InitialSeed} 250000 > {log}
+        """
+
+def GetInitialSeedNumberForPermutationChunk(wildcards):
+    return int(wildcards.n) * int(config["eQTL_mapping"]["PermutationChunkSize"])
+
+rule MergePermutationChunks:
+    input:
+        Chunks = expand("eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Permutations/Chunk.{n}.txt", n=range(0, int(config["eQTL_mapping"]["NumberPermutationChunks"])))
+    output:
+        "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/PermutationsCombined.txt"
+    shell:
+        """
+        awk 'NR==1 && FNR=NR {{print}} FNR>1 {{input.Chunks}}' {input.Chunks} > {output}
         """
 
 # rule prepare_vcf_for_VerifyBamID:
