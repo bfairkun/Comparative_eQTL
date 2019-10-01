@@ -1,0 +1,102 @@
+---
+title: "ConfusedAboutGeneLength"
+author: "Ben Fair"
+date: "9/19/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Goal: estimate gene dispersion as recommended by Abhishek. Gene expression for any particular gene modeled as a random variable drawn from a gamma distribution defined by a mean parameter and a overdispersion parameter. Observed count data is modeled as a Poisson sample from the underlying gamma. The parameters of the underlying gamma can be estimated using negative binomial fit in R, using this snippet that Abhishek shared with me: 
+
+`MASS::glm.nb(y ~ offset(log(s)) - offset(log(l)) + 1)`
+
+The intercept of the resulting fit is an estimate of the mean parameter, and 1/theta is an estimate of overdispersion. Importantly, this fit includes a term for library size and gene size. here I will convince myself that the intercept from this fit is a good estimate of mean(log(RPKM)) as calculated by hand.
+
+First define some functions I will use later: these are basically just convenient wrappers of Abhishek's snippet, that can handle the rare cases where an error is thrown, like if the algorithm for parameter estimation isn't converging.
+
+```{r}
+library(MASS)
+library(tidyverse)
+
+# Return list of 1/theta and intercept of NB.fit call from Abhishek's snippet
+Get.NB.Fit.Parameters <- function(Y, libsizes, genesize=1){
+  tryCatch(
+    {
+      GeneSizeVector <- rep(genesize, length(libsizes))
+      fit <- MASS::glm.nb(Y ~ offset(log(libsizes))-offset(log(GeneSizeVector))  + 1)
+      # overdispersion <- 1/fit$theta
+      # intercept <- fit$coefficients
+      return(list(Overdispersion=1/fit$theta, Intercept=fit$coefficients))
+
+    },
+    error = function(e){
+      return(list(Overdispersion=NA, Intercept=NA))
+    }
+  )
+}
+
+# Return dataframe of genewise overdispersion estimates and mu, given a count table
+GetParameterEstimatesOfUnderlyingGamma_FromTable <- function(MyCountTable, genesizes){
+  out <- matrix(data=NA, nrow=nrow(MyCountTable), ncol=2)
+  LibSize <- colSums(MyCountTable)
+  for(i in 1:nrow(MyCountTable)) {
+    NB.fit <- Get.NB.Fit.Parameters(t(MyCountTable[i,]), LibSize, genesizes[i])
+    out[i,1] <- NB.fit$Intercept
+    out[i,2] <- NB.fit$Overdispersion
+    rownames(out) <- rownames(MyCountTable)
+    colnames(out) <- c("mu", "overdispersion")
+  }
+  return(as.data.frame(out))
+}
+```
+
+Ok now I will use these functions based on your snippet to calculate the intercept from the Negative binomial fit to the count data, across 1000 genes. First I will do this without a gene-length correction (set gene size to 1 for all genes).
+
+
+```{r}
+# Read in count table
+MyCountTable <- read.table("~/Temporary/1000GenesCountTable.tsv", sep='\t', header=T)
+MyCountTable[1:10,1:10]
+
+# Get the NB fit parameters
+Genewise.NB.fit<-GetParameterEstimatesOfUnderlyingGamma_FromTable(MyCountTable, rep(1,nrow(MyCountTable)))
+
+```
+
+And now compare the genewise intercept (let's call it mu) with the genewise average log(CountsPerMillion) calculated by hand.
+
+```{r}
+# Divide count table rowwise by the column sums (total library counts)
+RPM<-t(t(MyCountTable) / colSums(MyCountTable) )
+
+# log transform and get gene-wise mean
+MeanLogRPM <- apply(log(RPM), 1, mean)
+
+# Compare to the results of NB fit
+plot(Genewise.NB.fit$mu, MeanLogRPM)
+```
+
+Ok that seems all good. Now let's introduce the genelength correction and compare to genewise average log(RPKM) calculated by hand.
+
+```{r}
+# Read in gene lengths
+GeneLengths <- read.table("../output/1000GenesChimpGeneLenths.tsv") %>% pull(x)
+head(GeneLengths)
+
+
+# Get NB fit parameters, this time using actual gene lengths
+Genewise.NB.fit.LengthCorrected<-GetParameterEstimatesOfUnderlyingGamma_FromTable(MyCountTable, GeneLengths)
+
+# Calculate RPKM by dividing RPM count matrix by gene lengths
+RPKM <- RPM/GeneLengths
+
+# log transform and get gene-wise mean
+MeanLogRPKM <- apply(log(RPKM), 1, mean)
+
+#Compare 
+plot(Genewise.NB.fit.LengthCorrected$mu, MeanLogRPKM)
+```
+

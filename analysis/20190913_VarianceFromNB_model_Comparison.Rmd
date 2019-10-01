@@ -89,7 +89,7 @@ return(cpm(d, log=T))
 
 
 # Modified from the function in the PowerAnalysis Rmarkdown.
-# Function to return RPKM table from chimp and human datasets (n=38 each)
+# Function to return list of count tables (in either log(RPKM), or raw counts) from chimp and human datasets (n=38 each)
 # Use GenesToKeep argument to subset the same list that I compared for eQTLs
 GetCountTable <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, GenesToKeep, ChimpSampleDrop=NULL, HumanSampleDrop=NULL)
   #if SubsampleSize parameter == 0, use full table, otherwise, subsample from it

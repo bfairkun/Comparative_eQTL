@@ -1,0 +1,312 @@
+---
+title: "20190919_Overdispersion"
+author: "Ben Fair"
+date: "9/19/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+```{r}
+library(tidyverse)
+library(knitr)
+library("edgeR")
+library(stats)
+library(corrplot)
+library(gplots)
+library("clusterProfiler")
+library("org.Hs.eg.db")
+library(enrichplot)
+library(cowplot)
+
+source("../code/CustomFunctions.R")
+```
+
+Pick genes to run overdispersion analysis on... Pick genes that were tested for eGene in both species and in the ortho-exon count table.
+
+```{r}
+HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
+ChimpSamplesToDrop <- c("Little_R")
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+eQTLs <- read.table(gzfile("../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz"), header=T)
+# List of chimp tested genes
+ChimpTestedGenes <- rownames(read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1))
+
+ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+
+# Of this ortholog list, how many genes are one2one
+OneToOneMap <- ChimpToHumanGeneMap %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one")
+
+# Read gtex heart egene list
+# Only consider those that were tested in both species and are one2one orthologs
+GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F) %>%
+  mutate(gene_id_stable = gsub(".\\d+$","",gene_id)) %>%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %>%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %>%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+
+EgenesTested <- gsub("\\..+", "", GtexHeartEgenes$gene_id, perl=T)
+length(EgenesTested)
+GenesInDESet <- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)$Geneid
+length(GenesInDESet)
+
+GeneList <- intersect(as.character(GenesInDESet),EgenesTested)
+```
+
+Load count tables and calculate overdispersion
+
+```{r}
+CountTables <- GetCountTables(CountTableChimpFile,
+                               CountTableHumanFile,
+                               0, GeneList, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+NumRowsToAnalyze=length(GeneList)
+
+Chimp.NB.fit.parameters<-GetParameterEstimatesOfUnderlyingGamma_lengthAdjusted_FromTable(CountTables$Chimp$Counts[1:NumRowsToAnalyze,], CountTables$Chimp$GeneLengths[1:NumRowsToAnalyze])
+Human.NB.fit.parameters<-GetParameterEstimatesOfUnderlyingGamma_lengthAdjusted_FromTable(CountTables$Human$Counts[1:NumRowsToAnalyze,], CountTables$Human$GeneLengths[1:NumRowsToAnalyze])
+```
+
+Are overdispersion estimates between species correlated?
+
+```{r}
+ToPlot <- cbind(Chimp.NB.fit.parameters,
+                apply(CountTables$Chimp$log2RPKM, 1, mean),
+                Human.NB.fit.parameters,
+                apply(CountTables$Human$log2RPKM, 1, mean))
+
+colnames(ToPlot) <- c("Chimp.Mean.Expression", "Chimp.Overdispersion", "Chimp.Mean.Log2RPKM", "Human.Mean.Expression", "Human.Overdispersion", "Human.Mean.Log2RPKM")
+
+R<-cor(log(ToPlot$Chimp.Overdispersion),log(ToPlot$Human.Overdispersion), use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+Overdispersion.Species.Correlation <- ggplot(ToPlot, aes(x=Chimp.Overdispersion, y=Human.Overdispersion)) +
+  geom_point(alpha=0.05) +
+  scale_x_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Chimp overdispersion estimate, ", "1","/", hat(theta)))) +
+  scale_y_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Human overdispersion estimate, ", "1","/", hat(theta)))) +
+  annotate("text",x=5,y=0.1, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+Overdispersion.Species.Correlation
+```
+
+Are overdispersion estimates correlated with mean expression?
+
+```{r}
+#Plot mu parameter estimate (estimate of log(mean expression)) vs logRPKM
+R<-cor(ToPlot$Chimp.Mean.Expression, ToPlot$Chimp.Mean.Log2RPKM, use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+ggplot(ToPlot, aes(x=Chimp.Mean.Expression, y=Chimp.Mean.Log2RPKM)) +
+  geom_point(alpha=0.05) +
+  # scale_x_continuous(name="Chimp mean expression\n(Factor of RPKM)") +
+  # scale_y_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Human overdispersion estimate, ", "1","/", hat(theta)))) +
+  annotate("text",x=5,y=0.1, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+
+#Plot logRPKM vs calculated manually:
+RPM<-t(t(CountTables$Chimp$Counts[1:NumRowsToAnalyze,]) / colSums(CountTables$Chimp$Counts[1:NumRowsToAnalyze,]))
+RPKM<-RPM/CountTables$Chimp$GeneLengths[1:NumRowsToAnalyze]
+MeanLogRPKM <- apply(log(RPKM), 1, mean)
+
+plot(MeanLogRPKM, Chimp.NB.fit.parameters$mu)
+plot(MeanLogRPKM, ToPlot$Chimp.Mean.Log2RPKM, alpha=0.05)
+plot(ToPlot$Chimp.Mean.Expression, ToPlot$Chimp.Mean.Log2RPKM)
+
+
+#Plot mu parameter estimate between species
+R<-cor(ToPlot$Chimp.Mean.Expression, ToPlot$Human.Mean.Expression, use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+ggplot(ToPlot, aes(x=Chimp.Mean.Expression, y=Human.Mean.Expression)) +
+  geom_point(alpha=0.05) +
+  # scale_x_continuous(name="Chimp mean expression\n(Factor of RPKM)") +
+  # scale_y_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Human overdispersion estimate, ", "1","/", hat(theta)))) +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+
+
+
+#Plot overdispersion vs mu
+R<-cor(ToPlot$Chimp.Mean.Expression, log(ToPlot$Chimp.Overdispersion), use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+ggplot(ToPlot, aes(x=Chimp.Mean.Expression, y=Chimp.Overdispersion)) +
+  geom_point(alpha=0.05) +
+  scale_x_continuous(name="Chimp mean expression\n(Factor of RPKM)") +
+  scale_y_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Chimp overdispersion estimate, ", "1","/", hat(theta)))) +
+  annotate("text",x=5,y=0.1, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+```
+
+If I am looking for the difference in overdispersion between species, does it matter whether or not I regress out this mean dependence with a loess curve.
+
+```{r}
+GetLoessResidual <- function(x, y){
+  loess.fit <- loess(y ~ x)
+  loess.residual <- y - predict(loess.fit, x)
+  return(loess.residual)
+}
+
+ToPlot$Chimp.Residual <- GetLoessResidual(ToPlot$Chimp.Mean.Expression, log(ToPlot$Chimp.Overdispersion))
+R<-cor(ToPlot$Chimp.Mean.Expression, log(ToPlot$Chimp.Overdispersion), use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+ggplot(ToPlot, aes(x=Chimp.Mean.Expression, y=Chimp.Overdispersion, color=Chimp.Residual)) +
+  geom_point(alpha=0.05) +
+  scale_x_continuous(name="Chimp mean expression\n(Factor of RPKM)") +
+  scale_y_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Chimp overdispersion estimate, ", "1","/", hat(theta)))) +
+  scale_colour_gradient2(name = "Residual from loess curve") +
+  annotate("text",x=5,y=0.1, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+
+ToPlot$Human.Residual <- GetLoessResidual(ToPlot$Human.Mean.Expression, log(ToPlot$Human.Overdispersion))
+
+ToPlot$DifferenceOfResiduals <- ToPlot$Chimp.Residual - ToPlot$Human.Residual
+ToPlot$DifferenceOfLogOverdispersion <- log(ToPlot$Chimp.Overdispersion) - log(ToPlot$Human.Overdispersion)
+
+ggplot(ToPlot, aes(x=DifferenceOfLogOverdispersion, y=DifferenceOfResiduals)) +
+  geom_point(alpha=0.05) +
+  theme_bw()
+
+# write.table(CountTables$Chimp$Counts[1:1000,], file="../output/1000GenesChimpCountTable.tsv", sep='\t', quote=F)
+# 
+# write.table(CountTables$Chimp$GeneLengths[1:1000], file="../output/1000GenesChimpGeneLenths.tsv", sep='\t', quote=F)
+
+
+
+```
+
+Conclusion:
+  For purposes of comparing species differences in overdispersion, it makes no difference.
+  
+
+
+Well I am also curious if it makes any difference to do all this negative binomial fitting, compared the simpler method of finding the residual of the trend between mean(log(RPKM)) and std(log(RPKM)).
+
+```{r}
+ToPlot$Human.SimpleResidual <- GetLoessResidual(ToPlot$Human.Mean.Log2RPKM, sqrt(apply(CountTables$Human$log2RPKM, 1, var)))
+ToPlot$Chimp.SimpleResidual <- GetLoessResidual(ToPlot$Chimp.Mean.Log2RPKM, sqrt(apply(CountTables$Chimp$log2RPKM, 1, var)))
+ToPlot$DifferenceOfSimpleResiduals <- ToPlot$Chimp.SimpleResidual - ToPlot$Human.SimpleResidual
+
+R<-cor(ToPlot$DifferenceOfSimpleResiduals, ToPlot$DifferenceOfResiduals, use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+ggplot(ToPlot, aes(x=DifferenceOfSimpleResiduals, y=DifferenceOfResiduals)) +
+  geom_point(alpha=0.05) +
+    annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+```
+
+So the two are correlated. $R^2=0.46$ 
+
+Now let's do with GSEA analysis and see if the same words come up as that both methods
+
+```{r}
+# RankedGeneList<-ToPlot$DifferenceOfSimpleResiduals
+# names(RankedGeneList) <- rownames(ToPlot)
+# SortedGeneList <- sort(RankedGeneList, decreasing=T)
+# 
+# chimp.high.var.Simple <- gseGO(gene = SortedGeneList,
+#                  OrgDb = org.Hs.eg.db,
+#                  keyType = 'ENSEMBL',
+#                  maxGSSize = 500,
+#                  ont = "BP",
+#                  nPerm = 100000)
+# as.data.frame(chimp.high.var.Simple) %>% dplyr::select(Description, p.adjust, enrichmentScore) %>% arrange(enrichmentScore) %>% head(20)
+
+RankedGeneList2<-ToPlot$DifferenceOfLogOverdispersion
+names(RankedGeneList2) <- rownames(ToPlot)
+SortedGeneList2 <- sort(RankedGeneList2, decreasing=T)
+
+chimp.high.var.Overdispersion <- gseGO(gene = SortedGeneList2,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "BP",
+                 nPerm = 100000)
+
+as.data.frame(chimp.high.var.Overdispersion) %>% dplyr::select(Description, p.adjust, enrichmentScore) %>% arrange(enrichmentScore) %>% head(20)
+
+as.data.frame(chimp.high.var.Overdispersion) %>% 
+  dplyr::select(Description, p.adjust, enrichmentScore) %>% 
+  filter(enrichmentScore<0) %>%
+  arrange(p.adjust) %>%
+  head(20)
+
+
+```
+
+So either way you measure gene-wise dispersion, the Gene set enrichment for genes that are more dispersed in the chimp population are the generally the same: immune response genes.
+
+
+For the purposes of illustrating how gene-dispersions between species are correlated, let's plot the correlation after regressing out the relationship with mean expression.
+
+```{r}
+R<-cor(log(ToPlot$Chimp.Residual),log(ToPlot$Human.Residual), use="complete.obs")
+cor.test(log(ToPlot$Chimp.Residual),log(ToPlot$Human.Residual), use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+Overdispersion.Species.Correlation.Corrected <- ggplot(ToPlot, aes(x=Chimp.Residual, y=Human.Residual)) +
+  geom_point(alpha=0.05) +
+  scale_x_continuous(trans='log10', name="Chimp residual overdispersion") +
+  scale_y_continuous(trans='log10', name="Human residual overdispersion") +
+  annotate("text",x=5,y=0.1, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+Overdispersion.Species.Correlation.Corrected
+Overdispersion.Species.Correlation
+
+```
+
+
+Lastly, I am interested in asking what are the overdispersed genes in general. Let's do another gsea analysis using the average of chimp_overdispersion and human_overdispersion, without regressing out the mean relationship. Then another gsea after regressing out the mean relationship
+
+```{r eval=T}
+gsea <- function(NamedGeneVector, ...){
+  
+}
+
+RankedGeneListMeanOverdispersion <- (log(ToPlot$Chimp.Overdispersion) + log(ToPlot$Human.Overdispersion))/2
+names(RankedGeneListMeanOverdispersion) <- rownames(ToPlot)
+SortedGeneListMeanOverdispersion <- sort(RankedGeneListMeanOverdispersion, decreasing=T)
+
+high.Overdispersion <- gseGO(gene = SortedGeneListMeanOverdispersion,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 maxGSSize = 500,
+                 ont = "BP",
+                 nPerm = 100000)
+
+high.Overdispersion.simplified <- simplify(high.Overdispersion)
+
+as.data.frame(high.Overdispersion.simplified) %>% dplyr::select(Description, p.adjust, enrichmentScore) %>% arrange(enrichmentScore) %>% head(30)
+```
+
+Ok now make a nice plot of the results of what genes are more dispersed in humans and which are less:
+
+```{r}
+GSEA.overdispersion.simplified <- simplify(chimp.high.var.Overdispersion)
+
+GSEA.species.overdispersion.plot <- GSEA.overdispersion.simplified %>% 
+  as.data.frame() %>% 
+  dplyr::select(Description, p.adjust, enrichmentScore, setSize) %>% 
+  top_n(20, abs(enrichmentScore)) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  xlab("Enrichment score\nMore overdispered in human<---->More overdispersed in chimp") +
+  scale_colour_gradient(low="red", high="black") +
+  labs(color = "Adjusted P-value") +
+  theme_bw()
+Overdispersion.Species.Correlation
+
+plot_grid(Overdispersion.Species.Correlation, GSEA.species.overdispersion.plot, labels = c('A', 'B'), label_size = 12, nrow=2)
+
+as.data.frame(high.Overdispersion.simplified) %>% dplyr::select(Description, p.adjust, enrichmentScore, setSize) %>% arrange(enrichmentScore) %>% 
+  top_n(20, abs(enrichmentScore)) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  xlab("Enrichment score\nMore overdispered in human<---->More overdispersed in chimp") +
+  scale_colour_gradient(low="red", high="black") +
+  labs(color = "Adjusted P-value") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 60, simplify = FALSE), paste, collapse="\n")) +
+  theme_bw()
+```
+

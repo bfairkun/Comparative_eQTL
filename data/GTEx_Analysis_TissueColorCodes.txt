@@ -1,0 +1,54 @@
+Tissue	Color code
+Adipose - Subcutaneous	FF5100
+Adipose - Visceral (Omentum)	FFA700
+Adrenal Gland	00EA03
+Artery - Aorta	FF2E48
+Artery - Coronary	FFA394
+Artery - Tibial	FF0000
+Bladder	BA0000
+Brain - Amygdala	EBF500
+Brain - Anterior cingulate cortex (BA24)	EBF500
+Brain - Caudate (basal ganglia)	EBF500
+Brain - Cerebellar Hemisphere	EBF500
+Brain - Cerebellum	EBF500
+Brain - Cortex	EBF500
+Brain - Frontal Cortex (BA9)	EBF500
+Brain - Hippocampus	EBF500
+Brain - Hypothalamus	EBF500
+Brain - Nucleus accumbens (basal ganglia)	EBF500
+Brain - Putamen (basal ganglia)	EBF500
+Brain - Spinal cord (cervical c-1)	EBF500
+Brain - Substantia nigra	EBF500
+Breast - Mammary Tissue	00D2CF
+Cells - EBV-transformed lymphocytes	DF36FF
+Cells - Transformed fibroblasts	96F1FF
+Cervix - Ectocervix	FFC8CA
+Cervix - Endocervix	D4A3E0
+Colon - Sigmoid	F7BB6C
+Colon - Transverse	D59848
+Esophagus - Gastroesophageal Junction	8F7351
+Esophagus - Mucosa	5C1C00
+Esophagus - Muscularis	C19785
+Fallopian Tube	FFC8CA
+Heart - Atrial Appendage	AD00FF
+Heart - Left Ventricle	73009D
+Kidney - Cortex	00FFDE
+Liver	A4C05C
+Lung	67FF00
+Minor Salivary Gland	8EC084
+Muscle - Skeletal	ADA2FF
+Nerve - Tibial	FFDB00
+Ovary	FF99FF
+Pancreas	A3500C
+Pituitary	88FF91
+Prostate	DDDDDD
+Skin - Not Sun Exposed (Suprapubic)	3000FF
+Skin - Sun Exposed (Lower leg)	7E63FF
+Small Intestine - Terminal Ileum	54571A
+Spleen	718C50
+Stomach	FFDE90
+Testis	AAAAAA
+Thyroid	006D00
+Uterus	FF19FF
+Vagina	FF1A97
+Whole Blood	FF00BC

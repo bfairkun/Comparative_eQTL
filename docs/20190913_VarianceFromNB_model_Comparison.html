@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Ben Fair" />
+
+
+<title>20190913_VarianceFromNB_Model_Comparison</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">20190913_VarianceFromNB_Model_Comparison</h1>
+<h4 class="author">Ben Fair</h4>
+<h4 class="date">9/13/2019</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-09-13
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree3ee187ccd1626bd9a545e070e57830bada9b71eetargetblank3ee187ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/3ee187ccd1626bd9a545e070e57830bada9b71ee" target="_blank">3ee187c</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree3ee187ccd1626bd9a545e070e57830bada9b71eetargetblank3ee187ca" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/20190521_eQTL_CrossSpeciesEnrichment_cache/
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    code/snakemake_workflow/rules/.eqtl_calling.smk.swp
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    docs/.DS_Store
+    Ignored:    docs/assets/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/20190716_VarianceInsteadOfEgenes_2.Rmd
+    Untracked:  analysis/20190913_VarianceFromNB_model_Comparison.Rmd
+    Untracked:  code/MakeFigureFunctions.R
+    Untracked:  data/GTEx_Analysis_TissueColorCodes.txt
+    Untracked:  data/wgEncodeBroadHmmHsmmHMM.hg19.bed.gz
+    Untracked:  docs/figure/20190913_VarianceFromNB_model_Comparison.Rmd/
+
+Unstaged changes:
+    Modified:   code/snakemake_workflow/Session.vim
+    Modified:   code/snakemake_workflow/rules/eqtl_calling.smk
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<p>As per Ahbishek’s advice, I should try using a different method of estimating gene variance. That is: I should fit the counts data to a negative binomial and to obtain an estimate the variance of each gene’s underlying gamma distribbution. Here I will try implementing that method, comparing to the previous method, which was to take the residual of a loess fit of the trend between mean(log(CPM)) and standard deviation(log(CPM)).</p>
+<pre class="r"><code>library(tidyverse)
+library(knitr)
+library(&quot;edgeR&quot;)
+library(stats)
+library(corrplot)
+library(gplots)
+library(&quot;clusterProfiler&quot;)
+library(&quot;org.Hs.eg.db&quot;)
+library(enrichplot)
+
+
+
+
+# Helper function reference in body of later function
+rep.col&lt;-function(x,n){
+   matrix(rep(x,each=n), ncol=n, byrow=TRUE)
+}
+
+# Modified from the function in the PowerAnalysis Rmarkdown.
+# Function to return RPKM table from chimp and human datasets (n=38 each)
+# Use GenesToKeep argument to subset the same list that I compared for eQTLs
+GetCPMCountTable &lt;-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, GenesToKeep, ChimpSampleDrop=NULL, HumanSampleDrop=NULL)
+  #if SubsampleSize parameter == 0, use full table, otherwise, subsample from it
+  {
+   FullChimpData &lt;- read.table(gzfile(ChimpCountTableFile), header=T, check.names=FALSE, skip=1)
+   FullHumanData &lt;- read.table(gzfile(HumanCountTableFile), header=T, check.names=FALSE, skip=1)
+   
+  if (!is.null(ChimpSampleDrop)){
+     FullChimpData &lt;- FullChimpData %&gt;% dplyr::select(-ChimpSampleDrop)
+   }   
+  if (!is.null(HumanSampleDrop)){
+     FullHumanData &lt;- FullHumanData %&gt;% dplyr::select(-HumanSampleDrop)
+   }
+
+   if (SubsampleSize==0){
+     CountTableChimp &lt;- FullChimpData
+     colnames(CountTableChimp) &lt;- paste0(&quot;C.&quot;, colnames(CountTableChimp))
+     CountTableHuman &lt;- FullHumanData
+     colnames(CountTableHuman) &lt;- paste0(&quot;H.&quot;, colnames(CountTableHuman))
+     
+   } else {
+     CountTableChimp &lt;- FullChimpData %&gt;% dplyr::select(c(1:6, sample(7:length(FullChimpData), SubsampleSize)))
+     colnames(CountTableChimp) &lt;- paste0(&quot;C.&quot;, colnames(CountTableChimp))
+     
+     CountTableHuman &lt;- FullHumanData %&gt;% dplyr::select(c(1:6, sample(7:length(FullHumanData), SubsampleSize)))
+     colnames(CountTableHuman) &lt;- paste0(&quot;H.&quot;, colnames(CountTableHuman))
+   }
+   
+CombinedTable &lt;- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=c(&quot;C.Geneid&quot;=&quot;H.Geneid&quot;)) %&gt;%
+  column_to_rownames(&quot;C.Geneid&quot;) %&gt;% as.matrix()
+
+SpeciesFactor &lt;- colnames(CombinedTable) %&gt;% substr(1,1) %&gt;% factor() %&gt;% unclass() %&gt;% as.character()
+
+d0 &lt;- DGEList(CombinedTable)
+d0 &lt;- calcNormFactors(d0)
+
+
+
+d &lt;- d0[GenesToKeep,]
+mm &lt;- model.matrix(~0 + SpeciesFactor)
+# y &lt;- voom(d, mm, normalize.method=&quot;cyclicloess&quot;, plot=F)
+
+# GeneLengths &lt;- inner_join(CountTableChimp[,c(&quot;C.Geneid&quot;, &quot;C.Length&quot;)], CountTableHuman[,c(&quot;H.Geneid&quot;, &quot;H.Length&quot;)], by=c(&quot;C.Geneid&quot;=&quot;H.Geneid&quot;))
+# GeneLengthMatrix &lt;- cbind(
+#   rep.col(log2(GeneLengths$C.Length/1000), length(CountTableChimp)-6),
+#   rep.col(log2(GeneLengths$H.Length/1000), length(CountTableHuman)-6))
+# rownames(GeneLengthMatrix) &lt;- GeneLengths$C.Geneid
+# y$E &lt;- y$E - GeneLengthMatrix[rownames(y$E),]
+
+return(cpm(d, log=T))
+# return(d0)
+
+}
+
+
+# Modified from the function in the PowerAnalysis Rmarkdown.
+# Function to return RPKM table from chimp and human datasets (n=38 each)
+# Use GenesToKeep argument to subset the same list that I compared for eQTLs
+GetCountTable &lt;-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, GenesToKeep, ChimpSampleDrop=NULL, HumanSampleDrop=NULL)
+  #if SubsampleSize parameter == 0, use full table, otherwise, subsample from it
+  {
+   FullChimpData &lt;- read.table(gzfile(ChimpCountTableFile), header=T, check.names=FALSE, skip=1)
+   FullHumanData &lt;- read.table(gzfile(HumanCountTableFile), header=T, check.names=FALSE, skip=1)
+   
+  if (!is.null(ChimpSampleDrop)){
+     FullChimpData &lt;- FullChimpData %&gt;% dplyr::select(-ChimpSampleDrop)
+   }   
+  if (!is.null(HumanSampleDrop)){
+     FullHumanData &lt;- FullHumanData %&gt;% dplyr::select(-HumanSampleDrop)
+   }
+
+   if (SubsampleSize==0){
+     CountTableChimp &lt;- FullChimpData
+     colnames(CountTableChimp) &lt;- paste0(&quot;C.&quot;, colnames(CountTableChimp))
+     CountTableHuman &lt;- FullHumanData
+     colnames(CountTableHuman) &lt;- paste0(&quot;H.&quot;, colnames(CountTableHuman))
+     
+   } else {
+     CountTableChimp &lt;- FullChimpData %&gt;% dplyr::select(c(1:6, sample(7:length(FullChimpData), SubsampleSize)))
+     colnames(CountTableChimp) &lt;- paste0(&quot;C.&quot;, colnames(CountTableChimp))
+     
+     CountTableHuman &lt;- FullHumanData %&gt;% dplyr::select(c(1:6, sample(7:length(FullHumanData), SubsampleSize)))
+     colnames(CountTableHuman) &lt;- paste0(&quot;H.&quot;, colnames(CountTableHuman))
+   }
+   
+CombinedTable &lt;- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=c(&quot;C.Geneid&quot;=&quot;H.Geneid&quot;)) %&gt;%
+  column_to_rownames(&quot;C.Geneid&quot;) %&gt;% as.matrix()
+
+SpeciesFactor &lt;- colnames(CombinedTable) %&gt;% substr(1,1) %&gt;% factor() %&gt;% unclass() %&gt;% as.character()
+
+d0 &lt;- DGEList(CombinedTable)
+d0 &lt;- calcNormFactors(d0)
+
+
+
+d &lt;- d0[GenesToKeep,]
+mm &lt;- model.matrix(~0 + SpeciesFactor)
+# y &lt;- voom(d, mm, normalize.method=&quot;cyclicloess&quot;, plot=F)
+
+# GeneLengths &lt;- inner_join(CountTableChimp[,c(&quot;C.Geneid&quot;, &quot;C.Length&quot;)], CountTableHuman[,c(&quot;H.Geneid&quot;, &quot;H.Length&quot;)], by=c(&quot;C.Geneid&quot;=&quot;H.Geneid&quot;))
+# GeneLengthMatrix &lt;- cbind(
+#   rep.col(log2(GeneLengths$C.Length/1000), length(CountTableChimp)-6),
+#   rep.col(log2(GeneLengths$H.Length/1000), length(CountTableHuman)-6))
+# rownames(GeneLengthMatrix) &lt;- GeneLengths$C.Geneid
+# y$E &lt;- y$E - GeneLengthMatrix[rownames(y$E),]
+
+return(d)
+# return(d0)
+
+}</code></pre>
+<p>Get list of cis-eQTL tested genes that were tested in both chimps and humans and one-to-one orthologs and also in DE gene count tables (from reads mapped to ortho exons):</p>
+<pre class="r"><code>CountTableChimpFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz&#39;
+CountTableHumanFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Human.subread.txt.gz&#39;
+
+eQTLs &lt;- read.table(gzfile(&quot;../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz&quot;), header=T)
+
+# List of chimp tested genes
+ChimpTestedGenes &lt;- rownames(read.table(&#39;../output/ExpressionMatrix.un-normalized.txt.gz&#39;, header=T, check.names=FALSE, row.names = 1))
+
+ChimpToHumanGeneMap &lt;- read.table(&quot;../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz&quot;, header=T, sep=&#39;\t&#39;, stringsAsFactors = F)
+
+# Of this ortholog list, how many genes are one2one
+OneToOneMap &lt;- ChimpToHumanGeneMap %&gt;%
+  filter(Chimpanzee.homology.type==&quot;ortholog_one2one&quot;)
+
+# Read gtex heart egene list
+# Only consider those that were tested in both species and are one2one orthologs
+GtexHeartEgenes &lt;- read.table(&quot;../data/Heart_Left_Ventricle.v7.egenes.txt.gz&quot;, header=T, sep=&#39;\t&#39;, stringsAsFactors = F) %&gt;%
+  mutate(gene_id_stable = gsub(&quot;.\\d+$&quot;,&quot;&quot;,gene_id)) %&gt;%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %&gt;%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %&gt;%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+
+EgenesTested &lt;- gsub(&quot;\\..+&quot;, &quot;&quot;, GtexHeartEgenes$gene_id, perl=T)
+length(EgenesTested)</code></pre>
+<pre><code>[1] 11586</code></pre>
+<pre class="r"><code>GenesInDESet &lt;- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)$Geneid
+length(GenesInDESet)</code></pre>
+<pre><code>[1] 44125</code></pre>
+<pre class="r"><code>GeneList &lt;- intersect(as.character(GenesInDESet),EgenesTested)
+kable(head(GeneList))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000186827</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000078808</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000176022</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000184163</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000160087</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000131584</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>length(GeneList)</code></pre>
+<pre><code>[1] 11416</code></pre>
+<p>Ok, now get CountTable of 38 chimps, 38 humans (based on remapped data that maps to orthologous exons) of RPKM, and filtered for the outlier samples that I also left out of the DE gene power analysis</p>
+<pre class="r"><code>HumanSamplesToDrop &lt;- c(c(&quot;SRR1507229&quot;,&quot;SRR603918&quot;, &quot;SRR1478149&quot;, &quot;SRR598509&quot;, &quot;SRR613186&quot;), c(&quot;SRR1489693&quot;, &quot;SRR598148&quot;, &quot;59167&quot;, &quot;SRR1478900&quot;, &quot;SRR1474730&quot;, &quot;61317&quot;))
+ChimpSamplesToDrop &lt;- c(&quot;Little_R&quot;)
+
+
+
+
+CountTable &lt;- GetCPMCountTable(CountTableChimpFile,
+              CountTableHumanFile,
+              0, GeneList, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+CountTable.Counts &lt;- GetCountTable(CountTableChimpFile,
+              CountTableHumanFile,
+              0, GeneList, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+
+
+
+qplot(apply(CountTable,1,mean), sqrt(apply(CountTable,1,var)), alpha=0.05) +
+  geom_smooth(method=&quot;loess&quot;, show_guide = FALSE, se=F) +
+  xlab(&quot;Mean expression (log(CPM)&quot;) +
+  ylab(&quot;Standard deviation&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="figure/20190913_VarianceFromNB_model_Comparison.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>scatter.smooth(apply(CountTable,1,mean), sqrt(apply(CountTable,1,var)), color=&quot;red&quot;)</code></pre>
+<p><img src="figure/20190913_VarianceFromNB_model_Comparison.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok now write functions to estimate the variance of the underlying gamma distribution for each gene, using a negative binomial fit to the count data.</p>
+<pre class="r"><code>fit &lt;- MASS::glm.nb(CountTable.Counts$counts[1,] ~ offset(log(CountTable.Counts$samples$lib.size))  + 1)
+var &lt;- fit$coefficients**2/fit$theta
+
+GetVarianceOfUnderlyingGamma &lt;- function(Y, libsizes){
+  tryCatch(
+    expr = {
+      fit &lt;- MASS::glm.nb(Y ~ offset(log(libsizes))  + 1)
+      var &lt;- fit$coefficients**2/fit$theta
+    },
+    error = function(e){var &lt;- NA},
+    finally = {
+      return(var)
+    }
+  )
+}
+
+GetInterceptOfNB.fit &lt;- function(Y, libsizes){
+  tryCatch(
+    expr = {
+      fit &lt;- MASS::glm.nb(Y ~ offset(log(libsizes))  + 1)
+      intercept &lt;- fit$coefficients
+    },
+    error = function(e){intercept &lt;- NA},
+    finally = {
+      return(intercept)
+    }
+  )
+}
+
+
+
+
+
+# Check that the intercept of the NB fit corresponds to mean
+Means&lt;- apply(CountTable.Counts$counts[1:100,], 1, GetInterceptOfNB.fit, CountTable.Counts$samples$lib.size)
+MeansCPM &lt;- apply(CountTable[1:100,],1,mean)
+qplot(Means, MeansCPM) +
+  xlab(&#39;Mean (intercept of the NB fit)&#39;) +
+  ylab(&#39;Mean of log(CPM)&#39;) +
+  theme_bw()</code></pre>
+<p><img src="figure/20190913_VarianceFromNB_model_Comparison.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>A&lt;- apply(CountTable.Counts$counts[1:1000,], 1, GetVarianceOfUnderlyingGamma, CountTable.Counts$samples$lib.size)
+
+Gene.summarystats &lt;- data.frame(
+                     SDlogexpression = sqrt(apply(CountTable,1,var)),
+                     logmean = apply(CountTable,1,mean))
+Gene.summarystats.lo &lt;- loess(SDlogexpression ~ logmean, Gene.summarystats)
+Gene.summarystats$SD.minus.loess &lt;- Gene.summarystats$SDlogexpression - predict(Gene.summarystats.lo, Gene.summarystats$logmean)
+
+B&lt;- data.frame(NB=A, LoessWay=Gene.summarystats$SD.minus.loess[1:1000])
+R&lt;-cor(B$NB, B$LoessWay, method=&#39;pearson&#39;)
+lb1 &lt;- paste(&quot;~R^2==~&quot;, round(R**2,2))
+qplot(B$NB, B$LoessWay) +
+  xlab(expression(paste(&quot;Variance of underlying gamma... I think?, &quot;, mu^&quot;2&quot;,&quot;/&quot;, theta))) +
+  ylab(&quot;Residual from loess curve of\nmean-SD-trend after log-transform&quot;) +
+  annotate(&quot;text&quot;,x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()</code></pre>
+<p><img src="figure/20190913_VarianceFromNB_model_Comparison.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.14
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] enrichplot_1.2.0       org.Hs.eg.db_3.7.0     AnnotationDbi_1.44.0  
+ [4] IRanges_2.16.0         S4Vectors_0.20.1       Biobase_2.42.0        
+ [7] BiocGenerics_0.28.0    clusterProfiler_3.10.1 gplots_3.0.1.1        
+[10] corrplot_0.84          edgeR_3.24.3           limma_3.38.3          
+[13] knitr_1.23             forcats_0.4.0          stringr_1.4.0         
+[16] dplyr_0.8.1            purrr_0.3.2            readr_1.3.1           
+[19] tidyr_0.8.3            tibble_2.1.3           ggplot2_3.1.1         
+[22] tidyverse_1.2.1       
+
+loaded via a namespace (and not attached):
+ [1] fgsea_1.8.0         colorspace_1.4-1    ggridges_0.5.1     
+ [4] rprojroot_1.3-2     qvalue_2.14.1       fs_1.3.1           
+ [7] rstudioapi_0.10     farver_1.1.0        urltools_1.7.3     
+[10] ggrepel_0.8.1       bit64_0.9-7         lubridate_1.7.4    
+[13] xml2_1.2.0          splines_3.5.1       GOSemSim_2.8.0     
+[16] polyclip_1.10-0     jsonlite_1.6        workflowr_1.4.0    
+[19] broom_0.5.2         GO.db_3.7.0         ggforce_0.2.2      
+[22] compiler_3.5.1      httr_1.4.0          rvcheck_0.1.3      
+[25] backports_1.1.4     assertthat_0.2.1    Matrix_1.2-17      
+[28] lazyeval_0.2.2      cli_1.1.0           tweenr_1.0.1       
+[31] htmltools_0.3.6     prettyunits_1.0.2   tools_3.5.1        
+[34] igraph_1.2.4.1      gtable_0.3.0        glue_1.3.1         
+[37] reshape2_1.4.3      DO.db_2.9           fastmatch_1.1-0    
+[40] Rcpp_1.0.1          cellranger_1.1.0    gdata_2.18.0       
+[43] nlme_3.1-140        ggraph_1.0.2        xfun_0.7           
+[46] rvest_0.3.4         gtools_3.8.1        DOSE_3.8.2         
+[49] europepmc_0.3       MASS_7.3-51.4       scales_1.0.0       
+[52] hms_0.4.2           RColorBrewer_1.1-2  yaml_2.2.0         
+[55] memoise_1.1.0       gridExtra_2.3       UpSetR_1.4.0       
+[58] triebeard_0.3.0     stringi_1.4.3       RSQLite_2.1.1      
+[61] highr_0.8           caTools_1.17.1.2    BiocParallel_1.16.6
+[64] rlang_0.3.4         pkgconfig_2.0.2     bitops_1.0-6       
+[67] evaluate_0.14       lattice_0.20-38     labeling_0.3       
+[70] cowplot_0.9.4       bit_1.1-14          tidyselect_0.2.5   
+[73] plyr_1.8.4          magrittr_1.5        R6_2.4.0           
+[76] generics_0.0.2      DBI_1.0.0           pillar_1.4.1       
+[79] haven_2.1.0         withr_2.1.2         modelr_0.1.4       
+[82] crayon_1.3.4        KernSmooth_2.23-15  rmarkdown_1.13     
+[85] viridis_0.5.1       progress_1.2.2      locfit_1.5-9.1     
+[88] grid_3.5.1          readxl_1.3.1        data.table_1.12.2  
+[91] blob_1.1.1          git2r_0.25.2        digest_0.6.19      
+[94] gridGraphics_0.4-1  munsell_0.5.0       viridisLite_0.3.0  
+[97] ggplotify_0.0.3    </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
