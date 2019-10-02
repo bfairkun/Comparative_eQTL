@@ -1,0 +1,1921 @@
+SAMPID	SMTSD	IndidualID
+GTEX-YF7O-2426-SM-5IFJL	Adipose - Subcutaneous	YF7O
+GTEX-145MI-0426-SM-5O99V	Adipose - Subcutaneous	145MI
+GTEX-16XZY-2526-SM-7DHL2	Adipose - Subcutaneous	16XZY
+GTEX-1H1ZS-0526-SM-9WG5L	Adipose - Subcutaneous	1H1ZS
+GTEX-YFCO-2026-SM-4W21Q	Adipose - Subcutaneous	YFCO
+GTEX-13O3P-0226-SM-5KM3Z	Adipose - Subcutaneous	13O3P
+GTEX-YB5K-2226-SM-4WWG1	Adipose - Subcutaneous	YB5K
+GTEX-ZF29-2226-SM-4WWB9	Adipose - Subcutaneous	ZF29
+GTEX-1I4MK-2026-SM-B2LVR	Adipose - Subcutaneous	1I4MK
+GTEX-1HSKV-0326-SM-ADEJC	Adipose - Subcutaneous	1HSKV
+GTEX-11P81-2426-SM-5GU65	Adipose - Subcutaneous	11P81
+GTEX-ZYFD-0226-SM-5NQ86	Adipose - Subcutaneous	ZYFD
+GTEX-13FTW-2526-SM-5IJC8	Adipose - Subcutaneous	13FTW
+GTEX-1IDJU-2526-SM-CMKGF	Adipose - Subcutaneous	1IDJU
+GTEX-16YQH-0226-SM-6PALD	Adipose - Subcutaneous	16YQH
+GTEX-1KWVE-1326-SM-E6CJ1	Adipose - Subcutaneous	1KWVE
+GTEX-1CB4F-0526-SM-9KNW2	Adipose - Subcutaneous	1CB4F
+GTEX-1J8EW-0226-SM-CYPSW	Adipose - Subcutaneous	1J8EW
+GTEX-ZPU1-2426-SM-4WWFM	Adipose - Subcutaneous	ZPU1
+GTEX-16MTA-2126-SM-6PALC	Adipose - Subcutaneous	16MTA
+GTEX-ZUA1-0226-SM-5NQ9Q	Adipose - Subcutaneous	ZUA1
+GTEX-YEC3-1226-SM-5IFI8	Adipose - Subcutaneous	YEC3
+GTEX-13O3Q-2326-SM-5KM3G	Adipose - Subcutaneous	13O3Q
+GTEX-ZVZO-0226-SM-5A5LA	Adipose - Subcutaneous	ZVZO
+GTEX-12ZZY-0326-SM-5LZVQ	Adipose - Subcutaneous	12ZZY
+GTEX-144GL-0226-SM-5QGOX	Adipose - Subcutaneous	144GL
+GTEX-ZT9X-1926-SM-57WE7	Adipose - Subcutaneous	ZT9X
+GTEX-1122O-2026-SM-9YFMG	Adipose - Subcutaneous	1122O
+GTEX-16GPK-0226-SM-7DUFI	Adipose - Subcutaneous	16GPK
+GTEX-1PWST-0326-SM-EAZ42	Adipose - Subcutaneous	1PWST
+GTEX-14PHX-2426-SM-62LEN	Adipose - Subcutaneous	14PHX
+GTEX-1B8KZ-1926-SM-7DUG8	Adipose - Subcutaneous	1B8KZ
+GTEX-1GZ2Q-0326-SM-9WG6N	Adipose - Subcutaneous	1GZ2Q
+GTEX-1B933-0526-SM-7EPHM	Adipose - Subcutaneous	1B933
+GTEX-ZVT2-2226-SM-5NQ6P	Adipose - Subcutaneous	ZVT2
+GTEX-1LSNL-0526-SM-DIPFI	Adipose - Subcutaneous	1LSNL
+GTEX-1HSGN-0126-SM-CGQFU	Adipose - Subcutaneous	1HSGN
+GTEX-1JN6P-0226-SM-COH34	Adipose - Subcutaneous	1JN6P
+GTEX-12C56-1626-SM-5FQUO	Adipose - Subcutaneous	12C56
+GTEX-1IDFM-0226-SM-CMKFX	Adipose - Subcutaneous	1IDFM
+GTEX-183FY-1226-SM-7DHLK	Adipose - Visceral (Omentum)	183FY
+GTEX-1OKEX-0926-SM-E8VNJ	Adipose - Visceral (Omentum)	1OKEX
+GTEX-1HT8W-0726-SM-A9SLB	Adipose - Visceral (Omentum)	1HT8W
+GTEX-1LSNM-0626-SM-DIPG7	Adipose - Visceral (Omentum)	1LSNM
+GTEX-1GL5R-0726-SM-9MQL5	Adipose - Visceral (Omentum)	1GL5R
+GTEX-1EWIQ-2526-SM-7EPIJ	Adipose - Visceral (Omentum)	1EWIQ
+GTEX-ZYVF-1026-SM-5E44V	Adipose - Visceral (Omentum)	ZYVF
+GTEX-11DXY-0326-SM-5H12F	Adipose - Visceral (Omentum)	11DXY
+GTEX-1B8KE-0826-SM-72D6S	Adipose - Visceral (Omentum)	1B8KE
+GTEX-1JKYR-1226-SM-CM2S7	Adipose - Visceral (Omentum)	1JKYR
+GTEX-1IDJC-0226-SM-CMKG2	Adipose - Visceral (Omentum)	1IDJC
+GTEX-1AYD5-0126-SM-7DUG5	Adipose - Visceral (Omentum)	1AYD5
+GTEX-1QCLY-1226-SM-EVYC3	Adipose - Visceral (Omentum)	1QCLY
+GTEX-18A7A-0926-SM-7LT8H	Adipose - Visceral (Omentum)	18A7A
+GTEX-145LU-1226-SM-5LU9B	Adipose - Visceral (Omentum)	145LU
+GTEX-1211K-1226-SM-5EQ4N	Adipose - Visceral (Omentum)	1211K
+GTEX-13113-1126-SM-5LZU9	Adipose - Visceral (Omentum)	13113
+GTEX-14PHW-1626-SM-6EU2H	Adipose - Visceral (Omentum)	14PHW
+GTEX-1C475-0326-SM-7SB8O	Adipose - Visceral (Omentum)	1C475
+GTEX-1HGF4-0226-SM-CNNQL	Adipose - Visceral (Omentum)	1HGF4
+GTEX-17F96-0726-SM-793CB	Adipose - Visceral (Omentum)	17F96
+GTEX-1RAZR-1026-SM-E8VOJ	Adipose - Visceral (Omentum)	1RAZR
+GTEX-14DAR-0426-SM-664MW	Adipose - Visceral (Omentum)	14DAR
+GTEX-18D9U-0426-SM-731AN	Adipose - Visceral (Omentum)	18D9U
+GTEX-14PJ3-0726-SM-69LQE	Adipose - Visceral (Omentum)	14PJ3
+GTEX-1HC8U-0926-SM-A9G3L	Adipose - Visceral (Omentum)	1HC8U
+GTEX-145ME-0726-SM-5O9A3	Adipose - Visceral (Omentum)	145ME
+GTEX-1AMEY-0526-SM-72D62	Adipose - Visceral (Omentum)	1AMEY
+GTEX-1JJ6O-2826-SM-CNNP7	Adipose - Visceral (Omentum)	1JJ6O
+GTEX-12C56-0826-SM-5EGJ5	Adipose - Visceral (Omentum)	12C56
+GTEX-1N2EE-1526-SM-DTXE9	Adipose - Visceral (Omentum)	1N2EE
+GTEX-ZF2S-1526-SM-5S2OO	Adipose - Visceral (Omentum)	ZF2S
+GTEX-1LH75-1026-SM-EWROK	Adipose - Visceral (Omentum)	1LH75
+GTEX-14PJ5-0426-SM-5ZZW2	Adipose - Visceral (Omentum)	14PJ5
+GTEX-14PHX-1626-SM-69LQB	Adipose - Visceral (Omentum)	14PHX
+GTEX-ZGAY-1326-SM-5S2NS	Adipose - Visceral (Omentum)	ZGAY
+GTEX-ZC5H-1626-SM-5HL7L	Adipose - Visceral (Omentum)	ZC5H
+GTEX-1LSVX-1326-SM-DIPET	Adipose - Visceral (Omentum)	1LSVX
+GTEX-15EU6-1726-SM-6M48H	Adipose - Visceral (Omentum)	15EU6
+GTEX-1IKOE-1726-SM-CNNQ6	Adipose - Visceral (Omentum)	1IKOE
+GTEX-ZTSS-0326-SM-5987M	Adrenal Gland	ZTSS
+GTEX-14PN3-1426-SM-686Z8	Adrenal Gland	14PN3
+GTEX-1J8EW-1826-SM-C1YQW	Adrenal Gland	1J8EW
+GTEX-14PJ4-0426-SM-6871F	Adrenal Gland	14PJ4
+GTEX-13PVR-0226-SM-5RQJI	Adrenal Gland	13PVR
+GTEX-1K2DA-0226-SM-CGQGW	Adrenal Gland	1K2DA
+GTEX-132QS-0126-SM-5IFH9	Adrenal Gland	132QS
+GTEX-1I1GU-0226-SM-AHZ2J	Adrenal Gland	1I1GU
+GTEX-12BJ1-0526-SM-5FQUD	Adrenal Gland	12BJ1
+GTEX-1399U-0226-SM-5P9J2	Adrenal Gland	1399U
+GTEX-12WSJ-0126-SM-5GCOM	Adrenal Gland	12WSJ
+GTEX-1399S-0426-SM-5IFG5	Adrenal Gland	1399S
+GTEX-11GSP-0326-SM-5A5KW	Adrenal Gland	11GSP
+GTEX-1CB4F-0126-SM-9JGGZ	Adrenal Gland	1CB4F
+GTEX-1PPH8-0826-SM-DTX9T	Adrenal Gland	1PPH8
+GTEX-1IDJH-1726-SM-A96T3	Adrenal Gland	1IDJH
+GTEX-ZY6K-0126-SM-5SIAM	Adrenal Gland	ZY6K
+GTEX-ZVT2-0826-SM-5GIEO	Adrenal Gland	ZVT2
+GTEX-14DAR-1726-SM-664MZ	Adrenal Gland	14DAR
+GTEX-ZDTT-0126-SM-4WKHA	Adrenal Gland	ZDTT
+GTEX-18A7A-1826-SM-7KFTU	Adrenal Gland	18A7A
+GTEX-1B8KZ-0126-SM-7DHM5	Adrenal Gland	1B8KZ
+GTEX-13O61-0126-SM-5KM4P	Adrenal Gland	13O61
+GTEX-ZP4G-0126-SM-4YCE3	Adrenal Gland	ZP4G
+GTEX-1RQEC-1926-SM-DTX7M	Adrenal Gland	1RQEC
+GTEX-Y9LG-0126-SM-5Q59W	Adrenal Gland	Y9LG
+GTEX-131XF-0126-SM-5DUVF	Adrenal Gland	131XF
+GTEX-1211K-0126-SM-59HJE	Adrenal Gland	1211K
+GTEX-14H4A-0226-SM-5SI6Q	Adrenal Gland	14H4A
+GTEX-1JMLX-1126-SM-CXZJN	Adrenal Gland	1JMLX
+GTEX-15SHU-1926-SM-7KUMO	Adrenal Gland	15SHU
+GTEX-1KXAM-0326-SM-EV7AQ	Adrenal Gland	1KXAM
+GTEX-Y5V6-1926-SM-5IFIL	Adrenal Gland	Y5V6
+GTEX-13FTW-0126-SM-5IJED	Adrenal Gland	13FTW
+GTEX-ZVP2-0126-SM-5NQ7D	Adrenal Gland	ZVP2
+GTEX-ZPCL-0826-SM-DNZZ7	Adrenal Gland	ZPCL
+GTEX-111YS-0126-SM-5987T	Adrenal Gland	111YS
+GTEX-1RAZQ-0226-SM-EV7BK	Adrenal Gland	1RAZQ
+GTEX-11NSD-0226-SM-5A5LR	Adrenal Gland	11NSD
+GTEX-1KANB-2626-SM-EV7BF	Adrenal Gland	1KANB
+GTEX-1I1GU-0426-SM-ARL7Y	Artery - Aorta	1I1GU
+GTEX-ZYT6-1026-SM-DKPOV	Artery - Aorta	ZYT6
+GTEX-1F48J-1326-SM-7RHGJ	Artery - Aorta	1F48J
+GTEX-1CB4J-0126-SM-7PC3K	Artery - Aorta	1CB4J
+GTEX-13FTW-0726-SM-9WG72	Artery - Aorta	13FTW
+GTEX-1L5NE-0326-SM-E6CIC	Artery - Aorta	1L5NE
+GTEX-1B933-1126-SM-73KX2	Artery - Aorta	1B933
+GTEX-1F5PK-0626-SM-7SB6S	Artery - Aorta	1F5PK
+GTEX-13OVG-0826-SM-5L3D8	Artery - Aorta	13OVG
+GTEX-13PVR-0826-SM-5S2PV	Artery - Aorta	13PVR
+GTEX-1HBPH-1026-SM-ADEIU	Artery - Aorta	1HBPH
+GTEX-1GZHY-1626-SM-9WG79	Artery - Aorta	1GZHY
+GTEX-11WQK-0326-SM-5EQL1	Artery - Aorta	11WQK
+GTEX-11GSP-1126-SM-5A5LM	Artery - Aorta	11GSP
+GTEX-1HCVE-1026-SM-ACKXR	Artery - Aorta	1HCVE
+GTEX-Y5V6-0426-SM-4VBRZ	Artery - Aorta	Y5V6
+GTEX-1H3NZ-1226-SM-9MQKT	Artery - Aorta	1H3NZ
+GTEX-1GL5R-0126-SM-9WYTI	Artery - Aorta	1GL5R
+GTEX-1EX96-2726-SM-7SB88	Artery - Aorta	1EX96
+GTEX-Z9EW-0126-SM-5CVM6	Artery - Aorta	Z9EW
+GTEX-1CAMS-1026-SM-7PC2I	Artery - Aorta	1CAMS
+GTEX-1I1CD-1226-SM-CNPQ2	Artery - Aorta	1I1CD
+GTEX-ZG7Y-0126-SM-4WWEX	Artery - Aorta	ZG7Y
+GTEX-13PVQ-1426-SM-5J1O4	Artery - Aorta	13PVQ
+GTEX-13RTK-0126-SM-5RQHQ	Artery - Aorta	13RTK
+GTEX-1I6K7-0826-SM-ACKWI	Artery - Aorta	1I6K7
+GTEX-1A3MV-0426-SM-73KXL	Artery - Aorta	1A3MV
+GTEX-139YR-0626-SM-5IJBT	Artery - Aorta	139YR
+GTEX-1IDJE-1026-SM-ADEIE	Artery - Aorta	1IDJE
+GTEX-1212Z-0826-SM-5EQ51	Artery - Aorta	1212Z
+GTEX-1LG7Z-0626-SM-D3LA2	Artery - Aorta	1LG7Z
+GTEX-1GN73-2226-SM-9YFLF	Artery - Aorta	1GN73
+GTEX-1E1VI-1226-SM-7RHGD	Artery - Aorta	1E1VI
+GTEX-14B4R-0226-SM-5TDDO	Artery - Aorta	14B4R
+GTEX-18A67-0926-SM-7LG5Y	Artery - Aorta	18A67
+GTEX-1AYCT-0326-SM-73KVN	Artery - Aorta	1AYCT
+GTEX-Y9LG-0226-SM-4VBS4	Artery - Aorta	Y9LG
+GTEX-1B97J-0526-SM-793C2	Artery - Aorta	1B97J
+GTEX-11TT1-1226-SM-5Q5AV	Artery - Aorta	11TT1
+GTEX-YEC4-0726-SM-5CVLV	Artery - Aorta	YEC4
+GTEX-13N11-0626-SM-5J1OL	Artery - Coronary	13N11
+GTEX-13U4I-0926-SM-5LU5A	Artery - Coronary	13U4I
+GTEX-ZAB5-2726-SM-5J2NH	Artery - Coronary	ZAB5
+GTEX-15SHV-0726-SM-6PAMO	Artery - Coronary	15SHV
+GTEX-1LGOU-0426-SM-D3L8O	Artery - Coronary	1LGOU
+GTEX-YEC3-0326-SM-5IFJJ	Artery - Coronary	YEC3
+GTEX-14PN3-0426-SM-6LLIY	Artery - Coronary	14PN3
+GTEX-11TT1-1526-SM-5EQKU	Artery - Coronary	11TT1
+GTEX-146FH-0926-SM-5SI96	Artery - Coronary	146FH
+GTEX-1HSMQ-0626-SM-CL54A	Artery - Coronary	1HSMQ
+GTEX-13X6J-1326-SM-5QGOV	Artery - Coronary	13X6J
+GTEX-1GMR3-0626-SM-9WYT3	Artery - Coronary	1GMR3
+GTEX-1LGRB-0826-SM-COH3J	Artery - Coronary	1LGRB
+GTEX-1LVAN-1826-SM-CNPOP	Artery - Coronary	1LVAN
+GTEX-14E1K-0926-SM-5S2U4	Artery - Coronary	14E1K
+GTEX-14C38-1226-SM-5S2UK	Artery - Coronary	14C38
+GTEX-1QCLZ-0826-SM-EWRNA	Artery - Coronary	1QCLZ
+GTEX-1F5PK-0426-SM-7RHHZ	Artery - Coronary	1F5PK
+GTEX-1HCUA-0426-SM-CGQEI	Artery - Coronary	1HCUA
+GTEX-1B97J-0826-SM-7SB78	Artery - Coronary	1B97J
+GTEX-ZF3C-1326-SM-5A5MF	Artery - Coronary	ZF3C
+GTEX-13PL7-1826-SM-5IJDV	Artery - Coronary	13PL7
+GTEX-1399U-0626-SM-5J1NZ	Artery - Coronary	1399U
+GTEX-1JMQJ-2526-SM-CY8HP	Artery - Coronary	1JMQJ
+GTEX-15DDE-1226-SM-6PAN8	Artery - Coronary	15DDE
+GTEX-1IL2U-1126-SM-COH3Q	Artery - Coronary	1IL2U
+GTEX-1399S-0926-SM-5PNVQ	Artery - Coronary	1399S
+GTEX-1H3NZ-0926-SM-9YFM7	Artery - Coronary	1H3NZ
+GTEX-ZGAY-0426-SM-4WWAM	Artery - Coronary	ZGAY
+GTEX-1JN1M-0926-SM-D4P2V	Artery - Coronary	1JN1M
+GTEX-15SHU-1026-SM-6PAL7	Artery - Coronary	15SHU
+GTEX-1EKGG-1026-SM-7RHG6	Artery - Coronary	1EKGG
+GTEX-13W3W-0626-SM-5LU45	Artery - Coronary	13W3W
+GTEX-11ZTS-1026-SM-5LU8O	Artery - Coronary	11ZTS
+GTEX-1IDJU-0826-SM-ARL87	Artery - Coronary	1IDJU
+GTEX-ZYT6-0826-SM-5E43I	Artery - Coronary	ZYT6
+GTEX-ZVT2-0526-SM-5E455	Artery - Coronary	ZVT2
+GTEX-11ZTT-0426-SM-5EQLK	Artery - Coronary	11ZTT
+GTEX-1QP29-1326-SM-E6CQ2	Artery - Coronary	1QP29
+GTEX-13O61-0626-SM-5L3D1	Artery - Coronary	13O61
+GTEX-1LVAO-0426-SM-EVYCI	Artery - Tibial	1LVAO
+GTEX-145MN-2326-SM-5SIB7	Artery - Tibial	145MN
+GTEX-13OW8-1626-SM-5L3HW	Artery - Tibial	13OW8
+GTEX-1E1VI-0626-SM-7PBZ1	Artery - Tibial	1E1VI
+GTEX-ZZ64-1326-SM-5E444	Artery - Tibial	ZZ64
+GTEX-13N1W-0326-SM-5IJDJ	Artery - Tibial	13N1W
+GTEX-1CB4J-1026-SM-7P8RW	Artery - Tibial	1CB4J
+GTEX-1GF9V-0426-SM-7PC11	Artery - Tibial	1GF9V
+GTEX-132Q8-0526-SM-5IJBQ	Artery - Tibial	132Q8
+GTEX-13W46-0626-SM-5LU3N	Artery - Tibial	13W46
+GTEX-1IKJJ-0526-SM-CMKG8	Artery - Tibial	1IKJJ
+GTEX-ZEX8-2626-SM-DO92R	Artery - Tibial	ZEX8
+GTEX-12ZZW-0426-SM-5GCO9	Artery - Tibial	12ZZW
+GTEX-1JN1M-0426-SM-CY8IN	Artery - Tibial	1JN1M
+GTEX-Z9EW-1926-SM-5CVMP	Artery - Tibial	Z9EW
+GTEX-1MGNQ-0526-SM-E9J2W	Artery - Tibial	1MGNQ
+GTEX-14DAR-2126-SM-5RQID	Artery - Tibial	14DAR
+GTEX-1HCU8-1526-SM-ADEHG	Artery - Tibial	1HCU8
+GTEX-YJ8O-2726-SM-5IFJ7	Artery - Tibial	YJ8O
+GTEX-ZQUD-1326-SM-57WEF	Artery - Tibial	ZQUD
+GTEX-14PK6-2326-SM-69LOG	Artery - Tibial	14PK6
+GTEX-ZVTK-0726-SM-5GZX6	Artery - Tibial	ZVTK
+GTEX-13D11-2726-SM-5K7V7	Artery - Tibial	13D11
+GTEX-14E6E-2126-SM-664N6	Artery - Tibial	14E6E
+GTEX-1C4CL-0126-SM-7IGN5	Artery - Tibial	1C4CL
+GTEX-1S5ZU-0526-SM-E9U4S	Artery - Tibial	1S5ZU
+GTEX-1C475-2126-SM-7PBXU	Artery - Tibial	1C475
+GTEX-14A5H-0226-SM-5S2VK	Artery - Tibial	14A5H
+GTEX-11P7K-2326-SM-5EGKZ	Artery - Tibial	11P7K
+GTEX-17F9E-0526-SM-7DUFD	Artery - Tibial	17F9E
+GTEX-1MUQO-0426-SM-E9J2Z	Artery - Tibial	1MUQO
+GTEX-14PJN-2226-SM-6872I	Artery - Tibial	14PJN
+GTEX-132AR-0726-SM-5EQ6J	Artery - Tibial	132AR
+GTEX-15EU6-0726-SM-7KUFU	Artery - Tibial	15EU6
+GTEX-1GPI6-0526-SM-9MQKR	Artery - Tibial	1GPI6
+GTEX-16AAH-1926-SM-7LG4C	Artery - Tibial	16AAH
+GTEX-1HFI6-0526-SM-CGQFG	Artery - Tibial	1HFI6
+GTEX-1HCVE-0526-SM-ACKW1	Artery - Tibial	1HCVE
+GTEX-1CB4G-0526-SM-7P8SY	Artery - Tibial	1CB4G
+GTEX-ZDTT-2426-SM-4WKFX	Artery - Tibial	ZDTT
+GTEX-15DCD-0011-R4a-SM-69LPB	Brain - Amygdala	15DCD
+GTEX-13X6I-0011-R4b-SM-5PNU9	Brain - Amygdala	13X6I
+GTEX-1B996-0011-R4b-SM-9OSVO	Brain - Amygdala	1B996
+GTEX-NL4W-0011-R4a-SM-2I5GZ	Brain - Amygdala	NL4W
+GTEX-13CZV-0011-R4b-SM-5J2NY	Brain - Amygdala	13CZV
+GTEX-14JG1-0011-R4b-SM-62LEB	Brain - Amygdala	14JG1
+GTEX-13OVH-0011-R4a-SM-5KM3W	Brain - Amygdala	13OVH
+GTEX-14JIY-0011-R4b-SM-5ZZV7	Brain - Amygdala	14JIY
+GTEX-139T8-0011-R4a-SM-5HL54	Brain - Amygdala	139T8
+GTEX-14PN4-0011-R4a-SM-686ZT	Brain - Amygdala	14PN4
+GTEX-1LVAO-0011-R4a-SM-EXURO	Brain - Amygdala	1LVAO
+GTEX-1H1CY-0011-R4b-SM-CJI3G	Brain - Amygdala	1H1CY
+GTEX-1J8Q2-0011-R4a-SM-ADEHA	Brain - Amygdala	1J8Q2
+GTEX-14PJM-0011-R4a-SM-5YYAS	Brain - Amygdala	14PJM
+GTEX-17F97-0011-R4b-SM-7KFS2	Brain - Amygdala	17F97
+GTEX-QVJO-0011-R4A-SM-2S1QL	Brain - Amygdala	QVJO
+GTEX-13112-0011-R4b-SM-5DUXL	Brain - Amygdala	13112
+GTEX-13OVJ-0011-R4b-SM-5P9H5	Brain - Amygdala	13OVJ
+GTEX-1N2EE-0011-R4a-SM-EXOII	Brain - Amygdala	1N2EE
+GTEX-13X6J-0011-R4b-SM-5P9K4	Brain - Amygdala	13X6J
+GTEX-1HBPI-0011-R4a-SM-CJI3K	Brain - Amygdala	1HBPI
+GTEX-Q2AG-0011-R4A-SM-2HMKA	Brain - Amygdala	Q2AG
+GTEX-13QIC-0011-R4a-SM-5PNX8	Brain - Amygdala	13QIC
+GTEX-13OW5-0011-R4b-SM-5L3HS	Brain - Amygdala	13OW5
+GTEX-1EMGI-0011-R4b-SM-CJI2D	Brain - Amygdala	1EMGI
+GTEX-18464-0011-R4a-SM-7LG6T	Brain - Amygdala	18464
+GTEX-S7SE-0011-R4A-SM-2XCDB	Brain - Amygdala	S7SE
+GTEX-12WSA-0011-R4a-SM-57WB7	Brain - Amygdala	12WSA
+GTEX-1AX9I-0011-R4b-SM-7EPIB	Brain - Amygdala	1AX9I
+GTEX-15DDE-0011-R4b-SM-7KULI	Brain - Amygdala	15DDE
+GTEX-1HBPH-0011-R4a-SM-A96RX	Brain - Amygdala	1HBPH
+GTEX-11ZVC-0011-R4a-SM-5BC6Z	Brain - Amygdala	11ZVC
+GTEX-12WSH-0011-R4a-SM-5GU6K	Brain - Amygdala	12WSH
+GTEX-13RTJ-0011-R4b-SM-5PNX1	Brain - Amygdala	13RTJ
+GTEX-131XH-0011-R4b-SM-5DUWB	Brain - Amygdala	131XH
+GTEX-WVLH-0011-R4A-SM-3MJFS	Brain - Amygdala	WVLH
+GTEX-1H2FU-0011-R4a-SM-CL551	Brain - Amygdala	1H2FU
+GTEX-13NYS-0011-R4b-SM-5MR3O	Brain - Amygdala	13NYS
+GTEX-NPJ7-0011-R4a-SM-2I3GJ	Brain - Amygdala	NPJ7
+GTEX-ZAK1-0011-R4a-SM-6AJBK	Brain - Amygdala	ZAK1
+GTEX-1HFI6-0011-R3b-SM-A9SKB	Brain - Anterior cingulate cortex (BA24)	1HFI6
+GTEX-11GSP-0011-R3a-SM-9QEGF	Brain - Anterior cingulate cortex (BA24)	11GSP
+GTEX-15ER7-0011-R3a-SM-6LPIK	Brain - Anterior cingulate cortex (BA24)	15ER7
+GTEX-1JMOU-0011-R3a-SM-EYYXN	Brain - Anterior cingulate cortex (BA24)	1JMOU
+GTEX-145LS-0011-R3a-SM-5S2VJ	Brain - Anterior cingulate cortex (BA24)	145LS
+GTEX-11WQK-0011-R3b-SM-DO93K	Brain - Anterior cingulate cortex (BA24)	11WQK
+GTEX-1313W-0011-R3a-SM-5EGLI	Brain - Anterior cingulate cortex (BA24)	1313W
+GTEX-13SLW-0011-R3b-SM-5SI6Y	Brain - Anterior cingulate cortex (BA24)	13SLW
+GTEX-139TT-0011-R3b-SM-5K7VL	Brain - Anterior cingulate cortex (BA24)	139TT
+GTEX-13112-0011-R3b-SM-5HL9L	Brain - Anterior cingulate cortex (BA24)	13112
+GTEX-13NYS-0011-R3b-SM-5MR41	Brain - Anterior cingulate cortex (BA24)	13NYS
+GTEX-XLM4-0011-R3B-SM-4AT6E	Brain - Anterior cingulate cortex (BA24)	XLM4
+GTEX-Y8DK-0011-R3A-SM-4RTW5	Brain - Anterior cingulate cortex (BA24)	Y8DK
+GTEX-P44H-0011-R3A-SM-D3L8E	Brain - Anterior cingulate cortex (BA24)	P44H
+GTEX-13RTL-0011-R3a-SM-5P9JP	Brain - Anterior cingulate cortex (BA24)	13RTL
+GTEX-14JG1-0011-R3a-SM-62LEC	Brain - Anterior cingulate cortex (BA24)	14JG1
+GTEX-1B933-0011-R3b-SM-7P8PL	Brain - Anterior cingulate cortex (BA24)	1B933
+GTEX-12WSM-0011-R3b-SM-5LZWI	Brain - Anterior cingulate cortex (BA24)	12WSM
+GTEX-12ZZX-0011-R3b-SM-5EGLH	Brain - Anterior cingulate cortex (BA24)	12ZZX
+GTEX-ZAB4-0011-R3a-SM-4RGNQ	Brain - Anterior cingulate cortex (BA24)	ZAB4
+GTEX-ZVT3-0011-R3b-SM-51MTJ	Brain - Anterior cingulate cortex (BA24)	ZVT3
+GTEX-17EVQ-0011-R3b-SM-7LT9B	Brain - Anterior cingulate cortex (BA24)	17EVQ
+GTEX-12WSF-0011-R3a-SM-5DUW7	Brain - Anterior cingulate cortex (BA24)	12WSF
+GTEX-148VJ-0011-R3b-SM-69LQJ	Brain - Anterior cingulate cortex (BA24)	148VJ
+GTEX-145LU-0011-R3a-SM-5P9K2	Brain - Anterior cingulate cortex (BA24)	145LU
+GTEX-YJ89-0011-R3b-SM-4V6EF	Brain - Anterior cingulate cortex (BA24)	YJ89
+GTEX-1HGF4-0011-R3b-SM-CL54W	Brain - Anterior cingulate cortex (BA24)	1HGF4
+GTEX-139T8-0011-R3b-SM-5HL4R	Brain - Anterior cingulate cortex (BA24)	139T8
+GTEX-1CB4H-0011-R3b-SM-9OSVI	Brain - Anterior cingulate cortex (BA24)	1CB4H
+GTEX-11ZVC-0011-R3a-SM-5BC6V	Brain - Anterior cingulate cortex (BA24)	11ZVC
+GTEX-1HUB1-0011-R3b-SM-CKZOX	Brain - Anterior cingulate cortex (BA24)	1HUB1
+GTEX-1JJEA-0011-R3b-SM-EXUTD	Brain - Anterior cingulate cortex (BA24)	1JJEA
+GTEX-YFC4-0011-R3a-SM-4RGLP	Brain - Anterior cingulate cortex (BA24)	YFC4
+GTEX-1CB4G-0011-R3a-SM-CE6QQ	Brain - Anterior cingulate cortex (BA24)	1CB4G
+GTEX-ZF28-0011-R3a-SM-4WWDA	Brain - Anterior cingulate cortex (BA24)	ZF28
+GTEX-13JVG-0011-R3b-SM-5LZXF	Brain - Anterior cingulate cortex (BA24)	13JVG
+GTEX-144GL-0011-R3a-SM-5P9HP	Brain - Anterior cingulate cortex (BA24)	144GL
+GTEX-1HBPH-0011-R3a-SM-A96RY	Brain - Anterior cingulate cortex (BA24)	1HBPH
+GTEX-13OW8-0011-R3a-SM-5L3I4	Brain - Anterior cingulate cortex (BA24)	13OW8
+GTEX-1EU9M-0011-R3a-SM-9QEHY	Brain - Anterior cingulate cortex (BA24)	1EU9M
+GTEX-1F75A-0011-R5a-SM-ARZMJ	Brain - Caudate (basal ganglia)	1F75A
+GTEX-1GMR8-0011-R5b-SM-9QEIH	Brain - Caudate (basal ganglia)	1GMR8
+GTEX-13RTJ-0011-R5a-SM-5P9HR	Brain - Caudate (basal ganglia)	13RTJ
+GTEX-14BMV-0011-R5b-SM-62LFT	Brain - Caudate (basal ganglia)	14BMV
+GTEX-ZUA1-0011-R5b-SM-51MTG	Brain - Caudate (basal ganglia)	ZUA1
+GTEX-1IKK5-0011-R5b-SM-CL55B	Brain - Caudate (basal ganglia)	1IKK5
+GTEX-WZTO-0011-R5B-SM-3NMC5	Brain - Caudate (basal ganglia)	WZTO
+GTEX-1HR98-0011-R5a-SM-A9G1V	Brain - Caudate (basal ganglia)	1HR98
+GTEX-1HB9E-0011-R5b-SM-ARU78	Brain - Caudate (basal ganglia)	1HB9E
+GTEX-13OVJ-0011-R5a-SM-5P9H7	Brain - Caudate (basal ganglia)	13OVJ
+GTEX-1H1ZS-0011-R5b-SM-CL53L	Brain - Caudate (basal ganglia)	1H1ZS
+GTEX-X261-0011-R5A-SM-3NMB4	Brain - Caudate (basal ganglia)	X261
+GTEX-13OW6-0011-R5a-SM-5O9BK	Brain - Caudate (basal ganglia)	13OW6
+GTEX-145MH-0011-R5a-SM-5P9JT	Brain - Caudate (basal ganglia)	145MH
+GTEX-ZDXO-0011-R5a-SM-4WKG5	Brain - Caudate (basal ganglia)	ZDXO
+GTEX-11TTK-0011-R5a-SM-DNZZV	Brain - Caudate (basal ganglia)	11TTK
+GTEX-13X6I-0011-R5a-SM-5PNWW	Brain - Caudate (basal ganglia)	13X6I
+GTEX-ZV68-0011-R5a-SM-4YCDW	Brain - Caudate (basal ganglia)	ZV68
+GTEX-132Q8-0011-R5a-SM-5IJDM	Brain - Caudate (basal ganglia)	132Q8
+GTEX-17HII-0011-R5a-SM-7LG51	Brain - Caudate (basal ganglia)	17HII
+GTEX-1LG7Y-0011-R5a-SM-EZ6MU	Brain - Caudate (basal ganglia)	1LG7Y
+GTEX-1R9K4-0011-R5b-SM-EZ6N8	Brain - Caudate (basal ganglia)	1R9K4
+GTEX-139TT-0011-R5b-SM-5K7W8	Brain - Caudate (basal ganglia)	139TT
+GTEX-15EO6-0011-R5b-SM-7KUDZ	Brain - Caudate (basal ganglia)	15EO6
+GTEX-WVLH-0011-R5A-SM-3MJFW	Brain - Caudate (basal ganglia)	WVLH
+GTEX-1CB4H-0011-R5b-SM-9QEGN	Brain - Caudate (basal ganglia)	1CB4H
+GTEX-13NYS-0011-R5a-SM-5MR4D	Brain - Caudate (basal ganglia)	13NYS
+GTEX-WL46-0011-R5A-SM-3LK6V	Brain - Caudate (basal ganglia)	WL46
+GTEX-1399T-0011-R5b-SM-5IJDK	Brain - Caudate (basal ganglia)	1399T
+GTEX-13S7M-0011-R5b-SM-5P9HS	Brain - Caudate (basal ganglia)	13S7M
+GTEX-1EX96-0011-R5a-SM-ARU83	Brain - Caudate (basal ganglia)	1EX96
+GTEX-1IY9M-0011-R5a-SM-A9SLX	Brain - Caudate (basal ganglia)	1IY9M
+GTEX-11OF3-0011-R5a-SM-57WB4	Brain - Caudate (basal ganglia)	11OF3
+GTEX-1F7RK-0011-R5b-SM-9WG5S	Brain - Caudate (basal ganglia)	1F7RK
+GTEX-13X6J-0011-R5b-SM-5PNWT	Brain - Caudate (basal ganglia)	13X6J
+GTEX-1I1GQ-0011-R5a-SM-CMKHJ	Brain - Caudate (basal ganglia)	1I1GQ
+GTEX-1J1OQ-0011-R5a-SM-D3L8K	Brain - Caudate (basal ganglia)	1J1OQ
+GTEX-1GN2E-0011-R5b-SM-CJI2M	Brain - Caudate (basal ganglia)	1GN2E
+GTEX-11PRG-0011-R5b-SM-DNZZS	Brain - Caudate (basal ganglia)	11PRG
+GTEX-1GTWX-0011-R5b-SM-CKZO6	Brain - Caudate (basal ganglia)	1GTWX
+GTEX-17EVQ-0011-R11a-SM-7LT9C	Brain - Cerebellar Hemisphere	17EVQ
+GTEX-12WSM-0011-R11a-SM-5DUX8	Brain - Cerebellar Hemisphere	12WSM
+GTEX-13X6J-0011-R11a-SM-5P9HE	Brain - Cerebellar Hemisphere	13X6J
+GTEX-1LVAO-0011-R11b-SM-EXOI8	Brain - Cerebellar Hemisphere	1LVAO
+GTEX-13PLJ-0011-R11b-SM-5O9BS	Brain - Cerebellar Hemisphere	13PLJ
+GTEX-1F48J-0011-R11b-SM-9OSWV	Brain - Cerebellar Hemisphere	1F48J
+GTEX-1KD4Q-0011-R11b-SM-EXOIE	Brain - Cerebellar Hemisphere	1KD4Q
+GTEX-11ZTS-0011-R11a-SM-DO113	Brain - Cerebellar Hemisphere	11ZTS
+GTEX-1H3VE-0011-R11b-SM-C1YRP	Brain - Cerebellar Hemisphere	1H3VE
+GTEX-1H3NZ-0011-R11b-SM-CE6SF	Brain - Cerebellar Hemisphere	1H3NZ
+GTEX-15EO6-0011-R11b-SM-6M47M	Brain - Cerebellar Hemisphere	15EO6
+GTEX-14E7W-0011-R11a-SM-5ZZVA	Brain - Cerebellar Hemisphere	14E7W
+GTEX-1B8L1-0011-R11b-SM-793DJ	Brain - Cerebellar Hemisphere	1B8L1
+GTEX-1R9K4-0011-R11a-SM-EZ6N9	Brain - Cerebellar Hemisphere	1R9K4
+GTEX-13NYS-0011-R11b-SM-5MR4P	Brain - Cerebellar Hemisphere	13NYS
+GTEX-13NYB-0011-R11a-SM-5KM3Q	Brain - Cerebellar Hemisphere	13NYB
+GTEX-14ASI-0011-R11b-SM-6AJBJ	Brain - Cerebellar Hemisphere	14ASI
+GTEX-13S7M-0011-R11b-SM-5P9HU	Brain - Cerebellar Hemisphere	13S7M
+GTEX-1IL2V-0011-R11a-SM-ARU6T	Brain - Cerebellar Hemisphere	1IL2V
+GTEX-13FHP-0011-R11b-SM-5LZXP	Brain - Cerebellar Hemisphere	13FHP
+GTEX-XMD1-0011-R11A-SM-4AT5J	Brain - Cerebellar Hemisphere	XMD1
+GTEX-WWYW-0011-R11A-SM-3NB38	Brain - Cerebellar Hemisphere	WWYW
+GTEX-17HG3-0011-R11b-SM-7KFT4	Brain - Cerebellar Hemisphere	17HG3
+GTEX-1EMGI-0011-R11b-SM-9OSWX	Brain - Cerebellar Hemisphere	1EMGI
+GTEX-1M4P7-0011-R11b-SM-EXOIK	Brain - Cerebellar Hemisphere	1M4P7
+GTEX-13N2G-0011-R11a-SM-5MR3F	Brain - Cerebellar Hemisphere	13N2G
+GTEX-WZTO-0011-R11A-SM-4E3K9	Brain - Cerebellar Hemisphere	WZTO
+GTEX-YFC4-0011-R11a-SM-4SOK6	Brain - Cerebellar Hemisphere	YFC4
+GTEX-1HB9E-0011-R11b-SM-ARU79	Brain - Cerebellar Hemisphere	1HB9E
+GTEX-12WSH-0011-R11a-SM-5LZVM	Brain - Cerebellar Hemisphere	12WSH
+GTEX-1J1OQ-0011-R11a-SM-A96S3	Brain - Cerebellar Hemisphere	1J1OQ
+GTEX-12ZZZ-0011-R11a-SM-5EGLC	Brain - Cerebellar Hemisphere	12ZZZ
+GTEX-12ZZX-0011-R11a-SM-5DUVJ	Brain - Cerebellar Hemisphere	12ZZX
+GTEX-1I1GV-0011-R11a-SM-CJI3Z	Brain - Cerebellar Hemisphere	1I1GV
+GTEX-14DAQ-0011-R11a-SM-664NO	Brain - Cerebellar Hemisphere	14DAQ
+GTEX-1JMQJ-0011-R11a-SM-EXOJY	Brain - Cerebellar Hemisphere	1JMQJ
+GTEX-13OW8-0011-R11a-SM-5L3GT	Brain - Cerebellar Hemisphere	13OW8
+GTEX-1A3MX-0011-R11b-SM-7DUGP	Brain - Cerebellar Hemisphere	1A3MX
+GTEX-13OVH-0011-R11b-SM-5KM4X	Brain - Cerebellar Hemisphere	13OVH
+GTEX-WL46-0011-R11A-SM-3MJFT	Brain - Cerebellar Hemisphere	WL46
+GTEX-12ZZY-2926-SM-5DUXO	Brain - Cerebellum	12ZZY
+GTEX-1F6IF-3026-SM-7P8QN	Brain - Cerebellum	1F6IF
+GTEX-132Q8-2926-SM-5IFFP	Brain - Cerebellum	132Q8
+GTEX-1QP6S-3026-SM-EAZ4N	Brain - Cerebellum	1QP6S
+GTEX-1KD4Q-3026-SM-EV7A7	Brain - Cerebellum	1KD4Q
+GTEX-1PIIG-2826-SM-DTX7O	Brain - Cerebellum	1PIIG
+GTEX-1H1DG-2826-SM-9JGHB	Brain - Cerebellum	1H1DG
+GTEX-145MF-2826-SM-7EPGU	Brain - Cerebellum	145MF
+GTEX-1HBPH-3026-SM-9WPNY	Brain - Cerebellum	1HBPH
+GTEX-1128S-2826-SM-5N9DI	Brain - Cerebellum	1128S
+GTEX-1KWVE-2226-SM-CXZKN	Brain - Cerebellum	1KWVE
+GTEX-1PWST-3026-SM-EAZ3H	Brain - Cerebellum	1PWST
+GTEX-13X6K-2826-SM-5O9DS	Brain - Cerebellum	13X6K
+GTEX-1GZ4I-2926-SM-9JGGO	Brain - Cerebellum	1GZ4I
+GTEX-1H3VE-2826-SM-9WPOL	Brain - Cerebellum	1H3VE
+GTEX-1F48J-2726-SM-7P8PW	Brain - Cerebellum	1F48J
+GTEX-14JFF-2826-SM-6871Q	Brain - Cerebellum	14JFF
+GTEX-14JIY-2326-SM-6AJAJ	Brain - Cerebellum	14JIY
+GTEX-13OVJ-2726-SM-5IJG6	Brain - Cerebellum	13OVJ
+GTEX-1CB4H-3026-SM-79OLX	Brain - Cerebellum	1CB4H
+GTEX-1H3O1-1826-SM-A96TO	Brain - Cerebellum	1H3O1
+GTEX-14A5I-2826-SM-5SIBF	Brain - Cerebellum	14A5I
+GTEX-1LG7Y-3126-SM-EV7AS	Brain - Cerebellum	1LG7Y
+GTEX-1B8SF-3026-SM-731DX	Brain - Cerebellum	1B8SF
+GTEX-12WSD-3026-SM-5LZU7	Brain - Cerebellum	12WSD
+GTEX-13OW6-2926-SM-5KM29	Brain - Cerebellum	13OW6
+GTEX-145LS-3026-SM-5O99S	Brain - Cerebellum	145LS
+GTEX-11NV4-2226-SM-5BC4T	Brain - Cerebellum	11NV4
+GTEX-1HSMO-2926-SM-C1YR5	Brain - Cerebellum	1HSMO
+GTEX-YJ89-2926-SM-5P9IT	Brain - Cerebellum	YJ89
+GTEX-1H3NZ-2926-SM-9WPQ8	Brain - Cerebellum	1H3NZ
+GTEX-1HBPI-2726-SM-9WPPF	Brain - Cerebellum	1HBPI
+GTEX-11GSP-3126-SM-5A5LL	Brain - Cerebellum	11GSP
+GTEX-13OW7-2926-SM-5MR3Z	Brain - Cerebellum	13OW7
+GTEX-14E6D-2926-SM-664OP	Brain - Cerebellum	14E6D
+GTEX-11O72-2826-SM-5HL6W	Brain - Cerebellum	11O72
+GTEX-1EKGG-3126-SM-9WPO5	Brain - Cerebellum	1EKGG
+GTEX-1JMQJ-3126-SM-EV79G	Brain - Cerebellum	1JMQJ
+GTEX-11EI6-2926-SM-5985U	Brain - Cerebellum	11EI6
+GTEX-145MH-2926-SM-5Q5D2	Brain - Cerebellum	145MH
+GTEX-1R9PO-2926-SM-EVYBR	Brain - Cortex	1R9PO
+GTEX-11DXY-3226-SM-5GIDE	Brain - Cortex	11DXY
+GTEX-13X6J-3026-SM-5Q5CU	Brain - Cortex	13X6J
+GTEX-1AX9I-3026-SM-73KUH	Brain - Cortex	1AX9I
+GTEX-1F7RK-1826-SM-7RHI4	Brain - Cortex	1F7RK
+GTEX-13OVH-3026-SM-5MR4N	Brain - Cortex	13OVH
+GTEX-15EO6-3026-SM-7KUMA	Brain - Cortex	15EO6
+GTEX-14ASI-3026-SM-5S2PN	Brain - Cortex	14ASI
+GTEX-1PPGY-3126-SM-EXUSR	Brain - Cortex	1PPGY
+GTEX-12126-1026-SM-5P9JJ	Brain - Cortex	12126
+GTEX-11GSP-3226-SM-5986O	Brain - Cortex	11GSP
+GTEX-Z93S-2926-SM-57WB9	Brain - Cortex	Z93S
+GTEX-ZDXO-2126-SM-4WKFI	Brain - Cortex	ZDXO
+GTEX-147GR-3026-SM-5S2ML	Brain - Cortex	147GR
+GTEX-12WSF-3126-SM-6M478	Brain - Cortex	12WSF
+GTEX-11EMC-3226-SM-5EGKW	Brain - Cortex	11EMC
+GTEX-ZUA1-3026-SM-59HJC	Brain - Cortex	ZUA1
+GTEX-1C6VQ-3026-SM-7IGPU	Brain - Cortex	1C6VQ
+GTEX-1NV8Z-3126-SM-E76R3	Brain - Cortex	1NV8Z
+GTEX-1CB4H-3126-SM-7IGN4	Brain - Cortex	1CB4H
+GTEX-11GS4-3126-SM-5A5LH	Brain - Cortex	11GS4
+GTEX-12ZZW-2926-SM-5LZUP	Brain - Cortex	12ZZW
+GTEX-15ER7-3126-SM-7KUGH	Brain - Cortex	15ER7
+GTEX-1117F-3226-SM-5N9CT	Brain - Cortex	1117F
+GTEX-14C5O-3026-SM-5YYB2	Brain - Cortex	14C5O
+GTEX-13NYB-3026-SM-5IJD7	Brain - Cortex	13NYB
+GTEX-1IL2U-3026-SM-C1YSH	Brain - Cortex	1IL2U
+GTEX-1GF9V-2926-SM-7PBXO	Brain - Cortex	1GF9V
+GTEX-12WSH-3026-SM-5CVNI	Brain - Cortex	12WSH
+GTEX-14JG1-3026-SM-5YYAA	Brain - Cortex	14JG1
+GTEX-1F48J-2826-SM-7P8R4	Brain - Cortex	1F48J
+GTEX-14C39-3126-SM-5ZZW6	Brain - Cortex	14C39
+GTEX-1IDFM-2826-SM-ACKWJ	Brain - Cortex	1IDFM
+GTEX-1F52S-3126-SM-7PC3M	Brain - Cortex	1F52S
+GTEX-145LS-3126-SM-5Q5BY	Brain - Cortex	145LS
+GTEX-11ONC-2926-SM-5P9JM	Brain - Cortex	11ONC
+GTEX-1399T-3026-SM-5KLZC	Brain - Cortex	1399T
+GTEX-1H3O1-1726-SM-9WYSR	Brain - Cortex	1H3O1
+GTEX-145MH-3026-SM-5Q5DZ	Brain - Cortex	145MH
+GTEX-1KWVE-2326-SM-D4P3N	Brain - Cortex	1KWVE
+GTEX-1GN1U-0011-R10b-SM-CKZNH	Brain - Frontal Cortex (BA9)	1GN1U
+GTEX-1H3O1-0011-R10a-SM-CJI3O	Brain - Frontal Cortex (BA9)	1H3O1
+GTEX-131XH-0011-R10a-SM-5EGLJ	Brain - Frontal Cortex (BA9)	131XH
+GTEX-1IDJH-0011-R10a-SM-ARZLK	Brain - Frontal Cortex (BA9)	1IDJH
+GTEX-X585-0011-R10A-SM-46MUY	Brain - Frontal Cortex (BA9)	X585
+GTEX-1B996-0011-R10b-SM-CJI3T	Brain - Frontal Cortex (BA9)	1B996
+GTEX-15G19-0011-R10b-SM-7KUG4	Brain - Frontal Cortex (BA9)	15G19
+GTEX-13CZV-0011-R10b-SM-5LZYD	Brain - Frontal Cortex (BA9)	13CZV
+GTEX-1192X-0011-R10a-SM-DO941	Brain - Frontal Cortex (BA9)	1192X
+GTEX-1I1HK-0011-R10b-SM-CJI3M	Brain - Frontal Cortex (BA9)	1I1HK
+GTEX-12ZZX-0011-R10b-SM-5DUWK	Brain - Frontal Cortex (BA9)	12ZZX
+GTEX-11EI6-0011-R10a-SM-DO93R	Brain - Frontal Cortex (BA9)	11EI6
+GTEX-1LC47-0011-R10b-SM-EYYWE	Brain - Frontal Cortex (BA9)	1LC47
+GTEX-13OW6-0011-R10a-SM-5L3HE	Brain - Frontal Cortex (BA9)	13OW6
+GTEX-ZV68-0011-R10a-SM-51MT7	Brain - Frontal Cortex (BA9)	ZV68
+GTEX-145MG-0011-R10a-SM-5PNWG	Brain - Frontal Cortex (BA9)	145MG
+GTEX-14E7W-0011-R10a-SM-5YYAX	Brain - Frontal Cortex (BA9)	14E7W
+GTEX-14BIL-0011-R10a-SM-5SI75	Brain - Frontal Cortex (BA9)	14BIL
+GTEX-14PQA-0011-R10a-SM-6AJAA	Brain - Frontal Cortex (BA9)	14PQA
+GTEX-1H1DG-0011-R10b-SM-CE6S7	Brain - Frontal Cortex (BA9)	1H1DG
+GTEX-11PRG-0011-R10b-SM-DO93G	Brain - Frontal Cortex (BA9)	11PRG
+GTEX-15DDE-0011-R10a-SM-7KUKW	Brain - Frontal Cortex (BA9)	15DDE
+GTEX-1CB4G-0011-R10a-SM-9QEHS	Brain - Frontal Cortex (BA9)	1CB4G
+GTEX-1B8L1-0011-R10b-SM-7P8Q4	Brain - Frontal Cortex (BA9)	1B8L1
+GTEX-1IOXB-0011-R10a-SM-D3L8I	Brain - Frontal Cortex (BA9)	1IOXB
+GTEX-14BIN-0011-R10a-SM-5S2UA	Brain - Frontal Cortex (BA9)	14BIN
+GTEX-1HGF4-0011-R10b-SM-CE6S5	Brain - Frontal Cortex (BA9)	1HGF4
+GTEX-13X6J-0011-R10b-SM-5PNWA	Brain - Frontal Cortex (BA9)	13X6J
+GTEX-1GMRU-0011-R10b-SM-CJI2L	Brain - Frontal Cortex (BA9)	1GMRU
+GTEX-1E1VI-0011-R10b-SM-ARU8F	Brain - Frontal Cortex (BA9)	1E1VI
+GTEX-14LZ3-0011-R10b-SM-6AJA9	Brain - Frontal Cortex (BA9)	14LZ3
+GTEX-ZXG5-0011-R10a-SM-57WDD	Brain - Frontal Cortex (BA9)	ZXG5
+GTEX-145MH-0011-R10b-SM-5PNUK	Brain - Frontal Cortex (BA9)	145MH
+GTEX-Z93S-0011-R10a-SM-4RGNM	Brain - Frontal Cortex (BA9)	Z93S
+GTEX-1B933-0011-R10b-SM-9OSVN	Brain - Frontal Cortex (BA9)	1B933
+GTEX-1A8G6-0011-R10b-SM-7P8PB	Brain - Frontal Cortex (BA9)	1A8G6
+GTEX-1313W-0011-R10b-SM-5DUXA	Brain - Frontal Cortex (BA9)	1313W
+GTEX-15UF6-0011-R10b-SM-9OSVF	Brain - Frontal Cortex (BA9)	15UF6
+GTEX-14E6D-0011-R10a-SM-5YY9C	Brain - Frontal Cortex (BA9)	14E6D
+GTEX-13O3Q-0011-R10b-SM-5KM39	Brain - Frontal Cortex (BA9)	13O3Q
+GTEX-1EX96-0011-R1a-SM-CE6R5	Brain - Hippocampus	1EX96
+GTEX-1IKK5-0011-R1b-SM-CE6SQ	Brain - Hippocampus	1IKK5
+GTEX-1GTWX-0011-R1a-SM-CE6RL	Brain - Hippocampus	1GTWX
+GTEX-144GO-0011-R1a-SM-5PNWO	Brain - Hippocampus	144GO
+GTEX-139T8-0011-R1a-SM-5HL75	Brain - Hippocampus	139T8
+GTEX-14ASI-0011-R1b-SM-5S2TY	Brain - Hippocampus	14ASI
+GTEX-P44H-0011-R1A-SM-3NM8J	Brain - Hippocampus	P44H
+GTEX-1HBPI-0011-R1b-SM-A9SKF	Brain - Hippocampus	1HBPI
+GTEX-1H1CY-0011-R1a-SM-CKZOZ	Brain - Hippocampus	1H1CY
+GTEX-QVUS-0011-R1A-SM-3GAD2	Brain - Hippocampus	QVUS
+GTEX-WWYW-0011-R1A-SM-3TW8G	Brain - Hippocampus	WWYW
+GTEX-1AX9I-0011-R1b-SM-7RHG2	Brain - Hippocampus	1AX9I
+GTEX-11GSO-0011-R1b-SM-57WD3	Brain - Hippocampus	11GSO
+GTEX-13RTL-0011-R1a-SM-5PNZ8	Brain - Hippocampus	13RTL
+GTEX-13OW5-0011-R1b-SM-5L3GE	Brain - Hippocampus	13OW5
+GTEX-131XH-0011-R1a-SM-5DUWA	Brain - Hippocampus	131XH
+GTEX-11WQC-0011-R1b-SM-DO932	Brain - Hippocampus	11WQC
+GTEX-13SLW-0011-R1a-SM-5S2W7	Brain - Hippocampus	13SLW
+GTEX-13QJC-0011-R1b-SM-5S2UU	Brain - Hippocampus	13QJC
+GTEX-13FLW-0011-R1b-SM-5LZX2	Brain - Hippocampus	13FLW
+GTEX-183WM-0011-R1a-SM-718A8	Brain - Hippocampus	183WM
+GTEX-144GL-0011-R1a-SM-5PNZ5	Brain - Hippocampus	144GL
+GTEX-1I1GS-0011-R1a-SM-CJI43	Brain - Hippocampus	1I1GS
+GTEX-1A8G6-0011-R1a-SM-7P8PC	Brain - Hippocampus	1A8G6
+GTEX-13OW8-0011-R1a-SM-5L3HI	Brain - Hippocampus	13OW8
+GTEX-13FTY-0011-R1a-SM-5LZXE	Brain - Hippocampus	13FTY
+GTEX-1313W-0011-R1b-SM-5EQ4A	Brain - Hippocampus	1313W
+GTEX-1IY9M-0011-R1a-SM-EXURZ	Brain - Hippocampus	1IY9M
+GTEX-13RTJ-0011-R1a-SM-5O9D9	Brain - Hippocampus	13RTJ
+GTEX-14PQA-0011-R1b-SM-6EU1G	Brain - Hippocampus	14PQA
+GTEX-1B933-0011-R1b-SM-9QEGW	Brain - Hippocampus	1B933
+GTEX-1GF9W-0011-R1a-SM-9QEIQ	Brain - Hippocampus	1GF9W
+GTEX-1HSMO-0011-R1a-SM-CM2SV	Brain - Hippocampus	1HSMO
+GTEX-11EI6-0011-R1a-SM-DO93L	Brain - Hippocampus	11EI6
+GTEX-1GN1U-0011-R1a-SM-CJI25	Brain - Hippocampus	1GN1U
+GTEX-1HSKV-0011-R1b-SM-CMKH7	Brain - Hippocampus	1HSKV
+GTEX-13QIC-0011-R1a-SM-5O9CJ	Brain - Hippocampus	13QIC
+GTEX-12WSF-0011-R1a-SM-5DUVI	Brain - Hippocampus	12WSF
+GTEX-P44G-0011-R1A-SM-2I3FE	Brain - Hippocampus	P44G
+GTEX-1CB4G-0011-R1b-SM-9QEHT	Brain - Hippocampus	1CB4G
+GTEX-1IKOH-0011-R8a-SM-A9SKG	Brain - Hypothalamus	1IKOH
+GTEX-1F88E-0011-R8a-SM-CJI2H	Brain - Hypothalamus	1F88E
+GTEX-1399T-0011-R8b-SM-5IJD8	Brain - Hypothalamus	1399T
+GTEX-13X6J-0011-R8b-SM-5PNUA	Brain - Hypothalamus	13X6J
+GTEX-1H1CY-0011-R8b-SM-CJI31	Brain - Hypothalamus	1H1CY
+GTEX-WHSE-0011-R8A-SM-3P5Z1	Brain - Hypothalamus	WHSE
+GTEX-1GMR8-0011-R8a-SM-CKZNX	Brain - Hypothalamus	1GMR8
+GTEX-13O3Q-0011-R8b-SM-5KM2J	Brain - Hypothalamus	13O3Q
+GTEX-1F48J-0011-R8a-SM-9OSWW	Brain - Hypothalamus	1F48J
+GTEX-13OW6-0011-R8a-SM-5L3GF	Brain - Hypothalamus	13OW6
+GTEX-WZTO-0011-R8A-SM-4E3II	Brain - Hypothalamus	WZTO
+GTEX-13CIG-0011-R8b-SM-5LZX5	Brain - Hypothalamus	13CIG
+GTEX-14ASI-0011-R8b-SM-5S2UB	Brain - Hypothalamus	14ASI
+GTEX-Z93S-0011-R8a-SM-4RGNL	Brain - Hypothalamus	Z93S
+GTEX-12WSM-0011-R8a-SM-5DUWJ	Brain - Hypothalamus	12WSM
+GTEX-1H3VE-0011-R8b-SM-A9G1L	Brain - Hypothalamus	1H3VE
+GTEX-16NPV-0011-R8a-SM-7EPH8	Brain - Hypothalamus	16NPV
+GTEX-1E2YA-0011-R8a-SM-CKZNG	Brain - Hypothalamus	1E2YA
+GTEX-145LS-0011-R8b-SM-5PNXA	Brain - Hypothalamus	145LS
+GTEX-1H3O1-0011-R8a-SM-CL555	Brain - Hypothalamus	1H3O1
+GTEX-1F75A-0011-R8a-SM-CL539	Brain - Hypothalamus	1F75A
+GTEX-13QJC-0011-R8b-SM-5S2U6	Brain - Hypothalamus	13QJC
+GTEX-1I1GS-0011-R8b-SM-CKZPE	Brain - Hypothalamus	1I1GS
+GTEX-1B933-0011-R8a-SM-9QEGX	Brain - Hypothalamus	1B933
+GTEX-11GSP-0011-R8b-SM-5NQ79	Brain - Hypothalamus	11GSP
+GTEX-17EVP-0011-R8b-SM-7DUF9	Brain - Hypothalamus	17EVP
+GTEX-13X6K-0011-R8b-SM-5PNZ4	Brain - Hypothalamus	13X6K
+GTEX-11WQC-0011-R8b-SM-57WCH	Brain - Hypothalamus	11WQC
+GTEX-14PJO-0011-R8a-SM-6AJAL	Brain - Hypothalamus	14PJO
+GTEX-1HCU6-0011-R8a-SM-CJI3R	Brain - Hypothalamus	1HCU6
+GTEX-1CB4G-0011-R8b-SM-9WG7H	Brain - Hypothalamus	1CB4G
+GTEX-14PN4-0011-R8a-SM-6EU1H	Brain - Hypothalamus	14PN4
+GTEX-13JVG-0011-R8a-SM-5KM3E	Brain - Hypothalamus	13JVG
+GTEX-1EMGI-0011-R8b-SM-9QEID	Brain - Hypothalamus	1EMGI
+GTEX-17EVQ-0011-R8a-SM-7189T	Brain - Hypothalamus	17EVQ
+GTEX-NL3H-0011-R8a-SM-DIPDY	Brain - Hypothalamus	NL3H
+GTEX-16Z82-0011-R8a-SM-7DUEX	Brain - Hypothalamus	16Z82
+GTEX-ZDXO-0011-R8a-SM-4WWD7	Brain - Hypothalamus	ZDXO
+GTEX-145LU-0011-R8b-SM-5PNZG	Brain - Hypothalamus	145LU
+GTEX-13OW8-0011-R8a-SM-5L3G5	Brain - Hypothalamus	13OW8
+GTEX-17EVP-0011-R6b-SM-7LT99	Brain - Nucleus accumbens (basal ganglia)	17EVP
+GTEX-1IKK5-0011-R6b-SM-A9SLY	Brain - Nucleus accumbens (basal ganglia)	1IKK5
+GTEX-WZTO-0011-R6B-SM-4E3J6	Brain - Nucleus accumbens (basal ganglia)	WZTO
+GTEX-139TS-0011-R6a-SM-5J2OB	Brain - Nucleus accumbens (basal ganglia)	139TS
+GTEX-1HBPI-0011-R6b-SM-A9G1T	Brain - Nucleus accumbens (basal ganglia)	1HBPI
+GTEX-YJ89-0011-R6a-SM-4V6GN	Brain - Nucleus accumbens (basal ganglia)	YJ89
+GTEX-YFC4-0011-R6b-SM-4V6E1	Brain - Nucleus accumbens (basal ganglia)	YFC4
+GTEX-14ASI-0011-R6a-SM-5S2UZ	Brain - Nucleus accumbens (basal ganglia)	14ASI
+GTEX-14JIY-0011-R6b-SM-68714	Brain - Nucleus accumbens (basal ganglia)	14JIY
+GTEX-WL46-0011-R6A-SM-3LK6X	Brain - Nucleus accumbens (basal ganglia)	WL46
+GTEX-12ZZX-0011-R6a-SM-5HL8L	Brain - Nucleus accumbens (basal ganglia)	12ZZX
+GTEX-1R46S-0011-R6a-SM-EZ6N6	Brain - Nucleus accumbens (basal ganglia)	1R46S
+GTEX-145MI-0011-R6a-SM-5PNZA	Brain - Nucleus accumbens (basal ganglia)	145MI
+GTEX-1AX9I-0011-R6a-SM-7P8PK	Brain - Nucleus accumbens (basal ganglia)	1AX9I
+GTEX-X4XY-0011-R6B-SM-46MVB	Brain - Nucleus accumbens (basal ganglia)	X4XY
+GTEX-1GN73-0011-R6b-SM-CJI2T	Brain - Nucleus accumbens (basal ganglia)	1GN73
+GTEX-14JG1-0011-R6b-SM-5YYAU	Brain - Nucleus accumbens (basal ganglia)	14JG1
+GTEX-1399T-0011-R6b-SM-5K7YL	Brain - Nucleus accumbens (basal ganglia)	1399T
+GTEX-144GL-0011-R6a-SM-5P9HW	Brain - Nucleus accumbens (basal ganglia)	144GL
+GTEX-1EMGI-0011-R6a-SM-9OSVR	Brain - Nucleus accumbens (basal ganglia)	1EMGI
+GTEX-11ONC-0011-R6a-SM-DO12A	Brain - Nucleus accumbens (basal ganglia)	11ONC
+GTEX-1HT8W-0011-R6a-SM-CM2SY	Brain - Nucleus accumbens (basal ganglia)	1HT8W
+GTEX-13N2G-0011-R6b-SM-5MR3P	Brain - Nucleus accumbens (basal ganglia)	13N2G
+GTEX-1GZ4I-0011-R6b-SM-9WG77	Brain - Nucleus accumbens (basal ganglia)	1GZ4I
+GTEX-13112-0011-R6b-SM-5DUVK	Brain - Nucleus accumbens (basal ganglia)	13112
+GTEX-13VXU-0011-R6a-SM-5SI71	Brain - Nucleus accumbens (basal ganglia)	13VXU
+GTEX-1CB4H-0011-R6b-SM-CKZNK	Brain - Nucleus accumbens (basal ganglia)	1CB4H
+GTEX-13OVJ-0011-R6b-SM-5L3GH	Brain - Nucleus accumbens (basal ganglia)	13OVJ
+GTEX-1CB4J-0011-R6b-SM-9WG7B	Brain - Nucleus accumbens (basal ganglia)	1CB4J
+GTEX-15DCD-0011-R6b-SM-6M46L	Brain - Nucleus accumbens (basal ganglia)	15DCD
+GTEX-1I1GR-0011-R6a-SM-CMKHI	Brain - Nucleus accumbens (basal ganglia)	1I1GR
+GTEX-1H3O1-0011-R6b-SM-CL54U	Brain - Nucleus accumbens (basal ganglia)	1H3O1
+GTEX-WHSE-0011-R6A-SM-3P5ZP	Brain - Nucleus accumbens (basal ganglia)	WHSE
+GTEX-13QJC-0011-R6a-SM-5S2VI	Brain - Nucleus accumbens (basal ganglia)	13QJC
+GTEX-1OJC4-0011-R6a-SM-EXOIM	Brain - Nucleus accumbens (basal ganglia)	1OJC4
+GTEX-14E7W-0011-R6b-SM-5ZZV3	Brain - Nucleus accumbens (basal ganglia)	14E7W
+GTEX-1IKOH-0011-R6b-SM-A9G1W	Brain - Nucleus accumbens (basal ganglia)	1IKOH
+GTEX-12WSE-0011-R6b-SM-5LZV5	Brain - Nucleus accumbens (basal ganglia)	12WSE
+GTEX-S7PM-0011-R6A-SM-3NM8F	Brain - Nucleus accumbens (basal ganglia)	S7PM
+GTEX-1E1VI-0011-R6a-SM-9OSVJ	Brain - Nucleus accumbens (basal ganglia)	1E1VI
+GTEX-1F75W-0011-R7a-SM-9QEI6	Brain - Putamen (basal ganglia)	1F75W
+GTEX-WVLH-0011-R7A-SM-3MJFB	Brain - Putamen (basal ganglia)	WVLH
+GTEX-13PVQ-0011-R7a-SM-5L3G3	Brain - Putamen (basal ganglia)	13PVQ
+GTEX-X261-0011-R7A-SM-4E3JJ	Brain - Putamen (basal ganglia)	X261
+GTEX-13FHP-0011-R7b-SM-5LZYI	Brain - Putamen (basal ganglia)	13FHP
+GTEX-1H3O1-0011-R7a-SM-CE6SJ	Brain - Putamen (basal ganglia)	1H3O1
+GTEX-13FXS-0011-R7a-SM-5L3FC	Brain - Putamen (basal ganglia)	13FXS
+GTEX-11DZ1-0011-R7a-SM-DNZZH	Brain - Putamen (basal ganglia)	11DZ1
+GTEX-1IDJH-0011-R7a-SM-A9SM1	Brain - Putamen (basal ganglia)	1IDJH
+GTEX-1EX96-0011-R7a-SM-9OSVW	Brain - Putamen (basal ganglia)	1EX96
+GTEX-1LVAO-0011-R7a-SM-EYYWZ	Brain - Putamen (basal ganglia)	1LVAO
+GTEX-1EMGI-0011-R7b-SM-9QEH5	Brain - Putamen (basal ganglia)	1EMGI
+GTEX-1HFI6-0011-R7b-SM-CM2SS	Brain - Putamen (basal ganglia)	1HFI6
+GTEX-13X6I-0011-R7b-SM-5PNWP	Brain - Putamen (basal ganglia)	13X6I
+GTEX-144GL-0011-R7b-SM-5P9HX	Brain - Putamen (basal ganglia)	144GL
+GTEX-17HG3-0011-R7b-SM-7EPGR	Brain - Putamen (basal ganglia)	17HG3
+GTEX-11WQC-0011-R7b-SM-5BC7A	Brain - Putamen (basal ganglia)	11WQC
+GTEX-139TT-0011-R7b-SM-5J2MN	Brain - Putamen (basal ganglia)	139TT
+GTEX-17HHY-0011-R7a-SM-718A1	Brain - Putamen (basal ganglia)	17HHY
+GTEX-1F52S-0011-R7b-SM-9QEH8	Brain - Putamen (basal ganglia)	1F52S
+GTEX-1H23P-0011-R7b-SM-CKZP2	Brain - Putamen (basal ganglia)	1H23P
+GTEX-13S7M-0011-R7a-SM-5O9DK	Brain - Putamen (basal ganglia)	13S7M
+GTEX-1GF9W-0011-R7b-SM-9QEIF	Brain - Putamen (basal ganglia)	1GF9W
+GTEX-11NV4-0011-R7a-SM-57WDH	Brain - Putamen (basal ganglia)	11NV4
+GTEX-17HII-0011-R7a-SM-79OMS	Brain - Putamen (basal ganglia)	17HII
+GTEX-ZVT3-0011-R7a-SM-57WCO	Brain - Putamen (basal ganglia)	ZVT3
+GTEX-15RJE-0011-R7a-SM-7DHL9	Brain - Putamen (basal ganglia)	15RJE
+GTEX-1JMQK-0011-R7b-SM-EXUTF	Brain - Putamen (basal ganglia)	1JMQK
+GTEX-139TS-0011-R7a-SM-5K7X7	Brain - Putamen (basal ganglia)	139TS
+GTEX-1IKK5-0011-R7b-SM-A9G39	Brain - Putamen (basal ganglia)	1IKK5
+GTEX-18464-0011-R7b-SM-731CM	Brain - Putamen (basal ganglia)	18464
+GTEX-1EH9U-0011-R7a-SM-9QEGU	Brain - Putamen (basal ganglia)	1EH9U
+GTEX-14E7W-0011-R7b-SM-5ZZV4	Brain - Putamen (basal ganglia)	14E7W
+GTEX-YJ89-0011-R7a-SM-4V6GO	Brain - Putamen (basal ganglia)	YJ89
+GTEX-1HGF4-0011-R7a-SM-A96S2	Brain - Putamen (basal ganglia)	1HGF4
+GTEX-14ASI-0011-R7b-SM-5YY9G	Brain - Putamen (basal ganglia)	14ASI
+GTEX-1J8Q2-0011-R7a-SM-CKZPF	Brain - Putamen (basal ganglia)	1J8Q2
+GTEX-13OVL-0011-R7a-SM-5P9GW	Brain - Putamen (basal ganglia)	13OVL
+GTEX-12WSA-0011-R7b-SM-5GU5U	Brain - Putamen (basal ganglia)	12WSA
+GTEX-13G51-0011-R7b-SM-5LZXG	Brain - Putamen (basal ganglia)	13G51
+GTEX-13PLJ-0011-R9b-SM-5O9DV	Brain - Spinal cord (cervical c-1)	13PLJ
+GTEX-1IGQW-0011-R9b-SM-D4P25	Brain - Spinal cord (cervical c-1)	1IGQW
+GTEX-1ICLZ-0011-R9a-SM-ARL7E	Brain - Spinal cord (cervical c-1)	1ICLZ
+GTEX-139UW-0011-R9b-SM-5LZYT	Brain - Spinal cord (cervical c-1)	139UW
+GTEX-1B8L1-0011-R9b-SM-9WG5U	Brain - Spinal cord (cervical c-1)	1B8L1
+GTEX-1EU9M-0011-R9a-SM-9WG61	Brain - Spinal cord (cervical c-1)	1EU9M
+GTEX-16Z82-0011-R9a-SM-7DUFA	Brain - Spinal cord (cervical c-1)	16Z82
+GTEX-14BIL-0011-R9a-SM-5SI7A	Brain - Spinal cord (cervical c-1)	14BIL
+GTEX-14JIY-0011-R9a-SM-6EU34	Brain - Spinal cord (cervical c-1)	14JIY
+GTEX-11DZ1-0011-R9a-SM-DO933	Brain - Spinal cord (cervical c-1)	11DZ1
+GTEX-1LB8K-0011-R9a-SM-EZ6MP	Brain - Spinal cord (cervical c-1)	1LB8K
+GTEX-11ZUS-0011-R9b-SM-5BC76	Brain - Spinal cord (cervical c-1)	11ZUS
+GTEX-15ER7-0011-R9b-SM-6PALF	Brain - Spinal cord (cervical c-1)	15ER7
+GTEX-1HFI6-0011-R9b-SM-CMKH4	Brain - Spinal cord (cervical c-1)	1HFI6
+GTEX-1C6VQ-0011-R9a-SM-7SB85	Brain - Spinal cord (cervical c-1)	1C6VQ
+GTEX-14BIN-0011-R9a-SM-5SI76	Brain - Spinal cord (cervical c-1)	14BIN
+GTEX-XMD1-0011-R9A-SM-4AT49	Brain - Spinal cord (cervical c-1)	XMD1
+GTEX-1H1ZS-0011-R9a-SM-CM2SO	Brain - Spinal cord (cervical c-1)	1H1ZS
+GTEX-ZAB4-0011-R9a-SM-4SOKG	Brain - Spinal cord (cervical c-1)	ZAB4
+GTEX-1J8JJ-0011-R9a-SM-ACKVF	Brain - Spinal cord (cervical c-1)	1J8JJ
+GTEX-14E7W-0011-R9a-SM-62LE6	Brain - Spinal cord (cervical c-1)	14E7W
+GTEX-ZE9C-0011-R9a-SM-4WWCY	Brain - Spinal cord (cervical c-1)	ZE9C
+GTEX-1HGF4-0011-R9a-SM-ADEH9	Brain - Spinal cord (cervical c-1)	1HGF4
+GTEX-1GF9V-0011-R9a-SM-CL53K	Brain - Spinal cord (cervical c-1)	1GF9V
+GTEX-1CAMQ-0011-R9a-SM-9WG5Z	Brain - Spinal cord (cervical c-1)	1CAMQ
+GTEX-1B933-0011-R9a-SM-79OOR	Brain - Spinal cord (cervical c-1)	1B933
+GTEX-11WQK-0011-R9b-SM-5BC6N	Brain - Spinal cord (cervical c-1)	11WQK
+GTEX-13X6I-0011-R9b-SM-5PNZJ	Brain - Spinal cord (cervical c-1)	13X6I
+GTEX-14PJM-0011-R9b-SM-6EU35	Brain - Spinal cord (cervical c-1)	14PJM
+GTEX-1HBPH-0011-R9a-SM-CMKH3	Brain - Spinal cord (cervical c-1)	1HBPH
+GTEX-1C6VS-0011-R9b-SM-9WG5W	Brain - Spinal cord (cervical c-1)	1C6VS
+GTEX-1HSMO-0011-R9b-SM-CM2T2	Brain - Spinal cord (cervical c-1)	1HSMO
+GTEX-147GR-0011-R9a-SM-5S2UY	Brain - Spinal cord (cervical c-1)	147GR
+GTEX-12126-0011-R9b-SM-5BC6P	Brain - Spinal cord (cervical c-1)	12126
+GTEX-1EH9U-0011-R9b-SM-9WG5T	Brain - Spinal cord (cervical c-1)	1EH9U
+GTEX-13SLX-0011-R9b-SM-5SI6X	Brain - Spinal cord (cervical c-1)	13SLX
+GTEX-13S7M-0011-R9a-SM-5O9DW	Brain - Spinal cord (cervical c-1)	13S7M
+GTEX-11EMC-0011-R9b-SM-DO921	Brain - Spinal cord (cervical c-1)	11EMC
+GTEX-12WSC-0011-R9a-SM-5GU4U	Brain - Spinal cord (cervical c-1)	12WSC
+GTEX-13QJC-0011-R9b-SM-5PNX3	Brain - Spinal cord (cervical c-1)	13QJC
+GTEX-1J8Q2-0011-R2b-SM-EAZ2X	Brain - Substantia nigra	1J8Q2
+GTEX-11DZ1-0011-R2a-SM-DNZZM	Brain - Substantia nigra	11DZ1
+GTEX-1F48J-0011-R2a-SM-CL535	Brain - Substantia nigra	1F48J
+GTEX-QMR6-0011-R2A-SM-32PKV	Brain - Substantia nigra	QMR6
+GTEX-1H3O1-0011-R2b-SM-CKZOT	Brain - Substantia nigra	1H3O1
+GTEX-13OVJ-0011-R2b-SM-5L3GP	Brain - Substantia nigra	13OVJ
+GTEX-1LH75-0011-R2b-SM-EYYWQ	Brain - Substantia nigra	1LH75
+GTEX-13SLX-0011-R2b-SM-5S2VP	Brain - Substantia nigra	13SLX
+GTEX-1B996-0011-R2a-SM-7IGON	Brain - Substantia nigra	1B996
+GTEX-14JG1-0011-R2a-SM-5ZZVE	Brain - Substantia nigra	14JG1
+GTEX-11GSP-0011-R2b-SM-9QEGE	Brain - Substantia nigra	11GSP
+GTEX-1H1DG-0011-R2a-SM-ADEIQ	Brain - Substantia nigra	1H1DG
+GTEX-16Z82-0011-R2b-SM-79OK9	Brain - Substantia nigra	16Z82
+GTEX-T2IS-0011-R2A-SM-32QPF	Brain - Substantia nigra	T2IS
+GTEX-WHSE-0011-R2A-SM-3P5ZL	Brain - Substantia nigra	WHSE
+GTEX-1F75B-0011-R2a-SM-ARL8I	Brain - Substantia nigra	1F75B
+GTEX-YFC4-0011-R2a-SM-4V6DZ	Brain - Substantia nigra	YFC4
+GTEX-13O3Q-0011-R2b-SM-5KM3K	Brain - Substantia nigra	13O3Q
+GTEX-1HB9E-0011-R2b-SM-A96RW	Brain - Substantia nigra	1HB9E
+GTEX-11ZTS-0011-R2b-SM-5BC75	Brain - Substantia nigra	11ZTS
+GTEX-11GSO-0011-R2a-SM-57WDF	Brain - Substantia nigra	11GSO
+GTEX-13PDP-0011-R2b-SM-5O9DH	Brain - Substantia nigra	13PDP
+GTEX-15CHQ-0011-R2b-SM-6AJAD	Brain - Substantia nigra	15CHQ
+GTEX-15RJE-0011-R2b-SM-79OMP	Brain - Substantia nigra	15RJE
+GTEX-13NYB-0011-R2a-SM-5MR3C	Brain - Substantia nigra	13NYB
+GTEX-1399T-0011-R2b-SM-5DUXM	Brain - Substantia nigra	1399T
+GTEX-13QJC-0011-R2b-SM-5PNUN	Brain - Substantia nigra	13QJC
+GTEX-145LS-0011-R2a-SM-5PNZI	Brain - Substantia nigra	145LS
+GTEX-1RLM8-0011-R2a-SM-EZ6N4	Brain - Substantia nigra	1RLM8
+GTEX-12WSA-0011-R2a-SM-57WDK	Brain - Substantia nigra	12WSA
+GTEX-Z93S-0011-R2a-SM-4RGNG	Brain - Substantia nigra	Z93S
+GTEX-1IGQW-0011-R2b-SM-D4P26	Brain - Substantia nigra	1IGQW
+GTEX-1GN1U-0011-R2a-SM-CL53A	Brain - Substantia nigra	1GN1U
+GTEX-14BIN-0011-R2a-SM-5S2RJ	Brain - Substantia nigra	14BIN
+GTEX-1HT8W-0011-R2a-SM-CMKH9	Brain - Substantia nigra	1HT8W
+GTEX-13RTJ-0011-R2a-SM-5PNW9	Brain - Substantia nigra	13RTJ
+GTEX-12ZZX-0011-R2a-SM-5EGLG	Brain - Substantia nigra	12ZZX
+GTEX-1LB8K-0011-R2a-SM-EZ6MQ	Brain - Substantia nigra	1LB8K
+GTEX-131XH-0011-R2b-SM-5DUVY	Brain - Substantia nigra	131XH
+GTEX-1F6I4-0011-R2a-SM-CL536	Brain - Substantia nigra	1F6I4
+GTEX-1C6VS-0726-SM-7EPHF	Breast - Mammary Tissue	1C6VS
+GTEX-1MCYP-0126-SM-E6CIS	Breast - Mammary Tissue	1MCYP
+GTEX-13D11-1026-SM-5IJFB	Breast - Mammary Tissue	13D11
+GTEX-Y5V5-2126-SM-4WWFO	Breast - Mammary Tissue	Y5V5
+GTEX-13PVR-2226-SM-7DHKP	Breast - Mammary Tissue	13PVR
+GTEX-13N1W-0626-SM-5MR4U	Breast - Mammary Tissue	13N1W
+GTEX-13FHO-0826-SM-5L3E8	Breast - Mammary Tissue	13FHO
+GTEX-1H3VY-0926-SM-ACKXE	Breast - Mammary Tissue	1H3VY
+GTEX-1JN1M-3026-SM-CMKGK	Breast - Mammary Tissue	1JN1M
+GTEX-1S82Z-0726-SM-E6CHX	Breast - Mammary Tissue	1S82Z
+GTEX-1J8EW-2626-SM-CL53E	Breast - Mammary Tissue	1J8EW
+GTEX-1CB4G-2326-SM-79OOI	Breast - Mammary Tissue	1CB4G
+GTEX-1N5O9-1126-SM-DTXEQ	Breast - Mammary Tissue	1N5O9
+GTEX-11DXY-2326-SM-5GICW	Breast - Mammary Tissue	11DXY
+GTEX-ZTPG-2826-SM-57WGA	Breast - Mammary Tissue	ZTPG
+GTEX-1HSGN-1526-SM-A9SMO	Breast - Mammary Tissue	1HSGN
+GTEX-18D9A-1526-SM-7LG4J	Breast - Mammary Tissue	18D9A
+GTEX-11EI6-0626-SM-5985T	Breast - Mammary Tissue	11EI6
+GTEX-1JMPY-0526-SM-CL54O	Breast - Mammary Tissue	1JMPY
+GTEX-13O3P-0826-SM-5L3DH	Breast - Mammary Tissue	13O3P
+GTEX-ZLWG-1926-SM-DO92J	Breast - Mammary Tissue	ZLWG
+GTEX-1RAZQ-1226-SM-EWRNL	Breast - Mammary Tissue	1RAZQ
+GTEX-1IDJF-2326-SM-ARL86	Breast - Mammary Tissue	1IDJF
+GTEX-1IKOE-1326-SM-CE6T6	Breast - Mammary Tissue	1IKOE
+GTEX-1B932-0826-SM-73KXG	Breast - Mammary Tissue	1B932
+GTEX-ZU9S-1926-SM-5NQBP	Breast - Mammary Tissue	ZU9S
+GTEX-13CF2-2026-SM-5K7VI	Breast - Mammary Tissue	13CF2
+GTEX-1HC8U-0826-SM-ADEIL	Breast - Mammary Tissue	1HC8U
+GTEX-14AS3-1626-SM-5S2OY	Breast - Mammary Tissue	14AS3
+GTEX-1AX8Z-0926-SM-731AW	Breast - Mammary Tissue	1AX8Z
+GTEX-11GS4-2126-SM-5A5KR	Breast - Mammary Tissue	11GS4
+GTEX-ZYW4-0826-SM-5GIDG	Breast - Mammary Tissue	ZYW4
+GTEX-11NSD-0926-SM-5N9DR	Breast - Mammary Tissue	11NSD
+GTEX-1R9PN-0326-SM-DTX85	Breast - Mammary Tissue	1R9PN
+GTEX-14PHY-1926-SM-5YY95	Breast - Mammary Tissue	14PHY
+GTEX-1CAMR-1426-SM-793BO	Breast - Mammary Tissue	1CAMR
+GTEX-1H1E6-0926-SM-9YFLT	Breast - Mammary Tissue	1H1E6
+GTEX-13QIC-2326-SM-5LU5N	Breast - Mammary Tissue	13QIC
+GTEX-1C6VQ-0426-SM-79OOX	Breast - Mammary Tissue	1C6VQ
+GTEX-1JK1U-1826-SM-ARL8W	Breast - Mammary Tissue	1JK1U
+GTEX-1IKOH-0001-SM-EAZDF	Cells - EBV-transformed lymphocytes	1IKOH
+GTEX-ZF29-0002-SM-4WKF2	Cells - EBV-transformed lymphocytes	ZF29
+GTEX-11TT1-0004-SM-5S2NT	Cells - EBV-transformed lymphocytes	11TT1
+GTEX-ZTSS-0004-SM-4YCCS	Cells - EBV-transformed lymphocytes	ZTSS
+GTEX-Y5LM-0003-SM-4V6G1	Cells - EBV-transformed lymphocytes	Y5LM
+GTEX-1GN2E-0001-SM-EYYVU	Cells - EBV-transformed lymphocytes	1GN2E
+GTEX-XBED-0003-SM-47JWP	Cells - EBV-transformed lymphocytes	XBED
+GTEX-1HSMQ-0001-SM-EZ6M5	Cells - EBV-transformed lymphocytes	1HSMQ
+GTEX-ZLV1-0001-SM-4WWAO	Cells - EBV-transformed lymphocytes	ZLV1
+GTEX-1HKZK-0001-SM-EZ6M1	Cells - EBV-transformed lymphocytes	1HKZK
+GTEX-11P7K-0003-SM-5S2OU	Cells - EBV-transformed lymphocytes	11P7K
+GTEX-1HSKV-0001-SM-EZ6M6	Cells - EBV-transformed lymphocytes	1HSKV
+GTEX-ZVZP-0004-SM-51MS8	Cells - EBV-transformed lymphocytes	ZVZP
+GTEX-ZQG8-0001-SM-4YCDH	Cells - EBV-transformed lymphocytes	ZQG8
+GTEX-ZVTK-0003-SM-51MRV	Cells - EBV-transformed lymphocytes	ZVTK
+GTEX-1I1GT-0003-SM-EZ6M8	Cells - EBV-transformed lymphocytes	1I1GT
+GTEX-U3ZM-0002-SM-3NMDM	Cells - EBV-transformed lymphocytes	U3ZM
+GTEX-YEC3-0002-SM-4W1YI	Cells - EBV-transformed lymphocytes	YEC3
+GTEX-YB5E-0001-SM-4VDSV	Cells - EBV-transformed lymphocytes	YB5E
+GTEX-1FIGZ-0001-SM-EAZCM	Cells - EBV-transformed lymphocytes	1FIGZ
+GTEX-WYVS-0004-SM-4ONDT	Cells - EBV-transformed lymphocytes	WYVS
+GTEX-1HCU9-0004-SM-EYYW6	Cells - EBV-transformed lymphocytes	1HCU9
+GTEX-TML8-0001-SM-3NMAF	Cells - EBV-transformed lymphocytes	TML8
+GTEX-X4EO-0004-SM-4QARM	Cells - EBV-transformed lymphocytes	X4EO
+GTEX-XGQ4-0004-SM-4AT5S	Cells - EBV-transformed lymphocytes	XGQ4
+GTEX-XXEK-0004-SM-4BRWO	Cells - EBV-transformed lymphocytes	XXEK
+GTEX-ZQUD-0003-SM-4YCD3	Cells - EBV-transformed lymphocytes	ZQUD
+GTEX-1F52S-0001-SM-EVR36	Cells - EBV-transformed lymphocytes	1F52S
+GTEX-ZDTS-0001-SM-4WAXW	Cells - EBV-transformed lymphocytes	ZDTS
+GTEX-1GMR3-0004-SM-EVR3D	Cells - EBV-transformed lymphocytes	1GMR3
+GTEX-WHPG-0004-SM-3NMDO	Cells - EBV-transformed lymphocytes	WHPG
+GTEX-VUSG-0003-SM-3NMDK	Cells - EBV-transformed lymphocytes	VUSG
+GTEX-XMK1-0001-SM-4B64F	Cells - EBV-transformed lymphocytes	XMK1
+GTEX-X4LF-0002-SM-4QASG	Cells - EBV-transformed lymphocytes	X4LF
+GTEX-WOFM-0001-SM-4OOT2	Cells - EBV-transformed lymphocytes	WOFM
+GTEX-Y8LW-0002-SM-4V6G2	Cells - EBV-transformed lymphocytes	Y8LW
+GTEX-T5JC-0001-SM-3NMAK	Cells - EBV-transformed lymphocytes	T5JC
+GTEX-12696-0002-SM-5SI6U	Cells - EBV-transformed lymphocytes	12696
+GTEX-YEC4-0002-SM-4W1Z6	Cells - EBV-transformed lymphocytes	YEC4
+GTEX-ZF2S-0004-SM-4WKFE	Cells - EBV-transformed lymphocytes	ZF2S
+GTEX-1GPI7-1926-SM-9KNUH	Colon - Sigmoid	1GPI7
+GTEX-ZLFU-1426-SM-4WWEU	Colon - Sigmoid	ZLFU
+GTEX-132AR-2826-SM-5IJFV	Colon - Sigmoid	132AR
+GTEX-145LT-0826-SM-5S2QL	Colon - Sigmoid	145LT
+GTEX-1F75W-2126-SM-7RHIA	Colon - Sigmoid	1F75W
+GTEX-1EMGI-2626-SM-7IGNR	Colon - Sigmoid	1EMGI
+GTEX-1B996-2726-SM-7DUGG	Colon - Sigmoid	1B996
+GTEX-11EQ9-1526-SM-5PNY7	Colon - Sigmoid	11EQ9
+GTEX-1IKOE-2126-SM-A96T5	Colon - Sigmoid	1IKOE
+GTEX-1KXAM-1926-SM-D3LAG	Colon - Sigmoid	1KXAM
+GTEX-16MTA-1626-SM-6M47N	Colon - Sigmoid	16MTA
+GTEX-ZE9C-2126-SM-4WKGY	Colon - Sigmoid	ZE9C
+GTEX-1LG7Z-1326-SM-DIPF3	Colon - Sigmoid	1LG7Z
+GTEX-11P7K-1826-SM-5HL5A	Colon - Sigmoid	11P7K
+GTEX-ZLV1-1326-SM-DO11Q	Colon - Sigmoid	ZLV1
+GTEX-13PVR-1726-SM-5Q5EC	Colon - Sigmoid	13PVR
+GTEX-11EM3-1626-SM-5N9CO	Colon - Sigmoid	11EM3
+GTEX-145MO-2626-SM-5QGPD	Colon - Sigmoid	145MO
+GTEX-1JMQJ-2626-SM-CY8HQ	Colon - Sigmoid	1JMQJ
+GTEX-145LS-2926-SM-5O99G	Colon - Sigmoid	145LS
+GTEX-13SLW-2826-SM-5Q5ES	Colon - Sigmoid	13SLW
+GTEX-117YX-0526-SM-5EGJH	Colon - Sigmoid	117YX
+GTEX-ZLWG-1826-SM-DO11I	Colon - Sigmoid	ZLWG
+GTEX-1J1R8-1426-SM-CL55O	Colon - Sigmoid	1J1R8
+GTEX-11EI6-2626-SM-5PNVT	Colon - Sigmoid	11EI6
+GTEX-11TT1-0926-SM-5GU5M	Colon - Sigmoid	11TT1
+GTEX-17HHE-1626-SM-7DHLN	Colon - Sigmoid	17HHE
+GTEX-1C4CL-1626-SM-7DUF3	Colon - Sigmoid	1C4CL
+GTEX-1HFI7-1626-SM-9WYTR	Colon - Sigmoid	1HFI7
+GTEX-1J8Q3-2426-SM-CL53S	Colon - Sigmoid	1J8Q3
+GTEX-11VI4-1426-SM-5GU6O	Colon - Sigmoid	11VI4
+GTEX-17MFQ-1226-SM-7KFSA	Colon - Sigmoid	17MFQ
+GTEX-Y5LM-1426-SM-5RQJL	Colon - Sigmoid	Y5LM
+GTEX-ZQG8-2426-SM-57WEE	Colon - Sigmoid	ZQG8
+GTEX-13OVK-1026-SM-7KFTC	Colon - Sigmoid	13OVK
+GTEX-1B97I-1526-SM-73KUK	Colon - Sigmoid	1B97I
+GTEX-1122O-1426-SM-5H11R	Colon - Sigmoid	1122O
+GTEX-13U4I-2626-SM-5SI9C	Colon - Sigmoid	13U4I
+GTEX-18D9A-1326-SM-7LT8P	Colon - Sigmoid	18D9A
+GTEX-1J1OQ-2826-SM-D3L88	Colon - Sigmoid	1J1OQ
+GTEX-ZYFC-2626-SM-5NQ6S	Colon - Transverse	ZYFC
+GTEX-14PKV-2126-SM-664O3	Colon - Transverse	14PKV
+GTEX-ZP4G-1726-SM-4WWCM	Colon - Transverse	ZP4G
+GTEX-ZPU1-1926-SM-57WDT	Colon - Transverse	ZPU1
+GTEX-YF7O-1726-SM-5IFJ9	Colon - Transverse	YF7O
+GTEX-1C6VQ-2726-SM-73KUL	Colon - Transverse	1C6VQ
+GTEX-1NV5F-2226-SM-DTX8O	Colon - Transverse	1NV5F
+GTEX-1PIEJ-2026-SM-E6CPA	Colon - Transverse	1PIEJ
+GTEX-1JMPY-0426-SM-C1YQ3	Colon - Transverse	1JMPY
+GTEX-1HFI7-1726-SM-A9G22	Colon - Transverse	1HFI7
+GTEX-14PHX-1526-SM-68717	Colon - Transverse	14PHX
+GTEX-111CU-1426-SM-5GZYP	Colon - Transverse	111CU
+GTEX-11ONC-2026-SM-5HL61	Colon - Transverse	11ONC
+GTEX-11TT1-1026-SM-5PNW7	Colon - Transverse	11TT1
+GTEX-1122O-1526-SM-5N9CL	Colon - Transverse	1122O
+GTEX-14JIY-3326-SM-6871E	Colon - Transverse	14JIY
+GTEX-12WSL-1626-SM-5GCMU	Colon - Transverse	12WSL
+GTEX-1HCU7-2626-SM-C1YQO	Colon - Transverse	1HCU7
+GTEX-11EM3-1526-SM-5A5KN	Colon - Transverse	11EM3
+GTEX-ZZ64-0726-SM-5GZX4	Colon - Transverse	ZZ64
+GTEX-139T6-1326-SM-5IFFO	Colon - Transverse	139T6
+GTEX-1N5O9-2726-SM-E76QH	Colon - Transverse	1N5O9
+GTEX-1L5NE-2026-SM-CXZKR	Colon - Transverse	1L5NE
+GTEX-146FQ-1926-SM-5NQBY	Colon - Transverse	146FQ
+GTEX-13FTW-1826-SM-5IJEN	Colon - Transverse	13FTW
+GTEX-13QBU-1826-SM-5IJG3	Colon - Transverse	13QBU
+GTEX-11NSD-1626-SM-5986U	Colon - Transverse	11NSD
+GTEX-ZXES-1626-SM-5NQ7L	Colon - Transverse	ZXES
+GTEX-1399U-1926-SM-5IFH7	Colon - Transverse	1399U
+GTEX-ZPIC-2226-SM-57WDX	Colon - Transverse	ZPIC
+GTEX-11EQ9-1426-SM-5987G	Colon - Transverse	11EQ9
+GTEX-1B932-2826-SM-73KUD	Colon - Transverse	1B932
+GTEX-1KANA-1926-SM-DHXKF	Colon - Transverse	1KANA
+GTEX-1IDJC-1326-SM-CL53H	Colon - Transverse	1IDJC
+GTEX-11O72-2226-SM-5PNW2	Colon - Transverse	11O72
+GTEX-117YW-1826-SM-5PNY5	Colon - Transverse	117YW
+GTEX-15UF6-2626-SM-6M466	Colon - Transverse	15UF6
+GTEX-133LE-1526-SM-5IFEN	Colon - Transverse	133LE
+GTEX-1IDJD-2226-SM-A96TD	Colon - Transverse	1IDJD
+GTEX-1I4MK-1126-SM-B2LWS	Colon - Transverse	1I4MK
+GTEX-YB5K-0626-SM-5LUB5	Esophagus - Gastroesophageal Junction	YB5K
+GTEX-15DCE-1526-SM-7KUFD	Esophagus - Gastroesophageal Junction	15DCE
+GTEX-ZV6S-0726-SM-57WFY	Esophagus - Gastroesophageal Junction	ZV6S
+GTEX-ZVP2-1426-SM-5NQ7P	Esophagus - Gastroesophageal Junction	ZVP2
+GTEX-11LCK-1526-SM-5HL64	Esophagus - Gastroesophageal Junction	11LCK
+GTEX-Y9LG-0926-SM-4VDS6	Esophagus - Gastroesophageal Junction	Y9LG
+GTEX-1QP9N-0526-SM-DTX9P	Esophagus - Gastroesophageal Junction	1QP9N
+GTEX-1KANA-0426-SM-CXZKH	Esophagus - Gastroesophageal Junction	1KANA
+GTEX-14E6E-0826-SM-664N7	Esophagus - Gastroesophageal Junction	14E6E
+GTEX-1C4CL-1426-SM-793CT	Esophagus - Gastroesophageal Junction	1C4CL
+GTEX-183FY-1726-SM-7LT9Q	Esophagus - Gastroesophageal Junction	183FY
+GTEX-1HKZK-1226-SM-9WYUR	Esophagus - Gastroesophageal Junction	1HKZK
+GTEX-YB5E-1026-SM-5IFI2	Esophagus - Gastroesophageal Junction	YB5E
+GTEX-144GM-1626-SM-5O9AG	Esophagus - Gastroesophageal Junction	144GM
+GTEX-14BMU-1026-SM-5RQJ5	Esophagus - Gastroesophageal Junction	14BMU
+GTEX-1JMQJ-1126-SM-CY8HO	Esophagus - Gastroesophageal Junction	1JMQJ
+GTEX-ZV7C-1326-SM-A9SK7	Esophagus - Gastroesophageal Junction	ZV7C
+GTEX-Y5V6-1226-SM-4VDTE	Esophagus - Gastroesophageal Junction	Y5V6
+GTEX-18D9A-0426-SM-72D55	Esophagus - Gastroesophageal Junction	18D9A
+GTEX-1QP28-1626-SM-E8VOI	Esophagus - Gastroesophageal Junction	1QP28
+GTEX-14JG1-1826-SM-5YY9Y	Esophagus - Gastroesophageal Junction	14JG1
+GTEX-13PL7-0526-SM-5J2MQ	Esophagus - Gastroesophageal Junction	13PL7
+GTEX-1S3DN-1426-SM-EWRNO	Esophagus - Gastroesophageal Junction	1S3DN
+GTEX-11OF3-2326-SM-5GU73	Esophagus - Gastroesophageal Junction	11OF3
+GTEX-16AAH-0826-SM-7LT9V	Esophagus - Gastroesophageal Junction	16AAH
+GTEX-17MF6-1726-SM-7LTA3	Esophagus - Gastroesophageal Junction	17MF6
+GTEX-YF7O-1026-SM-5P9IP	Esophagus - Gastroesophageal Junction	YF7O
+GTEX-1HSMP-1826-SM-E9TIB	Esophagus - Gastroesophageal Junction	1HSMP
+GTEX-1JJ6O-1626-SM-CM2RM	Esophagus - Gastroesophageal Junction	1JJ6O
+GTEX-ZYFC-2226-SM-5NQ96	Esophagus - Gastroesophageal Junction	ZYFC
+GTEX-1L5NE-1226-SM-D3L9Q	Esophagus - Gastroesophageal Junction	1L5NE
+GTEX-1211K-1326-SM-5FQV2	Esophagus - Gastroesophageal Junction	1211K
+GTEX-13D11-2026-SM-5IJBK	Esophagus - Gastroesophageal Junction	13D11
+GTEX-1HBPH-1526-SM-ARZNC	Esophagus - Gastroesophageal Junction	1HBPH
+GTEX-1MA7W-0926-SM-DIPFN	Esophagus - Gastroesophageal Junction	1MA7W
+GTEX-1CB4E-1226-SM-7MKFX	Esophagus - Gastroesophageal Junction	1CB4E
+GTEX-144FL-2626-SM-5TDCW	Esophagus - Gastroesophageal Junction	144FL
+GTEX-1LVAN-2126-SM-CNPQ8	Esophagus - Gastroesophageal Junction	1LVAN
+GTEX-13FH7-0626-SM-5KLZD	Esophagus - Gastroesophageal Junction	13FH7
+GTEX-YEC4-1226-SM-5CVLX	Esophagus - Gastroesophageal Junction	YEC4
+GTEX-1122O-1726-SM-5GICM	Esophagus - Mucosa	1122O
+GTEX-14PJ6-1026-SM-686ZB	Esophagus - Mucosa	14PJ6
+GTEX-17KNJ-1326-SM-7KFTG	Esophagus - Mucosa	17KNJ
+GTEX-131XG-1026-SM-5GCMX	Esophagus - Mucosa	131XG
+GTEX-1HSGN-1626-SM-A96U2	Esophagus - Mucosa	1HSGN
+GTEX-14A6H-1326-SM-5NQBC	Esophagus - Mucosa	14A6H
+GTEX-13U4I-1126-SM-5LU3S	Esophagus - Mucosa	13U4I
+GTEX-14PJ3-0626-SM-6UGC5	Esophagus - Mucosa	14PJ3
+GTEX-YB5E-0926-SM-4WWDQ	Esophagus - Mucosa	YB5E
+GTEX-ZTX8-0226-SM-5E44D	Esophagus - Mucosa	ZTX8
+GTEX-1K2DU-1726-SM-EV79S	Esophagus - Mucosa	1K2DU
+GTEX-ZTPG-1626-SM-5DUX2	Esophagus - Mucosa	ZTPG
+GTEX-1CAMQ-2726-SM-7MKGD	Esophagus - Mucosa	1CAMQ
+GTEX-15UF7-0926-SM-6M46F	Esophagus - Mucosa	15UF7
+GTEX-ZF2S-1226-SM-4WWAX	Esophagus - Mucosa	ZF2S
+GTEX-1399S-1326-SM-5P9GH	Esophagus - Mucosa	1399S
+GTEX-11P81-0826-SM-5P9GR	Esophagus - Mucosa	11P81
+GTEX-11DXZ-1226-SM-5H11L	Esophagus - Mucosa	11DXZ
+GTEX-1H3NZ-1326-SM-9JGHI	Esophagus - Mucosa	1H3NZ
+GTEX-1IDJH-2026-SM-CNNQX	Esophagus - Mucosa	1IDJH
+GTEX-1LSVX-1226-SM-DHXJN	Esophagus - Mucosa	1LSVX
+GTEX-131YS-1426-SM-5IJF7	Esophagus - Mucosa	131YS
+GTEX-139T6-0626-SM-5IFF9	Esophagus - Mucosa	139T6
+GTEX-ZEX8-1426-SM-4WKHQ	Esophagus - Mucosa	ZEX8
+GTEX-14PJN-0526-SM-68724	Esophagus - Mucosa	14PJN
+GTEX-13FLV-1126-SM-5J2NO	Esophagus - Mucosa	13FLV
+GTEX-17JCI-1226-SM-793D9	Esophagus - Mucosa	17JCI
+GTEX-1B8KZ-0726-SM-7938W	Esophagus - Mucosa	1B8KZ
+GTEX-ZY6K-0626-SM-59HJL	Esophagus - Mucosa	ZY6K
+GTEX-ZDTT-1326-SM-4WKFH	Esophagus - Mucosa	ZDTT
+GTEX-1AMFI-0226-SM-731D5	Esophagus - Mucosa	1AMFI
+GTEX-131XF-0826-SM-5GICG	Esophagus - Mucosa	131XF
+GTEX-15EU6-1626-SM-6LPKF	Esophagus - Mucosa	15EU6
+GTEX-1GN1W-2226-SM-9JGI5	Esophagus - Mucosa	1GN1W
+GTEX-13G51-0926-SM-5IFFU	Esophagus - Mucosa	13G51
+GTEX-131XE-1426-SM-5HL7V	Esophagus - Mucosa	131XE
+GTEX-1JKYN-1526-SM-CGQGA	Esophagus - Mucosa	1JKYN
+GTEX-1GN73-1926-SM-9JGGS	Esophagus - Mucosa	1GN73
+GTEX-13YAN-1926-SM-7EPH9	Esophagus - Mucosa	13YAN
+GTEX-13FHO-1726-SM-DPRZX	Esophagus - Mucosa	13FHO
+GTEX-14BMV-1426-SM-5S2WA	Esophagus - Muscularis	14BMV
+GTEX-1E1VI-1626-SM-7EPIL	Esophagus - Muscularis	1E1VI
+GTEX-1J8EW-1226-SM-A9G34	Esophagus - Muscularis	1J8EW
+GTEX-15SHU-1526-SM-7KUF5	Esophagus - Muscularis	15SHU
+GTEX-ZP4G-0926-SM-4WWF4	Esophagus - Muscularis	ZP4G
+GTEX-132AR-2326-SM-5IJDY	Esophagus - Muscularis	132AR
+GTEX-11NUK-1426-SM-5HL68	Esophagus - Muscularis	11NUK
+GTEX-1B97J-0926-SM-79ONU	Esophagus - Muscularis	1B97J
+GTEX-1GN1U-1926-SM-9KNUW	Esophagus - Muscularis	1GN1U
+GTEX-1R9K4-1826-SM-EVYBP	Esophagus - Muscularis	1R9K4
+GTEX-1I1GT-1526-SM-ARL7K	Esophagus - Muscularis	1I1GT
+GTEX-ZDTT-1226-SM-4WKG9	Esophagus - Muscularis	ZDTT
+GTEX-1B97I-1026-SM-73KVC	Esophagus - Muscularis	1B97I
+GTEX-1211K-1026-SM-5EQ4B	Esophagus - Muscularis	1211K
+GTEX-ZPCL-1226-SM-4WWFF	Esophagus - Muscularis	ZPCL
+GTEX-ZYVF-2326-SM-5E44Z	Esophagus - Muscularis	ZYVF
+GTEX-1RNTQ-1126-SM-E9TK9	Esophagus - Muscularis	1RNTQ
+GTEX-1R9PN-1026-SM-DTX87	Esophagus - Muscularis	1R9PN
+GTEX-14E1K-1126-SM-73KV4	Esophagus - Muscularis	14E1K
+GTEX-133LE-0726-SM-5P9IZ	Esophagus - Muscularis	133LE
+GTEX-148VJ-1126-SM-5NQBZ	Esophagus - Muscularis	148VJ
+GTEX-111YS-1026-SM-5GZYE	Esophagus - Muscularis	111YS
+GTEX-1NV8Z-1426-SM-DTX91	Esophagus - Muscularis	1NV8Z
+GTEX-13O3P-1326-SM-5K7Y8	Esophagus - Muscularis	13O3P
+GTEX-1PIEJ-1326-SM-EWRMM	Esophagus - Muscularis	1PIEJ
+GTEX-13NYB-0826-SM-5MR4V	Esophagus - Muscularis	13NYB
+GTEX-1JK1U-1926-SM-CJI38	Esophagus - Muscularis	1JK1U
+GTEX-1AYCT-1526-SM-73KWC	Esophagus - Muscularis	1AYCT
+GTEX-ZGAY-1226-SM-DO92W	Esophagus - Muscularis	ZGAY
+GTEX-14PJ4-1426-SM-69LO6	Esophagus - Muscularis	14PJ4
+GTEX-ZTPG-1526-SM-51MTF	Esophagus - Muscularis	ZTPG
+GTEX-ZZ64-0326-SM-5E45S	Esophagus - Muscularis	ZZ64
+GTEX-17JCI-1326-SM-7IGLZ	Esophagus - Muscularis	17JCI
+GTEX-14PHX-0826-SM-69LPO	Esophagus - Muscularis	14PHX
+GTEX-1S831-0826-SM-E9TIS	Esophagus - Muscularis	1S831
+GTEX-1GN73-2026-SM-9WYTT	Esophagus - Muscularis	1GN73
+GTEX-13OVJ-1326-SM-5K7Z9	Esophagus - Muscularis	13OVJ
+GTEX-14PJ6-1126-SM-6AJ9R	Esophagus - Muscularis	14PJ6
+GTEX-18QFQ-1126-SM-72D6R	Esophagus - Muscularis	18QFQ
+GTEX-1OJC3-0926-SM-E6CQJ	Esophagus - Muscularis	1OJC3
+GTEX-13FHP-0826-SM-5K7V5	Heart - Atrial Appendage	13FHP
+GTEX-13U4I-0626-SM-5LU5L	Heart - Atrial Appendage	13U4I
+GTEX-13JVG-1126-SM-5KM2M	Heart - Atrial Appendage	13JVG
+GTEX-1H1ZS-1026-SM-9WG6E	Heart - Atrial Appendage	1H1ZS
+GTEX-1B8KE-0326-SM-73KTY	Heart - Atrial Appendage	1B8KE
+GTEX-13O1R-0926-SM-5L3DS	Heart - Atrial Appendage	13O1R
+GTEX-15UF7-1526-SM-6LPI7	Heart - Atrial Appendage	15UF7
+GTEX-1GF9V-1726-SM-9KNW4	Heart - Atrial Appendage	1GF9V
+GTEX-14E1K-0826-SM-5ZZW9	Heart - Atrial Appendage	14E1K
+GTEX-18D9B-1126-SM-7KFSH	Heart - Atrial Appendage	18D9B
+GTEX-ZAB5-0126-SM-5CVMT	Heart - Atrial Appendage	ZAB5
+GTEX-11LCK-0826-SM-5PNYD	Heart - Atrial Appendage	11LCK
+GTEX-1C2JI-0626-SM-7DHM1	Heart - Atrial Appendage	1C2JI
+GTEX-17F96-0826-SM-7DHLU	Heart - Atrial Appendage	17F96
+GTEX-1R7EV-0426-SM-DTX7Z	Heart - Atrial Appendage	1R7EV
+GTEX-1NSGN-1226-SM-E76OL	Heart - Atrial Appendage	1NSGN
+GTEX-ZZPU-1126-SM-5N9CW	Heart - Atrial Appendage	ZZPU
+GTEX-1IDJH-1126-SM-COH3R	Heart - Atrial Appendage	1IDJH
+GTEX-15EU6-1326-SM-6PANG	Heart - Atrial Appendage	15EU6
+GTEX-1C6VQ-0826-SM-7PBZT	Heart - Atrial Appendage	1C6VQ
+GTEX-12584-1026-SM-59HK3	Heart - Atrial Appendage	12584
+GTEX-1313W-1126-SM-5EQ5U	Heart - Atrial Appendage	1313W
+GTEX-1QP29-1426-SM-DTX9Q	Heart - Atrial Appendage	1QP29
+GTEX-1LGRB-1026-SM-CNPQD	Heart - Atrial Appendage	1LGRB
+GTEX-13FHO-1226-SM-5L3EF	Heart - Atrial Appendage	13FHO
+GTEX-1AX9K-0426-SM-73KUG	Heart - Atrial Appendage	1AX9K
+GTEX-1PPGY-0926-SM-DTXFF	Heart - Atrial Appendage	1PPGY
+GTEX-14C39-0726-SM-5RQIK	Heart - Atrial Appendage	14C39
+GTEX-139YR-0526-SM-5L3DG	Heart - Atrial Appendage	139YR
+GTEX-ZDYS-0326-SM-5HL4W	Heart - Atrial Appendage	ZDYS
+GTEX-16XZY-0526-SM-7DHKY	Heart - Atrial Appendage	16XZY
+GTEX-13O61-0426-SM-5L3ET	Heart - Atrial Appendage	13O61
+GTEX-111VG-0326-SM-5GZX7	Heart - Atrial Appendage	111VG
+GTEX-1EWIQ-1126-SM-7EPIK	Heart - Atrial Appendage	1EWIQ
+GTEX-15CHC-0326-SM-5ZZVP	Heart - Atrial Appendage	15CHC
+GTEX-1KXAM-1426-SM-D3LAC	Heart - Atrial Appendage	1KXAM
+GTEX-17KNJ-0626-SM-7LT9L	Heart - Atrial Appendage	17KNJ
+GTEX-1P4AB-0926-SM-E76PV	Heart - Atrial Appendage	1P4AB
+GTEX-11DXX-0526-SM-5PNVR	Heart - Atrial Appendage	11DXX
+GTEX-14PJ2-1126-SM-69LOD	Heart - Atrial Appendage	14PJ2
+GTEX-15RJE-0626-SM-7KUKR	Heart - Left Ventricle	15RJE
+GTEX-14PHX-2126-SM-6EU2U	Heart - Left Ventricle	14PHX
+GTEX-14PN3-0526-SM-69LQF	Heart - Left Ventricle	14PN3
+GTEX-1HSGN-1126-SM-CJI4G	Heart - Left Ventricle	1HSGN
+GTEX-11EMC-0726-SM-5EGJO	Heart - Left Ventricle	11EMC
+GTEX-1IDJU-0726-SM-CNPQ9	Heart - Left Ventricle	1IDJU
+GTEX-1NV8Z-1526-SM-DTX8X	Heart - Left Ventricle	1NV8Z
+GTEX-1B996-1126-SM-73KWN	Heart - Left Ventricle	1B996
+GTEX-1313W-1426-SM-5KLZU	Heart - Left Ventricle	1313W
+GTEX-Y5V6-0826-SM-4VBRU	Heart - Left Ventricle	Y5V6
+GTEX-16BQI-0926-SM-6M485	Heart - Left Ventricle	16BQI
+GTEX-18D9B-1226-SM-72D6V	Heart - Left Ventricle	18D9B
+GTEX-1IDJI-1026-SM-A96TE	Heart - Left Ventricle	1IDJI
+GTEX-13PVQ-1226-SM-5IJDC	Heart - Left Ventricle	13PVQ
+GTEX-146FH-1026-SM-5RQIF	Heart - Left Ventricle	146FH
+GTEX-1ICLY-1326-SM-CJI47	Heart - Left Ventricle	1ICLY
+GTEX-1JMLX-1626-SM-ARZMV	Heart - Left Ventricle	1JMLX
+GTEX-117YX-1126-SM-5H128	Heart - Left Ventricle	117YX
+GTEX-1CB4I-1626-SM-7RHGV	Heart - Left Ventricle	1CB4I
+GTEX-1HBPH-0126-SM-CNNQ7	Heart - Left Ventricle	1HBPH
+GTEX-1RB15-0326-SM-E6CQB	Heart - Left Ventricle	1RB15
+GTEX-ZYFC-1126-SM-5E44W	Heart - Left Ventricle	ZYFC
+GTEX-13QBU-0426-SM-5J2O4	Heart - Left Ventricle	13QBU
+GTEX-15CHR-0226-SM-7PC2Z	Heart - Left Ventricle	15CHR
+GTEX-ZTPG-1226-SM-4YCDO	Heart - Left Ventricle	ZTPG
+GTEX-131XG-0626-SM-5GCMP	Heart - Left Ventricle	131XG
+GTEX-1GN1W-0326-SM-9JGHF	Heart - Left Ventricle	1GN1W
+GTEX-14A6H-0226-SM-5Q5DX	Heart - Left Ventricle	14A6H
+GTEX-15ER7-1726-SM-6PAMX	Heart - Left Ventricle	15ER7
+GTEX-1QP2A-1126-SM-EVR3H	Heart - Left Ventricle	1QP2A
+GTEX-ZYT6-1726-SM-5E44P	Heart - Left Ventricle	ZYT6
+GTEX-13O3P-1626-SM-5K7X3	Heart - Left Ventricle	13O3P
+GTEX-ZDYS-0226-SM-5HL4K	Heart - Left Ventricle	ZDYS
+GTEX-1122O-0826-SM-5GICV	Heart - Left Ventricle	1122O
+GTEX-1H1ZS-1126-SM-9MQLJ	Heart - Left Ventricle	1H1ZS
+GTEX-ZVT2-1026-SM-5GU55	Heart - Left Ventricle	ZVT2
+GTEX-18465-0926-SM-731AY	Heart - Left Ventricle	18465
+GTEX-13X6I-1426-SM-5SI9Z	Heart - Left Ventricle	13X6I
+GTEX-1HFI7-0826-SM-A9G23	Heart - Left Ventricle	1HFI7
+GTEX-13X6H-0426-SM-5LU4E	Heart - Left Ventricle	13X6H
+GTEX-1N2EF-1426-SM-EXUSH	Kidney - Cortex	1N2EF
+GTEX-13112-2126-SM-5GCO4	Kidney - Cortex	13112
+GTEX-1MUQO-2526-SM-E9TJN	Kidney - Cortex	1MUQO
+GTEX-1GF9W-1326-SM-7P8PX	Kidney - Cortex	1GF9W
+GTEX-ZVZP-0926-SM-5GIDB	Kidney - Cortex	ZVZP
+GTEX-1JMPZ-1226-SM-ARU8Y	Kidney - Cortex	1JMPZ
+GTEX-1OJC4-2326-SM-DTXA5	Kidney - Cortex	1OJC4
+GTEX-1497J-0826-SM-5NQAJ	Kidney - Cortex	1497J
+GTEX-1A3MW-2226-SM-73KUX	Kidney - Cortex	1A3MW
+GTEX-147F4-2626-SM-5Q5CS	Kidney - Cortex	147F4
+GTEX-14C5O-2026-SM-5YYB1	Kidney - Cortex	14C5O
+GTEX-ZDXO-0226-SM-4WKH7	Kidney - Cortex	ZDXO
+GTEX-12WSG-0826-SM-5EQ5A	Kidney - Cortex	12WSG
+GTEX-15DYW-2026-SM-6AJBD	Kidney - Cortex	15DYW
+GTEX-14E6D-2526-SM-5YYA9	Kidney - Cortex	14E6D
+GTEX-ZC5H-1726-SM-5HL7X	Kidney - Cortex	ZC5H
+GTEX-1399S-0526-SM-5IJG8	Kidney - Cortex	1399S
+GTEX-13OVI-1126-SM-5KLZF	Kidney - Cortex	13OVI
+GTEX-1GF9V-1926-SM-9JGHE	Kidney - Cortex	1GF9V
+GTEX-1H3NZ-2126-SM-9WPQ6	Kidney - Cortex	1H3NZ
+GTEX-14C39-2126-SM-664OH	Kidney - Cortex	14C39
+GTEX-ZYFG-1626-SM-5GZYY	Kidney - Cortex	ZYFG
+GTEX-13O1R-2526-SM-5N9FW	Kidney - Cortex	13O1R
+GTEX-ZLFU-0926-SM-5P9F8	Kidney - Cortex	ZLFU
+GTEX-ZE9C-1426-SM-4WKGM	Kidney - Cortex	ZE9C
+GTEX-1F48J-2226-SM-7MXTN	Kidney - Cortex	1F48J
+GTEX-1JMQJ-1726-SM-E9U4V	Kidney - Cortex	1JMQJ
+GTEX-1HBPI-2026-SM-CE6RZ	Kidney - Cortex	1HBPI
+GTEX-ZYT6-2226-SM-5GIC9	Kidney - Cortex	ZYT6
+GTEX-17HHY-2326-SM-7KFSR	Kidney - Cortex	17HHY
+GTEX-11TTK-1926-SM-5PNW8	Kidney - Cortex	11TTK
+GTEX-17F97-1926-SM-7IGM4	Kidney - Cortex	17F97
+GTEX-11OF3-1326-SM-5N9FJ	Kidney - Cortex	11OF3
+GTEX-1GTWX-1826-SM-9QEHG	Kidney - Cortex	1GTWX
+GTEX-1LG7Y-2726-SM-D5OVW	Kidney - Cortex	1LG7Y
+GTEX-16MT8-1926-SM-7EPGL	Kidney - Cortex	16MT8
+GTEX-1H3VY-1926-SM-9JGHJ	Kidney - Cortex	1H3VY
+GTEX-11GS4-2326-SM-5A5KS	Kidney - Cortex	11GS4
+GTEX-12696-0926-SM-5FQTV	Kidney - Cortex	12696
+GTEX-1R9PO-1626-SM-E6CPT	Kidney - Cortex	1R9PO
+GTEX-14A5I-1726-SM-5QGQ5	Liver	14A5I
+GTEX-11ZTS-1426-SM-5EQMM	Liver	11ZTS
+GTEX-13NYB-1026-SM-5IFH3	Liver	13NYB
+GTEX-1AX9I-1626-SM-72D5D	Liver	1AX9I
+GTEX-13QJC-0726-SM-5RQJK	Liver	13QJC
+GTEX-YFC4-1526-SM-5IFJS	Liver	YFC4
+GTEX-14753-1626-SM-5NQ9L	Liver	14753
+GTEX-YECK-1926-SM-4W21H	Liver	YECK
+GTEX-13FTW-1126-SM-5J2NV	Liver	13FTW
+GTEX-1GF9X-0426-SM-7MKHN	Liver	1GF9X
+GTEX-12KS4-1326-SM-5LUB3	Liver	12KS4
+GTEX-1ICLY-1526-SM-C1YS4	Liver	1ICLY
+GTEX-1HBPH-2626-SM-A96TV	Liver	1HBPH
+GTEX-14AS3-0126-SM-5Q5F4	Liver	14AS3
+GTEX-14C38-1526-SM-5RQJ7	Liver	14C38
+GTEX-1EH9U-1126-SM-7IGLU	Liver	1EH9U
+GTEX-11TUW-1726-SM-5BC5C	Liver	11TUW
+GTEX-1B8SG-1326-SM-79ONT	Liver	1B8SG
+GTEX-1H11D-0826-SM-9OSWB	Liver	1H11D
+GTEX-131YS-1626-SM-5HL6C	Liver	131YS
+GTEX-11NUK-1226-SM-5P9GM	Liver	11NUK
+GTEX-13VXU-0926-SM-5IFFH	Liver	13VXU
+GTEX-13NZB-0626-SM-5IFH6	Liver	13NZB
+GTEX-ZPU1-0826-SM-57WG2	Liver	ZPU1
+GTEX-ZVP2-0626-SM-51MSO	Liver	ZVP2
+GTEX-ZTPG-1426-SM-51MT3	Liver	ZTPG
+GTEX-12WSD-1426-SM-5GCN9	Liver	12WSD
+GTEX-1269C-0626-SM-5FQSS	Liver	1269C
+GTEX-17HGU-1826-SM-7IGQM	Liver	17HGU
+GTEX-11DXZ-0126-SM-5EGGY	Liver	11DXZ
+GTEX-11OF3-0726-SM-5BC4Z	Liver	11OF3
+GTEX-1E2YA-1226-SM-7MGY3	Liver	1E2YA
+GTEX-1HBPI-1026-SM-AHZ4N	Liver	1HBPI
+GTEX-12WSL-0226-SM-5CVMJ	Liver	12WSL
+GTEX-15RJE-1126-SM-6LPI5	Liver	15RJE
+GTEX-139TU-0826-SM-5IJFG	Liver	139TU
+GTEX-1HB9E-0626-SM-AHZ4K	Liver	1HB9E
+GTEX-1CB4J-0726-SM-7IGN8	Liver	1CB4J
+GTEX-1A32A-0826-SM-72D5C	Liver	1A32A
+GTEX-1KANB-2226-SM-DHXJW	Liver	1KANB
+GTEX-11NUK-0826-SM-5HL4U	Lung	11NUK
+GTEX-14JG1-0926-SM-5YY8W	Lung	14JG1
+GTEX-1J1R8-0226-SM-AHZ3C	Lung	1J1R8
+GTEX-ZEX8-0526-SM-DO115	Lung	ZEX8
+GTEX-1HCUA-0226-SM-A8N88	Lung	1HCUA
+GTEX-1I1GR-0726-SM-B2LWL	Lung	1I1GR
+GTEX-1PWST-0826-SM-DTXF1	Lung	1PWST
+GTEX-1I1GU-0526-SM-B2LX2	Lung	1I1GU
+GTEX-1QEPI-0826-SM-DTX9B	Lung	1QEPI
+GTEX-15UKP-1926-SM-6LPI9	Lung	15UKP
+GTEX-1HBPM-0826-SM-9WYSP	Lung	1HBPM
+GTEX-12ZZW-0926-SM-5LZUD	Lung	12ZZW
+GTEX-1IDJH-0726-SM-ARU7U	Lung	1IDJH
+GTEX-11UD2-0726-SM-5EQ69	Lung	11UD2
+GTEX-13YAN-1026-SM-5O9CF	Lung	13YAN
+GTEX-14PQA-1126-SM-7KUM4	Lung	14PQA
+GTEX-YF7O-0626-SM-4W21R	Lung	YF7O
+GTEX-ZF28-0726-SM-4WKFU	Lung	ZF28
+GTEX-11I78-0126-SM-5HL6F	Lung	11I78
+GTEX-1EMGI-1426-SM-7IGNQ	Lung	1EMGI
+GTEX-11EMC-0126-SM-5EGKV	Lung	11EMC
+GTEX-1B97I-0226-SM-73KVO	Lung	1B97I
+GTEX-12584-1426-SM-5EGJ9	Lung	12584
+GTEX-1GL5R-0526-SM-9WPOQ	Lung	1GL5R
+GTEX-1K9T9-0926-SM-D3L9C	Lung	1K9T9
+GTEX-148VJ-0826-SM-5LU8V	Lung	148VJ
+GTEX-12ZZY-0926-SM-5EQ6I	Lung	12ZZY
+GTEX-11ZTS-1226-SM-5EQMQ	Lung	11ZTS
+GTEX-148VI-0226-SM-5RQKA	Lung	148VI
+GTEX-ZA64-0326-SM-5HL8T	Lung	ZA64
+GTEX-18D9A-0226-SM-7KFSJ	Lung	18D9A
+GTEX-1477Z-0626-SM-5NQB7	Lung	1477Z
+GTEX-145LU-0526-SM-5O9AT	Lung	145LU
+GTEX-14C5O-1126-SM-5TDEH	Lung	14C5O
+GTEX-117YW-0526-SM-5H11C	Lung	117YW
+GTEX-11GSP-0726-SM-5986L	Lung	11GSP
+GTEX-1LG7Y-0826-SM-E9TJX	Lung	1LG7Y
+GTEX-14E6D-1026-SM-5S2RS	Lung	14E6D
+GTEX-15RIE-0326-SM-6PAMC	Lung	15RIE
+GTEX-14E6C-1426-SM-5ZZWH	Lung	14E6C
+GTEX-1MGNQ-1926-SM-DTX8L	Minor Salivary Gland	1MGNQ
+GTEX-1GMR2-2026-SM-7MKHK	Minor Salivary Gland	1GMR2
+GTEX-1I1HK-2526-SM-A96SM	Minor Salivary Gland	1I1HK
+GTEX-11EMC-2526-SM-5PNVU	Minor Salivary Gland	11EMC
+GTEX-15SHV-2226-SM-6M464	Minor Salivary Gland	15SHV
+GTEX-ZG7Y-2426-SM-DO11H	Minor Salivary Gland	ZG7Y
+GTEX-1I6K6-0626-SM-ARU7J	Minor Salivary Gland	1I6K6
+GTEX-ZC5H-2726-SM-5KLZW	Minor Salivary Gland	ZC5H
+GTEX-1POEN-2226-SM-DPRXV	Minor Salivary Gland	1POEN
+GTEX-1MCC2-2226-SM-EV7AJ	Minor Salivary Gland	1MCC2
+GTEX-11P81-2026-SM-5P9GT	Minor Salivary Gland	11P81
+GTEX-1314G-2026-SM-5LZUM	Minor Salivary Gland	1314G
+GTEX-13111-2326-SM-5LZUQ	Minor Salivary Gland	13111
+GTEX-1LSNL-2626-SM-EV7AT	Minor Salivary Gland	1LSNL
+GTEX-1R9K4-0526-SM-E76P1	Minor Salivary Gland	1R9K4
+GTEX-1AX8Z-0626-SM-731EH	Minor Salivary Gland	1AX8Z
+GTEX-13O21-1926-SM-5MR39	Minor Salivary Gland	13O21
+GTEX-18A7B-2826-SM-7KFTK	Minor Salivary Gland	18A7B
+GTEX-1GTWX-2526-SM-9JGHG	Minor Salivary Gland	1GTWX
+GTEX-1PPH8-1526-SM-E6CQO	Minor Salivary Gland	1PPH8
+GTEX-ZLFU-2226-SM-EXUS7	Minor Salivary Gland	ZLFU
+GTEX-11ZTS-3026-SM-5EQM7	Minor Salivary Gland	11ZTS
+GTEX-1JKYR-0726-SM-AHZ3K	Minor Salivary Gland	1JKYR
+GTEX-14JIY-3026-SM-6EU1R	Minor Salivary Gland	14JIY
+GTEX-1IY9M-2926-SM-A96TH	Minor Salivary Gland	1IY9M
+GTEX-13QBU-2126-SM-5KLZN	Minor Salivary Gland	13QBU
+GTEX-17KNJ-2726-SM-7KFRE	Minor Salivary Gland	17KNJ
+GTEX-1C64O-0626-SM-7DHL1	Minor Salivary Gland	1C64O
+GTEX-ZF29-2126-SM-DNZYX	Minor Salivary Gland	ZF29
+GTEX-11EQ9-2026-SM-5P9JI	Minor Salivary Gland	11EQ9
+GTEX-14B4R-1426-SM-5Q5CG	Minor Salivary Gland	14B4R
+GTEX-13OVL-2926-SM-5IFG3	Minor Salivary Gland	13OVL
+GTEX-14PN4-2526-SM-686ZG	Minor Salivary Gland	14PN4
+GTEX-1I6K7-0926-SM-A96SV	Minor Salivary Gland	1I6K7
+GTEX-1J8EW-2826-SM-A96T9	Minor Salivary Gland	1J8EW
+GTEX-1HFI7-2426-SM-B2LXV	Minor Salivary Gland	1HFI7
+GTEX-1HCU7-0126-SM-C1YR3	Minor Salivary Gland	1HCU7
+GTEX-12BJ1-2226-SM-5BC6G	Minor Salivary Gland	12BJ1
+GTEX-ZLWG-2026-SM-DO11F	Minor Salivary Gland	ZLWG
+GTEX-1LBAC-0626-SM-D3L9T	Minor Salivary Gland	1LBAC
+GTEX-ZAB5-2126-SM-5K7UN	Muscle - Skeletal	ZAB5
+GTEX-117XS-2526-SM-5H11G	Muscle - Skeletal	117XS
+GTEX-1H1ZS-0626-SM-CNPPU	Muscle - Skeletal	1H1ZS
+GTEX-15F5U-1826-SM-6LLJF	Muscle - Skeletal	15F5U
+GTEX-1JN76-0326-SM-ARZNJ	Muscle - Skeletal	1JN76
+GTEX-1KXAM-2426-SM-DIPFC	Muscle - Skeletal	1KXAM
+GTEX-145LU-2026-SM-5Q5E8	Muscle - Skeletal	145LU
+GTEX-144GO-1326-SM-5Q5EL	Muscle - Skeletal	144GO
+GTEX-1I6K7-0326-SM-B2LXO	Muscle - Skeletal	1I6K7
+GTEX-1B932-0526-SM-73KU7	Muscle - Skeletal	1B932
+GTEX-15RIG-0426-SM-7KUF4	Muscle - Skeletal	15RIG
+GTEX-11P82-1826-SM-5PNYJ	Muscle - Skeletal	11P82
+GTEX-1S5ZA-0526-SM-EWRO1	Muscle - Skeletal	1S5ZA
+GTEX-1M5QR-1326-SM-EWROC	Muscle - Skeletal	1M5QR
+GTEX-1AX9J-0126-SM-73KY2	Muscle - Skeletal	1AX9J
+GTEX-11GS4-2526-SM-5A5KT	Muscle - Skeletal	11GS4
+GTEX-1C64O-0326-SM-73KVW	Muscle - Skeletal	1C64O
+GTEX-15ETS-0326-SM-6PANH	Muscle - Skeletal	15ETS
+GTEX-1B97I-2026-SM-7DHN2	Muscle - Skeletal	1B97I
+GTEX-15UF6-1026-SM-7KUF7	Muscle - Skeletal	15UF6
+GTEX-11DZ1-0926-SM-5EQ5R	Muscle - Skeletal	11DZ1
+GTEX-1C6WA-0326-SM-7DUGE	Muscle - Skeletal	1C6WA
+GTEX-13FTZ-2226-SM-5LZXI	Muscle - Skeletal	13FTZ
+GTEX-13OVK-1926-SM-6M48G	Muscle - Skeletal	13OVK
+GTEX-ZC5H-0326-SM-5HL9F	Muscle - Skeletal	ZC5H
+GTEX-Z93S-1326-SM-5CVMR	Muscle - Skeletal	Z93S
+GTEX-1JMPY-1226-SM-CJI3A	Muscle - Skeletal	1JMPY
+GTEX-1211K-2126-SM-59HJZ	Muscle - Skeletal	1211K
+GTEX-1C2JI-2126-SM-793CG	Muscle - Skeletal	1C2JI
+GTEX-1GN1W-0726-SM-9KNTV	Muscle - Skeletal	1GN1W
+GTEX-17EVQ-1226-SM-7LG59	Muscle - Skeletal	17EVQ
+GTEX-111CU-2026-SM-5GZZC	Muscle - Skeletal	111CU
+GTEX-17EUY-0626-SM-793BE	Muscle - Skeletal	17EUY
+GTEX-1AX9K-2726-SM-7DHMA	Muscle - Skeletal	1AX9K
+GTEX-1HFI6-0426-SM-B2LXB	Muscle - Skeletal	1HFI6
+GTEX-1HUB1-0526-SM-CL54N	Muscle - Skeletal	1HUB1
+GTEX-1JMQK-0326-SM-ARZN5	Muscle - Skeletal	1JMQK
+GTEX-1399U-2526-SM-5L3DL	Muscle - Skeletal	1399U
+GTEX-13FTY-0226-SM-5IJBW	Muscle - Skeletal	13FTY
+GTEX-1J8EW-0326-SM-CYPSX	Muscle - Skeletal	1J8EW
+GTEX-1AX9I-0426-SM-73KY3	Nerve - Tibial	1AX9I
+GTEX-1HT8W-0426-SM-ADEJA	Nerve - Tibial	1HT8W
+GTEX-1314G-1826-SM-5LZVA	Nerve - Tibial	1314G
+GTEX-1PPGY-0526-SM-E9J3Q	Nerve - Tibial	1PPGY
+GTEX-14PN3-2626-SM-6EU17	Nerve - Tibial	14PN3
+GTEX-13OW6-0226-SM-5J1NB	Nerve - Tibial	13OW6
+GTEX-1IGQW-0326-SM-COH44	Nerve - Tibial	1IGQW
+GTEX-13N11-2826-SM-5KM4Z	Nerve - Tibial	13N11
+GTEX-12696-2626-SM-5EQ44	Nerve - Tibial	12696
+GTEX-11P7K-2226-SM-5GU56	Nerve - Tibial	11P7K
+GTEX-1POEN-0326-SM-EYYWB	Nerve - Tibial	1POEN
+GTEX-16MT9-0226-SM-793BN	Nerve - Tibial	16MT9
+GTEX-1R9JW-2226-SM-E8VMS	Nerve - Tibial	1R9JW
+GTEX-12WSK-2626-SM-5GCOT	Nerve - Tibial	12WSK
+GTEX-1CAMS-0526-SM-7EWEX	Nerve - Tibial	1CAMS
+GTEX-1JMPZ-0426-SM-COH32	Nerve - Tibial	1JMPZ
+GTEX-1H3VY-0526-SM-9MQKE	Nerve - Tibial	1H3VY
+GTEX-1F48J-0426-SM-7SB8S	Nerve - Tibial	1F48J
+GTEX-1RAZQ-0326-SM-E9J45	Nerve - Tibial	1RAZQ
+GTEX-ZC5H-0526-SM-5HL9E	Nerve - Tibial	ZC5H
+GTEX-1477Z-1526-SM-5SI9V	Nerve - Tibial	1477Z
+GTEX-132NY-0526-SM-5EQ4V	Nerve - Tibial	132NY
+GTEX-ZVZO-0526-SM-5A5LB	Nerve - Tibial	ZVZO
+GTEX-1QCLY-0726-SM-DTXDX	Nerve - Tibial	1QCLY
+GTEX-ZF2S-2526-SM-5CVNT	Nerve - Tibial	ZF2S
+GTEX-14BIN-0826-SM-793DR	Nerve - Tibial	14BIN
+GTEX-13FTW-2426-SM-9WG73	Nerve - Tibial	13FTW
+GTEX-1212Z-2726-SM-5EQ59	Nerve - Tibial	1212Z
+GTEX-13VXT-0426-SM-5LU57	Nerve - Tibial	13VXT
+GTEX-1IDFM-1726-SM-B2LVU	Nerve - Tibial	1IDFM
+GTEX-1HCU7-0526-SM-CGQFF	Nerve - Tibial	1HCU7
+GTEX-12584-0326-SM-59HK2	Nerve - Tibial	12584
+GTEX-13G51-2826-SM-5LZWV	Nerve - Tibial	13G51
+GTEX-139T6-1726-SM-5PNZ3	Nerve - Tibial	139T6
+GTEX-16BQI-0626-SM-6PAMS	Nerve - Tibial	16BQI
+GTEX-13QIC-1426-SM-5LU4V	Nerve - Tibial	13QIC
+GTEX-1F6IF-0126-SM-9MQLB	Nerve - Tibial	1F6IF
+GTEX-1GMR3-2226-SM-9YFT6	Nerve - Tibial	1GMR3
+GTEX-12WSM-0426-SM-5LZVU	Nerve - Tibial	12WSM
+GTEX-13FH7-2426-SM-5K7US	Nerve - Tibial	13FH7
+GTEX-ZC5H-2026-SM-5CVN2	Ovary	ZC5H
+GTEX-1OJC4-2026-SM-E6CQW	Ovary	1OJC4
+GTEX-1QPFJ-1726-SM-EXOJU	Ovary	1QPFJ
+GTEX-12WSG-1426-SM-5FQUK	Ovary	12WSG
+GTEX-11GSP-0226-SM-5A5KV	Ovary	11GSP
+GTEX-1C475-0426-SM-7P8OU	Ovary	1C475
+GTEX-13SLX-2426-SM-664OM	Ovary	13SLX
+GTEX-18D9A-0826-SM-718C1	Ovary	18D9A
+GTEX-13W3W-1526-SM-5LU5I	Ovary	13W3W
+GTEX-12WSJ-1226-SM-5LU91	Ovary	12WSJ
+GTEX-183WM-1926-SM-72D5F	Ovary	183WM
+GTEX-ZLWG-0926-SM-4WWC3	Ovary	ZLWG
+GTEX-11ZVC-1426-SM-5EGGA	Ovary	11ZVC
+GTEX-13D11-1126-SM-5KLYS	Ovary	13D11
+GTEX-13U4I-2126-SM-5LU55	Ovary	13U4I
+GTEX-1IDJU-1126-SM-A9G2S	Ovary	1IDJU
+GTEX-1HSGN-2426-SM-C1YRI	Ovary	1HSGN
+GTEX-1LGRB-2326-SM-CNNPU	Ovary	1LGRB
+GTEX-1ICG6-1526-SM-C1YQT	Ovary	1ICG6
+GTEX-ZVT2-0326-SM-5E44G	Ovary	ZVT2
+GTEX-15ER7-2326-SM-7KUN3	Ovary	15ER7
+GTEX-1HCUA-1326-SM-9WPP6	Ovary	1HCUA
+GTEX-15UF6-2026-SM-6LPI3	Ovary	15UF6
+GTEX-146FH-2526-SM-5Q5BP	Ovary	146FH
+GTEX-1399S-2126-SM-5J2MH	Ovary	1399S
+GTEX-11EM3-1726-SM-5N9D1	Ovary	11EM3
+GTEX-13N11-0526-SM-5IJFI	Ovary	13N11
+GTEX-131YS-2226-SM-5P9G8	Ovary	131YS
+GTEX-1H1CY-1926-SM-9WG7X	Ovary	1H1CY
+GTEX-15SDE-0926-SM-6LPIA	Ovary	15SDE
+GTEX-14BIN-1426-SM-664NI	Ovary	14BIN
+GTEX-14BMU-1726-SM-5TDE8	Ovary	14BMU
+GTEX-1J1OQ-1626-SM-CE6TB	Ovary	1J1OQ
+GTEX-11DXX-1426-SM-5GIDU	Ovary	11DXX
+GTEX-1GN1W-1426-SM-9JGHP	Ovary	1GN1W
+GTEX-1LKK1-1626-SM-EVR4Y	Ovary	1LKK1
+GTEX-132AR-1426-SM-5IFF1	Ovary	132AR
+GTEX-1HBPH-2726-SM-A96TW	Ovary	1HBPH
+GTEX-1A8FM-2226-SM-7PC1C	Ovary	1A8FM
+GTEX-1PIEJ-1626-SM-E6CP9	Ovary	1PIEJ
+GTEX-1LG7Z-0326-SM-DHXK3	Pancreas	1LG7Z
+GTEX-13YAN-2126-SM-5Q5C4	Pancreas	13YAN
+GTEX-1I4MK-1026-SM-AHZ2H	Pancreas	1I4MK
+GTEX-ZV7C-0726-SM-59HKH	Pancreas	ZV7C
+GTEX-14PKV-0926-SM-6AJB4	Pancreas	14PKV
+GTEX-17KNJ-1926-SM-7KFRV	Pancreas	17KNJ
+GTEX-1QP29-1926-SM-DPRZO	Pancreas	1QP29
+GTEX-1A3MW-1926-SM-7IGM8	Pancreas	1A3MW
+GTEX-11NSD-0526-SM-5A5LT	Pancreas	11NSD
+GTEX-1399R-0426-SM-5IJE3	Pancreas	1399R
+GTEX-13D11-2226-SM-5IFEO	Pancreas	13D11
+GTEX-12WSN-0826-SM-5GCOF	Pancreas	12WSN
+GTEX-14PN3-0126-SM-6AJAU	Pancreas	14PN3
+GTEX-1211K-1126-SM-5EGGB	Pancreas	1211K
+GTEX-1B97J-1526-SM-79ONI	Pancreas	1B97J
+GTEX-14JG6-0426-SM-68715	Pancreas	14JG6
+GTEX-1AYCT-1226-SM-7EPGH	Pancreas	1AYCT
+GTEX-1S82P-1026-SM-EAZ4W	Pancreas	1S82P
+GTEX-14PJN-1526-SM-6AJBP	Pancreas	14PJN
+GTEX-YB5E-0526-SM-4VDSD	Pancreas	YB5E
+GTEX-14PJM-2126-SM-6AJAS	Pancreas	14PJM
+GTEX-1S831-0626-SM-EV79N	Pancreas	1S831
+GTEX-1H1DG-1426-SM-9OSXP	Pancreas	1H1DG
+GTEX-ZVP2-0726-SM-59HKY	Pancreas	ZVP2
+GTEX-13VXT-1226-SM-5LU3M	Pancreas	13VXT
+GTEX-ZDYS-2526-SM-4WKGU	Pancreas	ZDYS
+GTEX-117YX-0226-SM-5EGH6	Pancreas	117YX
+GTEX-131XE-1926-SM-5IFER	Pancreas	131XE
+GTEX-15UKP-1326-SM-6LPI8	Pancreas	15UKP
+GTEX-ZLFU-0726-SM-57WF6	Pancreas	ZLFU
+GTEX-1JK1U-1026-SM-AHZ44	Pancreas	1JK1U
+GTEX-1128S-0826-SM-5GZZI	Pancreas	1128S
+GTEX-1JKYR-1026-SM-CGQGI	Pancreas	1JKYR
+GTEX-1S83E-1426-SM-EV7B8	Pancreas	1S83E
+GTEX-1RAZA-1626-SM-EV79I	Pancreas	1RAZA
+GTEX-1PFEY-1126-SM-DPRZ3	Pancreas	1PFEY
+GTEX-15CHR-2026-SM-7MXU2	Pancreas	15CHR
+GTEX-17F9E-1426-SM-793BG	Pancreas	17F9E
+GTEX-1LVAN-1226-SM-CNNQY	Pancreas	1LVAN
+GTEX-ZAB4-1726-SM-5HL8C	Pancreas	ZAB4
+GTEX-13OVH-3126-SM-5MR4Z	Pituitary	13OVH
+GTEX-1H3VE-2626-SM-9WG7Y	Pituitary	1H3VE
+GTEX-14PJM-3226-SM-6AJA1	Pituitary	14PJM
+GTEX-13FHP-3126-SM-5KLYX	Pituitary	13FHP
+GTEX-1H3NZ-3126-SM-9WPOK	Pituitary	1H3NZ
+GTEX-1PIIG-2626-SM-E9U67	Pituitary	1PIIG
+GTEX-13O1R-3226-SM-5KM58	Pituitary	13O1R
+GTEX-15DDE-3226-SM-6LPK6	Pituitary	15DDE
+GTEX-13SLW-2926-SM-5Q5BQ	Pituitary	13SLW
+GTEX-12ZZW-3026-SM-5LZW7	Pituitary	12ZZW
+GTEX-1H3O1-1626-SM-9JGH8	Pituitary	1H3O1
+GTEX-18A6Q-3026-SM-72D6T	Pituitary	18A6Q
+GTEX-13FTY-2826-SM-5J2ML	Pituitary	13FTY
+GTEX-11NV4-2326-SM-5BC4X	Pituitary	11NV4
+GTEX-1GF9V-3126-SM-7MKHH	Pituitary	1GF9V
+GTEX-1I1GP-3126-SM-C1YS2	Pituitary	1I1GP
+GTEX-1212Z-2926-SM-59HKV	Pituitary	1212Z
+GTEX-1GF9W-2826-SM-7MKGE	Pituitary	1GF9W
+GTEX-1192X-3026-SM-5N9BM	Pituitary	1192X
+GTEX-13X6K-3026-SM-5QGPA	Pituitary	13X6K
+GTEX-1GZ2Q-3126-SM-9JGGM	Pituitary	1GZ2Q
+GTEX-13OW6-3126-SM-5L3IA	Pituitary	13OW6
+GTEX-14BIN-3126-SM-664NJ	Pituitary	14BIN
+GTEX-1HSMO-3126-SM-CNNQP	Pituitary	1HSMO
+GTEX-13OW8-3026-SM-5L3G8	Pituitary	13OW8
+GTEX-12WSC-3126-SM-5GCNB	Pituitary	12WSC
+GTEX-ZYY3-3226-SM-5SI9X	Pituitary	ZYY3
+GTEX-12WSF-3026-SM-6LPIU	Pituitary	12WSF
+GTEX-1HR9M-2926-SM-ACKVO	Pituitary	1HR9M
+GTEX-1C6VR-3126-SM-7MXTT	Pituitary	1C6VR
+GTEX-12696-3126-SM-5FQUX	Pituitary	12696
+GTEX-13OW5-2926-SM-5IJF2	Pituitary	13OW5
+GTEX-1HB9E-3026-SM-EV79F	Pituitary	1HB9E
+GTEX-1EMGI-2926-SM-7DUEJ	Pituitary	1EMGI
+GTEX-1KANB-3126-SM-D3L9G	Pituitary	1KANB
+GTEX-145LS-3226-SM-5TDCA	Pituitary	145LS
+GTEX-14753-2926-SM-5LU9J	Pituitary	14753
+GTEX-1HR98-3126-SM-CNNQ9	Pituitary	1HR98
+GTEX-1445S-3226-SM-5TDE1	Pituitary	1445S
+GTEX-1B996-3026-SM-7MKG8	Pituitary	1B996
+GTEX-1KAFJ-1226-SM-D4P46	Prostate	1KAFJ
+GTEX-111YS-1726-SM-5GIED	Prostate	111YS
+GTEX-11O72-2726-SM-5HL6K	Prostate	11O72
+GTEX-12BJ1-1226-SM-5LUAE	Prostate	12BJ1
+GTEX-17HII-2526-SM-7LT8C	Prostate	17HII
+GTEX-1S3DN-1926-SM-E6CIR	Prostate	1S3DN
+GTEX-1AX9K-1526-SM-73KVP	Prostate	1AX9K
+GTEX-1KANA-1026-SM-D3L9L	Prostate	1KANA
+GTEX-1JKYR-1726-SM-C1YR6	Prostate	1JKYR
+GTEX-13FTW-1226-SM-5LZZ1	Prostate	13FTW
+GTEX-1PFEY-0626-SM-E76PH	Prostate	1PFEY
+GTEX-12696-2226-SM-5EQ65	Prostate	12696
+GTEX-13FHO-2826-SM-5K7ZA	Prostate	13FHO
+GTEX-1MGNQ-2226-SM-EV7A2	Prostate	1MGNQ
+GTEX-1HKZK-1626-SM-B2LWH	Prostate	1HKZK
+GTEX-13RTJ-2126-SM-5S2PZ	Prostate	13RTJ
+GTEX-1I1GU-1126-SM-A96S9	Prostate	1I1GU
+GTEX-1QP6S-0726-SM-E76QS	Prostate	1QP6S
+GTEX-1LSNL-2326-SM-DHXKN	Prostate	1LSNL
+GTEX-1QP29-0526-SM-EAZ3T	Prostate	1QP29
+GTEX-18QFQ-2026-SM-72D7J	Prostate	18QFQ
+GTEX-11TT1-2026-SM-5EQM8	Prostate	11TT1
+GTEX-1KXAM-1126-SM-E9TJU	Prostate	1KXAM
+GTEX-13N2G-1826-SM-5KM1I	Prostate	13N2G
+GTEX-1BAJH-0626-SM-7P8OY	Prostate	1BAJH
+GTEX-ZVP2-0826-SM-59HJ6	Prostate	ZVP2
+GTEX-15CHR-1226-SM-79OON	Prostate	15CHR
+GTEX-1I6K6-2126-SM-B2LX6	Prostate	1I6K6
+GTEX-1HFI6-2326-SM-9WYUN	Prostate	1HFI6
+GTEX-YJ8A-1126-SM-5IFJU	Prostate	YJ8A
+GTEX-1E1VI-2726-SM-7MXVH	Prostate	1E1VI
+GTEX-117YX-1526-SM-5H12T	Prostate	117YX
+GTEX-1GN2E-2026-SM-9JGGG	Prostate	1GN2E
+GTEX-1LBAC-1926-SM-DHXK2	Prostate	1LBAC
+GTEX-1JJ6O-0726-SM-CY8HS	Prostate	1JJ6O
+GTEX-1J8Q3-0926-SM-A96SU	Prostate	1J8Q3
+GTEX-14PJ3-1726-SM-5ZZVH	Prostate	14PJ3
+GTEX-1I1GP-2026-SM-CE6SZ	Prostate	1I1GP
+GTEX-14PJ4-1226-SM-5YY9U	Prostate	14PJ4
+GTEX-13O61-1726-SM-5KM46	Prostate	13O61
+GTEX-18D9B-0926-SM-7LG4U	Skin - Not Sun Exposed (Suprapubic)	18D9B
+GTEX-1E1VI-0326-SM-793D1	Skin - Not Sun Exposed (Suprapubic)	1E1VI
+GTEX-1QW4Y-1126-SM-DTXE3	Skin - Not Sun Exposed (Suprapubic)	1QW4Y
+GTEX-1JMPY-0226-SM-CKZOK	Skin - Not Sun Exposed (Suprapubic)	1JMPY
+GTEX-ZU9S-1826-SM-5NQ9E	Skin - Not Sun Exposed (Suprapubic)	ZU9S
+GTEX-12WSL-2026-SM-5GCML	Skin - Not Sun Exposed (Suprapubic)	12WSL
+GTEX-1PPGY-1626-SM-EVYBL	Skin - Not Sun Exposed (Suprapubic)	1PPGY
+GTEX-1AMEY-0826-SM-72D65	Skin - Not Sun Exposed (Suprapubic)	1AMEY
+GTEX-1QEPI-2626-SM-DTXF4	Skin - Not Sun Exposed (Suprapubic)	1QEPI
+GTEX-1GN1V-2826-SM-9JGIA	Skin - Not Sun Exposed (Suprapubic)	1GN1V
+GTEX-ZF3C-0626-SM-DO92O	Skin - Not Sun Exposed (Suprapubic)	ZF3C
+GTEX-1J8QM-2426-SM-A9SLS	Skin - Not Sun Exposed (Suprapubic)	1J8QM
+GTEX-14B4R-1326-SM-5Q5EZ	Skin - Not Sun Exposed (Suprapubic)	14B4R
+GTEX-1JJEA-1826-SM-ARU8P	Skin - Not Sun Exposed (Suprapubic)	1JJEA
+GTEX-11ZUS-2626-SM-5FQUR	Skin - Not Sun Exposed (Suprapubic)	11ZUS
+GTEX-1RAZR-2126-SM-E9U6T	Skin - Not Sun Exposed (Suprapubic)	1RAZR
+GTEX-133LE-2326-SM-5K7W3	Skin - Not Sun Exposed (Suprapubic)	133LE
+GTEX-1F88F-0126-SM-9WYSZ	Skin - Not Sun Exposed (Suprapubic)	1F88F
+GTEX-1GZHY-0626-SM-9KNVC	Skin - Not Sun Exposed (Suprapubic)	1GZHY
+GTEX-132AR-0326-SM-5KM2C	Skin - Not Sun Exposed (Suprapubic)	132AR
+GTEX-1C6VR-0126-SM-7RHGB	Skin - Not Sun Exposed (Suprapubic)	1C6VR
+GTEX-15G19-2426-SM-7KUMR	Skin - Not Sun Exposed (Suprapubic)	15G19
+GTEX-111FC-2526-SM-5GZXU	Skin - Not Sun Exposed (Suprapubic)	111FC
+GTEX-11NUK-2726-SM-5A5MC	Skin - Not Sun Exposed (Suprapubic)	11NUK
+GTEX-1QCLY-0226-SM-EWRNH	Skin - Not Sun Exposed (Suprapubic)	1QCLY
+GTEX-1LGOU-1326-SM-D3L8M	Skin - Not Sun Exposed (Suprapubic)	1LGOU
+GTEX-178AV-1726-SM-7KUL8	Skin - Not Sun Exposed (Suprapubic)	178AV
+GTEX-1R9K4-2826-SM-DTX8F	Skin - Not Sun Exposed (Suprapubic)	1R9K4
+GTEX-1AMFI-1326-SM-7939R	Skin - Not Sun Exposed (Suprapubic)	1AMFI
+GTEX-ZY6K-1426-SM-5GZX2	Skin - Not Sun Exposed (Suprapubic)	ZY6K
+GTEX-1HCU6-2526-SM-ADEHL	Skin - Not Sun Exposed (Suprapubic)	1HCU6
+GTEX-13FLV-0126-SM-5K7WT	Skin - Not Sun Exposed (Suprapubic)	13FLV
+GTEX-12KS4-2126-SM-5FQUT	Skin - Not Sun Exposed (Suprapubic)	12KS4
+GTEX-1MJK3-0726-SM-E6CJC	Skin - Not Sun Exposed (Suprapubic)	1MJK3
+GTEX-13SLW-0626-SM-5Q5ER	Skin - Not Sun Exposed (Suprapubic)	13SLW
+GTEX-1F48J-0726-SM-7RHGS	Skin - Not Sun Exposed (Suprapubic)	1F48J
+GTEX-ZVT4-2426-SM-5GIEI	Skin - Not Sun Exposed (Suprapubic)	ZVT4
+GTEX-14LZ3-0126-SM-69LPM	Skin - Not Sun Exposed (Suprapubic)	14LZ3
+GTEX-Y5V5-0126-SM-5S2NW	Skin - Not Sun Exposed (Suprapubic)	Y5V5
+GTEX-1LVAM-0726-SM-E6CIL	Skin - Not Sun Exposed (Suprapubic)	1LVAM
+GTEX-1KD4Q-0226-SM-E9TJ9	Skin - Sun Exposed (Lower leg)	1KD4Q
+GTEX-13SLX-0526-SM-5S2ON	Skin - Sun Exposed (Lower leg)	13SLX
+GTEX-1LBAC-0126-SM-DIPEZ	Skin - Sun Exposed (Lower leg)	1LBAC
+GTEX-1RB15-2126-SM-E9TIM	Skin - Sun Exposed (Lower leg)	1RB15
+GTEX-11LCK-1026-SM-5A5KB	Skin - Sun Exposed (Lower leg)	11LCK
+GTEX-13OVJ-0126-SM-5KM36	Skin - Sun Exposed (Lower leg)	13OVJ
+GTEX-1QMI2-0226-SM-EVYBX	Skin - Sun Exposed (Lower leg)	1QMI2
+GTEX-1I1GQ-0126-SM-COH3H	Skin - Sun Exposed (Lower leg)	1I1GQ
+GTEX-1R7EU-0226-SM-EVR4G	Skin - Sun Exposed (Lower leg)	1R7EU
+GTEX-1MGNQ-0126-SM-EVYCJ	Skin - Sun Exposed (Lower leg)	1MGNQ
+GTEX-15G19-0126-SM-6PANQ	Skin - Sun Exposed (Lower leg)	15G19
+GTEX-12584-0126-SM-5EGKQ	Skin - Sun Exposed (Lower leg)	12584
+GTEX-1GN73-0226-SM-9WG67	Skin - Sun Exposed (Lower leg)	1GN73
+GTEX-1HUB1-0426-SM-E9U4U	Skin - Sun Exposed (Lower leg)	1HUB1
+GTEX-ZWKS-0126-SM-5SIAA	Skin - Sun Exposed (Lower leg)	ZWKS
+GTEX-1A8FM-0226-SM-7SB7Q	Skin - Sun Exposed (Lower leg)	1A8FM
+GTEX-ZQG8-1626-SM-DHXIT	Skin - Sun Exposed (Lower leg)	ZQG8
+GTEX-1JMPZ-0226-SM-CNPP1	Skin - Sun Exposed (Lower leg)	1JMPZ
+GTEX-132NY-0326-SM-5IJBL	Skin - Sun Exposed (Lower leg)	132NY
+GTEX-13OW6-0426-SM-5L3HM	Skin - Sun Exposed (Lower leg)	13OW6
+GTEX-1NV5F-0226-SM-E8VNY	Skin - Sun Exposed (Lower leg)	1NV5F
+GTEX-1AMEY-1326-SM-73KYK	Skin - Sun Exposed (Lower leg)	1AMEY
+GTEX-1RLM8-2326-SM-EWRN4	Skin - Sun Exposed (Lower leg)	1RLM8
+GTEX-ZQUD-1426-SM-57WER	Skin - Sun Exposed (Lower leg)	ZQUD
+GTEX-1LGRB-2526-SM-CNPPQ	Skin - Sun Exposed (Lower leg)	1LGRB
+GTEX-1F88F-2726-SM-7PBZZ	Skin - Sun Exposed (Lower leg)	1F88F
+GTEX-1H23P-0126-SM-ADEJ3	Skin - Sun Exposed (Lower leg)	1H23P
+GTEX-1KANB-0526-SM-E6CJH	Skin - Sun Exposed (Lower leg)	1KANB
+GTEX-18465-0126-SM-731BN	Skin - Sun Exposed (Lower leg)	18465
+GTEX-16GPK-0126-SM-7DHLE	Skin - Sun Exposed (Lower leg)	16GPK
+GTEX-1F75B-0126-SM-9KNVL	Skin - Sun Exposed (Lower leg)	1F75B
+GTEX-139TU-0126-SM-5K7WH	Skin - Sun Exposed (Lower leg)	139TU
+GTEX-1KANC-1526-SM-D3LAB	Skin - Sun Exposed (Lower leg)	1KANC
+GTEX-1B8L1-2526-SM-9WYTF	Skin - Sun Exposed (Lower leg)	1B8L1
+GTEX-133LE-1826-SM-5J1MV	Skin - Sun Exposed (Lower leg)	133LE
+GTEX-12WSG-2826-SM-E9J4H	Skin - Sun Exposed (Lower leg)	12WSG
+GTEX-ZAJG-0126-SM-5HL94	Skin - Sun Exposed (Lower leg)	ZAJG
+GTEX-1128S-2326-SM-5GZZY	Skin - Sun Exposed (Lower leg)	1128S
+GTEX-13RTL-0126-SM-7LG5S	Skin - Sun Exposed (Lower leg)	13RTL
+GTEX-1N2DW-0226-SM-E9TK2	Skin - Sun Exposed (Lower leg)	1N2DW
+GTEX-11P7K-1626-SM-5GU63	Small Intestine - Terminal Ileum	11P7K
+GTEX-131XF-1326-SM-5GCMQ	Small Intestine - Terminal Ileum	131XF
+GTEX-11EQ9-1326-SM-5985X	Small Intestine - Terminal Ileum	11EQ9
+GTEX-11DXX-1626-SM-5H11H	Small Intestine - Terminal Ileum	11DXX
+GTEX-ZG7Y-1926-SM-DNZZ5	Small Intestine - Terminal Ileum	ZG7Y
+GTEX-YB5E-1526-SM-5IFIE	Small Intestine - Terminal Ileum	YB5E
+GTEX-1399U-2126-SM-5IFEZ	Small Intestine - Terminal Ileum	1399U
+GTEX-1C475-1426-SM-793CH	Small Intestine - Terminal Ileum	1C475
+GTEX-148VJ-2226-SM-5NQ9M	Small Intestine - Terminal Ileum	148VJ
+GTEX-13W3W-2026-SM-5K7UL	Small Intestine - Terminal Ileum	13W3W
+GTEX-12BJ1-1926-SM-5HL9Z	Small Intestine - Terminal Ileum	12BJ1
+GTEX-14XAO-1926-SM-6ETZO	Small Intestine - Terminal Ileum	14XAO
+GTEX-1LH75-1926-SM-DIPGD	Small Intestine - Terminal Ileum	1LH75
+GTEX-1497J-1926-SM-5TDCC	Small Intestine - Terminal Ileum	1497J
+GTEX-1LGOU-1426-SM-D3L8N	Small Intestine - Terminal Ileum	1LGOU
+GTEX-1R9PM-1626-SM-DPRY9	Small Intestine - Terminal Ileum	1R9PM
+GTEX-1S5ZA-1326-SM-EV7BB	Small Intestine - Terminal Ileum	1S5ZA
+GTEX-1PIEJ-1526-SM-E6CP8	Small Intestine - Terminal Ileum	1PIEJ
+GTEX-145LT-1026-SM-5LU9O	Small Intestine - Terminal Ileum	145LT
+GTEX-11DXZ-1326-SM-5H11X	Small Intestine - Terminal Ileum	11DXZ
+GTEX-1RAZA-1826-SM-DTXA2	Small Intestine - Terminal Ileum	1RAZA
+GTEX-1HSMQ-2226-SM-C1YRD	Small Intestine - Terminal Ileum	1HSMQ
+GTEX-18QFQ-1626-SM-72D7H	Small Intestine - Terminal Ileum	18QFQ
+GTEX-ZF2S-1726-SM-57WFT	Small Intestine - Terminal Ileum	ZF2S
+GTEX-ZZ64-0526-SM-5GZXM	Small Intestine - Terminal Ileum	ZZ64
+GTEX-1KXAM-2026-SM-DHXKI	Small Intestine - Terminal Ileum	1KXAM
+GTEX-1QPFJ-2626-SM-DPRZU	Small Intestine - Terminal Ileum	1QPFJ
+GTEX-111CU-1326-SM-5NQ8L	Small Intestine - Terminal Ileum	111CU
+GTEX-1R9JW-1926-SM-EVR4J	Small Intestine - Terminal Ileum	1R9JW
+GTEX-14BMU-1426-SM-5TDE5	Small Intestine - Terminal Ileum	14BMU
+GTEX-Y5V5-1826-SM-4VDS5	Small Intestine - Terminal Ileum	Y5V5
+GTEX-ZEX8-1826-SM-57WBH	Small Intestine - Terminal Ileum	ZEX8
+GTEX-13QBU-1926-SM-5IJEW	Small Intestine - Terminal Ileum	13QBU
+GTEX-1JK1U-1226-SM-CNNPN	Small Intestine - Terminal Ileum	1JK1U
+GTEX-11LCK-1926-SM-5A5KE	Small Intestine - Terminal Ileum	11LCK
+GTEX-ZVT2-2126-SM-5NQ93	Small Intestine - Terminal Ileum	ZVT2
+GTEX-14PJN-0826-SM-686ZL	Small Intestine - Terminal Ileum	14PJN
+GTEX-1R7EU-1326-SM-E6CQ6	Small Intestine - Terminal Ileum	1R7EU
+GTEX-1R7EV-1226-SM-DTX82	Small Intestine - Terminal Ileum	1R7EV
+GTEX-ZPIC-2326-SM-57WDW	Small Intestine - Terminal Ileum	ZPIC
+GTEX-11LCK-0126-SM-5A5M5	Spleen	11LCK
+GTEX-17F96-1426-SM-7IGQA	Spleen	17F96
+GTEX-1QP66-0126-SM-EAZ3N	Spleen	1QP66
+GTEX-1RMOY-0726-SM-EV79D	Spleen	1RMOY
+GTEX-15ETS-3126-SM-6LPKN	Spleen	15ETS
+GTEX-1J8Q3-0126-SM-C1YSI	Spleen	1J8Q3
+GTEX-14PK6-0526-SM-69LOF	Spleen	14PK6
+GTEX-1C6VQ-2126-SM-7IGNL	Spleen	1C6VQ
+GTEX-145MN-0126-SM-5RQHY	Spleen	145MN
+GTEX-1F5PL-2226-SM-7MKHE	Spleen	1F5PL
+GTEX-OIZF-0926-SM-7MKH7	Spleen	OIZF
+GTEX-1CB4F-0226-SM-7EPHS	Spleen	1CB4F
+GTEX-11P81-1326-SM-5GU5S	Spleen	11P81
+GTEX-12WSG-0926-SM-5EGIH	Spleen	12WSG
+GTEX-14ICL-0126-SM-664NG	Spleen	14ICL
+GTEX-ZAB5-0526-SM-5CVMU	Spleen	ZAB5
+GTEX-1JMLX-1426-SM-CNNPO	Spleen	1JMLX
+GTEX-1211K-0426-SM-5FQTP	Spleen	1211K
+GTEX-1F5PK-0726-SM-7MGXN	Spleen	1F5PK
+GTEX-16MT8-1826-SM-7EWE8	Spleen	16MT8
+GTEX-13X6H-0726-SM-5Q5BX	Spleen	13X6H
+GTEX-ZLWG-0426-SM-4WWFA	Spleen	ZLWG
+GTEX-15RIG-0126-SM-6PAN4	Spleen	15RIG
+GTEX-1RAZA-1026-SM-E6CQ9	Spleen	1RAZA
+GTEX-14PN3-0226-SM-6871K	Spleen	14PN3
+GTEX-1LSNM-0126-SM-EAZ57	Spleen	1LSNM
+GTEX-1R7EU-2026-SM-E9U63	Spleen	1R7EU
+GTEX-ZG7Y-2026-SM-DO91N	Spleen	ZG7Y
+GTEX-ZVZP-0726-SM-59HKA	Spleen	ZVZP
+GTEX-17GQL-0126-SM-72D5Q	Spleen	17GQL
+GTEX-13PL7-1126-SM-5MR5O	Spleen	13PL7
+GTEX-1L5NE-0926-SM-D4P3P	Spleen	1L5NE
+GTEX-1KD5A-1526-SM-D4P3W	Spleen	1KD5A
+GTEX-1PDJ9-0226-SM-DPRYX	Spleen	1PDJ9
+GTEX-12BJ1-0726-SM-5EGGF	Spleen	12BJ1
+GTEX-1R7EV-0126-SM-EAZ3O	Spleen	1R7EV
+GTEX-ZP4G-0326-SM-4YCEF	Spleen	ZP4G
+GTEX-12WSN-0126-SM-5DUX5	Spleen	12WSN
+GTEX-ZDTT-1026-SM-5KM19	Spleen	ZDTT
+GTEX-13111-0126-SM-5EGHO	Spleen	13111
+GTEX-139D8-2326-SM-5IFGE	Stomach	139D8
+GTEX-ZXES-1426-SM-5NQ8S	Stomach	ZXES
+GTEX-1IDJD-2426-SM-C1YS6	Stomach	1IDJD
+GTEX-11EM3-1026-SM-5A5KL	Stomach	11EM3
+GTEX-1RMOY-1126-SM-EV79E	Stomach	1RMOY
+GTEX-ZYY3-1726-SM-5EGH3	Stomach	ZYY3
+GTEX-Y5LM-1326-SM-5RQIS	Stomach	Y5LM
+GTEX-17F98-1526-SM-7EWD8	Stomach	17F98
+GTEX-ZE7O-3026-SM-51MS4	Stomach	ZE7O
+GTEX-14PJ5-0826-SM-6AJAR	Stomach	14PJ5
+GTEX-ZLWG-1526-SM-DO12F	Stomach	ZLWG
+GTEX-1H11D-2226-SM-9OSXN	Stomach	1H11D
+GTEX-1H1E6-1626-SM-9OSWC	Stomach	1H1E6
+GTEX-1PPH8-1326-SM-DTXFO	Stomach	1PPH8
+GTEX-13QBU-1126-SM-5LU44	Stomach	13QBU
+GTEX-1HCUA-1626-SM-A9SMG	Stomach	1HCUA
+GTEX-13X6H-1626-SM-5Q5CT	Stomach	13X6H
+GTEX-11EQ9-1226-SM-5987E	Stomach	11EQ9
+GTEX-1KXAM-0926-SM-CXZKA	Stomach	1KXAM
+GTEX-1HFI7-1526-SM-9WG7W	Stomach	1HFI7
+GTEX-1211K-1426-SM-5FQTF	Stomach	1211K
+GTEX-1HT8W-2326-SM-A9SLA	Stomach	1HT8W
+GTEX-1I6K7-1726-SM-B2LXQ	Stomach	1I6K7
+GTEX-1JMLX-2426-SM-CXZJQ	Stomach	1JMLX
+GTEX-1399R-1126-SM-5IFIO	Stomach	1399R
+GTEX-13CF3-1926-SM-5K7WF	Stomach	13CF3
+GTEX-13O3Q-2126-SM-5KM4C	Stomach	13O3Q
+GTEX-117YW-2226-SM-5N9DB	Stomach	117YW
+GTEX-1H1DG-2126-SM-9WPPB	Stomach	1H1DG
+GTEX-14PKU-1126-SM-69LOU	Stomach	14PKU
+GTEX-145MN-1326-SM-5NQ9S	Stomach	145MN
+GTEX-13FTW-1726-SM-5KM2B	Stomach	13FTW
+GTEX-13PVQ-2126-SM-5L3FW	Stomach	13PVQ
+GTEX-ZTX8-0426-SM-59HLG	Stomach	ZTX8
+GTEX-ZLFU-1326-SM-DO11R	Stomach	ZLFU
+GTEX-13FH7-1026-SM-5IJGF	Stomach	13FH7
+GTEX-1MUQO-1926-SM-EAZ59	Stomach	1MUQO
+GTEX-14ICL-0826-SM-5YY9W	Stomach	14ICL
+GTEX-12WSD-2326-SM-59HKQ	Stomach	12WSD
+GTEX-14PJ4-1626-SM-664OB	Stomach	14PJ4
+GTEX-1H1ZS-2826-SM-9OSXS	Testis	1H1ZS
+GTEX-1PDJ9-1426-SM-DPRYW	Testis	1PDJ9
+GTEX-15RJ7-1826-SM-7KUMJ	Testis	15RJ7
+GTEX-1R7EU-1726-SM-DTX9M	Testis	1R7EU
+GTEX-ZVTK-0126-SM-57WDG	Testis	ZVTK
+GTEX-13OW8-0526-SM-5KM24	Testis	13OW8
+GTEX-1AX8Z-2826-SM-73KTZ	Testis	1AX8Z
+GTEX-17HHY-0726-SM-7IGM6	Testis	17HHY
+GTEX-ZAB5-2426-SM-5CVMW	Testis	ZAB5
+GTEX-1IKJJ-2126-SM-C1YQU	Testis	1IKJJ
+GTEX-1NHNU-1526-SM-E6CP2	Testis	1NHNU
+GTEX-Y3I4-2026-SM-4TT6Z	Testis	Y3I4
+GTEX-11NUK-2626-SM-5A5MB	Testis	11NUK
+GTEX-1B8KE-1426-SM-7EWEL	Testis	1B8KE
+GTEX-1JKYR-1626-SM-AHZ3L	Testis	1JKYR
+GTEX-11GS4-2026-SM-5N9CP	Testis	11GS4
+GTEX-1KWVE-1126-SM-DHXJY	Testis	1KWVE
+GTEX-ZZ64-1126-SM-5GZXY	Testis	ZZ64
+GTEX-1BAJH-0726-SM-7IGMF	Testis	1BAJH
+GTEX-18D9B-2726-SM-72D73	Testis	18D9B
+GTEX-11DXZ-2126-SM-59881	Testis	11DXZ
+GTEX-1S831-2026-SM-EXOJP	Testis	1S831
+GTEX-Y9LG-1726-SM-4VBQE	Testis	Y9LG
+GTEX-1HCVE-2826-SM-9WPPI	Testis	1HCVE
+GTEX-17MF6-2726-SM-7IGMZ	Testis	17MF6
+GTEX-14753-0626-SM-5Q5CY	Testis	14753
+GTEX-11P82-1526-SM-5BC5M	Testis	11P82
+GTEX-14E6E-1026-SM-664N9	Testis	14E6E
+GTEX-1O97I-2426-SM-DPRZ2	Testis	1O97I
+GTEX-14BIL-2226-SM-73KWF	Testis	14BIL
+GTEX-16Z82-2726-SM-7KULV	Testis	16Z82
+GTEX-1E2YA-2826-SM-7EPIN	Testis	1E2YA
+GTEX-1GL5R-0826-SM-9KNTS	Testis	1GL5R
+GTEX-1E1VI-1026-SM-7MKGQ	Testis	1E1VI
+GTEX-13N1W-2626-SM-5IJEP	Testis	13N1W
+GTEX-1K2DU-2226-SM-CXZJY	Testis	1K2DU
+GTEX-11EQ8-1426-SM-5EGJR	Testis	11EQ8
+GTEX-1GN73-1726-SM-9JGFR	Testis	1GN73
+GTEX-17HGU-0726-SM-7DUFN	Testis	17HGU
+GTEX-14E7W-0726-SM-664OK	Testis	14E7W
+GTEX-1LBAC-0726-SM-D3L9U	Thyroid	1LBAC
+GTEX-13FTW-0626-SM-5IFEX	Thyroid	13FTW
+GTEX-1AYCT-0226-SM-73KVB	Thyroid	1AYCT
+GTEX-1JJE9-0226-SM-CY8HU	Thyroid	1JJE9
+GTEX-1B97I-0326-SM-7DUGB	Thyroid	1B97I
+GTEX-18QFQ-0726-SM-7LG6D	Thyroid	18QFQ
+GTEX-1GMR3-0726-SM-9WPOF	Thyroid	1GMR3
+GTEX-1F75B-0826-SM-9QEIT	Thyroid	1F75B
+GTEX-1HFI7-0326-SM-9WPOX	Thyroid	1HFI7
+GTEX-1QMI2-0826-SM-EXUT4	Thyroid	1QMI2
+GTEX-15RIF-0326-SM-7KUFR	Thyroid	15RIF
+GTEX-ZF29-0726-SM-DO92H	Thyroid	ZF29
+GTEX-15ER7-0726-SM-7KUMF	Thyroid	15ER7
+GTEX-13FH7-0126-SM-5KLZ1	Thyroid	13FH7
+GTEX-13OW6-0726-SM-5L3FX	Thyroid	13OW6
+GTEX-Z9EW-0226-SM-5CVM7	Thyroid	Z9EW
+GTEX-1211K-0726-SM-5FQUW	Thyroid	1211K
+GTEX-13JVG-0926-SM-5IJE1	Thyroid	13JVG
+GTEX-11TUW-0226-SM-5LU8X	Thyroid	11TUW
+GTEX-ZYFD-0826-SM-5NQ9A	Thyroid	ZYFD
+GTEX-13O3O-0926-SM-5KM1F	Thyroid	13O3O
+GTEX-1F6IF-1126-SM-9KNV2	Thyroid	1F6IF
+GTEX-13OVJ-0626-SM-5J2O2	Thyroid	13OVJ
+GTEX-15EO6-0126-SM-6LPKJ	Thyroid	15EO6
+GTEX-14PII-0826-SM-6871S	Thyroid	14PII
+GTEX-1R9K4-0726-SM-EWRN2	Thyroid	1R9K4
+GTEX-12WSK-0926-SM-5CVNQ	Thyroid	12WSK
+GTEX-13PVR-0626-SM-5S2RC	Thyroid	13PVR
+GTEX-ZZ64-0126-SM-5GZXA	Thyroid	ZZ64
+GTEX-1IDJC-1026-SM-A96T2	Thyroid	1IDJC
+GTEX-1R9K5-0726-SM-EAZ4E	Thyroid	1R9K5
+GTEX-18A6Q-0726-SM-7LT8Y	Thyroid	18A6Q
+GTEX-1GN73-0826-SM-9OSW4	Thyroid	1GN73
+GTEX-13CF3-0926-SM-5LZZC	Thyroid	13CF3
+GTEX-1F52S-0526-SM-7P8TP	Thyroid	1F52S
+GTEX-1NV5F-0726-SM-DTXEH	Thyroid	1NV5F
+GTEX-183WM-2626-SM-7KFRY	Thyroid	183WM
+GTEX-1192W-0126-SM-5EGGS	Thyroid	1192W
+GTEX-13D11-0226-SM-5LZXL	Thyroid	13D11
+GTEX-145LT-0226-SM-5S2QK	Thyroid	145LT
+GTEX-13PL7-2026-SM-5IFGK	Uterus	13PL7
+GTEX-11GSP-2426-SM-5N9BD	Uterus	11GSP
+GTEX-145LS-2426-SM-5TDCZ	Uterus	145LS
+GTEX-1A8FM-2326-SM-7MKGC	Uterus	1A8FM
+GTEX-15ETS-1526-SM-6LPKM	Uterus	15ETS
+GTEX-ZPIC-1226-SM-DO91X	Uterus	ZPIC
+GTEX-14PJ6-1526-SM-6AJ9M	Uterus	14PJ6
+GTEX-12WSK-2026-SM-5CVNB	Uterus	12WSK
+GTEX-1QP28-1526-SM-E76P6	Uterus	1QP28
+GTEX-1HCUA-1226-SM-9WPP5	Uterus	1HCUA
+GTEX-13VXT-1626-SM-5IJES	Uterus	13VXT
+GTEX-1S82U-1226-SM-E9TKB	Uterus	1S82U
+GTEX-1399S-2226-SM-5IFEW	Uterus	1399S
+GTEX-1GZ4H-0826-SM-9OSXK	Uterus	1GZ4H
+GTEX-11EMC-1826-SM-5A5JT	Uterus	11EMC
+GTEX-15CHC-2026-SM-6EU1Z	Uterus	15CHC
+GTEX-1PBJI-2326-SM-E6CP6	Uterus	1PBJI
+GTEX-1GN1W-1326-SM-9JGHZ	Uterus	1GN1W
+GTEX-1K9T9-2526-SM-D3L9B	Uterus	1K9T9
+GTEX-1LGOU-1226-SM-D3L8L	Uterus	1LGOU
+GTEX-YJ8O-1126-SM-5P9IS	Uterus	YJ8O
+GTEX-14BIM-2226-SM-5SI8Y	Uterus	14BIM
+GTEX-1C475-0626-SM-73KV9	Uterus	1C475
+GTEX-13FTX-1026-SM-5J2O5	Uterus	13FTX
+GTEX-14BIN-1526-SM-73KZ7	Uterus	14BIN
+GTEX-1LH75-1626-SM-EWROL	Uterus	1LH75
+GTEX-14AS3-1826-SM-5TDD8	Uterus	14AS3
+GTEX-145ME-1326-SM-5O98Q	Uterus	145ME
+GTEX-13OVJ-2326-SM-5IJGA	Uterus	13OVJ
+GTEX-1KANC-1126-SM-CY8I7	Uterus	1KANC
+GTEX-14JG6-0826-SM-6AJB9	Uterus	14JG6
+GTEX-1313W-2826-SM-5P9G1	Uterus	1313W
+GTEX-16A39-0726-SM-7KUEB	Uterus	16A39
+GTEX-13N11-1126-SM-5KM41	Uterus	13N11
+GTEX-1J1OQ-1726-SM-CL55N	Uterus	1J1OQ
+GTEX-1I4MK-1426-SM-B2LWU	Uterus	1I4MK
+GTEX-13D11-1226-SM-5IFGA	Uterus	13D11
+GTEX-1H1CY-2126-SM-9OSXV	Uterus	1H1CY
+GTEX-ZP4G-0726-SM-4WWF2	Uterus	ZP4G
+GTEX-1LGRB-2226-SM-CNNQI	Uterus	1LGRB
+GTEX-11P81-2126-SM-5HL6N	Vagina	11P81
+GTEX-1NUQO-1826-SM-E6CQU	Vagina	1NUQO
+GTEX-YFC4-2926-SM-5IFJ8	Vagina	YFC4
+GTEX-ZVT3-2726-SM-5GU5X	Vagina	ZVT3
+GTEX-ZTPG-2226-SM-57WF9	Vagina	ZTPG
+GTEX-1I4MK-1726-SM-ARL7O	Vagina	1I4MK
+GTEX-11I78-2026-SM-5987C	Vagina	11I78
+GTEX-131YS-2426-SM-5J2OD	Vagina	131YS
+GTEX-17F9Y-2326-SM-7DUFP	Vagina	17F9Y
+GTEX-ZV6S-1326-SM-59HJA	Vagina	ZV6S
+GTEX-13N11-1526-SM-5L3FL	Vagina	13N11
+GTEX-13D11-1326-SM-5IJFY	Vagina	13D11
+GTEX-12WSD-2926-SM-5LZUH	Vagina	12WSD
+GTEX-1399S-2326-SM-5K7YV	Vagina	1399S
+GTEX-1LVAN-1626-SM-CNPQ7	Vagina	1LVAN
+GTEX-14PN3-1626-SM-6AJAV	Vagina	14PN3
+GTEX-Y8LW-1426-SM-5RQJJ	Vagina	Y8LW
+GTEX-1JN76-1526-SM-CNPPF	Vagina	1JN76
+GTEX-1QCLZ-2226-SM-DTX7R	Vagina	1QCLZ
+GTEX-1C475-0526-SM-793AC	Vagina	1C475
+GTEX-1F5PL-1826-SM-7P8PP	Vagina	1F5PL
+GTEX-ZLWG-1126-SM-4WWFQ	Vagina	ZLWG
+GTEX-11EM3-1826-SM-5A5KO	Vagina	11EM3
+GTEX-1IDJU-1026-SM-AHZ2U	Vagina	1IDJU
+GTEX-1QP28-1426-SM-EVR4E	Vagina	1QP28
+GTEX-14JG6-0726-SM-69LQH	Vagina	14JG6
+GTEX-13OVI-0926-SM-5J1MI	Vagina	13OVI
+GTEX-1117F-2526-SM-5GZY6	Vagina	1117F
+GTEX-14AS3-1726-SM-5RQJV	Vagina	14AS3
+GTEX-1LGOU-1126-SM-D3LAI	Vagina	1LGOU
+GTEX-15SDE-1726-SM-6LPJS	Vagina	15SDE
+GTEX-1J8EW-2526-SM-CKZO2	Vagina	1J8EW
+GTEX-14PKU-1326-SM-6871B	Vagina	14PKU
+GTEX-14PJM-2926-SM-69LOE	Vagina	14PJM
+GTEX-1AMFI-1526-SM-73KVY	Vagina	1AMFI
+GTEX-11GSP-2226-SM-5HL5Q	Vagina	11GSP
+GTEX-ZE7O-2426-SM-57WD7	Vagina	ZE7O
+GTEX-13U4I-2026-SM-5LU3L	Vagina	13U4I
+GTEX-1399U-1526-SM-5J2N7	Vagina	1399U
+GTEX-YJ8O-1226-SM-5P9JE	Vagina	YJ8O
+GTEX-1JMQL-0006-SM-DHXJB	Whole Blood	1JMQL
+GTEX-1HCVE-0006-SM-ADEH2	Whole Blood	1HCVE
+GTEX-U8T8-0005-SM-3DB8F	Whole Blood	U8T8
+GTEX-1S831-0006-SM-DLHC1	Whole Blood	1S831
+GTEX-18D9U-0006-SM-7SB6M	Whole Blood	18D9U
+GTEX-TML8-0005-SM-32QPA	Whole Blood	TML8
+GTEX-14PJM-0006-SM-9JGHA	Whole Blood	14PJM
+GTEX-1KANA-0006-SM-9YFLB	Whole Blood	1KANA
+GTEX-13FXS-0006-SM-5O99X	Whole Blood	13FXS
+GTEX-13SLX-0005-SM-CM2RF	Whole Blood	13SLX
+GTEX-14E6E-0006-SM-5MR5N	Whole Blood	14E6E
+GTEX-QDT8-0006-SM-CXZJC	Whole Blood	QDT8
+GTEX-1BAJH-0005-SM-7PC1R	Whole Blood	1BAJH
+GTEX-XMK1-0005-SM-4B665	Whole Blood	XMK1
+GTEX-131XW-0006-SM-5O9AO	Whole Blood	131XW
+GTEX-ZLV1-0005-SM-4WWAP	Whole Blood	ZLV1
+GTEX-1S5VW-0005-SM-CYPS4	Whole Blood	1S5VW
+GTEX-16NPX-0005-SM-7MKGG	Whole Blood	16NPX
+GTEX-11DXZ-0006-SM-5LZZH	Whole Blood	11DXZ
+GTEX-1NV8Z-0005-SM-DKPQ3	Whole Blood	1NV8Z
+GTEX-1F7RK-0006-SM-ACKV4	Whole Blood	1F7RK
+GTEX-WWYW-0005-SM-3NB3K	Whole Blood	WWYW
+GTEX-12126-0006-SM-5O9B8	Whole Blood	12126
+GTEX-1GMR3-0005-SM-ADEGR	Whole Blood	1GMR3
+GTEX-WVLH-0006-SM-3MJF7	Whole Blood	WVLH
+GTEX-1OJC4-0005-SM-DKPQ4	Whole Blood	1OJC4
+GTEX-15SB6-0005-SM-7P8OO	Whole Blood	15SB6
+GTEX-1JKYR-0005-SM-DHXL5	Whole Blood	1JKYR
+GTEX-WFON-0005-SM-3NMC9	Whole Blood	WFON
+GTEX-1F88F-0005-SM-A9SK2	Whole Blood	1F88F
+GTEX-17HGU-0006-SM-7MXT8	Whole Blood	17HGU
+GTEX-1IKOE-0005-SM-CMKFL	Whole Blood	1IKOE
+GTEX-1C6VS-0005-SM-7MGWG	Whole Blood	1C6VS
+GTEX-R55C-0005-SM-3GAE9	Whole Blood	R55C
+GTEX-13CF3-0006-SM-5N9ED	Whole Blood	13CF3
+GTEX-1LSNL-0006-SM-CXZIV	Whole Blood	1LSNL
+GTEX-111YS-0006-SM-5NQBE	Whole Blood	111YS
+GTEX-16NPV-0005-SM-7PC2F	Whole Blood	16NPV
+GTEX-XBEW-0006-SM-4AT4E	Whole Blood	XBEW
+GTEX-1192X-0005-SM-5NQC3	Whole Blood	1192X
