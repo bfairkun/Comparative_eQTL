@@ -15,21 +15,21 @@ gene_location_file_name <- args[4]
 covariates_file_name <- args[5]
 errorCovariance_file <- args[6]
 permutation_matrix_output_filename <- args[7]
-Npermutations <- args[8]
-cisDistance <- args[9]
-InitialSeed <- args[10]
+Npermutations <- as.numeric(args[8])
+InitialSeed <- as.numeric(args[9])
+cisDistance <- args[10]
 
-setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/")
-SNP_file_name <- "code/snakemake_workflow/scratch/Test.snps"
-snps_location_file_name <- "code/snakemake_workflow/scratch/Test.snploc"
-expression_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
-gene_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
-covariates_file_name <- "output/Covariates/0GenotypePCs_and_11RNASeqPCs.covariates"
-errorCovariance_file <- "code/snakemake_workflow/eQTL_mapping/Kinship/GRM.cXX.txt"
-permutation_matrix_output_filename <- "/project2/gilad/bjf79/temp/PvalueMatrix.txt"
-cisDistance<-100000
-InitialSeed <- 1
-Npermutations <- 5
+# setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/")
+# SNP_file_name <- "code/snakemake_workflow/scratch/Test.snps"
+# snps_location_file_name <- "code/snakemake_workflow/scratch/Test.snploc"
+# expression_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
+# gene_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
+# covariates_file_name <- "output/Covariates/0GenotypePCs_and_11RNASeqPCs.covariates"
+# errorCovariance_file <- "code/snakemake_workflow/eQTL_mapping/Kinship/GRM.cXX.txt"
+# permutation_matrix_output_filename <- "/project2/gilad/bjf79/temp/PvalueMatrix.txt"
+# cisDistance<-100000
+# InitialSeed <- 1
+# Npermutations <- 5
 
 
 # Linear model to use, modelANOVA, modelLINEAR, or modelLINEAR_CROSS
@@ -107,8 +107,8 @@ for (i in 1:Npermutations){
 
   # Write out permutated expression matrix and reload it
   TempFilepath.ExpressionMatrix <- tempfile("ExpressionMatrix.")
-  write.table(Temp.df, file=TempFilepath, sep='\t', quote=F, col.names =NA)
-  gene$LoadFile(TempFilepath);
+  write.table(Temp.df, file=TempFilepath.ExpressionMatrix, sep='\t', quote=F, col.names =NA)
+  gene$LoadFile(TempFilepath.ExpressionMatrix);
 
   TempFilepath.Covariates <- tempfile("Covariates.")
   write.table(Temp.df.cov, file=TempFilepath.Covariates, sep='\t', quote=F, col.names =NA)
@@ -138,7 +138,7 @@ for (i in 1:Npermutations){
 }
 
 row.names(PermutatePvalueMatrix) <- names(permuted$cis$min.pv.gene)
-write.table(PermutatePvalueMatrix, permutation_matrix_output_filename, quote=F, sep='\t', col.names = F)
+write.table(t(PermutatePvalueMatrix), permutation_matrix_output_filename, quote=F, sep='\t', col.names = T, row.names=F)
 
 
 

@@ -98,6 +98,9 @@
   "MatrixEQTL":
   {"mem" : 24000},
 
+  "eQTL_permutations":
+  {"mem" : 24000},
+
   "MatrixEQTL_sQTL":
   {"mem" : 18000},
 

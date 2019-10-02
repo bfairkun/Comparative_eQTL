@@ -128,5 +128,8 @@ def get_vcf_chunks_by_contig(wildcards):
                   contig=wildcards.contig,
                   coords=freebayes_region_chunks_dict[wildcards.contig])
 
+def GetInitialSeedNumberForPermutationChunk(wildcards):
+    return int(wildcards.n) * int(config["eQTL_mapping"]["PermutationChunkSize"])
+
 genotypedregions, = glob_wildcards("genotyped/all.{region}.vcf.gz")
 

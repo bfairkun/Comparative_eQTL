@@ -117,9 +117,9 @@ eQTL_mapping:
     gene_FDR: 0.1
     # FDR threshold for counting number of significant eQTLs at the level of
     # eGenes (permutation testing done by FastQTL or MatrixEQTL script)
-    PermutationChunkSize: 100
+    PermutationChunkSize: 25
     # Number permutations of GTEx style permutations for identifying eGenes
-    NumberPermutationChunks: 100
+    NumberPermutationChunks: 400
     # Used in permutation testing. Number of jobs to break up the eQTL calling
     # (with permutations) across various compute nodes
     # The total number of permutations is equal to PermutationChunkSize*NumberPermutationChunks.

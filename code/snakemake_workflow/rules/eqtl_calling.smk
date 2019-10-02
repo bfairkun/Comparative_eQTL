@@ -546,8 +546,6 @@ rule eQTL_permutations:
         Rscript scripts/MatrixEqtl_Cis_Permutations.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {params.NumberPermutations} {params.InitialSeed} 250000 > {log}
         """
 
-def GetInitialSeedNumberForPermutationChunk(wildcards):
-    return int(wildcards.n) * int(config["eQTL_mapping"]["PermutationChunkSize"])
 
 rule MergePermutationChunks:
     input:

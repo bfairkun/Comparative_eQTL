@@ -5,6 +5,8 @@ include: "rules/common.smk"
 rule all:
     input:
         # "eQTL_mapping/SharedPolymorphisms/MatchedSNPsToTest.vcf.gz",
+        "OverdispersionAnalysis/FullCountTable.txt.gz",
+        # "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/PermutationsCombined.txt",
         "../../output/TissueSpecificity/tau.log.txt",
         "MiscOutput/HumanVcfs/YRI.hg38.vcf.gz",
         "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps",
@@ -84,6 +86,7 @@ include: "rules/eqtl_calling.smk"
 include: "rules/sqtl_calling.smk"
 include: "rules/PowerAnalysis.smk"
 include: "rules/eQTL_analysis.smk"
+include: "rules/Overdispersion.smk"
 # eQTL_analysis requires an eqtl model results file to be defined in config
 # include: "rules/qc.smk"
 #include: "rules/annotation.smk"
