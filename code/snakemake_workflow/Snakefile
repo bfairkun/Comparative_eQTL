@@ -4,6 +4,9 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "OverdispersionAnalysis/TableSubset.txt",
+        "OverdispersionAnalysis/GtexTissueMatrix.overdispersion.txt",
+        "OverdispersionAnalysis/GTEx.genelengths.txt",
         # "eQTL_mapping/SharedPolymorphisms/MatchedSNPsToTest.vcf.gz",
         "OverdispersionAnalysis/FullCountTable.txt.gz",
         # "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/PermutationsCombined.txt",
