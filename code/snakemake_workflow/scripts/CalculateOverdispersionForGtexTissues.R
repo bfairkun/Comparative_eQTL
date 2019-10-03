@@ -48,14 +48,14 @@ for (i in seq_along(TissueList)){
 }
 
 MuMatrix %>% as.data.frame() %>%
-  write.table(MuTableOut, sep='\t', quote = F)
+  write.table(MuTableOut, sep='\t', quote = F, col.names = NA)
 
 # MuMatrix %>% as.data.frame() %>%
-#   write.table("../../output/GTEx.Tissues.Mu.Matrix.txt", sep='\t', quote = F)
+#   write.table("../../output/GTEx.Tissues.Mu.Matrix.txt", sep='\t', quote = F, col.names = NA)
 
 
 OverdispersionMatrix %>% as.data.frame() %>%
-  write.table(OverdispersionTableOut, sep='\t', quote = F)
+  write.table(OverdispersionTableOut, sep='\t', quote = F, col.names = NA)
 
 # OverdispersionMatrix %>% as.data.frame() %>%
-#   write.table("../../output/GTEx.Tissues.Overdispersion.Matrix.txt", sep='\t', quote = F)
+#   write.table("../../output/GTEx.Tissues.Overdispersion.Matrix.txt", sep='\t', quote = F, col.names = NA)
