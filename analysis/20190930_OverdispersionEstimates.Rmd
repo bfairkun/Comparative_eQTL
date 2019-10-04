@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 ```
 
-From my dataset of gene expression measurements across 39 chimp individuals (RNA-seq from heart tissue) and ~39 human individuals (~50 RNA-seq sampels randomly chosen from human GTEx datasets, then culled to exclude outliers and lowly sequenced samples) I am interested in quantifying gene expression dispersion within each population. I had previously made the observation that gene expression dispersion (summarized by statistics like standard deviation, or variance) is well correlated ($R^2\approx0.6$) between the two species, even after regressing out the fact that variance is correlated to expression (due to both biological and statstical reasons). Abhishek suggested I do this analysis a bit differently. Rather than simply plotting standard deviation for each gene after regressing out the relationship with absolute expression, I should model the raw count data with a negative binomial model and estimate an over dispersion parameter. Abhishek wrote more description [here](https://users.rcc.uchicago.edu/~aksarkar/singlecell-ideas/species-var.html) with some snippets of how I might accomplish this.
+From my dataset of gene expression measurements across 39 chimp individuals (RNA-seq from heart tissue) and ~39 human individuals (~10 RNA-seq samples from Bryan's dataset which are experimentally batch-matched with ~10 of our chimp datasets, as well as ~30 datasets randomly chosen from GTEx heart left ventricle set) I am interested in quantifying gene expression dispersion within each population. I had previously made the observation that gene expression dispersion (summarized by statistics like standard deviation, or variance) is well correlated ($R^2\approx0.6$) between the two species, even after regressing out the fact that variance is correlated to expression (due to both biological and statstical reasons). Abhishek suggested I do this analysis a bit differently. Rather than simply plotting standard deviation for each gene after regressing out the relationship with absolute expression, I should model the raw count data with a negative binomial model and estimate an over dispersion parameter. Abhishek wrote more description [here](https://users.rcc.uchicago.edu/~aksarkar/singlecell-ideas/species-var.html) with some snippets of how I might accomplish this.
 
 ```{r}
 library(plyr)
@@ -127,7 +127,7 @@ LoessPlot
 
 ```
 
-Ok, this is similar to what Abhishek has described as seeing, as well as [Eling et al 2018](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(18)30278-3). Yoav still expressed skepticism that the correlation between species overdispersion is still due some technical aspect to expression levels. To rule that out as best as possible, similar to what I have done before, (and similar to Eling et al) I will regress out the expression level and see if the residual overdispersion $\epsilon_j$ is still well corellated.
+Ok, this is similar to what Abhishek has described as seeing, as well as [Eling et al 2018](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(18)30278-3). I think it is still reasonable to be skeptical that the correlation between species overdispersion is still due some technical aspect to expression levels. To rule that out that possibility, similar to what I have done before, (and similar to Eling et al) I will regress out the expression level and check that the residual overdispersion $\epsilon_j$ is still well corellated between species.
 
 ```{r}
 ResidualDemoPlot <- LoessPlot +
@@ -222,6 +222,7 @@ OverdispersionGSEAPlot <- GSEA.mean$Simplified %>%
   scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 40, simplify = FALSE), paste, collapse="\n")) +
   labs(color = "Adjusted P-value") +
   theme_bw()+ theme(legend.position="top")
+OverdispersionGSEAPlot
 
 #Plot most significant categories
 GSEA.mean$Simplified %>% 
@@ -269,7 +270,7 @@ Essentiality$CultureEssentiality %>% table()
 
 Although it seems that the vast majority of genes for which I estimated overdispersion are essential, from the 6 non essential genes, they do seem to have a significantly higher distribution of overdispersion estimates.
 
-Now let's ask what types of genes are overdispersed in my chimp sample population relative to human sample population (and vice versa).
+Now let's ask what types of genes are overdispersed in my chimp sample population relative to human sample population (and vice versa). Luckily for GSEA analysis I only need a ranked list, however, it might be useful in the future to figure how to formally test the hypothesis for each gene that $\phi_{chimp}=\phi_{human}$.
 
 ```{r}
 OverdispersionSpeciesDifference <- (log(ToPlot$Chimp.Overdispersion) - log(ToPlot$Human.Overdispersion))
@@ -355,8 +356,14 @@ MeanCorrelationHeatmap <- heatmap.2(MeanCorrelationMatrix, trace="none", dendrog
 
 ```
 
+Note that the clustering pattern for mean gene expression generally matches what GTEx had published in its pilot paper for clustering of tissues (heart ventricle, heart atrial appendage, skeletal muscle for a tight cluster, brain is a tight cluster, etc) and that my chimp heart dataset (which was processed a bit differently, with gene length and gene counts measurements coming only from orthologous exons) fall in that human heart cluster.
+
+However, the clustering pattern for overdispersion shows less resemblance to the mean expression (though I hypothesize it would look more like the mean expression pattern if we had less noisy estimates with larger sample sizes). Furthermore, my chimp and human heart datasets cluster tightly together, though they do not cluster with any of the GTEx datasets. Worth noting that of the GTEx tissues, my human heart overdispersion estimates and my chimp overdispersion datasets are closest to the overdispersion estimates from GTEx heart.
+
+Lastly, worth noting that the correlation coefficients of genewise dispersion between GTEx tissues is often in 0.4 to 0.6 range (Pearson $R^2$), which is about what I calculated between my chimp and human heart tissues.
 
 ```{r}
+# some plots mashed together into a single figure that could summarize this analysis
 plot_grid(OverdispersionGSEAPlot,
           Overdispersion.Species.Correlation,
           ResidualDemoPlot,

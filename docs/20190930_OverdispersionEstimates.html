@@ -444,7 +444,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-03
+<strong>Last updated:</strong> 2019-10-04
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -535,10 +535,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree65c8360ca271cb584c648059261c789592f5429ftargetblank65c8360a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/65c8360ca271cb584c648059261c789592f5429f" target="_blank">65c8360</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree71db33a2a4e18c3fed650e74c106b7aa32810f74targetblank71db33aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/71db33a2a4e18c3fed650e74c106b7aa32810f74" target="_blank">71db33a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree65c8360ca271cb584c648059261c789592f5429ftargetblank65c8360a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree71db33a2a4e18c3fed650e74c106b7aa32810f74targetblank71db33aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -558,12 +558,7 @@ Ignored files:
     Ignored:    docs/.DS_Store
     Ignored:    docs/assets/.DS_Store
 
-Untracked files:
-    Untracked:  analysis/20191001_GtexAnnotations.Rmd
-    Untracked:  analysis_temp/20190716_VarianceInsteadOfEgenes_2.Rmd
-
 Unstaged changes:
-    Deleted:    analysis/20190716_VarianceInsteadOfEgenes_2.Rmd
     Modified:   analysis/20190930_OverdispersionEstimates.Rmd
 
 </code></pre>
@@ -608,6 +603,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/analysis/20190930_OverdispersionEstimates.Rmd" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/20190930_OverdispersionEstimates.html" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/781081997b0eaf5358342507947137ed99599e0a/analysis/20190930_OverdispersionEstimates.Rmd" target="_blank">7810819</a>
 </td>
 <td>
@@ -627,7 +656,7 @@ added overdispersion analysis, gene lists
 </div>
 </div>
 </div>
-<p>From my dataset of gene expression measurements across 39 chimp individuals (RNA-seq from heart tissue) and ~39 human individuals (~50 RNA-seq sampels randomly chosen from human GTEx datasets, then culled to exclude outliers and lowly sequenced samples) I am interested in quantifying gene expression dispersion within each population. I had previously made the observation that gene expression dispersion (summarized by statistics like standard deviation, or variance) is well correlated (<span class="math inline">\(R^2\approx0.6\)</span>) between the two species, even after regressing out the fact that variance is correlated to expression (due to both biological and statstical reasons). Abhishek suggested I do this analysis a bit differently. Rather than simply plotting standard deviation for each gene after regressing out the relationship with absolute expression, I should model the raw count data with a negative binomial model and estimate an over dispersion parameter. Abhishek wrote more description <a href="https://users.rcc.uchicago.edu/~aksarkar/singlecell-ideas/species-var.html">here</a> with some snippets of how I might accomplish this.</p>
+<p>From my dataset of gene expression measurements across 39 chimp individuals (RNA-seq from heart tissue) and ~39 human individuals (~10 RNA-seq samples from Bryan’s dataset which are experimentally batch-matched with ~10 of our chimp datasets, as well as ~30 datasets randomly chosen from GTEx heart left ventricle set) I am interested in quantifying gene expression dispersion within each population. I had previously made the observation that gene expression dispersion (summarized by statistics like standard deviation, or variance) is well correlated (<span class="math inline">\(R^2\approx0.6\)</span>) between the two species, even after regressing out the fact that variance is correlated to expression (due to both biological and statstical reasons). Abhishek suggested I do this analysis a bit differently. Rather than simply plotting standard deviation for each gene after regressing out the relationship with absolute expression, I should model the raw count data with a negative binomial model and estimate an over dispersion parameter. Abhishek wrote more description <a href="https://users.rcc.uchicago.edu/~aksarkar/singlecell-ideas/species-var.html">here</a> with some snippets of how I might accomplish this.</p>
 <pre class="r"><code>library(plyr)
 library(tidyverse)
 library(knitr)
@@ -701,6 +730,43 @@ ggplot(ToPlot, aes(x=Chimp.Mean.Expression, y=Chimp.Mean.Log2RPKM)) +
   annotate(&quot;text&quot;,x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
   theme_bw()</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-4-1.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Ok now, let’s see how the estimated overdispersion estimates (<span class="math inline">\(1/\hat{\phi_j}\)</span>) correlate between species:</p>
 <pre class="r"><code>R&lt;-cor(log(ToPlot$Chimp.Overdispersion),log(ToPlot$Human.Overdispersion), use=&quot;complete.obs&quot;)
 lb1 &lt;- paste(&quot;~R^2==~&quot;, round(R**2,2))
@@ -712,6 +778,43 @@ Overdispersion.Species.Correlation &lt;- ggplot(ToPlot, aes(x=Chimp.Overdispersi
   theme_bw()
 Overdispersion.Species.Correlation</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-5-1.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Ok those correlate quite well. While this model fitting method for estimating overdispersion parameter should properly take into account the statistical counting variance (related to gene length, and expression level), given that gene expression between species correlate so well (<span class="math inline">\(R^2&gt;0.9\)</span>) it is natural to check if there there may be residual expression-related reasons that explain how dispersion is correlated between species. So let’s see if there is still a correlation between overdispersion <span class="math inline">\(1/\hat{\phi_j}\)</span> and expression level <span class="math inline">\(\hat{\mu_j}\)</span>.</p>
 <pre class="r"><code>#Plot overdispersion vs mu
 LoessPlot &lt;- ggplot(ToPlot, aes(x=Chimp.Mean.Expression, y=Chimp.Overdispersion)) +
@@ -722,7 +825,44 @@ LoessPlot &lt;- ggplot(ToPlot, aes(x=Chimp.Mean.Expression, y=Chimp.Overdispersi
   theme_bw()
 LoessPlot</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Ok, this is similar to what Abhishek has described as seeing, as well as <a href="https://www.cell.com/cell-systems/pdfExtended/S2405-4712(18)30278-3">Eling et al 2018</a>. Yoav still expressed skepticism that the correlation between species overdispersion is still due some technical aspect to expression levels. To rule that out as best as possible, similar to what I have done before, (and similar to Eling et al) I will regress out the expression level and see if the residual overdispersion <span class="math inline">\(\epsilon_j\)</span> is still well corellated.</p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-6-1.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ok, this is similar to what Abhishek has described as seeing, as well as <a href="https://www.cell.com/cell-systems/pdfExtended/S2405-4712(18)30278-3">Eling et al 2018</a>. I think it is still reasonable to be skeptical that the correlation between species overdispersion is still due some technical aspect to expression levels. To rule that out that possibility, similar to what I have done before, (and similar to Eling et al) I will regress out the expression level and check that the residual overdispersion <span class="math inline">\(\epsilon_j\)</span> is still well corellated between species.</p>
 <pre class="r"><code>ResidualDemoPlot &lt;- LoessPlot +
   geom_segment(aes(x=-21.125,xend=-21.125, y=0.35, yend=2.5),
   lineend = &quot;round&quot;, linejoin = &quot;round&quot;, color=&quot;brown&quot;,
@@ -731,6 +871,43 @@ LoessPlot</code></pre>
   annotate(&quot;text&quot;,x=-20,y=0.1, label=TeX(&quot;$\\epsilon_j$&quot;), hjust=1, vjust=-1, color=&quot;brown&quot;, size=10)
 ResidualDemoPlot</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-7-1.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>GetLoessResidual &lt;- function(x, y){
   loess.fit &lt;- loess(y ~ x, degree=1)
   #for our purposes, the fit with the default degree=2 looks like unnatural fit, especially near the edges
@@ -764,6 +941,43 @@ Overdispersion.Species.Correlation.Corrected &lt;- ggplot(ToPlot, aes(x=Chimp.Re
   theme_bw()
 Overdispersion.Species.Correlation.Corrected</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-2">
+Past versions of unnamed-chunk-7-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-7-2.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Ok so even when I regress out the affect of the mean, I still get a strong correlation of overdispersion between species. What is the biological meaning of this? Are certain gene groups more or less overdispersed in one species or another? What is a reasonable way to go about hypothesis testing for differentially overdispersed genes between species? How does this level of correlation of overdispersion compare to between tissues within human GTEx samples?</p>
 <p>First, to help with thinking about how to interpret overdispersed genes, let’s do GSEA to get a sense of what kinds of genes are highly overdispersed. My prediction is that overdispersed genes will have negative enrichment for essential and housekeeping genes.</p>
 <pre class="r"><code>gsea.full &lt;- function(NamedGeneVector, ...){
@@ -821,8 +1035,46 @@ OverdispersionGSEAPlot &lt;- GSEA.mean$Simplified %&gt;%
   scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 40, simplify = FALSE), paste, collapse=&quot;\n&quot;)) +
   labs(color = &quot;Adjusted P-value&quot;) +
   theme_bw()+ theme(legend.position=&quot;top&quot;)
-
-#Plot most significant categories
+OverdispersionGSEAPlot</code></pre>
+<p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-8-1.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>#Plot most significant categories
 GSEA.mean$Simplified %&gt;% 
   group_by(source) %&gt;%
   top_n(n = -5, wt = p.adjust) %&gt;%
@@ -839,7 +1091,7 @@ GSEA.mean$Simplified %&gt;%
   scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 60, simplify = FALSE), paste, collapse=&quot;\n&quot;)) +
   labs(color = &quot;Adjusted P-value&quot;) +
   theme_bw()</code></pre>
-<p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Consistent with that intuition, I would say the genes with low dispersion (negative enrichment) are words relating to essential processes, while MHC complex and other immune related words make sense in that they are associated with high overdispersion and these gene sets respond to random environmental insults that could contribute to population variation. Continuing with the idea that low overdispersion is related to important housekeeping genes, let’s check if lowly overdispersed genes are related to gene lists of essentiality (based on <a href="https://www.g3journal.org/content/7/8/2719">Hart et al</a>, a cell culture CRISPR screen experiment).</p>
 <pre class="r"><code>EssentialGenes &lt;- read.table(&quot;../data/lists/CEGv2_subset_universe.tsv&quot;, stringsAsFactors = F) %&gt;% pull(V1) %&gt;% mapIds(org.Hs.eg.db, keys=., keytype = &quot;SYMBOL&quot;, column=&quot;ENSEMBL&quot;)
 
@@ -864,8 +1116,45 @@ Essentiality$CultureEssentiality %&gt;% table()</code></pre>
     annotate(&quot;text&quot;, x = 0.5, y = 0.2, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=Essentiality, Human.Overdispersion ~ CultureEssentiality, alternative=&quot;less&quot;)$p.value, 2) )) +
     theme_bw()</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-9-1.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Although it seems that the vast majority of genes for which I estimated overdispersion are essential, from the 6 non essential genes, they do seem to have a significantly higher distribution of overdispersion estimates.</p>
-<p>Now let’s ask what types of genes are overdispersed in my chimp sample population relative to human sample population (and vice versa).</p>
+<p>Now let’s ask what types of genes are overdispersed in my chimp sample population relative to human sample population (and vice versa). Luckily for GSEA analysis I only need a ranked list, however, it might be useful in the future to figure how to formally test the hypothesis for each gene that <span class="math inline">\(\phi_{chimp}=\phi_{human}\)</span>.</p>
 <pre class="r"><code>OverdispersionSpeciesDifference &lt;- (log(ToPlot$Chimp.Overdispersion) - log(ToPlot$Human.Overdispersion))
 names(OverdispersionSpeciesDifference) &lt;- rownames(ToPlot)
 
@@ -888,6 +1177,43 @@ GSEA.Difference$Simplified %&gt;%
   labs(color = &quot;Adjusted P-value&quot;) +
   theme_bw()</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-10-1.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#Plot most significant categories
 GSEA.Difference$Simplified %&gt;% 
   group_by(source) %&gt;%
@@ -906,6 +1232,43 @@ GSEA.Difference$Simplified %&gt;%
   labs(color = &quot;Adjusted P-value&quot;) +
   theme_bw()</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-2">
+Past versions of unnamed-chunk-10-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-10-2.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Immune words seem to pop up as more overdispersed in chimp. Keep in mind that 7 of our chimps were HCV+ or HBV+. One day I will have to repeat this analysis after excluding those virus-challanged chimps.</p>
 <p>Next I am interested in comparing the level of correlation of gene-wise overdispersion statistics across GTEx tissues. The fact that I saw a correlation of (<span class="math inline">\(R^2=0.6\)</span>) across chimp and human seemed high to me, and I am interested in seeing how that compares across tissues within humans. Using a different Rscript, I have already generated a table of mu estimates and overdispersion estimates for each gene for each GTEx tissue using 40 samples per tissue. <a href="20191001_GtexAnnotations.html">Here</a> is more info on how I chose those samples (basically I excluded samples with different types of RNA-isolation methods for library prep and low mapping rates or RIN scores, then randomly selected 40 samples from the remaining set).</p>
 <pre class="r"><code>MuTable &lt;- read.table(&quot;../output/GTEx.Tissues.Mu.Matrix.txt.gz&quot;, header=T, sep=&#39;\t&#39;, check.names = F, row.names = 1) %&gt;%
@@ -931,6 +1294,43 @@ GtexScheme &lt;- plyr::mapvalues(row.names(OverdispersionCorrelationMatrix), fro
 
 OverdispersionCorrelationHeatmap &lt;- heatmap.2(OverdispersionCorrelationMatrix, trace=&quot;none&quot;, dendrogram=c(&quot;col&quot;), labCol=F, cexRow = 0.7, ColSideColors=GtexScheme, colRow = GtexScheme, adjRow=c(0,0), offsetRow=-0.6, main=&quot;overdispersion correlation matrix&quot;)</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-11-1.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>MeanCorrelationMatrix&lt;-ToPlot %&gt;% rownames_to_column() %&gt;%
   dplyr::select(rowname, Chimp.Mean.Expression, Human.Mean.Expression) %&gt;% 
   left_join(MuTable, by=c(&quot;rowname&quot;=&quot;gene&quot;)) %&gt;%
@@ -938,12 +1338,90 @@ OverdispersionCorrelationHeatmap &lt;- heatmap.2(OverdispersionCorrelationMatrix
   as.matrix() %&gt;% scale() %&gt;% cor(use=&quot;na.or.complete&quot;)
 MeanCorrelationHeatmap &lt;- heatmap.2(MeanCorrelationMatrix, trace=&quot;none&quot;, dendrogram=c(&quot;col&quot;), labCol=F, cexRow = 0.7, ColSideColors=GtexScheme, colRow = GtexScheme, adjRow=c(0,0), offsetRow=-0.6, main=&quot;mean expression correlation matrix&quot;)</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>plot_grid(OverdispersionGSEAPlot,
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-2">
+Past versions of unnamed-chunk-11-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-11-2.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Note that the clustering pattern for mean gene expression generally matches what GTEx had published in its pilot paper for clustering of tissues (heart ventricle, heart atrial appendage, skeletal muscle for a tight cluster, brain is a tight cluster, etc) and that my chimp heart dataset (which was processed a bit differently, with gene length and gene counts measurements coming only from orthologous exons) fall in that human heart cluster.</p>
+<p>However, the clustering pattern for overdispersion shows less resemblance to the mean expression (though I hypothesize it would look more like the mean expression pattern if we had less noisy estimates with larger sample sizes). Furthermore, my chimp and human heart datasets cluster tightly together, though they do not cluster with any of the GTEx datasets. Worth noting that of the GTEx tissues, my human heart overdispersion estimates and my chimp overdispersion datasets are closest to the overdispersion estimates from GTEx heart.</p>
+<p>Lastly, worth noting that the correlation coefficients of genewise dispersion between GTEx tissues is often in 0.4 to 0.6 range (Pearson <span class="math inline">\(R^2\)</span>), which is about what I calculated between my chimp and human heart tissues.</p>
+<pre class="r"><code># some plots mashed together into a single figure that could summarize this analysis
+plot_grid(OverdispersionGSEAPlot,
           Overdispersion.Species.Correlation,
           ResidualDemoPlot,
           Overdispersion.Species.Correlation.Corrected,
           labels = c(&#39;A&#39;, &#39;B&#39;, &#39;C&#39;), label_size = 12, scale=1, rel_heights = c(2,1))</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-12-1.png" target="_blank">71db33a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-03
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
