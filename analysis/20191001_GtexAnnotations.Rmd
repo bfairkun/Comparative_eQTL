@@ -1,0 +1,132 @@
+---
+title: "20191001_GtexAnnotations"
+author: "Ben Fair"
+date: "10/1/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+From my dataset of gene expression measurements across 39 chimp individuals (RNA-seq from heart tissue) and ~39 human individuals (~50 RNA-seq sampels randomly chosen from human GTEx datasets, then culled to exclude outliers and lowly sequenced samples) I am interested in quantifying gene expression dispersion within each population. I had [previously]() made the observation that gene expression overdispersion  is well correlated ($R^2\approx0.5$) between the two species, even after regressing out the fact that variance is correlated to expression (due to both biological and statstical reasons). This amount of correlation is higher than I would have guessed, given how small the overlap is between eGenes that I could detect. However, I still don't have a sense of what I should have expected. To gain some intuition on this, I would like to use other GTEx tissues to estimate gene-wise overdispersion parameters, and compare the correlation across tissues. First, let's peruse the GTEx samples available to us, to pick ~40 reasonable samples per tissue for this analysis.
+
+```{r}
+library(tidyverse)
+
+Samples <- read.table("../data/GTExAnnotations/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt", header=T, sep='\t', quote="")
+Subjects <- read.table("../data/GTExAnnotations/GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt", header=T, sep='\t')
+GtexColors <- read.table("../data/GTEx_Analysis_TissueColorCodes.txt", sep='\t', header=T, stringsAsFactors = F) %>% mutate(HEX=paste0("#",Color.code))
+
+TissueColorVector <- GtexColors$HEX
+names(TissueColorVector)<-GtexColors$Tissue
+
+#Num samples per tissue. Note that I may want to filter out some samples to draw from ones where experimental protocols (like RNA extraction method) were kept reasonably constant
+Samples %>%
+  filter(SMAFRZE=="RNASEQ") %>%
+  count(SMTSD,SMNABTCHT) %>%
+  filter(SMTSD %in% GtexColors$Tissue) %>% mutate(sum=sum(n)) %>%
+  ggplot(aes(x=SMTSD, y=n, fill=SMTSD, color=SMNABTCHT)) +
+    geom_col(show.legend = T) +
+    ylab("Number Samples") +
+    theme_bw() +
+    scale_fill_manual(values=TissueColorVector, guide=FALSE) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5)) +
+    theme(legend.position="top") +
+    guides(color=guide_legend(nrow=2,byrow=TRUE))
+
+
+#Histogram of mapping rate
+hist(Samples$SMMAPRT)
+
+#Histogram of rRNA mapping rate
+hist(Samples$SMRRNART)
+
+#Histogram of exonic mapping rate
+hist(Samples$SMEXNCRT)
+
+#Histogram of mapped library size
+hist(log10(Samples$SMMPPD))
+
+#RIN score
+hist(Samples$SMRIN)
+
+#types of library preps
+table(Samples$SMGEBTCHT)
+
+#types of nucleic acid preps
+table(Samples$SMNABTCHT)
+
+#sample type. RNASEQ type was deemed suitable for GTEx v8 eQTL calling
+table(Samples$SMAFRZE)
+
+#Now let's randomly pick ~40 samples that are  TruSeq.v1 and have coverage comparable to my ChimpSamples (~70M mapped reads), and are similar in other metrics (RNA Extraction from Paxgene-derived Lysate Plate Based).
+
+
+
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+# Apply filters, like keeping RNA-extraction method consistent within tissue, minimum mapping rate, etc.
+SamplesFilteredForTissuesSuitableForAnalysis <- Samples %>%
+  mutate(IndidualID=gsub("GTEX-(\\w+)-.+", "\\1", SAMPID, perl=T)) %>%
+  # filter(SMNABTCHT %in% c("RNA Extraction from Paxgene-derived Lysate Plate Based")) %>%
+  filter(SMAFRZE=="RNASEQ") %>%
+  group_by(SMTSD) %>%
+  mutate(c=Mode(SMNABTCHT)) %>%
+  filter(quantile(SMMPPD, 0.1)<SMMPPD &
+        quantile(SMMAPRT, 0.1)<SMMAPRT &
+        quantile(SMRIN, 0.1)<SMRIN) %>%
+  ungroup() %>%
+  filter(SMNABTCHT==c) %>%
+  add_count(SMTSD, name="CountBeforeSampling") %>%
+  filter(SMTSD %in% GtexColors$Tissue) %>%
+  filter(CountBeforeSampling>40)
+
+# Acceptable samples to draw from.
+SamplesFilteredForTissuesSuitableForAnalysis %>%
+  group_by(SMTSD) %>%
+  count(SMTSD, SMNABTCHT) %>%
+  ggplot(aes(x=SMTSD, y=n, fill=SMTSD, color=SMNABTCHT)) +
+    geom_col(show.legend = T) +
+    ylab("Number Samples") +
+    theme_bw() +
+    scale_fill_manual(values=TissueColorVector, guide=FALSE) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5)) +
+    theme(legend.position="top") +
+    guides(color=guide_legend(nrow=2,byrow=TRUE))
+
+# Samples drawn at random to keep sample size consistent
+set.seed(0)
+SuitableSubsample <- SamplesFilteredForTissuesSuitableForAnalysis  %>%
+  group_by(SMTSD) %>%
+  sample_n(40) %>% ungroup()
+SuitableSubsample %>%
+  count(SMTSD, SMNABTCHT) %>%
+  ggplot(aes(x=SMTSD, y=n, fill=SMTSD, color=SMNABTCHT)) +
+    geom_col(show.legend = T) +
+    ylab("Number Samples") +
+    theme_bw() +
+    scale_fill_manual(values=TissueColorVector, guide=FALSE) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5)) +
+    theme(legend.position="top") +
+    guides(color=guide_legend(nrow=2,byrow=TRUE))
+
+#How many tissues exist for this analysis
+SuitableSubsample %>% distinct(SMTSD) %>% dim()
+
+# How many times do the same individuals show up in multiple tissues for this subsample?
+SuitableSubsample %>% select(SAMPID, SMTSD, IndidualID) %>%
+  count(IndidualID) %>% pull(n) %>% hist(ylab="#individuals with X tissues in subsample")
+
+#Could be worth also making a subsample of the same 40 people for all tissues.
+#Unfortunately that wouldn't be possible. Would need to consider less tissues, or less individuals.
+SamplesFilteredForTissuesSuitableForAnalysis %>%
+  count(IndidualID) %>% pull(n) %>% hist(ylab="#individuals with X tissues in subsample")
+
+SuitableSubsample %>% select(SAMPID, SMTSD, IndidualID) %>%
+  write.table("../data/OverdispersionGTExAnalysisSampleList.txt", sep="\t", quote=F, row.names = F)
+```
+
