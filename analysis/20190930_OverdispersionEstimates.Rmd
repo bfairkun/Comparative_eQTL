@@ -25,6 +25,8 @@ library(enrichplot)
 library(cowplot)
 library('latex2exp')
 library(gdata)
+library(readxl)
+
 
 # custom functions to read count tables, estimate overdispersion based on Abhishek's code snippets
 source("../code/CustomFunctions.R")
@@ -269,6 +271,35 @@ Essentiality$CultureEssentiality %>% table()
 ```
 
 Although it seems that the vast majority of genes for which I estimated overdispersion are essential, from the 6 non essential genes, they do seem to have a significantly higher distribution of overdispersion estimates.
+
+Perhaps I should use [Lek et al](https://www.nature.com/articles/nature19057)'s pLI score instead to do a similar comparison between LoF intolerant and LoF tolerant genes.
+
+```{r}
+pLI.data <- as.data.frame(read_excel("../data/Lek_etal_nature19057-SI Table 13.xlsx", sheet=2))
+
+
+EssentialGenes <- pLI.data %>% filter(pLI>0.9) %>% pull(gene) %>% mapIds(org.Hs.eg.db, keys=., keytype = "SYMBOL", column="ENSEMBL")
+
+NonEssentialGenes <- pLI.data %>% filter(pLI<0.1) %>% pull(gene) %>% mapIds(org.Hs.eg.db, keys=., keytype = "SYMBOL", column="ENSEMBL")
+
+Essentiality <- ToPlot %>%
+  rownames_to_column() %>%
+  mutate(pLI.Score.essentiality=case_when(
+    rowname %in% EssentialGenes ~ "Essential",
+    rowname %in% NonEssentialGenes ~ "NonEssential")) %>%
+  filter(pLI.Score.essentiality %in% c("Essential", "NonEssential"))
+
+Essentiality$pLI.Score.essentiality %>% table()
+
+  ggplot(Essentiality, aes(color=pLI.Score.essentiality,x=Human.Overdispersion)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous(trans='log10') +
+    ylab("Cumulative frequency") +
+    annotate("text", x = 0.5, y = 0.2, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=Essentiality, Human.Overdispersion ~ pLI.Score.essentiality, alternative="less")$p.value, 2) )) +
+    theme_bw()
+```
+
+Ok, same general conclusion holds. Loss of function tolerant genes are more overdispersed.
 
 Now let's ask what types of genes are overdispersed in my chimp sample population relative to human sample population (and vice versa). Luckily for GSEA analysis I only need a ranked list, however, it might be useful in the future to figure how to formally test the hypothesis for each gene that $\phi_{chimp}=\phi_{human}$.
 

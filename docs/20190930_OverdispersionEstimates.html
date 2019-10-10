@@ -444,7 +444,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-04
+<strong>Last updated:</strong> 2019-10-10
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -535,10 +535,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree71db33a2a4e18c3fed650e74c106b7aa32810f74targetblank71db33aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/71db33a2a4e18c3fed650e74c106b7aa32810f74" target="_blank">71db33a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree0ec290ac01f0befeccc6e8b14b033ed20e36eebbtargetblank0ec290aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/0ec290ac01f0befeccc6e8b14b033ed20e36eebb" target="_blank">0ec290a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree71db33a2a4e18c3fed650e74c106b7aa32810f74targetblank71db33aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree0ec290ac01f0befeccc6e8b14b033ed20e36eebbtargetblank0ec290aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -557,6 +557,11 @@ Ignored files:
     Ignored:    data/PastAnalysesDataToKeep/.DS_Store
     Ignored:    docs/.DS_Store
     Ignored:    docs/assets/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/20190930_OverdispersionEstimates_HBV_excluded.Rmd
+    Untracked:  data/Lek_etal_nature19057-SI Table 13.xlsx
+    Untracked:  docs/figure/20190930_OverdispersionEstimates_HBV_excluded.Rmd/
 
 Unstaged changes:
     Modified:   analysis/20190930_OverdispersionEstimates.Rmd
@@ -598,6 +603,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0ec290ac01f0befeccc6e8b14b033ed20e36eebb/analysis/20190930_OverdispersionEstimates.Rmd" target="_blank">0ec290a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-04
+</td>
+<td>
+update overdispersion analysis
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/0ec290ac01f0befeccc6e8b14b033ed20e36eebb/docs/20190930_OverdispersionEstimates.html" target="_blank">0ec290a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-04
+</td>
+<td>
+update overdispersion analysis
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -670,6 +709,8 @@ library(enrichplot)
 library(cowplot)
 library(&#39;latex2exp&#39;)
 library(gdata)
+library(readxl)
+
 
 # custom functions to read count tables, estimate overdispersion based on Abhishek&#39;s code snippets
 source(&quot;../code/CustomFunctions.R&quot;)</code></pre>
@@ -1061,6 +1102,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0ec290ac01f0befeccc6e8b14b033ed20e36eebb/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-8-1.png" target="_blank">0ec290a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-04
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-8-1.png" target="_blank">71db33a</a>
 </td>
 <td>
@@ -1092,6 +1144,43 @@ GSEA.mean$Simplified %&gt;%
   labs(color = &quot;Adjusted P-value&quot;) +
   theme_bw()</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-2">
+Past versions of unnamed-chunk-8-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0ec290ac01f0befeccc6e8b14b033ed20e36eebb/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-8-2.png" target="_blank">0ec290a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-04
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Consistent with that intuition, I would say the genes with low dispersion (negative enrichment) are words relating to essential processes, while MHC complex and other immune related words make sense in that they are associated with high overdispersion and these gene sets respond to random environmental insults that could contribute to population variation. Continuing with the idea that low overdispersion is related to important housekeeping genes, let’s check if lowly overdispersed genes are related to gene lists of essentiality (based on <a href="https://www.g3journal.org/content/7/8/2719">Hart et al</a>, a cell culture CRISPR screen experiment).</p>
 <pre class="r"><code>EssentialGenes &lt;- read.table(&quot;../data/lists/CEGv2_subset_universe.tsv&quot;, stringsAsFactors = F) %&gt;% pull(V1) %&gt;% mapIds(org.Hs.eg.db, keys=., keytype = &quot;SYMBOL&quot;, column=&quot;ENSEMBL&quot;)
 
@@ -1154,28 +1243,31 @@ Benjmain Fair
 </div>
 </div>
 <p>Although it seems that the vast majority of genes for which I estimated overdispersion are essential, from the 6 non essential genes, they do seem to have a significantly higher distribution of overdispersion estimates.</p>
-<p>Now let’s ask what types of genes are overdispersed in my chimp sample population relative to human sample population (and vice versa). Luckily for GSEA analysis I only need a ranked list, however, it might be useful in the future to figure how to formally test the hypothesis for each gene that <span class="math inline">\(\phi_{chimp}=\phi_{human}\)</span>.</p>
-<pre class="r"><code>OverdispersionSpeciesDifference &lt;- (log(ToPlot$Chimp.Overdispersion) - log(ToPlot$Human.Overdispersion))
-names(OverdispersionSpeciesDifference) &lt;- rownames(ToPlot)
-
-GSEA.Difference &lt;-gsea.full(OverdispersionSpeciesDifference)
+<p>Perhaps I should use <a href="https://www.nature.com/articles/nature19057">Lek et al</a>’s pLI score instead to do a similar comparison between LoF intolerant and LoF tolerant genes.</p>
+<pre class="r"><code>pLI.data &lt;- as.data.frame(read_excel(&quot;../data/Lek_etal_nature19057-SI Table 13.xlsx&quot;, sheet=2))
 
 
-#Plot most enriched categories (absolute value of enrichment score, with p.adjust&gt;0.05)
-GSEA.Difference$Simplified %&gt;% 
-  group_by(source) %&gt;%
-  top_n(n = 15, wt = abs(enrichmentScore)) %&gt;%
-  ungroup() %&gt;%
-  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
-  geom_point() +
-  xlim(c(-1,1)) +
-  facet_grid(source~., scales = &quot;free&quot;) +
-  scale_colour_gradient(low=&quot;red&quot;, high=&quot;black&quot;) +
-  facet_grid(source~., scales = &quot;free&quot;) +
-  xlab(&quot;Enrichment\nOverdispersedInHuman&lt;--&gt;OverdispersedInChimp&quot;) +
-  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 60, simplify = FALSE), paste, collapse=&quot;\n&quot;)) +
-  labs(color = &quot;Adjusted P-value&quot;) +
-  theme_bw()</code></pre>
+EssentialGenes &lt;- pLI.data %&gt;% filter(pLI&gt;0.9) %&gt;% pull(gene) %&gt;% mapIds(org.Hs.eg.db, keys=., keytype = &quot;SYMBOL&quot;, column=&quot;ENSEMBL&quot;)
+
+NonEssentialGenes &lt;- pLI.data %&gt;% filter(pLI&lt;0.1) %&gt;% pull(gene) %&gt;% mapIds(org.Hs.eg.db, keys=., keytype = &quot;SYMBOL&quot;, column=&quot;ENSEMBL&quot;)
+
+Essentiality &lt;- ToPlot %&gt;%
+  rownames_to_column() %&gt;%
+  mutate(pLI.Score.essentiality=case_when(
+    rowname %in% EssentialGenes ~ &quot;Essential&quot;,
+    rowname %in% NonEssentialGenes ~ &quot;NonEssential&quot;)) %&gt;%
+  filter(pLI.Score.essentiality %in% c(&quot;Essential&quot;, &quot;NonEssential&quot;))
+
+Essentiality$pLI.Score.essentiality %&gt;% table()</code></pre>
+<pre><code>.
+   Essential NonEssential 
+        2389         5665 </code></pre>
+<pre class="r"><code>  ggplot(Essentiality, aes(color=pLI.Score.essentiality,x=Human.Overdispersion)) +
+    stat_ecdf(geom = &quot;step&quot;) +
+    scale_x_continuous(trans=&#39;log10&#39;) +
+    ylab(&quot;Cumulative frequency&quot;) +
+    annotate(&quot;text&quot;, x = 0.5, y = 0.2, label = paste(&quot;Mann-Whitney\none-sided P =&quot;, signif(wilcox.test(data=Essentiality, Human.Overdispersion ~ pLI.Score.essentiality, alternative=&quot;less&quot;)$p.value, 2) )) +
+    theme_bw()</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
@@ -1214,13 +1306,19 @@ Benjmain Fair
 </table>
 </div>
 </div>
-<pre class="r"><code>#Plot most significant categories
+<p>Ok, same general conclusion holds. Loss of function tolerant genes are more overdispersed.</p>
+<p>Now let’s ask what types of genes are overdispersed in my chimp sample population relative to human sample population (and vice versa). Luckily for GSEA analysis I only need a ranked list, however, it might be useful in the future to figure how to formally test the hypothesis for each gene that <span class="math inline">\(\phi_{chimp}=\phi_{human}\)</span>.</p>
+<pre class="r"><code>OverdispersionSpeciesDifference &lt;- (log(ToPlot$Chimp.Overdispersion) - log(ToPlot$Human.Overdispersion))
+names(OverdispersionSpeciesDifference) &lt;- rownames(ToPlot)
+
+GSEA.Difference &lt;-gsea.full(OverdispersionSpeciesDifference)
+
+
+#Plot most enriched categories (absolute value of enrichment score, with p.adjust&gt;0.05)
 GSEA.Difference$Simplified %&gt;% 
   group_by(source) %&gt;%
-  top_n(n = -15, wt = p.adjust) %&gt;%
+  top_n(n = 15, wt = abs(enrichmentScore)) %&gt;%
   ungroup() %&gt;%
-  group_by(source) %&gt;%
-  sample_n(8) %&gt;%
   ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
   geom_point() +
   xlim(c(-1,1)) +
@@ -1231,68 +1329,6 @@ GSEA.Difference$Simplified %&gt;%
   scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 60, simplify = FALSE), paste, collapse=&quot;\n&quot;)) +
   labs(color = &quot;Adjusted P-value&quot;) +
   theme_bw()</code></pre>
-<p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-2">
-Past versions of unnamed-chunk-10-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-10-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/bfairkun/Comparative_eQTL/blob/71db33a2a4e18c3fed650e74c106b7aa32810f74/docs/figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-10-2.png" target="_blank">71db33a</a>
-</td>
-<td>
-Benjmain Fair
-</td>
-<td>
-2019-10-03
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Immune words seem to pop up as more overdispersed in chimp. Keep in mind that 7 of our chimps were HCV+ or HBV+. One day I will have to repeat this analysis after excluding those virus-challanged chimps.</p>
-<p>Next I am interested in comparing the level of correlation of gene-wise overdispersion statistics across GTEx tissues. The fact that I saw a correlation of (<span class="math inline">\(R^2=0.6\)</span>) across chimp and human seemed high to me, and I am interested in seeing how that compares across tissues within humans. Using a different Rscript, I have already generated a table of mu estimates and overdispersion estimates for each gene for each GTEx tissue using 40 samples per tissue. <a href="20191001_GtexAnnotations.html">Here</a> is more info on how I chose those samples (basically I excluded samples with different types of RNA-isolation methods for library prep and low mapping rates or RIN scores, then randomly selected 40 samples from the remaining set).</p>
-<pre class="r"><code>MuTable &lt;- read.table(&quot;../output/GTEx.Tissues.Mu.Matrix.txt.gz&quot;, header=T, sep=&#39;\t&#39;, check.names = F, row.names = 1) %&gt;%
-  rownames_to_column(&quot;X&quot;) %&gt;%
-  mutate(gene = gsub(&quot;\\.\\d+&quot;, &quot;&quot;, X, perl=T)) %&gt;% dplyr::select(-X)
-OverdispersionTable &lt;- read.table(&quot;../output/GTEx.Tissues.Overdispersion.Matrix.txt.gz&quot;, header=T, sep=&#39;\t&#39;, check.names = F, row.names = 1) %&gt;%
-  rownames_to_column(&quot;X&quot;)  %&gt;% 
-  mutate(gene = gsub(&quot;\\.\\d+&quot;, &quot;&quot;, X, perl=T)) %&gt;% dplyr::select(-X)
-
-OverdispersionCorrelationMatrix&lt;-ToPlot %&gt;% rownames_to_column() %&gt;%
-  dplyr::select(rowname, Chimp.Overdispersion, Human.Overdispersion) %&gt;% 
-  left_join(OverdispersionTable, by=c(&quot;rowname&quot;=&quot;gene&quot;)) %&gt;%
-  column_to_rownames() %&gt;%
-  as.matrix() %&gt;% scale() %&gt;% cor(use=&quot;na.or.complete&quot;)
-
-GtexColors &lt;- read.table(&quot;../data/GTEx_Analysis_TissueColorCodes.txt&quot;, sep=&#39;\t&#39;, header=T, stringsAsFactors = F) %&gt;% mutate(HEX=paste0(&quot;#&quot;,Color.code))
-GtexColors[nrow(GtexColors) + 1,] = c(&quot;Chimp.Mean.Expression&quot;,&quot;black&quot;, &quot;#000000&quot;)
-GtexColors[nrow(GtexColors) + 1,] = c(&quot;Human.Mean.Expression&quot;,&quot;black&quot;, &quot;#000000&quot;)
-GtexColors[nrow(GtexColors) + 1,] = c(&quot;Chimp.Overdispersion&quot;,&quot;black&quot;, &quot;#000000&quot;)
-GtexColors[nrow(GtexColors) + 1,] = c(&quot;Human.Overdispersion&quot;,&quot;black&quot;, &quot;#000000&quot;)
-
-GtexScheme &lt;- plyr::mapvalues(row.names(OverdispersionCorrelationMatrix), from=GtexColors$Tissue, to=GtexColors$HEX)
-
-OverdispersionCorrelationHeatmap &lt;- heatmap.2(OverdispersionCorrelationMatrix, trace=&quot;none&quot;, dendrogram=c(&quot;col&quot;), labCol=F, cexRow = 0.7, ColSideColors=GtexScheme, colRow = GtexScheme, adjRow=c(0,0), offsetRow=-0.6, main=&quot;overdispersion correlation matrix&quot;)</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
@@ -1331,12 +1367,23 @@ Benjmain Fair
 </table>
 </div>
 </div>
-<pre class="r"><code>MeanCorrelationMatrix&lt;-ToPlot %&gt;% rownames_to_column() %&gt;%
-  dplyr::select(rowname, Chimp.Mean.Expression, Human.Mean.Expression) %&gt;% 
-  left_join(MuTable, by=c(&quot;rowname&quot;=&quot;gene&quot;)) %&gt;%
-  column_to_rownames() %&gt;%
-  as.matrix() %&gt;% scale() %&gt;% cor(use=&quot;na.or.complete&quot;)
-MeanCorrelationHeatmap &lt;- heatmap.2(MeanCorrelationMatrix, trace=&quot;none&quot;, dendrogram=c(&quot;col&quot;), labCol=F, cexRow = 0.7, ColSideColors=GtexScheme, colRow = GtexScheme, adjRow=c(0,0), offsetRow=-0.6, main=&quot;mean expression correlation matrix&quot;)</code></pre>
+<pre class="r"><code>#Plot most significant categories
+GSEA.Difference$Simplified %&gt;% 
+  group_by(source) %&gt;%
+  top_n(n = -15, wt = p.adjust) %&gt;%
+  ungroup() %&gt;%
+  group_by(source) %&gt;%
+  sample_n(8) %&gt;%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  facet_grid(source~., scales = &quot;free&quot;) +
+  scale_colour_gradient(low=&quot;red&quot;, high=&quot;black&quot;) +
+  facet_grid(source~., scales = &quot;free&quot;) +
+  xlab(&quot;Enrichment\nOverdispersedInHuman&lt;--&gt;OverdispersedInChimp&quot;) +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 60, simplify = FALSE), paste, collapse=&quot;\n&quot;)) +
+  labs(color = &quot;Adjusted P-value&quot;) +
+  theme_bw()</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-2">
@@ -1375,15 +1422,30 @@ Benjmain Fair
 </table>
 </div>
 </div>
-<p>Note that the clustering pattern for mean gene expression generally matches what GTEx had published in its pilot paper for clustering of tissues (heart ventricle, heart atrial appendage, skeletal muscle for a tight cluster, brain is a tight cluster, etc) and that my chimp heart dataset (which was processed a bit differently, with gene length and gene counts measurements coming only from orthologous exons) fall in that human heart cluster.</p>
-<p>However, the clustering pattern for overdispersion shows less resemblance to the mean expression (though I hypothesize it would look more like the mean expression pattern if we had less noisy estimates with larger sample sizes). Furthermore, my chimp and human heart datasets cluster tightly together, though they do not cluster with any of the GTEx datasets. Worth noting that of the GTEx tissues, my human heart overdispersion estimates and my chimp overdispersion datasets are closest to the overdispersion estimates from GTEx heart.</p>
-<p>Lastly, worth noting that the correlation coefficients of genewise dispersion between GTEx tissues is often in 0.4 to 0.6 range (Pearson <span class="math inline">\(R^2\)</span>), which is about what I calculated between my chimp and human heart tissues.</p>
-<pre class="r"><code># some plots mashed together into a single figure that could summarize this analysis
-plot_grid(OverdispersionGSEAPlot,
-          Overdispersion.Species.Correlation,
-          ResidualDemoPlot,
-          Overdispersion.Species.Correlation.Corrected,
-          labels = c(&#39;A&#39;, &#39;B&#39;, &#39;C&#39;), label_size = 12, scale=1, rel_heights = c(2,1))</code></pre>
+<p>Immune words seem to pop up as more overdispersed in chimp. Keep in mind that 7 of our chimps were HCV+ or HBV+. One day I will have to repeat this analysis after excluding those virus-challanged chimps.</p>
+<p>Next I am interested in comparing the level of correlation of gene-wise overdispersion statistics across GTEx tissues. The fact that I saw a correlation of (<span class="math inline">\(R^2=0.6\)</span>) across chimp and human seemed high to me, and I am interested in seeing how that compares across tissues within humans. Using a different Rscript, I have already generated a table of mu estimates and overdispersion estimates for each gene for each GTEx tissue using 40 samples per tissue. <a href="20191001_GtexAnnotations.html">Here</a> is more info on how I chose those samples (basically I excluded samples with different types of RNA-isolation methods for library prep and low mapping rates or RIN scores, then randomly selected 40 samples from the remaining set).</p>
+<pre class="r"><code>MuTable &lt;- read.table(&quot;../output/GTEx.Tissues.Mu.Matrix.txt.gz&quot;, header=T, sep=&#39;\t&#39;, check.names = F, row.names = 1) %&gt;%
+  rownames_to_column(&quot;X&quot;) %&gt;%
+  mutate(gene = gsub(&quot;\\.\\d+&quot;, &quot;&quot;, X, perl=T)) %&gt;% dplyr::select(-X)
+OverdispersionTable &lt;- read.table(&quot;../output/GTEx.Tissues.Overdispersion.Matrix.txt.gz&quot;, header=T, sep=&#39;\t&#39;, check.names = F, row.names = 1) %&gt;%
+  rownames_to_column(&quot;X&quot;)  %&gt;% 
+  mutate(gene = gsub(&quot;\\.\\d+&quot;, &quot;&quot;, X, perl=T)) %&gt;% dplyr::select(-X)
+
+OverdispersionCorrelationMatrix&lt;-ToPlot %&gt;% rownames_to_column() %&gt;%
+  dplyr::select(rowname, Chimp.Overdispersion, Human.Overdispersion) %&gt;% 
+  left_join(OverdispersionTable, by=c(&quot;rowname&quot;=&quot;gene&quot;)) %&gt;%
+  column_to_rownames() %&gt;%
+  as.matrix() %&gt;% scale() %&gt;% cor(use=&quot;na.or.complete&quot;)
+
+GtexColors &lt;- read.table(&quot;../data/GTEx_Analysis_TissueColorCodes.txt&quot;, sep=&#39;\t&#39;, header=T, stringsAsFactors = F) %&gt;% mutate(HEX=paste0(&quot;#&quot;,Color.code))
+GtexColors[nrow(GtexColors) + 1,] = c(&quot;Chimp.Mean.Expression&quot;,&quot;black&quot;, &quot;#000000&quot;)
+GtexColors[nrow(GtexColors) + 1,] = c(&quot;Human.Mean.Expression&quot;,&quot;black&quot;, &quot;#000000&quot;)
+GtexColors[nrow(GtexColors) + 1,] = c(&quot;Chimp.Overdispersion&quot;,&quot;black&quot;, &quot;#000000&quot;)
+GtexColors[nrow(GtexColors) + 1,] = c(&quot;Human.Overdispersion&quot;,&quot;black&quot;, &quot;#000000&quot;)
+
+GtexScheme &lt;- plyr::mapvalues(row.names(OverdispersionCorrelationMatrix), from=GtexColors$Tissue, to=GtexColors$HEX)
+
+OverdispersionCorrelationHeatmap &lt;- heatmap.2(OverdispersionCorrelationMatrix, trace=&quot;none&quot;, dendrogram=c(&quot;col&quot;), labCol=F, cexRow = 0.7, ColSideColors=GtexScheme, colRow = GtexScheme, adjRow=c(0,0), offsetRow=-0.6, main=&quot;overdispersion correlation matrix&quot;)</code></pre>
 <p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
@@ -1422,6 +1484,23 @@ Benjmain Fair
 </table>
 </div>
 </div>
+<pre class="r"><code>MeanCorrelationMatrix&lt;-ToPlot %&gt;% rownames_to_column() %&gt;%
+  dplyr::select(rowname, Chimp.Mean.Expression, Human.Mean.Expression) %&gt;% 
+  left_join(MuTable, by=c(&quot;rowname&quot;=&quot;gene&quot;)) %&gt;%
+  column_to_rownames() %&gt;%
+  as.matrix() %&gt;% scale() %&gt;% cor(use=&quot;na.or.complete&quot;)
+MeanCorrelationHeatmap &lt;- heatmap.2(MeanCorrelationMatrix, trace=&quot;none&quot;, dendrogram=c(&quot;col&quot;), labCol=F, cexRow = 0.7, ColSideColors=GtexScheme, colRow = GtexScheme, adjRow=c(0,0), offsetRow=-0.6, main=&quot;mean expression correlation matrix&quot;)</code></pre>
+<p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-12-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Note that the clustering pattern for mean gene expression generally matches what GTEx had published in its pilot paper for clustering of tissues (heart ventricle, heart atrial appendage, skeletal muscle for a tight cluster, brain is a tight cluster, etc) and that my chimp heart dataset (which was processed a bit differently, with gene length and gene counts measurements coming only from orthologous exons) fall in that human heart cluster.</p>
+<p>However, the clustering pattern for overdispersion shows less resemblance to the mean expression (though I hypothesize it would look more like the mean expression pattern if we had less noisy estimates with larger sample sizes). Furthermore, my chimp and human heart datasets cluster tightly together, though they do not cluster with any of the GTEx datasets. Worth noting that of the GTEx tissues, my human heart overdispersion estimates and my chimp overdispersion datasets are closest to the overdispersion estimates from GTEx heart.</p>
+<p>Lastly, worth noting that the correlation coefficients of genewise dispersion between GTEx tissues is often in 0.4 to 0.6 range (Pearson <span class="math inline">\(R^2\)</span>), which is about what I calculated between my chimp and human heart tissues.</p>
+<pre class="r"><code># some plots mashed together into a single figure that could summarize this analysis
+plot_grid(OverdispersionGSEAPlot,
+          Overdispersion.Species.Correlation,
+          ResidualDemoPlot,
+          Overdispersion.Species.Correlation.Corrected,
+          labels = c(&#39;A&#39;, &#39;B&#39;, &#39;C&#39;), label_size = 12, scale=1, rel_heights = c(2,1))</code></pre>
+<p><img src="figure/20190930_OverdispersionEstimates.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1446,15 +1525,16 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] MASS_7.3-51.4          gdata_2.18.0           latex2exp_0.4.0       
- [4] cowplot_0.9.4          enrichplot_1.2.0       org.Hs.eg.db_3.7.0    
- [7] AnnotationDbi_1.44.0   IRanges_2.16.0         S4Vectors_0.20.1      
-[10] Biobase_2.42.0         BiocGenerics_0.28.0    clusterProfiler_3.10.1
-[13] gplots_3.0.1.1         corrplot_0.84          edgeR_3.24.3          
-[16] limma_3.38.3           knitr_1.23             forcats_0.4.0         
-[19] stringr_1.4.0          dplyr_0.8.1            purrr_0.3.2           
-[22] readr_1.3.1            tidyr_0.8.3            tibble_2.1.3          
-[25] ggplot2_3.1.1          tidyverse_1.2.1        plyr_1.8.4            
+ [1] MASS_7.3-51.4          readxl_1.3.1           gdata_2.18.0          
+ [4] latex2exp_0.4.0        cowplot_0.9.4          enrichplot_1.2.0      
+ [7] org.Hs.eg.db_3.7.0     AnnotationDbi_1.44.0   IRanges_2.16.0        
+[10] S4Vectors_0.20.1       Biobase_2.42.0         BiocGenerics_0.28.0   
+[13] clusterProfiler_3.10.1 gplots_3.0.1.1         corrplot_0.84         
+[16] edgeR_3.24.3           limma_3.38.3           knitr_1.23            
+[19] forcats_0.4.0          stringr_1.4.0          dplyr_0.8.1           
+[22] purrr_0.3.2            readr_1.3.1            tidyr_0.8.3           
+[25] tibble_2.1.3           ggplot2_3.1.1          tidyverse_1.2.1       
+[28] plyr_1.8.4            
 
 loaded via a namespace (and not attached):
  [1] fgsea_1.8.0         colorspace_1.4-1    ggridges_0.5.1     
@@ -1485,9 +1565,9 @@ loaded via a namespace (and not attached):
 [76] withr_2.1.2         modelr_0.1.4        crayon_1.3.4       
 [79] KernSmooth_2.23-15  rmarkdown_1.13      viridis_0.5.1      
 [82] progress_1.2.2      locfit_1.5-9.1      grid_3.5.1         
-[85] readxl_1.3.1        data.table_1.12.2   blob_1.1.1         
-[88] git2r_0.25.2        digest_0.6.19       gridGraphics_0.4-1 
-[91] munsell_0.5.0       viridisLite_0.3.0   ggplotify_0.0.3    </code></pre>
+[85] data.table_1.12.2   blob_1.1.1          git2r_0.25.2       
+[88] digest_0.6.19       gridGraphics_0.4-1  munsell_0.5.0      
+[91] viridisLite_0.3.0   ggplotify_0.0.3    </code></pre>
 </div>
 
 
