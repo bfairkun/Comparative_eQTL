@@ -59,3 +59,6 @@ OverdispersionMatrix %>% as.data.frame() %>%
 
 # OverdispersionMatrix %>% as.data.frame() %>%
 #   write.table("../../output/GTEx.Tissues.Overdispersion.Matrix.txt", sep='\t', quote = F, col.names = NA)
+# heatmap.2(B, trace="none", dendrogram=c("col"), labCol=F, cexRow = 0.7)
+# heatmap.2(A, trace="none", dendrogram=c("col"), labCol=F, cexRow = 0.7)
+

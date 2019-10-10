@@ -153,3 +153,10 @@ PowerAnalysis:
 
 LocusZoomDirectoryPath:
     "/project2/gilad/bjf79_project1/software/locusZoomWithLD/locuszoom/"
+
+GTEx_eQTL_mapping:
+    vcf: "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz"
+    covariates: "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Heart_Left_Ventricle.v8.covariates.txt"
+    phenotypes: "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Heart_Left_Ventricle.v8.normalized_expression.bed.gz"
+    chunks: 100
+

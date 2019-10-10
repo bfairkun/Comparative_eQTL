@@ -117,6 +117,22 @@ rule Annotate_vcf:
         tabix -p vcf {output.vcf} 2>> {log}
         """
 
+rule Split_AnnotatedVcfByChrom:
+    input:
+        vcf = "PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz",
+        tbi = "PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz.tbi"
+    output:
+        vcf = "PopulationSubstructure/ReferencePanelMerged.annotated.splits/{chromosome}.vcf",
+        tbi = "PopulationSubstructure/ReferencePanelMerged.annotated.splits/{chromosome}.vcf.tbi"
+    log:
+        "logs/populationsubstructure/Split_AnnotatedVcfByChrom/{chromosome}.log"
+    shell:
+        """
+        bcftools view -O z -r {wildcards.chromosome} {input.vcf} > {output.vcf} 2> {log}
+        tabix -p vcf {output.vcf} 2>> {log}
+        """
+
+
 rule MakePlinkBed:
     """
     bed is required for for admixture. tped is for REAP. geno 0 parameter to include snps with 0% missing genotypes

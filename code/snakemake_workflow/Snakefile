@@ -5,11 +5,13 @@ include: "rules/common.smk"
 rule all:
     input:
         "OverdispersionAnalysis/TableSubset.txt",
-        "OverdispersionAnalysis/GtexTissueMatrix.overdispersion.txt",
+        expand("PopulationSubstructure/ReferencePanelMerged.annotated.splits/{chromosome}.vcf", chromosome=contigs),
+        "../../output/ChimpEgenes.eigenMT.txt.gz",
+        # "OverdispersionAnalysis/GtexTissueMatrix.overdispersion.txt",
         "OverdispersionAnalysis/GTEx.genelengths.txt",
         # "eQTL_mapping/SharedPolymorphisms/MatchedSNPsToTest.vcf.gz",
         "OverdispersionAnalysis/FullCountTable.txt.gz",
-        # "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/PermutationsCombined.txt",
+        "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/PermutationsCombined.txt",
         "../../output/TissueSpecificity/tau.log.txt",
         "MiscOutput/HumanVcfs/YRI.hg38.vcf.gz",
         "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps",

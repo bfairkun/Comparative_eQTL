@@ -546,16 +546,73 @@ rule eQTL_permutations:
         Rscript scripts/MatrixEqtl_Cis_Permutations.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {params.NumberPermutations} {params.InitialSeed} 250000 > {log}
         """
 
-
+LastChunk=int(config["eQTL_mapping"]["NumberPermutationChunks"])-1
 rule MergePermutationChunks:
     input:
         Chunks = expand("eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Permutations/Chunk.{n}.txt", n=range(0, int(config["eQTL_mapping"]["NumberPermutationChunks"])))
     output:
         "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/PermutationsCombined.txt"
+    log:
+        "eQTL_mapping/MergePermutationChunks.log"
     shell:
         """
-        awk 'NR==1 && FNR=NR {{print}} FNR>1 {{input.Chunks}}' {input.Chunks} > {output}
+        cat eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Permutations/Chunk.0.txt > {output}
+        for i in {{1..{LastChunk}}}; do
+            tail -n +2 eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Permutations/Chunk.${{i}}.txt >> {output}
+        done
         """
+
+rule splitForEigenMT:
+    input:
+        snps = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps",
+        snp_locs = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
+        results = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt",
+    output:
+        snps = "eQTL_mapping/MatrixEQTL/eigenMT/{chromosome}/gen.txt",
+        snp_locs =  "eQTL_mapping/MatrixEQTL/eigenMT/{chromosome}/gen.positions.txt",
+        results = "eQTL_mapping/MatrixEQTL/eigenMT/{chromosome}/qtls.txt"
+    log:
+        "logs/eQTL_mapping/splitForEigenMT/{chromosome}.txt"
+    shell:
+        """
+        awk -F'\\t' -v OFS='\\t' 'NR==1 || /^ID\.{wildcards.chromosome}\./' {input.snps} > {output.snps}
+        awk -F'\\t' -v OFS='\\t' 'NR==1 || /^ID\.{wildcards.chromosome}\./' {input.snp_locs} > {output.snp_locs}
+        awk -F'\\t' -v OFS='\\t' 'NR==1 || /^ID\.{wildcards.chromosome}\./ {{print $1, $2, $3, $4, $5, $6}}' {input.results} > {output.results}
+        """
+
+rule EigenMT:
+    input:
+        snps = "eQTL_mapping/MatrixEQTL/eigenMT/{chromosome}/gen.txt",
+        snp_locs =  "eQTL_mapping/MatrixEQTL/eigenMT/{chromosome}/gen.positions.txt",
+        results = "eQTL_mapping/MatrixEQTL/eigenMT/{chromosome}/qtls.txt",
+        gene_loc = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
+    output:
+        "eQTL_mapping/MatrixEQTL/eigenMT/{chromosome}/results.txt"
+    log:
+        "logs/eQTL_mapping/EigenMT/{chromosome}.log"
+    conda:
+        "../envs/eigenMT.yaml"
+    shell:
+        """
+        python ~/software/eigenMT/eigenMT.py --QTL {input.results} --GEN {input.snps} --GENPOS {input.snp_locs} --PHEPOS {input.gene_loc} --cis_dist 250000 --OUT {output} --CHROM {wildcards.chromosome} &> {log}
+        """
+
+rule catEiginMT:
+    input:
+        expand("eQTL_mapping/MatrixEQTL/eigenMT/{chromosome}/results.txt", chromosome=set(contigs) - set(['X', 'Y', 'MT'])),
+    output:
+        "../../output/ChimpEgenes.eigenMT.txt.gz"
+    log:
+        "logs/eQTL_mapping/catEiginMT.log"
+    shell:
+        """
+        (cat <(cat {input} | head -1) <(cat {input} | grep -v '^snps') | gzip - > {output}) &> {log}
+        """
+
+
+
+# rule PermutationTest:
+#     input:
 
 # rule prepare_vcf_for_VerifyBamID:
 #     """Grab vcf from plink file for association testing, since these genotypes

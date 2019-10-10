@@ -1,0 +1,30 @@
+name: py27
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=main
+  - blas=1.1=openblas
+  - ca-certificates=2019.9.11=hecc5488_0
+  - certifi=2019.9.11=py27_0
+  - libffi=3.2.1=he1b5a44_1006
+  - libgcc-ng=9.1.0=hdf63c60_0
+  - libgfortran-ng=7.3.0=hdf63c60_0
+  - libstdcxx-ng=9.1.0=hdf63c60_0
+  - ncurses=6.1=hf484d3e_1002
+  - numpy=1.16.2=py27_blas_openblash1522bff_0
+  - openblas=0.3.3=h9ac9557_1001
+  - openssl=1.1.1c=h516909a_0
+  - pip=19.2.3=py27_0
+  - python=2.7.15=h5a48372_1009
+  - readline=8.0=hf8c457e_0
+  - scikit-learn=0.20.4=py27_blas_openblashebff5e3_0
+  - scipy=1.2.1=py27_blas_openblash1522bff_0
+  - setuptools=41.4.0=py27_0
+  - sqlite=3.30.0=hcee41ef_0
+  - tk=8.6.9=hed695b0_1003
+  - wheel=0.33.6=py27_0
+  - zlib=1.2.11=h516909a_1006
+prefix: /project2/gilad/bjf79_project1/envs/py27
+
