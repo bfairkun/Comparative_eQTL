@@ -5,6 +5,8 @@ include: "rules/common.smk"
 rule all:
     input:
         "OverdispersionAnalysis/TableSubset.txt",
+        expand("../../output/GTEX_renalysis/SampleSize_{n}.txt.gz", n=config["GTEx_eQTL_mapping"]["variable_sample_sizes"]),
+        # expand("GTEX_renalysis/Subsamples/output/Subsample_{subsample}.txt.gz", subsample=range(1, Num_subsamples + 1)),
         expand("PopulationSubstructure/ReferencePanelMerged.annotated.splits/{chromosome}.vcf", chromosome=contigs),
         "../../output/ChimpEgenes.eigenMT.txt.gz",
         # "OverdispersionAnalysis/GtexTissueMatrix.overdispersion.txt",
@@ -92,6 +94,8 @@ include: "rules/sqtl_calling.smk"
 include: "rules/PowerAnalysis.smk"
 include: "rules/eQTL_analysis.smk"
 include: "rules/Overdispersion.smk"
+include: "rules/GTExReanalysis.smk"
+include: "rules/GTExReanalysis_constantSampleSize.smk"
 # eQTL_analysis requires an eqtl model results file to be defined in config
 # include: "rules/qc.smk"
 #include: "rules/annotation.smk"

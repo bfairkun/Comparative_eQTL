@@ -132,4 +132,4 @@ def GetInitialSeedNumberForPermutationChunk(wildcards):
     return int(wildcards.n) * int(config["eQTL_mapping"]["PermutationChunkSize"])
 
 genotypedregions, = glob_wildcards("genotyped/all.{region}.vcf.gz")
-
+Num_subsamples = int(config["GTEx_eQTL_mapping"]["number_subsamples"])

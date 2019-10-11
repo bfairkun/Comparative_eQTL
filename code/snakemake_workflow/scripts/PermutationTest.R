@@ -7,7 +7,7 @@ setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_w
 
 permutationTable <- t(fread("eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/PermutationsCombined.txt", sep='\t', header=T))
 ActualTable <- fread("eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt", sep='\t', header=T)
-eigenMTTable <- read.table("eQTL_mapping/MatrixEQTL/eigenMT.corrected.eGenes.txt.gz", header=T, sep='\t') %>%
+eigenMTTable <- read.table("eQTL_mapping/MatrixEQTL/eigenMT.corrected.eGenes.txt2.gz", header=T, sep='\t') %>%
   tibble::column_to_rownames("gene")
 
 
