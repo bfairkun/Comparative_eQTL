@@ -135,11 +135,11 @@ Separate topic:
 Write out list of acceptable samples to draw from for re-calling eQTLs from GTEx data with smaller sample sizes (n=40)
 
 ```{r}
-Covariates <- read.table("../data/GTEx_Heart_v8_covariates.txt", header=T)
+Covariates <- read.table("../data/GTEx_Heart_v8_covariates.txt", header=T, check.names = F)
 
-HeartSamples <- SamplesFilteredForTissuesSuitableForAnalysis %>%
+SamplesFilteredForTissuesSuitableForAnalysis %>%
   filter(SMTSD=="Heart - Left Ventricle") %>%
-  mutate(CovariateID = paste0("GTEX.",IndidualID)) %>% 
+  mutate(CovariateID = paste0("GTEX-",IndidualID)) %>% 
   filter(CovariateID %in% colnames(Covariates)) %>% dplyr::select(CovariateID) %>%
   write.table("../data/GTEx_Heart_v8_AcceptableSampleList.txt", row.names = F, col.names = F, quote=F)
   
