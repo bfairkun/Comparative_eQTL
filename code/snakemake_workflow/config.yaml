@@ -165,6 +165,7 @@ GTEx_eQTL_mapping:
     number_subsamples: 1
     variable_sample_sizes:
         - 40
+        - 60
         - 80
         - 120
         - 160
