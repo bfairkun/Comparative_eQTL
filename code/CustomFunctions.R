@@ -9,6 +9,8 @@
 library(tidyverse)
 library(MASS)
 library(edgeR)
+library(gridExtra)
+library(cowplot)
 
 # return matrix of column x repeated n times
 rep.col<-function(x,n){
@@ -17,15 +19,126 @@ rep.col<-function(x,n){
 
 
 # Read in relevant files of Pvalues for all genes tested and the SysToID file that I downloaded from Biomart
-function(Chimp.tsv, Human.tsv, SysToID.tsv){
+TsvToCombinedEgenes <- function(Chimp.tsv, Human.tsv, SysToID.tsv, HumanTsvType = c("Custom", "GTEx")){
 
+  #Read in chimp eGene summary table
+  C<-read.table(Chimp.tsv, header=T, stringsAsFactors = F, sep='\t') %>%
+    dplyr::select(C.gene = gene, C.beta = beta, C.nompval=pvalue, C.FDR=FDR, C.bestsnp=snps)
+
+  #Read in human eGene summary table
+  if (HumanTsvType=="Custom") {
+    H<-read.table(Human.tsv, header=T, stringsAsFactors = F, sep='\t') %>%
+      mutate(H.gene=gsub(".\\d+$","", pid, perl=T)) %>%
+      dplyr::select(H.gene, H.beta = slope, H.nompval=npval, H.FDR=st, H.bestsnp=sid)
+  }
+  else if ( HumanTsvType=="GTEx") {
+    H<-read.table(Human.tsv, header=T, stringsAsFactors = F, sep='\t') %>%
+      mutate(H.gene=gsub(".\\d+$","", gene_id, perl=T)) %>%
+      dplyr::select(H.gene, H.beta = slope, H.nompval=pval_nominal, H.FDR=qval, H.bestsnp=variant_id)
+  }
+
+  #Read in Biomart table
+  B<-read.table(SysToID.tsv, header=T, stringsAsFactors = F, sep='\t') %>%
+    filter(Chimpanzee.homology.type=="ortholog_one2one") %>%
+    filter(Gene.stable.ID %in% H$H.gene & Chimpanzee.gene.stable.ID %in% C$C.gene) %>%
+    distinct(Chimpanzee.gene.stable.ID, .keep_all = T) %>%
+    dplyr::select(PercentIdentitiyHumanToChimp=X.id..query.gene.identical.to.target.Chimpanzee.gene,
+           dN=dN.with.Chimpanzee,
+           dS=dS.with.Chimpanzee,
+           H.gene=Gene.stable.ID,
+           C.gene=Chimpanzee.gene.stable.ID)
+
+  #Merge tables and return output
+  Output.df <- B %>%
+    left_join(H, by="H.gene") %>%
+    left_join(C, by="C.gene")
+  return(Output.df)
 }
+
+
 
 
 # Return plots for dN/dS, etc. from dataframe
-function(Chimp.df, Human.df, SysToID.df){
+Plot.PercentNonIdentity.byGroup <- function(TsvToCombinedEgenes.df){
+  SharedLabel <- "both"
+  NeitherLabel <- "neither"
+  ChimpLabel <- "chimp"
+  HumanLabel <- "human"
 
+  ToPlot <- TsvToCombinedEgenes.df %>%
+    mutate(group = case_when(
+      H.FDR <=0.1 & C.FDR<=0.1 ~ SharedLabel,
+      H.FDR <=0.1 & C.FDR>=0.1 ~ HumanLabel,
+      H.FDR >=0.1 & C.FDR<=0.1 ~ ChimpLabel,
+      H.FDR >=0.1 & C.FDR>=0.1 ~ NeitherLabel))
+
+  AlternativeHypothesis <- c(
+    "chimp > neither",
+    "human > neither",
+    "both > chimp",
+    "both > human")
+  Pvalues <- c(
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2)
+  )
+  PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
+  colnames(PvalTable) <- c('"H"[a]', "`P-value`")
+  Human.PercentNonIdentity.plot <- ggplot(ToPlot, aes(color=group,x=100-PercentIdentitiyHumanToChimp+0.001)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous(trans='log1p', limits=c(0,100), expand=expand_scale()) +
+    ylab("Cumulative frequency") +
+    xlab("Percent non-identitical amino acid between chimp and human") +
+    labs(color = "eGene discovered in") +
+    theme_bw() +
+    theme(legend.position="bottom")
+
+  return(list(plot=Human.PercentNonIdentity.plot, PvalTable=PvalTable))
 }
+
+###
+Plot.dNdS.byGroup <- function(TsvToCombinedEgenes.df){
+  SharedLabel <- "both"
+  NeitherLabel <- "neither"
+  ChimpLabel <- "chimp"
+  HumanLabel <- "human"
+
+  ToPlot <- TsvToCombinedEgenes.df %>%
+    mutate(dN.dS=dN/dS) %>%
+    mutate(group = case_when(
+      H.FDR <=0.1 & C.FDR<=0.1 ~ SharedLabel,
+      H.FDR <=0.1 & C.FDR>=0.1 ~ HumanLabel,
+      H.FDR >=0.1 & C.FDR<=0.1 ~ ChimpLabel,
+      H.FDR >=0.1 & C.FDR>=0.1 ~ NeitherLabel))
+
+  AlternativeHypothesis <- c(
+    "chimp > neither",
+    "human > neither",
+    "both > chimp",
+    "both > human")
+  Pvalues <- c(
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), dN.dS ~ group, alternative="greater")$p.value, 2)
+  )
+  PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
+  colnames(PvalTable) <- c('"H"[a]', "`P-value`")
+  Human.PercentNonIdentity.plot <- ggplot(ToPlot, aes(color=group,x=dN.dS)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous(trans='log10', limits=c(0.01,10)) +
+    ylab("Cumulative frequency") +
+    xlab("dN/dS") +
+    labs(color = "eGene discovered in") +
+    theme_bw() +
+    theme(legend.position="bottom")
+
+  return(list(plot=Human.PercentNonIdentity.plot, PvalTable=PvalTable))
+}
+
+###
+
 
 # Return intercept of NB fit (estimate of mean expression our context), given Y (a vector of counts for a single gene), and libsizes (total counts for libraries)
 GetInterceptOfNB.fit <- function(Y, libsizes, genesize=1){
@@ -66,29 +179,30 @@ Get.NB.Fit.Parameters <- function(Y, libsizes, genesize=1){
       fit <- MASS::glm.nb(Y ~ offset(log(libsizes))-offset(log(GeneSizeVector))  + 1)
       # overdispersion <- 1/fit$theta
       # intercept <- fit$coefficients
-      return(list(Overdispersion=1/fit$theta, Intercept=fit$coefficients))
+      return(list(Overdispersion=1/fit$theta, Intercept=fit$coefficients, theta.se=fit$SE.theta))
 
     },
     error = function(e){
-      return(list(Overdispersion=NA, Intercept=NA))
+      return(list(Overdispersion=NA, Intercept=NA, theta.se=NA))
       }
   )
 }
 
 # Return dataframe of overdispersion estimates and mu, given a count table
 GetParameterEstimatesOfUnderlyingGamma_lengthAdjusted_FromTable <- function(MyCountTable, genesizes){
-  out <- matrix(data=NA, nrow=nrow(MyCountTable), ncol=2)
+  out <- matrix(data=NA, nrow=nrow(MyCountTable), ncol=3)
   LibSize <- colSums(MyCountTable)
   for(i in 1:nrow(MyCountTable)) {
     NB.fit <- Get.NB.Fit.Parameters(t(MyCountTable[i,]), LibSize, genesizes[i])
     out[i,1] <- NB.fit$Intercept
     out[i,2] <- NB.fit$Overdispersion
+    out[i,3] <- NB.fit$theta.se
+
     rownames(out) <- rownames(MyCountTable)
-    colnames(out) <- c("mu", "overdispersion")
+    colnames(out) <- c("mu", "overdispersion", "theta.se")
   }
   return(as.data.frame(out))
 }
-
 
 
 # Return a named vector of standard dev independent of log(mean) trend from a count table
@@ -232,6 +346,27 @@ GetCountTables <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSiz
 # cor(A$mu,log(A$overdispersion), use="complete.obs")
 # qplot(apply(CountTables$Chimp$log2RPKM[1:NumRowsToAnalyze,],1,mean), sqrt(apply(CountTables$Chimp$log2RPKM[1:NumRowsToAnalyze,],1,var)), alpha=0.05) +
 #   theme_bw()
+
+# C<-read.table("output/ChimpEgenes.eigenMT.txt.gz", header=T, stringsAsFactors = F, sep='\t') %>%
+#   select(C.gene = gene, C.beta = beta, C.nompval=pvalue, C.FDR=FDR, C.bestsnp=snps)
+# H<-read.table("output/GTEX_renalysis/SampleSize_120.txt.gz", header=T, stringsAsFactors = F, sep='\t') %>%
+#   mutate(H.gene=gsub(".\\d+$","", pid, perl=T)) %>%
+#   select(H.gene, H.beta = slope, H.nompval=npval, H.FDR=st, H.bestsnp=sid)
+# H<-read.table("data/Adipose_Subcutaneous.v7.egenes.txt.gz", header=T, stringsAsFactors = F, sep='\t') %>%
+#   mutate(H.gene=gsub(".\\d+$","", gene_id, perl=T)) %>%
+#   select(H.gene, H.beta = slope, H.nompval=pval_nominal, H.FDR=qval, H.bestsnp=variant_id)
+# B<-read.table("data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, stringsAsFactors = F, sep='\t') %>%
+#   filter(Chimpanzee.homology.type=="ortholog_one2one") %>%
+#   filter(Gene.stable.ID %in% H$H.gene & Chimpanzee.gene.stable.ID %in% C$C.gene) %>%
+#   distinct(Chimpanzee.gene.stable.ID, .keep_all = T) %>%
+#   select(PercentIdentitiyHumanToChimp=X.id..query.gene.identical.to.target.Chimpanzee.gene,
+#          dN=dN.with.Chimpanzee,
+#          dS=dS.with.Chimpanzee,
+#          H.gene=Gene.stable.ID,
+#          C.gene=Chimpanzee.gene.stable.ID)
+# Output.df <- B %>%
+#   left_join(H, by="H.gene") %>%
+#   left_join(C, by="C.gene")
 
 ###
 

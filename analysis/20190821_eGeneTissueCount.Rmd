@@ -13,6 +13,10 @@ knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 ```{r load-libraries}
 library(tidyverse)
 library(knitr)
+library(matrixStats)
+library(dplyr)
+library(ggExtra)
+library(reshape2)
 ```
 
 Are eGenes that are shared between humans and chimps more likely to be eGenes in many tissues?
@@ -88,10 +92,10 @@ HumanFDR <- 0.1
 ChimpFDR <- 0.1
 
 # Filter human eGenes by qval threshold
-HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% pull(chimp_id)
+# HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% pull(chimp_id)
 
 # Filter human eGenes by topN qval
-# HumanSigGenes <- GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% pull(chimp_id)
+HumanSigGenes <- GtexHeartEgenes %>% top_n(-HumanTopN, qval) %>% pull(chimp_id)
 
 # Filter human eGeness by qval threshold then topN betas 
 # HumanSigGenes <- GtexHeartEgenes %>% filter(qval<HumanFDR) %>% top_n(1000, abs(slope)) %>% pull(chimp_id)
@@ -197,13 +201,16 @@ Shared.chimp.tissue.plot
 
 ```
 
+Main finding: 
+
+Shared eGenes tend to be eGenes in more GTEx tissues than human specific eGenes
 
 Make same plots, but using top 600 human eGenes to classify heart eGene for purposes of species sharing.
 
 ```{r}
 
 #Change FDR thresholds or take top N eGenes by qvalue
-HumanTopN <- 600
+HumanTopN <- 1000
 HumanFDR <- 0.1
 ChimpFDR <- 0.1
 
@@ -312,4 +319,138 @@ Human.tissue.plot
 Shared.human.tissue.plot
 Shared.chimp.tissue.plot
 ```
+
+Ok the same main result seems true with this much more stringent cutoff for human eGenes (which only leaves 28 shared eGenes), but could be due to chance (P=0.11). Perhaps for publication it is best to show results at these various thresholds in the supplement, to show these trends generally hold across various reasonable thresholds for classifying human eGenes.
+
+Next I want to see if the shared eGenes are more likely to be expressed in just a few tissues or highly expressed in all tissues. I hypothesize the shared eGenes are more likely to be tissue specific, as tissue specific genes are more likely to be neutral, since deleterious genes need only be deleterious in one tissue for it to be selected against.
+
+First I will look at expression levels (TPM) of shared eGenes vs species specific eGenes
+
+```{r}
+#read in median GTEx TPM for each gene
+GTEx.Expression <- read.table("../data/GTEx_Analysis_2016-01-15_v7_RNASeQCv1.1.8_gene_median_tpm.gct.gz", sep='\t', skip=2, header=T,check.names=FALSE)
+
+GTEx.Expression[1:10,1:10] %>% kable()
+
+#Get list of brain subtypes to exclude (let's just include brain cerebellum for this analysis)
+#...too many brain subtypes is redundant
+BrainsSubtypesToExclude<-colnames(GTEx.Expression) %>% grep("Brain", ., value=T) %>% grep("Cerebellum", ., value=T, invert=T)
+
+GTEx.Expression.filtered <- GTEx.Expression %>%
+  mutate(human_id=gsub("\\.\\d+$", "", gene_id, perl=T)) %>%
+  select(-c(gene_id, BrainsSubtypesToExclude, Description)) %>%
+  filter(human_id %in% GtexHeartEgenes$gene_id_stable) %>%
+  mutate(Means = rowMedians(as.matrix(.[,-42]))) %>%
+  mutate(chimp_id=plyr::mapvalues(human_id, OneToOneMap$Gene.stable.ID, OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F))
+
+
+ToPlot <- GTEx.Expression.filtered %>%
+  mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(HumanSigGenes, ChimpSigGenes) ~ "human.specific.eGene")) %>%
+  filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(HumanSigGenes, ChimpSigGenes)))%>%
+  select(human_id, group, Means, 1:41) %>%
+  melt(value.name="expression")
+
+GtexTissueColors <- read.table("../data/GTEx_Analysis_TissueColorCodes.txt", header=T, sep='\t') %>%
+  rbind(data.frame(Tissue="Means", Color.code="000000"), .) %>%
+  filter(Tissue %in% ToPlot$variable) %>%
+  mutate(HexCode=paste0("#", Color.code))
+
+Human.tissue.expression.plot <- ggplot(ToPlot, aes(color=group,x=variable, y=expression)) +
+  geom_boxplot(outlier.shape = NA, fatten = 4) +
+  scale_y_continuous(trans="log10", limits=c(0.01, 5000)) +
+  ylab("expression\nlog10(TPM)") +
+  # geom_point(data=GtexTissueColors, aes(y=1,x=Tissue, color=HexCode)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5),
+        axis.ticks.x = element_line(colour = GtexTissueColors$HexCode, size = 2),
+        axis.title.x=element_blank())
+Human.tissue.expression.plot
+
+#Are any of the differences in those groups significant... Try muscle for example
+ToCompare <- GTEx.Expression.filtered %>%
+  mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(HumanSigGenes, ChimpSigGenes) ~ "human.specific.eGene")) %>%
+  filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(HumanSigGenes, ChimpSigGenes))) %>%
+  select(human_id, group, Means, 1:41)
+wilcox.test(data=ToCompare, `Muscle - Skeletal` ~ group, alternative="greater")
+```
+
+Ok so the shared eGenes seem to be slightly lower expressed in all tissues, though it could be just chance.
+
+Ok now I will look at tissue specificity on a per-tissue level (are the shared eGenes specific for any particular tissue?). First I will do this by looking at Z-scores of expression (for each gene, standardize the measurements across tissues into Z-score).
+
+
+```{r}
+ToPlot <- GTEx.Expression.filtered %>%
+  select(1:41) %>% as.matrix() %>% log10() %>% t() %>% scale() %>% t() %>% as.data.frame() %>%
+  mutate(human_id=GTEx.Expression.filtered$human_id, chimp_id=GTEx.Expression.filtered$chimp_id) %>%
+    mutate(group = case_when(
+        # chimp_id %in% HumanSigGenes ~ "human.eGene",
+        # !chimp_id %in% HumanSigGenes ~ "not.human.eGene")) %>%
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(HumanSigGenes, ChimpSigGenes) ~ "human.specific.eGene")) %>%
+  filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(HumanSigGenes, ChimpSigGenes)))%>%
+  melt(value.name="expression")
+
+GtexTissueColors <- read.table("../data/GTEx_Analysis_TissueColorCodes.txt", header=T, sep='\t') %>%
+  # rbind(data.frame(Tissue="Means", Color.code="000000"), .) %>%
+  filter(Tissue %in% ToPlot$variable) %>%
+  mutate(HexCode=paste0("#", Color.code))
+
+Human.tissue.expression.Z.plot <- ggplot(ToPlot, aes(color=group,x=variable, y=expression)) +
+  geom_boxplot(outlier.shape = NA, fatten = 4) +
+  ylab("expression\nZ-score") +
+  # geom_point(data=GtexTissueColors, aes(y=1,x=Tissue, color=HexCode)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5),
+        axis.ticks.x = element_line(colour = GtexTissueColors$HexCode, size = 2),
+        axis.title.x=element_blank())
+Human.tissue.expression.Z.plot
+```
+
+
+Now look at tissue specificity, as calculated with gini and tau statistics from the GTEx tissue data. Using both slightly different statistics to make sure the general finding is robust to choice of statistic
+
+```{r}
+
+tau<-read.table("../output/TissueSpecificity/tau.log.txt", col.names =c('gene', 'tau'), sep='\t')
+gini<-read.table("../output/TissueSpecificity/gini.log.txt", col.names =c('gene', 'gini'), sep='\t')
+tissue.specificity <- merge(tau, gini) %>%
+  filter(gene %in% GtexHeartEgenes$gene_id_stable) %>%
+  mutate(chimp_id=plyr::mapvalues(gene, OneToOneMap$Gene.stable.ID, OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F))
+  
+
+p<- ggplot(tissue.specificity, aes(x=gini, y=tau)) +
+  geom_point(alpha=0.05) +
+  theme_bw()
+
+#scatter plot and histograms of tau and gini over all tested genes
+tauVgini <- ggExtra::ggMarginal(p, type = "histogram")
+library(grid)
+grid.newpage()
+grid.draw(tauVgini)
+
+
+ToPlot <- tissue.specificity %>%
+  mutate(group = case_when(
+        chimp_id %in% intersect(HumanSigGenes, ChimpSigGenes) ~ "shared.eGene",
+        chimp_id %in% setdiff(HumanSigGenes, ChimpSigGenes) ~ "human.specific.eGene")) %>%
+        filter(chimp_id %in% union(intersect(HumanSigGenes, ChimpSigGenes), setdiff(HumanSigGenes, ChimpSigGenes)))
+        # chimp_id %in% HumanSigGenes ~ "chimp.eGene",
+        # !chimp_id %in% HumanSigGenes ~ "not.chimp.eGene"))
+
+Human.tissue.specificity.plot <- ggplot(ToPlot, aes(color=group,x=tau)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("Tissue specificity (tau)") +
+  annotate("text", x = 0.4, y = 0.4, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=ToPlot, tau ~ group, alternative="less")$p.value, 2) )) +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+Human.tissue.specificity.plot
+```
+
+
 
