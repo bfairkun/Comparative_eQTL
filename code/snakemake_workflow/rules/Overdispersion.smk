@@ -51,3 +51,23 @@ rule CalculateOverdispersionTissueMatrix:
         """
         Rscript scripts/CalculateOverdispersionForGtexTissues.R {input.CountTable} {input.SampleList} {input.GeneLengths} {output.mu} {output.overdispersion} &> {log}
         """
+
+rule OverdispersionInChimps:
+    input:
+        ChimpCountTable = "../../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz",
+        HumanCountTable = "../../output/PowerAnalysisFullCountTable.Human.subread.txt.gz",
+        Metadata = "../../data/Metadata.xlsx",
+        ChimpEgenes = "../../output/ChimpEgenes.eigenMT.txt.gz",
+        HumanEgenes = "../../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz",
+        Biomart = "../../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz"
+    output:
+        OverdispersionParameters = "../../output/OverdispersionEstimatesFromChimp.txt.gz",
+        OverdispersionParameters2 = "../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz",
+    log:
+        "logs/OverdispersionAnalysis/CalculateOverdispersionChimps.log"
+    shell:
+        """
+        Rscript scripts/CalculateChimpOverdispersion.R 2> {log}
+        gzip ../../output/OverdispersionEstimatesFromChimp.txt
+        gzip ../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt
+        """
