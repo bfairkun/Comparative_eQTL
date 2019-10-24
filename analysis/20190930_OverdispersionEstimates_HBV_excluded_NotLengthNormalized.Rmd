@@ -1,0 +1,244 @@
+---
+title: "20190930_OverdispersionEstimatesBetweenSpecies_HBV_excluded"
+author: "Ben Fair"
+date: "9/30/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+The following is basically identical to this analysis where I estimate overdispersion of gene expression in chimpanzee versus human heart. The only difference is that here, I excluded the 7 chimp samples which were HBV+ or HCV+ since these may be the sole reason for immune related terms appearing as enriched for chimp-specific overdispersed genes. Also here I will not include gene length as an offset to estimate overdispersion.
+
+```{r}
+library(plyr)
+library(tidyverse)
+library(knitr)
+library("edgeR")
+library(stats)
+library(corrplot)
+library(gplots)
+library("clusterProfiler")
+library("org.Hs.eg.db")
+library(enrichplot)
+library(cowplot)
+library('latex2exp')
+library(gdata)
+library(readxl)
+
+
+# custom functions to read count tables, estimate overdispersion based on Abhishek's code snippets
+source("../code/CustomFunctions.R")
+```
+
+
+First, I will pick samples and genes to run this analysis on... The choice of which human samples from GTEx to include are the same ones I used for differential expression analysis [here](20190613_PowerAnalysis.html). Basically, I just excluded outlier samples that didn't cluster with the large majority of samples. The samples were re-mapped to their respective genomes and gene counts were determined using only reads over othologous exons. The genes I will include in this analysis will be all those that were tested for eGene in both species and in the ortho-exon count table.
+
+```{r}
+
+
+HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
+ChimpSamplesToDrop <- c("Little_R")
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+VirusChallengedChimps <- OtherMetadata %>% filter(grepl("V+",Viral.status)) %>% pull(Individual.ID)
+
+
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+eQTLs <- read.table(gzfile("../data/PastAnalysesDataToKeep/20190521_eQTLs_250kB_10MAF.txt.gz"), header=T)
+# List of chimp tested genes
+ChimpTestedGenes <- rownames(read.table('../output/ExpressionMatrix.un-normalized.txt.gz', header=T, check.names=FALSE, row.names = 1))
+
+ChimpToHumanGeneMap <- read.table("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", header=T, sep='\t', stringsAsFactors = F)
+
+# Of this ortholog list, how many genes are one2one
+OneToOneMap <- ChimpToHumanGeneMap %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one")
+
+# Read gtex heart egene list
+# Only consider those that were tested in both species and are one2one orthologs
+GtexHeartEgenes <- read.table("../data/Heart_Left_Ventricle.v7.egenes.txt.gz", header=T, sep='\t', stringsAsFactors = F) %>%
+  mutate(gene_id_stable = gsub(".\\d+$","",gene_id)) %>%
+  filter(gene_id_stable %in% OneToOneMap$Gene.stable.ID) %>%
+  mutate(chimp_id = plyr::mapvalues(gene_id_stable, OneToOneMap$Gene.stable.ID,  OneToOneMap$Chimpanzee.gene.stable.ID, warn_missing = F)) %>%
+  filter(chimp_id %in% ChimpTestedGenes)
+
+
+EgenesTested <- gsub("\\..+", "", GtexHeartEgenes$gene_id, perl=T)
+length(EgenesTested)
+GenesInDESet <- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)$Geneid
+length(GenesInDESet)
+
+GeneList <- intersect(as.character(GenesInDESet),EgenesTested)
+```
+
+Now, load count tables and calculate overdispersion
+
+```{r}
+CountTables <- GetCountTables(CountTableChimpFile,
+                               CountTableHumanFile,
+                               0, GeneList, ChimpSampleDrop=c(ChimpSamplesToDrop, VirusChallengedChimps), HumanSampleDrop = HumanSamplesToDrop)
+
+
+Chimp.NB.fit.parameters<-GetParameterEstimatesOfUnderlyingGamma_lengthAdjusted_FromTable(CountTables$Chimp$Counts, rep(1, length(CountTables$Chimp$GeneLengths)))
+Human.NB.fit.parameters<-GetParameterEstimatesOfUnderlyingGamma_lengthAdjusted_FromTable(CountTables$Human$Counts, rep(1, length(CountTables$Chimp$GeneLengths)))
+```
+
+Just to as one simple confirmation that the code is working as expected, here is a plot of the population mean expression estimate $\hat{\mu_j}$ for each gene $j$ from the negative binomial fit, versus when I calculate the expression estimates by a simply averaging across samples (let's call it $\bar{x_j}$) for all genes.
+
+```{r}
+ToPlot <- cbind(Chimp.NB.fit.parameters,
+                apply(CountTables$Chimp$log2RPKM, 1, mean),
+                CountTables$Chimp$GeneLengths,
+                Human.NB.fit.parameters,
+                apply(CountTables$Human$log2RPKM, 1, mean),
+                CountTables$Human$GeneLengths)
+
+colnames(ToPlot) <- c("Chimp.Mean.Expression", "Chimp.Overdispersion", "Chimp.theta.se", "Chimp.Mean.Log2RPKM", "Chimp.GeneLength", "Human.Mean.Expression", "Human.Overdispersion", "Human.Mean.Log2RPKM", "Human.theta.se", "Human.GeneLength")
+
+#Plot mu parameter estimate (estimate of log(mean expression)) vs logRPKM
+R<-cor(ToPlot$Chimp.Mean.Expression, ToPlot$Chimp.Mean.Log2RPKM, use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+ggplot(ToPlot, aes(x=Chimp.Mean.Expression, y=Chimp.Mean.Log2RPKM)) +
+  geom_point(alpha=0.05) +
+  xlab(TeX('$\\hat{\\mu}$')) +
+  ylab(expression(bar("x"))) +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+
+```
+
+Ok now, let's see how the estimated overdispersion estimates ($1/\hat{\phi_j}$) correlate between species:
+
+```{r}
+R<-cor(log(ToPlot$Chimp.Overdispersion),log(ToPlot$Human.Overdispersion), use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+Overdispersion.Species.Correlation <- ggplot(ToPlot, aes(x=Chimp.Overdispersion, y=Human.Overdispersion)) +
+  geom_point(alpha=0.05) +
+  scale_x_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Chimp overdispersion, ", "1","/", hat(phi)))) +
+  scale_y_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Human overdispersion, ", "1","/", hat(phi)))) +
+  annotate("text",x=5,y=0.1, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+Overdispersion.Species.Correlation
+```
+
+Ok those correlate quite well. While this model fitting method for estimating overdispersion parameter should properly take into account the statistical counting variance (related to gene length, and expression level), given that gene expression between species correlate so well ($R^2>0.9$) it is natural to check if there there may be residual expression-related reasons that explain how dispersion is correlated between species. So let's see if there is still a correlation between overdispersion $1/\hat{\phi_j}$ and expression level $\hat{\mu_j}$.
+
+```{r}
+#Plot overdispersion vs mu
+LoessPlot <- ggplot(ToPlot, aes(x=Chimp.Mean.Expression, y=Chimp.Overdispersion)) +
+  geom_point(alpha=0.2) +
+  scale_x_continuous(name=TeX('Chimp log(RPKM), $\\hat{\\mu}$')) +
+  scale_y_continuous(trans="log10", name=expression(paste("Chimp overdispersion, ", "log(1","/", hat(phi), ")")), limits=c(0.001,10)) +
+  geom_smooth(method=loess, show.legend = FALSE, se=T, method.args=list(degree=1)) +
+  theme_bw()
+LoessPlot
+
+
+#Plot overdispersion vs genelength
+PlotLength <- ggplot(ToPlot, aes(x=Chimp.GeneLength, y=Chimp.Overdispersion)) +
+  geom_point(alpha=0.2) +
+  scale_x_continuous(trans="log10", name='Chimp orthologous exonic gene length') +
+  scale_y_continuous(trans="log10", name=expression(paste("Chimp overdispersion, ", "log(1","/", hat(phi), ")")), limits=c(0.001,10)) +
+  # geom_smooth(method=loess, show.legend = FALSE, se=T, method.args=list(degree=1)) +
+  geom_density_2d() +
+  theme_bw()
+PlotLength
+
+```
+
+Ok, this is similar to what Abhishek has described as seeing, as well as [Eling et al 2018](https://www.cell.com/cell-systems/pdfExtended/S2405-4712(18)30278-3). I think it is still reasonable to be skeptical that the correlation between species overdispersion is still due some technical aspect to expression levels. To rule that out that possibility, similar to what I have done before, (and similar to Eling et al) I will regress out the expression level and check that the residual overdispersion $\epsilon_j$ is still well corellated between species.
+
+```{r}
+ResidualDemoPlot <- LoessPlot +
+  geom_segment(aes(x=-21.125,xend=-21.125, y=0.35, yend=2.5),
+  lineend = "round", linejoin = "round", color="brown",
+     size = 0.7, arrow = arrow(length = unit(0.1, "inches"))
+  ) +
+  annotate("text",x=-20,y=0.1, label=TeX("$\\epsilon_j$"), hjust=1, vjust=-1, color="brown", size=10)
+ResidualDemoPlot
+
+GetLoessResidual <- function(x, y){
+  loess.fit <- loess(y ~ x, degree=1)
+  #for our purposes, the fit with the default degree=2 looks like unnatural fit, especially near the edges
+  loess.residual <- y - predict(loess.fit, x)
+  return(loess.residual)
+}
+
+# I got the residual of log transformed overdispersion estimate, then expontiate it and plot it on log-transformed axis. Just a personal preference for plotting, instead of just keeping data log-transformed.
+ToPlot$Chimp.Residual <- exp(GetLoessResidual(ToPlot$Chimp.Mean.Expression, log(ToPlot$Chimp.Overdispersion)))
+ToPlot$Human.Residual <- exp(GetLoessResidual(ToPlot$Human.Mean.Expression, log(ToPlot$Human.Overdispersion)))
+
+R<-cor(log(ToPlot$Chimp.Residual),log(ToPlot$Human.Residual), use="complete.obs")
+cor.test(log(ToPlot$Chimp.Residual),log(ToPlot$Human.Residual), use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+Overdispersion.Species.Correlation.Corrected <- ggplot(ToPlot, aes(x=Chimp.Residual, y=Human.Residual)) +
+  geom_point(alpha=0.05) +
+  scale_x_continuous(limits=c(0.05,50), trans="log10", name=TeX("Chimp residual, $\\epsilon_j$")) +
+  scale_y_continuous(limits=c(0.05,50), trans="log10", name=TeX("Human residual, $\\epsilon_j$")) +
+  annotate("text",x=5,y=0.1, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+Overdispersion.Species.Correlation.Corrected
+
+```
+
+
+Consistent with that intuition, I would say the genes with low dispersion (negative enrichment) are words relating to essential processes, while MHC complex and other immune related words make sense in that they are associated with high overdispersion and these gene sets respond to random environmental insults that could contribute to population variation. Continuing with the idea that low overdispersion is related to important housekeeping genes, let's check if lowly overdispersed genes are related to gene lists of essentiality (based on [Hart et al](https://www.g3journal.org/content/7/8/2719), a cell culture CRISPR screen experiment).
+
+```{r}
+EssentialGenes <- read.table("../data/lists/CEGv2_subset_universe.tsv", stringsAsFactors = F) %>% pull(V1) %>% mapIds(org.Hs.eg.db, keys=., keytype = "SYMBOL", column="ENSEMBL")
+
+NonEssentialGenes <- read.table("../data/lists/NEGv1_subset_universe.tsv", stringsAsFactors = F) %>% pull(V1) %>% mapIds(org.Hs.eg.db, keys=., keytype = "SYMBOL", column="ENSEMBL")
+
+
+Essentiality <- ToPlot %>%
+  rownames_to_column() %>%
+  mutate(CultureEssentiality=case_when(
+    rowname %in% EssentialGenes ~ "Essential",
+    rowname %in% NonEssentialGenes ~ "NonEssential")) %>%
+  filter(CultureEssentiality %in% c("Essential", "NonEssential"))
+
+Essentiality$CultureEssentiality %>% table()
+
+  ggplot(Essentiality, aes(color=CultureEssentiality,x=Human.Overdispersion)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous(trans='log10') +
+    ylab("Cumulative frequency") +
+    annotate("text", x = 0.5, y = 0.2, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=Essentiality, Human.Overdispersion ~ CultureEssentiality, alternative="less")$p.value, 2) )) +
+    theme_bw()
+```
+
+Although it seems that the vast majority of genes for which I estimated overdispersion are essential, from the 6 non essential genes, they do seem to have a significantly higher distribution of overdispersion estimates.
+
+Perhaps I should use [Lek et al](https://www.nature.com/articles/nature19057)'s pLI score instead to do a similar comparison between LoF intolerant and LoF tolerant genes.
+
+```{r}
+pLI.data <- as.data.frame(read_excel("../data/Lek_etal_nature19057-SI Table 13.xlsx", sheet=2))
+
+
+EssentialGenes <- pLI.data %>% filter(pLI>0.9) %>% pull(gene) %>% mapIds(org.Hs.eg.db, keys=., keytype = "SYMBOL", column="ENSEMBL")
+
+NonEssentialGenes <- pLI.data %>% filter(pLI<0.1) %>% pull(gene) %>% mapIds(org.Hs.eg.db, keys=., keytype = "SYMBOL", column="ENSEMBL")
+
+Essentiality <- ToPlot %>%
+  rownames_to_column() %>%
+  mutate(pLI.Score.essentiality=case_when(
+    rowname %in% EssentialGenes ~ "Essential",
+    rowname %in% NonEssentialGenes ~ "NonEssential")) %>%
+  filter(pLI.Score.essentiality %in% c("Essential", "NonEssential"))
+
+Essentiality$pLI.Score.essentiality %>% table()
+
+  ggplot(Essentiality, aes(color=pLI.Score.essentiality,x=Human.Overdispersion)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous(trans='log10') +
+    ylab("Cumulative frequency") +
+    annotate("text", x = 0.5, y = 0.2, label = paste("Mann-Whitney\none-sided P =", signif(wilcox.test(data=Essentiality, Human.Overdispersion ~ pLI.Score.essentiality, alternative="less")$p.value, 2) )) +
+    theme_bw()
+```
+
+Ok, same general conclusion holds. Loss of function tolerant genes are more overdispersed.
+
+Now let's ask what types of genes are overdispersed in my chimp sample population relative to human sample population (and vice versa). Luckily for GSEA analysis I only need a ranked list, however, it might be useful in the future to figure how to formally test the hypothesis for each gene that $\phi_{chimp}=\phi_{human}$.
+

@@ -1,0 +1,109 @@
+---
+title: "20191017_MedianRegressOutMeanEffect"
+author: "Ben Fair"
+date: "10/17/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+The following is basically identical to this analysis where I estimate overdispersion of gene expression in chimpanzee versus human heart. The only difference is that here, I excluded the 7 chimp samples which were HBV+ or HCV+ since these may be the sole reason for immune related terms appearing as enriched for chimp-specific overdispersed genes.
+
+```{r}
+library(plyr)
+library(tidyverse)
+library(knitr)
+library(stats)
+library(corrplot)
+library(gplots)
+library("org.Hs.eg.db")
+library(enrichplot)
+library(cowplot)
+library('latex2exp')
+library(gdata)
+library(readxl)
+library(quantreg)
+
+
+
+# custom functions to read count tables, estimate overdispersion based on Abhishek's code snippets
+source("../code/CustomFunctions.R")
+```
+
+## Overview
+[Here]() I describe that the overdispersion estimates between species are well correlated even when you consider only the residual overdispersion after regressing out the effect on mean expression on overdispersion. That regression was using loess regress, but actually i think it might not be the best way to regress out the effect since it is quite influenced by outliers. As an alternative, here let's see compare to the effect when using quantile regression.
+
+### regress out with loess
+First read in the overdispersion $\phi$ estimates for each gene $j$ and scatter plot chimp vs human.
+```{r}
+ParameterEstimates <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz", sep='\t', header=T, stringsAsFactors = F)
+
+R<-cor(log(ParameterEstimates$Chimp.Overdispersion),log(ParameterEstimates$Human.Overdispersion), use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+ggplot(ParameterEstimates, aes(x=Chimp.Overdispersion, y=Human.Overdispersion)) +
+  geom_point(alpha=0.05) +
+  scale_x_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Chimp overdispersion, ", hat(phi)))) +
+  scale_y_continuous(trans='log10', limits=c(1E-2,10), name=expression(paste("Human overdispersion, ", hat(phi)))) +
+  annotate("text",x=10,y=.01, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+```
+
+Regress out the effect with loess function. Plot the residual in each species
+```{r}
+#Even when regressing out the mean effect
+LoessPlot <- ggplot(ParameterEstimates, aes(x=Chimp.Mean.Expression, y=Chimp.Overdispersion)) +
+  geom_point(alpha=0.1, size=0.5) +
+  scale_x_continuous(name=TeX('$\\hat{\\mu}$'), limits=c(-25,-12.5)) +
+  scale_y_continuous(trans="log10", name=expression(paste("log(", hat(phi), ")")), limits=c(0.01,10)) +
+  geom_smooth(method=loess, show.legend = FALSE, se=T, method.args=list(degree=1, family="gaussian")) +
+  theme_bw()
+# LoessPlot
+ResidualDemoPlot <- LoessPlot +
+  geom_segment(aes(x=-21.125,xend=-21.125, y=0.35, yend=2.5),
+               lineend = "round", linejoin = "round", color="brown",
+               size = 0.7, arrow = arrow(length = unit(0.1, "inches"))
+  ) +
+  geom_density_2d() +
+  annotate("text",x=-21.125,y=2.5, label=TeX("$\\epsilon_j$"), hjust=0, vjust=0, color="brown", size=10) +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank(), rect = element_rect(fill = "transparent"))
+ResidualDemoPlot
+
+R<-cor(log(ParameterEstimates$Chimp.Overdispersion),log(ParameterEstimates$Human.Overdispersion), use="complete.obs")
+lb1 <- paste("~R^2==~", round(R**2,2))
+CorrelationAfterRegressingOut <- ggplot(ParameterEstimates, aes(x=Chimp.Residual, y=Human.Residual)) +
+  geom_point(alpha=0.05) +
+  scale_x_continuous(limits=c(0.05,50), trans="log10", name=TeX("Chimp residual, $\\epsilon_j$")) +
+  scale_y_continuous(limits=c(0.05,50), trans="log10", name=TeX("Human residual, $\\epsilon_j$")) +
+  annotate("text",x=50,y=0.05, label=lb1, hjust=1, vjust=-1, parse=TRUE) +
+  theme_bw()
+CorrelationAfterRegressingOut
+
+ggplot(ParameterEstimates, aes(x=Chimp.Mean.Expression, y=Chimp.Residual)) +
+  geom_point(alpha=0.1, size=0.5) +
+  scale_x_continuous(name=TeX('$\\hat{\\mu}$'), limits=c(-25,-12.5)) +
+  scale_y_continuous(trans="log10", name=expression(paste("log(", hat(phi), ")")), limits=c(0.01,10)) +
+  geom_smooth(method=loess, show.legend = FALSE, se=T, method.args=list(degree=1, family="gaussian")) +
+  theme_bw()
+```
+
+### regress out with quantile (median) regression
+
+```{r}
+ParameterEstimates$Chimp.Mean.Expression
+rqfit <- rq(log(Chimp.Overdispersion) ~ Chimp.Mean.Expression, data = ParameterEstimates)
+
+
+
+ggplot(ParameterEstimates, aes(x=Chimp.Mean.Expression, y=Chimp.Overdispersion)) +
+  geom_point(alpha=0.1, size=0.5) +
+  scale_x_continuous(name=TeX('$\\hat{\\mu}$'), limits=c(-25,-12.5)) +
+  scale_y_continuous(trans="log10", name=expression(paste("log(", hat(phi), ")")), limits=c(0.01,10)) +
+  # geom_quantile(quantiles = c(0.25,0.5,0.75)) +
+    geom_smooth(method=loess, show.legend = FALSE, se=T, method.args=list(degree=1, family="gaussian", span=0.3), color="red") +
+    geom_smooth(method=lm, show.legend = FALSE, se=T, color="gray") +
+  geom_density_2d() +
+  theme_bw()
+```
+

@@ -127,12 +127,29 @@ SamplesFilteredForTissuesSuitableForAnalysis %>%
   count(IndidualID) %>% pull(n) %>% hist(ylab="#individuals with X tissues in subsample")
 
 SuitableSubsample %>% select(SAMPID, SMTSD, IndidualID) %>%
-  write.table("../data/OverdispersionGTExAnalysisSampleList.txt", sep="\t", quote=F, row.names = F)
+  write.table("../data/OverdispersionGTExAnalysisSampleList.40EachTissue.txt", sep="\t", quote=F, row.names = F)
+```
+
+Also write out list of all samples used for GTEx v8 eQTL calling, for best possible overdispersion parameter estimates.
+
+```{r}
+
+Samples %>%
+  mutate(IndidualID=gsub("GTEX-(\\w+)-.+", "\\1", SAMPID, perl=T)) %>%
+  # filter(SMNABTCHT %in% c("RNA Extraction from Paxgene-derived Lysate Plate Based")) %>%
+  filter(SMAFRZE=="RNASEQ") %>%
+  group_by(SMTSD) %>%
+  mutate(c=Mode(SMNABTCHT)) %>%
+  filter(SMNABTCHT==c) %>%
+  add_count(SMTSD, name="CountBeforeSampling") %>%
+  filter(SMTSD %in% GtexColors$Tissue) %>%
+  dplyr::select(SAMPID, SMTSD, IndidualID) %>%
+  write.table("../data/OverdispersionGTExAnalysisSampleList.AllModeExtractionSamples.txt", sep="\t", quote=F, row.names = F)
 ```
 
 
 Separate topic:
-Write out list of acceptable samples to draw from for re-calling eQTLs from GTEx data with smaller sample sizes (n=40)
+Write out list of acceptable samples to draw from for re-calling eQTLs from GTEx data with smaller sample sizes (n=40). 
 
 ```{r}
 Covariates <- read.table("../data/GTEx_Heart_v8_covariates.txt", header=T, check.names = F)
@@ -143,6 +160,5 @@ SamplesFilteredForTissuesSuitableForAnalysis %>%
   filter(CovariateID %in% colnames(Covariates)) %>% dplyr::select(CovariateID) %>%
   write.table("../data/GTEx_Heart_v8_AcceptableSampleList.txt", row.names = F, col.names = F, quote=F)
   
-
 ```
 
