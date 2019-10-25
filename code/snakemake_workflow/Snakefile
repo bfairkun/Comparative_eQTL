@@ -5,6 +5,7 @@ include: "rules/common.smk"
 rule all:
     input:
         "../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz",
+        expand("../../output/GtexTissueMatrix.mu.NoLengthNorm.{listname}.txt.gz", listname=["40EachTissue","AllModeExtractionSamples"]),
         "OverdispersionAnalysis/TableSubset.txt",
         expand("../../output/GTEX_renalysis/SampleSize_{n}.txt.gz", n=config["GTEx_eQTL_mapping"]["variable_sample_sizes"]),
         # expand("GTEX_renalysis/Subsamples/output/Subsample_{subsample}.txt.gz", subsample=range(1, Num_subsamples + 1)),

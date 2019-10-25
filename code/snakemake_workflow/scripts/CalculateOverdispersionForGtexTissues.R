@@ -12,7 +12,7 @@ OverdispersionTableOut <- args[5]
 
 # setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
 # CountTableIn <- "OverdispersionAnalysis/TableSubset.txt"
-# SampleListIn <- "../../data/OverdispersionGTExAnalysisSampleList.txt"
+# SampleListIn <- "../../data/OverdispersionGTExAnalysisSampleList.AllModeExtractionSamples.txt"
 # GeneLengthsIn <- "OverdispersionAnalysis/GTEx.genelengths.txt"
 # MuTableOut <- args[3]
 # OverdispersionTableOut <- args[4]
@@ -38,7 +38,8 @@ OverdispersionMatrix <- MuMatrix
 
 for (i in seq_along(TissueList)){
   print(paste("Analyzing", TissueList[i]))
-  SamplesToSubset <- SampleList %>% filter(SMTSD == TissueList[i]) %>% pull(SAMPID)
+  SamplesToSubset <- SampleList %>% filter(SMTSD == TissueList[i] & SAMPID %in% colnames(CountTable)
+) %>% pull(SAMPID)
   CountTableSubset <- CountTable %>%
     dplyr::select(Name, SamplesToSubset) %>%
     column_to_rownames("Name")

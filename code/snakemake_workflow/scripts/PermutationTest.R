@@ -3,33 +3,44 @@ library(data.table)
 library(qvalue)
 library(stats)
 
-setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
 
-permutationTable <- t(fread("eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/PermutationsCombined.txt", sep='\t', header=T))
-ActualTable <- fread("eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt", sep='\t', header=T)
-eigenMTTable <- read.table("eQTL_mapping/MatrixEQTL/eigenMT.corrected.eGenes.txt2.gz", header=T, sep='\t') %>%
-  tibble::column_to_rownames("gene")
+args = commandArgs(trailingOnly=TRUE)
+PermutationsTableFile <- args[1]
+ActualTableFile <- args[2]
+TableOutFile <- args[3]
 
+## Files for testing
+# setwd("~/CurrentProjects/sQTL_pipeline/")
+# PermutationsTableFile <- "sQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/PermutationsCombined.txt"
+# ActualTableFile <- "sQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/BestPvalueNonPermuted.txt"
+# TableOutFile <- "~/temp/test.txt"
 
-BestActualPVal <- ActualTable %>%
-  dplyr::group_by(gene) %>%
-  dplyr::slice(which.min(pvalue)) %>%
-  dplyr::ungroup() %>%
-  dplyr::select(gene, pvalue) %>%
-  tibble::column_to_rownames("gene") %>% as.matrix()
+# read table of min p values from permutations
+permutationTable <- t(fread(PermutationsTableFile, sep='\t', header=T))
 
-MergedTable <- merge(BestActualPVal, permutationTable, by="row.names") %>%
-  tibble::column_to_rownames("Row.names")
+# read table of min p values from real data
+ActualTable <- fread(ActualTableFile, sep='\t', header=T) %>%
+  as.data.frame() %>% tibble::column_to_rownames("Gene")
+
+# Merge the two tables, putting the real data as the first column.
+# If you are interested in gene level or cluster-level tests, this where you
+# should group and find minimum Pval. Here I did cluster level P-values.
+MergedTable <- merge(ActualTable, permutationTable, by="row.names") %>%
+  mutate(clusterName=gsub("^(.+?):.+?:.+?:(clu_\\d+).+$", "\\1.\\2", Row.names, perl=T)) %>%
+  dplyr::group_by(clusterName) %>% dplyr::summarise_all(dplyr::funs(min)) %>%
+  dplyr::ungroup() %>% dplyr::select(-Row.names) %>% as.data.frame() %>%
+  tibble::column_to_rownames("clusterName")
 
 PermutationTest <- function(PvalVector){
   return(ecdf(PvalVector)(PvalVector[1]))
 }
 
-PermutationTestPvals <- apply(MergedTable, 1, PermutationTest)
 
-B<-merge(as.data.frame(BestActualPVal), as.data.frame(PermutationTestPvals), by="row.names") %>%
-rownames(B) <- B$Row.names
-C<-merge(B, eigenMTTable, by="row.names")
+OutTable <- data.frame(
+  BestActualPval=MergedTable$MinP,
+  PermutationTestPval=apply(MergedTable, 1, PermutationTest))
+OutTable$PermutationTestQvalue <- qvalue(OutTable$PermutationTestPval)$qvalue
 
-plot(-log10(C$PermutationTestPvals), -log10(C$FDR))
-
+OutTable %>%
+  tibble::rownames_to_column(var = "GroupedTrait") %>%
+  write.table(file=TableOutFile, quote=F, sep='\t')

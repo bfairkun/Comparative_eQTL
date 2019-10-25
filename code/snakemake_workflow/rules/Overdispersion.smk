@@ -27,11 +27,11 @@ rule get_GTEx_geneLength:
 rule SubsetCountTable:
     input:
         CountTable = "OverdispersionAnalysis/FullCountTable.txt.gz",
-        SampleList = "../../data/OverdispersionGTExAnalysisSampleList.txt"
+        SampleList = "../../data/OverdispersionGTExAnalysisSampleList.{list}.txt"
     log:
-        "logs/Overdispersion/SubsetCountTable.log"
+        "logs/Overdispersion/SubsetCountTable.{list}.log"
     output:
-        "OverdispersionAnalysis/TableSubset.txt"
+        "OverdispersionAnalysis/TableSubset.{list}.txt"
     shell:
         """
         Rscript scripts/SubsetGTExCountTable.R {input.CountTable} {input.SampleList} {output} &> {log}
@@ -40,16 +40,50 @@ rule SubsetCountTable:
 rule CalculateOverdispersionTissueMatrix:
     input:
         CountTable = "OverdispersionAnalysis/TableSubset.txt",
-        SampleList = "../../data/OverdispersionGTExAnalysisSampleList.txt",
+        SampleList = "../../data/OverdispersionGTExAnalysisSampleList.{list}.txt",
         GeneLengths="OverdispersionAnalysis/GTEx.genelengths.txt"
     output:
-        mu = "OverdispersionAnalysis/GtexTissueMatrix.mu.txt",
-        overdispersion = "OverdispersionAnalysis/GtexTissueMatrix.overdispersion.txt",
+        mu = "OverdispersionAnalysis/GtexTissueMatrix.mu.{list}.txt",
+        overdispersion = "OverdispersionAnalysis/GtexTissueMatrix.overdispersion.{list}.txt",
     log:
-        "logs/OverdispersionAnalysis/CalculateOverdispersionTissueMatrix"
+        "logs/OverdispersionAnalysis/CalculateOverdispersionTissueMatrix.{list}.log"
     shell:
         """
         Rscript scripts/CalculateOverdispersionForGtexTissues.R {input.CountTable} {input.SampleList} {input.GeneLengths} {output.mu} {output.overdispersion} &> {log}
+        """
+
+rule CalculateOverdispersionTissueMatrix_NoLengthNorm:
+    input:
+        CountTable = "OverdispersionAnalysis/TableSubset.txt",
+        SampleList = "../../data/OverdispersionGTExAnalysisSampleList.{list}.txt",
+        GeneLengths="OverdispersionAnalysis/GTEx.genelengths.txt"
+    output:
+        mu = "OverdispersionAnalysis/GtexTissueMatrix.mu.NoLengthNorm.{list}.txt",
+        overdispersion = "OverdispersionAnalysis/GtexTissueMatrix.overdispersion.NoLengthNorm.{list}.txt",
+    log:
+        "logs/OverdispersionAnalysis/CalculateOverdispersionTissueMatrix.{list}.log"
+    shell:
+        """
+        Rscript scripts/CalculateOverdispersionForGtexTissues_NoLengthNorm.R {input.CountTable} {input.SampleList} {input.GeneLengths} {output.mu} {output.overdispersion} &> {log}
+        """
+
+rule copyToOutput_GTExOverdispersion:
+    input:
+        mu = "OverdispersionAnalysis/GtexTissueMatrix.mu.NoLengthNorm.{list}.txt",
+        overdispersion = "OverdispersionAnalysis/GtexTissueMatrix.overdispersion.NoLengthNorm.{list}.txt",
+        mu2 = "OverdispersionAnalysis/GtexTissueMatrix.mu.{list}.txt",
+        overdispersion2 = "OverdispersionAnalysis/GtexTissueMatrix.overdispersion.{list}.txt",
+    output:
+        mu = "../../output/GtexTissueMatrix.mu.NoLengthNorm.{list}.txt.gz",
+        overdispersion = "../../output/GtexTissueMatrix.overdispersion.NoLengthNorm.{list}.txt.gz",
+        mu2 = "../../output/GtexTissueMatrix.mu.{list}.txt.gz",
+        overdispersion2 = "../../output/GtexTissueMatrix.overdispersion.{list}.txt.gz",
+    shell:
+        """
+        cat {input.mu} | gzip - > {output.mu}
+        cat {input.overdispersion} | gzip - > {output.overdispersion}
+        cat {input.mu2} | gzip - > {output.mu2}
+        cat {input.overdispersion2} | gzip - > {output.overdispersion2}
         """
 
 rule OverdispersionInChimps:
@@ -71,3 +105,9 @@ rule OverdispersionInChimps:
         gzip ../../output/OverdispersionEstimatesFromChimp.txt
         gzip ../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt
         """
+
+rule GetHeartLeftVentricleChromHMM:
+    output:
+        "../../data/HeartLeftVentricle.ChromHMM.hg38.bed.gz"
+    shell:
+        "wget -O {output} https://egg2.wustl.edu/roadmap/data/byFileType/chromhmmSegmentations/ChmmModels/core_K27ac/jointModel/final/E095_18_core_K27ac_hg38lift_dense.bed.gz"
