@@ -24,6 +24,20 @@ rule get_GTEx_geneLength:
         /project2/gilad/bjf79_project1/software/GTFtools_0.6.5/gtftools.py -l {output} {input}
         """
 
+rule get_tss_and_tata_annotations:
+    """
+    From paper titled 'refTSS: A Reference Data Set for Human and Mouse
+    Transcription Start Sites'
+    """
+    output:
+        tata = "../../data/TSS_annotations/TataAnnotations.txt.gz",
+        tss_classifications = "../../data/TSS_annotations/TssClassificationAnnotations.txt.gz",
+    shell:
+        """
+        wget -O {output.tata} http://reftss.clst.riken.jp/datafiles/current/human/tata_box_annotations/hg38_tata_annotation_v3.txt.gz
+        wget -O {output.tss_classifications} http://reftss.clst.riken.jp/datafiles/current/human/tss_classification/TSS.classification.hg38.gz
+        """
+
 rule SubsetCountTable:
     input:
         CountTable = "OverdispersionAnalysis/FullCountTable.txt.gz",
@@ -95,15 +109,15 @@ rule OverdispersionInChimps:
         HumanEgenes = "../../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz",
         Biomart = "../../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz"
     output:
-        OverdispersionParameters = "../../output/OverdispersionEstimatesFromChimp.txt.gz",
-        OverdispersionParameters2 = "../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz",
+        OverdispersionParameters = "../../output/OverdispersionEstimatesFromChimp.txt",
+        OverdispersionParameters2 = "../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt",
+        OverdispersionParameters_NoLengthNorm = "../../output/OverdispersionEstimatesFromChimp.NoLengthNorm.txt",
+        OverdispersionParameters2_NoLengthNorm = "../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.NoLengthNorm.txt",
     log:
         "logs/OverdispersionAnalysis/CalculateOverdispersionChimps.log"
     shell:
         """
         Rscript scripts/CalculateChimpOverdispersion.R 2> {log}
-        gzip ../../output/OverdispersionEstimatesFromChimp.txt
-        gzip ../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt
         """
 
 rule GetHeartLeftVentricleChromHMM:
