@@ -1,0 +1,207 @@
+---
+title: "20191025_FullGtexOverdispersionEstimates"
+author: "Ben Fair"
+date: "10/25/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+```{r}
+library(tidyverse)
+library(CorShrink)
+library(gplots)
+library(readxl)
+library("org.Hs.eg.db")
+
+source("../code/CustomFunctions.R")
+```
+
+
+make correlation matrix heatmaps of gtex tissues for overdispersion.
+
+```{r}
+
+
+MuTable <- read.table("../output/GtexTissueMatrix.mu.NoLengthNorm.AllModeExtractionSamples.txt.gz", header=T, sep='\t', check.names = F, row.names = 1) %>%
+  rownames_to_column("X") %>%
+  mutate(gene = gsub("\\.\\d+", "", X, perl=T)) %>% dplyr::select(-X)
+
+OverdispersionTable <- read.table("../output/GtexTissueMatrix.overdispersion.NoLengthNorm.AllModeExtractionSamples.txt.gz", header=T, sep='\t', check.names = F, row.names = 1) %>%
+  rownames_to_column("X")  %>% 
+  mutate(gene = gsub("\\.\\d+", "", X, perl=T)) %>% dplyr::select(-X)
+
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp.NoLengthNorm.txt", header=T, sep='\t')
+
+OverdispersionCombined <- ChimpOverdispersionTable %>%
+  dplyr::select(ThisStudy_ChimpHeart=Chimp.Overdispersion,
+         ThisStudy_HumanHeart=Human.Overdispersion,
+         gene) %>%
+  left_join(OverdispersionTable, by="gene") %>%
+  select_if(~sum(!is.na(.)) > 0) %>% tibble::column_to_rownames("gene")
+
+MuCombined <- ChimpOverdispersionTable %>%
+  dplyr::select(ThisStudy_ChimpHeart=Chimp.Mean.Expression,
+         ThisStudy_HumanHeart=Human.Mean.Expression,
+         gene) %>%
+  left_join(MuTable, by="gene") %>%
+  select_if(~sum(!is.na(.)) > 0) %>% tibble::column_to_rownames("gene")
+
+GenesOrderedByExpression <- ChimpOverdispersionTable %>%
+  dplyr::select(ThisStudy_ChimpHeart=Chimp.Mean.Expression,
+         ThisStudy_HumanHeart=Human.Mean.Expression,
+         gene) %>%
+  left_join(MuTable, by="gene") %>%
+  select_if(~sum(!is.na(.)) > 0) %>%
+  gather(tissue, value, -gene) %>%
+    group_by(gene) %>% 
+    summarise(Median = median(value)) %>%
+    arrange(desc(Median)) %>%
+    top_n(5000) %>% pull(gene)
+
+
+ResidualOverdispersionCombined <- OverdispersionCombined
+# ResidualOverdispersionCombined <- OverdispersionCombined[GenesOrderedByExpression,]
+
+ResidualOverdispersionCombined[,] <- NA
+for (tissue in colnames(ResidualOverdispersionCombined)){
+  print(tissue)
+  ResidualOverdispersionCombined[,tissue] <- GetLoessResidual(MuCombined[,tissue], log10(OverdispersionCombined[,tissue]))
+  # ResidualOverdispersionCombined[GenesOrderedByExpression,tissue] <- GetLoessResidual(MuCombined[GenesOrderedByExpression,tissue], log10(OverdispersionCombined[GenesOrderedByExpression,tissue]))
+
+}
+
+GtexColors <- read.table("../data/GTEx_Analysis_TissueColorCodes.txt", sep='\t', header=T, stringsAsFactors = F) %>% mutate(HEX=paste0("#",Color.code))
+GtexColors[nrow(GtexColors) + 1,] = c("ThisStudy_ChimpHeart","black", "#000000")
+GtexColors[nrow(GtexColors) + 1,] = c("ThisStudy_HumanHeart","black", "#000000")
+
+TissueColorVector <- GtexColors$HEX
+names(TissueColorVector)<-GtexColors$Tissue
+
+#Do tissues generally differ in their levels of overdispersion
+OverdispersionCombined %>%
+  gather() %>% mutate(TissueColor=TissueColorVector[key]) %>%
+  ggplot(aes(x=key, y=log(value))) +
+    geom_boxplot(outlier.shape = NA, aes(fill = key)) +
+    ylab("overdispersion") +
+    ylim(c(-6,2)) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5)) +
+    theme(legend.position="none") +
+    scale_fill_manual(values=TissueColorVector) +
+    guides(color=guide_legend(nrow=2,byrow=TRUE))
+
+# Do these different levels of overdispersion relate to power in eQTL studies
+GtexEgeneCounts <- read_excel("../data/NumberEgenesPerGtexTissue.xlsx")
+GtexEgeneCounts %>%
+  ggplot(aes(x=`# RNASeq and Genotyped samples`, y=as.numeric(eGenes), fill=Tissue)) +
+  geom_point() +
+  scale_fill_manual(values=TissueColorVector) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+
+ResidOD.Corshrink <- ResidualOverdispersionCombined %>%
+  as.matrix() %>% scale() %>%
+  CorShrinkData(sd_boot = FALSE, image = "null")
+GtexScheme <- plyr::mapvalues(row.names(ResidOD.Corshrink$cor), from=GtexColors$Tissue, to=GtexColors$HEX)
+heatmap.2(ResidOD.Corshrink$cor**2, trace="none", dendrogram=c("col"), labCol=F, cexRow = 0.7, ColSideColors=GtexScheme, colRow = GtexScheme, adjRow=c(0,0), offsetRow=-0.6, main="residual overdispersion pearson cor")
+sort(ResidOD.Corshrink$cor["ThisStudy_ChimpHeart",])
+
+
+OD.Corshrink <- OverdispersionCombined %>%
+  as.matrix() %>% scale() %>%
+  CorShrinkData(sd_boot = FALSE, image = "null")
+GtexScheme <- plyr::mapvalues(row.names(OD.Corshrink$cor), from=GtexColors$Tissue, to=GtexColors$HEX)
+heatmap.2(OD.Corshrink$cor, trace="none", dendrogram=c("col"), labCol=F, cexRow = 0.7, ColSideColors=GtexScheme, colRow = GtexScheme, adjRow=c(0,0), offsetRow=-0.6, main="overdispersion pearson cor")
+sort(OD.Corshrink$cor["ThisStudy_ChimpHeart",])
+
+
+mu.Corshrink <- MuCombined %>%
+  as.matrix() %>% scale() %>%
+  CorShrinkData(sd_boot = FALSE, image = "null")
+GtexScheme <- plyr::mapvalues(row.names(OD.Corshrink$cor), from=GtexColors$Tissue, to=GtexColors$HEX)
+heatmap.2(mu.Corshrink$cor, trace="none", dendrogram=c("col"), labCol=F, cexRow = 0.7, ColSideColors=GtexScheme, colRow = GtexScheme, adjRow=c(0,0), offsetRow=-0.6, main="expression correlation")
+
+
+```
+
+Check that residual overdispersion associates with essentiality:
+
+```{r}
+pLI.data <- as.data.frame(read_excel("../data/Lek_etal_nature19057-SI Table 13.xlsx", sheet=2))
+
+
+EssentialGenes <- pLI.data %>% filter(pLI>0.9) %>% pull(gene) %>% mapIds(org.Hs.eg.db, keys=., keytype = "SYMBOL", column="ENSEMBL")
+
+NonEssentialGenes <- pLI.data %>% filter(pLI<0.1) %>% pull(gene) %>% mapIds(org.Hs.eg.db, keys=., keytype = "SYMBOL", column="ENSEMBL")
+
+Essentiality <- ResidualOverdispersionCombined %>%
+  rownames_to_column() %>%
+  mutate(MeanResODAcrossTissues=rowMeans(ResidualOverdispersionCombined)) %>%
+  mutate(pLI.Score.essentiality=case_when(
+    rowname %in% EssentialGenes ~ "Essential",
+    rowname %in% NonEssentialGenes ~ "NonEssential")) %>%
+  filter(pLI.Score.essentiality %in% c("Essential", "NonEssential"))
+
+Essentiality$pLI.Score.essentiality %>% table()
+
+ggplot(Essentiality, aes(color=pLI.Score.essentiality,x=MeanResODAcrossTissues)) +
+    stat_ecdf(geom = "step") +
+    ylab("Cumulative frequency") +
+    xlab("Cross tissue mean residual overdispersion") +
+    annotate("text", x = Inf, y = -Inf, hjust=1, vjust=-1, label = paste("Mann-Whitney test: P =", signif(wilcox.test(data=Essentiality, MeanResODAcrossTissues ~ pLI.Score.essentiality, alternative="less")$p.value, 2) )) +
+    theme_bw()
+```
+
+Now see if TATA box genes are more overdispersed
+
+```{r}
+TSS.annotations <- read.table("../data/TSS_annotations/TssClassificationAnnotations.txt.gz", sep='\t', header=T, stringsAsFactors = F, fill=T)
+TATA.annotations <- read.table("../data/TSS_annotations/TataAnnotations.txt.gz", sep='\t', header=T, stringsAsFactors=F, quote = "", fill=T)
+
+
+TSS.filtered.annotations <- TSS.annotations %>% filter(TSSclassification=="yes") %>%
+  left_join(TATA.annotations, by=c("refTSSID")) %>%
+  dplyr::select(refTSSID, Chr, Start, End, Strand, Distance.to.TSS, Nearest.Ensembl, TATA=TATA.Box.TBP..Promoter.Homer.Distance.From.Peak.sequence.strand.conservation.) %>%
+  mutate(TATA.dist = as.numeric(gsub("^(.+?)\\(.+", "\\1", TATA, perl=T)))
+
+#TATA boxes are ~35bp upstream of TSS
+qplot(as.numeric(TSS.filtered.annotations$TATA.dist), xlim=c(-50,10))
+
+#annotated genes TSS are close distance to TSS from this database (based on CAGE and other data), but slightly biased
+qplot(TSS.filtered.annotations$Distance.to.TSS, xlim=c(-400,400))
+
+#let's keep only the TATA box genes where the TATA motif is within -40 to -30 of the TSS, assuming that the others are false positives in the functional sense. Also get rid of TSS where distance of gene to TSS is unreasonably far
+TATA.GeneList <- TSS.filtered.annotations %>%
+  filter(TATA.dist >= -40 & TATA.dist <= -30) %>%
+  filter(Distance.to.TSS >= -200 & Distance.to.TSS <= 500) %>%
+  distinct(Nearest.Ensembl, .keep_all = T) %>%
+  pull(Nearest.Ensembl)
+Not.TATA.GeneList <- TSS.filtered.annotations %>%
+  distinct(Nearest.Ensembl, .keep_all = T) %>%
+  filter(!Nearest.Ensembl %in% TATA.GeneList) %>%
+  pull(Nearest.Ensembl)
+
+TATA.Dispersion <- ResidualOverdispersionCombined %>%
+  rownames_to_column() %>%
+  mutate(MeanResODAcrossTissues=rowMeans(ResidualOverdispersionCombined)) %>%
+  mutate(Promoter.type=case_when(
+    rowname %in% TATA.GeneList ~ "TATA.box",
+    rowname %in% Not.TATA.GeneList ~ "No.Tata.Box")) %>%
+  filter(Promoter.type %in% c("TATA.box", "No.Tata.Box"))
+
+table(TATA.Dispersion$Promoter.type)
+
+ggplot(TATA.Dispersion, aes(color=Promoter.type,x=MeanResODAcrossTissues)) +
+    stat_ecdf(geom = "step") +
+    ylab("Cumulative frequency") +
+    xlab("Cross tissue mean residual overdispersion") +
+    annotate("text", x = Inf, y = -Inf, hjust=1, vjust=-1, label = paste("Mann-Whitney test: P =", signif(wilcox.test(data=TATA.Dispersion, MeanResODAcrossTissues ~ Promoter.type, alternative="less")$p.value, 2) )) +
+    theme_bw() +
+    theme(legend.position = "bottom")
+
+```
+

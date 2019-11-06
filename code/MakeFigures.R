@@ -44,6 +44,14 @@ Fig1A <- CountTables$Chimp$log2RPKM[HighAndLowDispersionGenes,] %>% t() %>% as.d
 Fig1A_withTable <- ggdraw(Fig1A) +
   draw_grob(tableGrob(Fig1ATable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.4, y=0.7, width=0.2, height=0.3)
 
+CountTables$Chimp$log2RPKM[HighAndLowDispersionGenes,] %>% t() %>% as.data.frame() %>% gather() %>%
+  dplyr::select(gene=key, value) %>%
+  ggplot(aes(x=gene, y=value)) +
+  geom_boxplot(outlier.shape=NA) +
+  ylab("Expression\nlog2(RPKM)") +
+  ylim(c(0,10)) +
+  geom_jitter(position=position_jitter(width=.1, height=0))
+
 
 #overdispersion correlation
 R<-cor(log(ParameterEstimates$Chimp.Overdispersion),log(ParameterEstimates$Human.Overdispersion), use="complete.obs")

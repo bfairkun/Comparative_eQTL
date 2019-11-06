@@ -58,19 +58,31 @@ TsvToCombinedEgenes <- function(Chimp.tsv, Human.tsv, SysToID.tsv, HumanTsvType 
 
 
 
-# Return plots for dN/dS, etc. from dataframe
-Plot.PercentNonIdentity.byGroup <- function(TsvToCombinedEgenes.df){
+# Return plots for dN/dS, etc. from dataframe. If HumanEgeneCount==NULL, use 0.1 FDR, else, use the HumanEgeneCount to classify the top N human genes by FDR as eGenes
+Plot.PercentNonIdentity.byGroup <- function(TsvToCombinedEgenes.df, HumanEgeneCount=NULL){
   SharedLabel <- "both"
   NeitherLabel <- "neither"
   ChimpLabel <- "chimp"
   HumanLabel <- "human"
 
-  ToPlot <- TsvToCombinedEgenes.df %>%
-    mutate(group = case_when(
-      H.FDR <=0.1 & C.FDR<=0.1 ~ SharedLabel,
-      H.FDR <=0.1 & C.FDR>=0.1 ~ HumanLabel,
-      H.FDR >=0.1 & C.FDR<=0.1 ~ ChimpLabel,
-      H.FDR >=0.1 & C.FDR>=0.1 ~ NeitherLabel))
+  if (is.null(HumanEgeneCount)){
+    ToPlot <- TsvToCombinedEgenes.df %>%
+      mutate(group = case_when(
+        H.FDR <=0.1 & C.FDR<=0.1 ~ SharedLabel,
+        H.FDR <=0.1 & C.FDR>=0.1 ~ HumanLabel,
+        H.FDR >=0.1 & C.FDR<=0.1 ~ ChimpLabel,
+        H.FDR >=0.1 & C.FDR>=0.1 ~ NeitherLabel))
+  } else {
+    ToPlot <- TsvToCombinedEgenes.df %>%
+      mutate(rank = dense_rank(H.FDR)) %>%
+      mutate(group = case_when(
+        rank <= HumanEgeneCount & C.FDR<=0.1 ~ SharedLabel,
+        rank <= HumanEgeneCount & C.FDR>=0.1 ~ HumanLabel,
+        rank >= HumanEgeneCount & C.FDR<=0.1 ~ ChimpLabel,
+        rank >= HumanEgeneCount & C.FDR>=0.1 ~ NeitherLabel)) %>%
+      dplyr::select(-rank)
+  }
+
 
   AlternativeHypothesis <- c(
     "chimp > neither",
@@ -98,19 +110,31 @@ Plot.PercentNonIdentity.byGroup <- function(TsvToCombinedEgenes.df){
 }
 
 ###
-Plot.dNdS.byGroup <- function(TsvToCombinedEgenes.df){
+Plot.dNdS.byGroup <- function(TsvToCombinedEgenes.df, HumanEgeneCount=NULL){
   SharedLabel <- "both"
   NeitherLabel <- "neither"
   ChimpLabel <- "chimp"
   HumanLabel <- "human"
 
-  ToPlot <- TsvToCombinedEgenes.df %>%
-    mutate(dN.dS=dN/dS) %>%
-    mutate(group = case_when(
-      H.FDR <=0.1 & C.FDR<=0.1 ~ SharedLabel,
-      H.FDR <=0.1 & C.FDR>=0.1 ~ HumanLabel,
-      H.FDR >=0.1 & C.FDR<=0.1 ~ ChimpLabel,
-      H.FDR >=0.1 & C.FDR>=0.1 ~ NeitherLabel))
+  if (is.null(HumanEgeneCount)){
+    ToPlot <- TsvToCombinedEgenes.df %>%
+      mutate(dN.dS=dN/dS) %>%
+      mutate(group = case_when(
+        H.FDR <=0.1 & C.FDR<=0.1 ~ SharedLabel,
+        H.FDR <=0.1 & C.FDR>=0.1 ~ HumanLabel,
+        H.FDR >=0.1 & C.FDR<=0.1 ~ ChimpLabel,
+        H.FDR >=0.1 & C.FDR>=0.1 ~ NeitherLabel))
+  } else {
+    ToPlot <- TsvToCombinedEgenes.df %>%
+      mutate(dN.dS=dN/dS) %>%
+      mutate(rank = dense_rank(H.FDR)) %>%
+      mutate(group = case_when(
+        rank <= HumanEgeneCount & C.FDR<=0.1 ~ SharedLabel,
+        rank <= HumanEgeneCount & C.FDR>=0.1 ~ HumanLabel,
+        rank >= HumanEgeneCount & C.FDR<=0.1 ~ ChimpLabel,
+        rank >= HumanEgeneCount & C.FDR>=0.1 ~ NeitherLabel)) %>%
+      dplyr::select(-rank)
+  }
 
   AlternativeHypothesis <- c(
     "chimp > neither",
@@ -135,6 +159,60 @@ Plot.dNdS.byGroup <- function(TsvToCombinedEgenes.df){
     theme(legend.position="bottom")
 
   return(list(plot=Human.PercentNonIdentity.plot, PvalTable=PvalTable))
+}
+
+
+Plot.Interpecies.DE.byGroup <- function(TsvToCombinedEgenes.df, DE.df, HumanEgeneCount=NULL){
+  SharedLabel <- "both"
+  NeitherLabel <- "neither"
+  ChimpLabel <- "chimp"
+  HumanLabel <- "human"
+
+  if (is.null(HumanEgeneCount)){
+    ToPlot <- TsvToCombinedEgenes.df %>%
+      left_join(DE.df, by=c("H.gene"= "gene")) %>%
+      mutate(InterspeciesEffectSize=abs(coefficients)) %>%
+      mutate(group = case_when(
+        H.FDR <=0.1 & C.FDR<=0.1 ~ SharedLabel,
+        H.FDR <=0.1 & C.FDR>=0.1 ~ HumanLabel,
+        H.FDR >=0.1 & C.FDR<=0.1 ~ ChimpLabel,
+        H.FDR >=0.1 & C.FDR>=0.1 ~ NeitherLabel))
+  } else {
+    ToPlot <- TsvToCombinedEgenes.df %>%
+      left_join(DE.df, by=c("H.gene"= "gene")) %>%
+      mutate(InterspeciesEffectSize=abs(coefficients)) %>%
+      mutate(rank = dense_rank(H.FDR)) %>%
+      mutate(group = case_when(
+        rank <= HumanEgeneCount & C.FDR<=0.1 ~ SharedLabel,
+        rank <= HumanEgeneCount & C.FDR>=0.1 ~ HumanLabel,
+        rank >= HumanEgeneCount & C.FDR<=0.1 ~ ChimpLabel,
+        rank >= HumanEgeneCount & C.FDR>=0.1 ~ NeitherLabel)) %>%
+      dplyr::select(-rank)
+  }
+
+  AlternativeHypothesis <- c(
+    "chimp > neither",
+    "human > neither",
+    "both > chimp",
+    "both > human")
+  Pvalues <- c(
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2)
+  )
+  PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
+  colnames(PvalTable) <- c('"H"[a]', "`P-value`")
+  EffectSize.plot <- ggplot(ToPlot, aes(color=group,x=InterspeciesEffectSize)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous(limits=c(0,4), name="log2 Interspecies absolute effect size") +
+    ylab("Cumulative frequency") +
+    xlab("|Inter-species effect size|") +
+    labs(color = "eGene discovered in") +
+    theme_bw() +
+    theme(legend.position="bottom")
+
+  return(list(plot=EffectSize.plot, PvalTable=PvalTable))
 }
 
 ###
@@ -202,6 +280,14 @@ GetParameterEstimatesOfUnderlyingGamma_lengthAdjusted_FromTable <- function(MyCo
     colnames(out) <- c("mu", "overdispersion", "theta.se")
   }
   return(as.data.frame(out))
+}
+
+# Get residual from loess fit for regressing out mean effect on overdispersion
+GetLoessResidual <- function(x, y){
+  loess.fit <- loess(y ~ x, degree=1)
+  #for our purposes, the fit with the default degree=2 looks like unnatural fit, especially near the edges
+  loess.residual <- y - predict(loess.fit, x)
+  return(loess.residual)
 }
 
 
@@ -289,6 +375,58 @@ GetCountTables <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSiz
   return(ToReturn)
 }
 
+
+DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, FC.NullInterval, drop, ChimpSampleDrop=NULL, HumanSampleDrop=NULL)
+  #if SubsampleSize parameter == 0, use full table, otherwise, subsample from it
+{
+  FullChimpData <- read.table(gzfile(ChimpCountTableFile), header=T, check.names=FALSE, skip=1)
+  FullHumanData <- read.table(gzfile(HumanCountTableFile), header=T, check.names=FALSE, skip=1)
+
+  if (!is.null(ChimpSampleDrop)){
+    FullChimpData <- FullChimpData %>% dplyr::select(-ChimpSampleDrop)
+  }
+  if (!is.null(HumanSampleDrop)){
+    FullHumanData <- FullHumanData %>% dplyr::select(-HumanSampleDrop)
+  }
+
+  if (SubsampleSize==0){
+    CountTableChimp <- FullChimpData
+    colnames(CountTableChimp) <- paste0("C.", colnames(CountTableChimp))
+    CountTableHuman <- FullHumanData
+    colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
+
+  } else {
+    CountTableChimp <- FullChimpData %>% dplyr::select(c(1:6, sample(7:length(FullChimpData), SubsampleSize)))
+    colnames(CountTableChimp) <- paste0("C.", colnames(CountTableChimp))
+
+    CountTableHuman <- FullHumanData %>% dplyr::select(c(1:6, sample(7:length(FullHumanData), SubsampleSize)))
+    colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
+  }
+
+  CombinedTable <- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=c("C.Geneid"="H.Geneid")) %>%
+    column_to_rownames("C.Geneid") %>% as.matrix()
+
+  SpeciesFactor <- colnames(CombinedTable) %>% substr(1,1) %>% factor() %>% unclass() %>% as.character()
+
+  d0 <- DGEList(CombinedTable)
+  d0 <- calcNormFactors(d0)
+  d <- d0[-drop,]
+  mm <- model.matrix(~0 + SpeciesFactor)
+  y <- voom(d, mm, normalize.method="cyclicloess", plot=F)
+
+  GeneLengths <- inner_join(CountTableChimp[,c("C.Geneid", "C.Length")], CountTableHuman[,c("H.Geneid", "H.Length")], by=c("C.Geneid"="H.Geneid"))
+  GeneLengthMatrix <- cbind(
+    rep.col(log2(GeneLengths$C.Length/1000), length(CountTableChimp)-6),
+    rep.col(log2(GeneLengths$H.Length/1000), length(CountTableHuman)-6))
+  rownames(GeneLengthMatrix) <- GeneLengths$C.Geneid
+  y$E <- y$E - GeneLengthMatrix[rownames(y$E),]
+
+  fit<- lmFit(y, mm)
+  contr <- makeContrasts(DE=SpeciesFactor1-SpeciesFactor2, levels = mm)
+  tmp <- contrasts.fit(fit, contrasts=contr)
+  efit <- treat(tmp, lfc = FC.NullInterval)
+  return(efit)
+}
 
 ### tests
 

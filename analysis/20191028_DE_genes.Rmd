@@ -1,0 +1,85 @@
+---
+title: "DE genes"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Overview:
+
+Do DE gene analysis for chimp/human. Leave out virus challanged chimps
+
+
+## Analysis
+
+Load necessary libraries:
+
+```{r load-libraries, message=F, warning=F}
+library(tidyverse)
+library(knitr)
+library("edgeR")
+library(corrplot)
+library(gplots)
+library(pROC)
+library(qvalue)
+library(reshape2)
+library(gridExtra)
+library(readxl)
+
+source("../code/CustomFunctions.R")
+```
+
+
+Read in count tables
+
+```{r read-data}
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+```
+
+Drop samples that are to be dropped for various reasons. see [power analysis](20190613_PowerAnalysis.html). Also drop the virus challanged chimps
+
+```{r}
+HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+VirusChallengedChimps <- OtherMetadata %>% filter(grepl("V+",Viral.status)) %>% pull(Individual.ID)
+ChimpSamplesToDrop <- c(c("Little_R"), VirusChallengedChimps)
+```
+
+See [source code](https://github.com/bfairkun/Comparative_eQTL/blob/master/code/CustomFunctions.R) for DE gene analysis or refer to basically the same code in my [power analysis](20190613_PowerAnalysis.html).
+
+```{r}
+CountTableChimp <- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1) %>% dplyr::select(-ChimpSamplesToDrop)
+CountTableHuman <- read.table(gzfile(CountTableHumanFile), header=T, check.names=FALSE, skip=1) %>% dplyr::select(-HumanSamplesToDrop)
+CountTableFull <- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by="Geneid") %>%
+  column_to_rownames("Geneid") %>% as.matrix() %>% DGEList() %>% calcNormFactors()
+cutoff <- 6
+drop <- which(apply(cpm(CountTableFull), 1, max) < cutoff)
+d <- CountTableFull[-drop,] 
+
+#Interval for null hypothesis
+FC.NullInterval <- log2(1)
+
+#True results are those using all samples
+True.efit <- DE.Subsampled(CountTableChimpFile,
+              CountTableHumanFile,
+              0, FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+TrueResponse <- decideTests(True.efit, p.value=0.05)
+
+WriteOut <- data.frame(coefficients=as.numeric(True.efit$coefficients), pval=as.numeric(True.efit$p.value), signif=decideTests(True.efit))
+ggplot(WriteOut, aes(x=coefficients, y=-log10(pval), color=factor(DE))) +
+  geom_point(alpha=0.1) +
+  scale_x_continuous(limits=c(-5,5))
+
+```
+
+Write out results to data
+
+```{r, eval=F}
+WriteOut %>% tibble::rownames_to_column("gene") %>%
+write.table("../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', row.names = F, col.names = T, quote=F)
+```
+
+

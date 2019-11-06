@@ -1,0 +1,130 @@
+---
+title: "My document"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Overview:
+
+Does overdispersion correlate with between species divergence in expression, or eGene character. To the extent that dispersion marks genes not under strong constraint/purifying selection, I expect more dispersed genes to be eGenes and more dispersed genes to also be DE between species.
+
+
+## Analysis
+
+Load necessary libraries:
+
+```{r load-libraries, message=F, warning=F}
+library(tidyverse)
+source("../code/CustomFunctions.R")
+
+```
+
+
+
+```{r}
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp.NoLengthNorm.txt", header=T, sep='\t')
+
+EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
+
+DE.results <- read.table("../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', header=T)
+
+
+```
+
+
+Are human eGenes more overdispersed?
+```{r}
+left_join(ChimpOverdispersionTable, EgenesTested, by=c("gene"="H.gene")) %>%
+  mutate(eGene=case_when(
+    H.FDR <= 0.05 ~ "eGene",
+    H.FDR >= 0.05 ~ "not eGene"
+  )) %>%
+  ggplot(aes(x=Human.Residual, color=eGene)) +
+    stat_ecdf(geom = "step") +
+    theme_bw()
+```
+
+No. Probably same conclusion for chimp eGenes, though chimp eGenes in my case is a more stringent threshold for eGene effect size since power is limited... let's see.
+
+```{r}
+
+left_join(ChimpOverdispersionTable, EgenesTested, by=c("gene"="H.gene")) %>%
+  mutate(eGene=case_when(
+    C.FDR <= 0.1 ~ "eGene",
+    C.FDR >= 0.1 ~ "not eGene"
+  )) %>%
+  ggplot(aes(x=Human.Residual, color=eGene)) +
+    stat_ecdf(geom = "step") +
+    theme_bw()
+```
+
+
+Are DE genes any more dispersed?
+```{r}
+
+left_join(ChimpOverdispersionTable, DE.results, by="gene") %>%
+  ggplot(aes(x=Human.Residual, y=-log10(pval), color=factor(DE))) +
+    geom_point(alpha=0.1) +
+    theme_bw()
+```
+
+If anything they are slightly less dispersed.
+
+Are eGenes more likely to be DE genes?
+```{r}
+left_join(EgenesTested, DE.results, by=c("H.gene"= "gene")) %>%
+    mutate(Chimp.eGene=case_when(
+    C.FDR <= 0.1 ~ "eGene",
+    C.FDR >= 0.1 ~ "not eGene"
+  )) %>%
+  ggplot(aes(x=abs(coefficients), color=Chimp.eGene)) +
+    stat_ecdf(geom = "step") +
+    theme_bw()
+
+left_join(EgenesTested, DE.results, by=c("H.gene"= "gene")) %>%
+    mutate(Human.eGene=case_when(
+    H.FDR <= 0.1 ~ "eGene",
+    H.FDR >= 0.1 ~ "not eGene"
+  )) %>%
+  ggplot(aes(x=abs(coefficients), color=Human.eGene)) +
+    stat_ecdf(geom = "step") +
+    theme_bw()
+```
+
+Yes, eGenes slightly stronger between species effects. Now let's make the plot for eGenes that are in both as a separate category.
+
+```{r}
+DE.plot.results <- Plot.Interpecies.DE.byGroup(EgenesTested, DE.results, HumanEgeneCount = 500)
+DE.plot.results$plot
+DE.plot.results$PvalTable
+
+DE.Fig <- ggdraw(DE.plot.results$plot) +
+  draw_grob(tableGrob(DE.plot.results$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.25, width=0.3, height=0.3)
+ggsave("~/Desktop/My.DE.pdf", DE.Fig, height=120, width=120, units="mm")
+
+
+```
+
+Percent identity and dn/ds plot
+```{r}
+PercentIdentityPlot <- Plot.PercentNonIdentity.byGroup(EgenesTested, HumanEgeneCount = 500)
+PercentIdentityPlot$plot
+PercentIdentityPlot$PvalTable
+PercentIdent.Fig <- ggdraw(PercentIdentityPlot$plot) +
+  draw_grob(tableGrob(PercentIdentityPlot$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.25, width=0.3, height=0.3)
+ggsave("~/Desktop/My.PercentIdent.pdf", dN.dS.Fig, height=120, width=120, units="mm")
+
+
+Plot.dNdS <- Plot.dNdS.byGroup(EgenesTested, HumanEgeneCount = 500)
+Plot.dNdS$plot
+Plot.dNdS$PvalTable
+dNdS.Fig <- ggdraw(Plot.dNdS$plot) +
+  draw_grob(tableGrob(Plot.dNdS$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.25, width=0.3, height=0.3)
+ggsave("~/Desktop/My.dNdS.pdf", dNdS.Fig, height=120, width=120, units="mm")
+
+```
+
+

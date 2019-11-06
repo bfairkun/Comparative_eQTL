@@ -1,0 +1,122 @@
+---
+title: "TabulaMuris_analysis2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Read in the processed tabula muris dataset...
+
+```{r}
+library(tidyverse)
+library(biomaRt)
+library("Matrix")
+library(Seurat)
+library(sctransform)
+library(data.table)
+
+
+
+Heart.seur = readRDS("~/Downloads/TabMuris_heart_seurat.rds")
+
+
+```
+
+
+Finally, now ask if overdispersed genes fall into different clusters
+```{r}
+OverdispersedGeneList <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz", sep='\t', header=T)
+
+OverdispersedGeneList$MeanDispersion <- (log(OverdispersedGeneList$Chimp.Residual) + log(OverdispersedGeneList$Human.Residual))/2
+
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+
+MouseGenes = rownames(Heart.seur)
+genes = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = MouseGenes ,mart = mouse, attributesL = c("ensembl_gene_id", "chromosome_name", "start_position"), martL = human, uniqueRows=T)
+
+#I want to grab the top overdispersed genes, but only those that are reliably expressed in at least 5 cells, and have an ensembl homolog match to human
+CellNonZeroCounts <- data.frame(
+        NumCellsExpressing=rowSums(Heart.seur@assays$RNA[,] > 0)) %>%
+        tibble::rownames_to_column("MGI.symbol")
+Top9Dispersed <- OverdispersedGeneList %>%
+        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        top_n(9, MeanDispersion) %>%
+        pull(MGI.symbol)
+
+Bottom9Dispersed <- OverdispersedGeneList %>%
+        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        top_n(-9, MeanDispersion) %>%
+        pull(MGI.symbol)
+
+```
+
+Umaps
+```{r, eval=F}
+Top9Dispersed.umap <- FeaturePlot(Heart.seur, features = Top9Dispersed, order=T)
+
+Bottom9Dispersed.umap <- FeaturePlot(Heart.seur, features = Bottom9Dispersed, order=T)
+
+Top9Dispersed.umap
+Bottom9Dispersed.umap
+```
+
+```{r}
+#Need to scale data for heatmap
+Heart.seur <- ScaleData(object = Heart.seur)
+
+ OverdispersedGeneList %>%
+        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        top_n(50, MeanDispersion) %>%
+        pull(MGI.symbol) %>%
+DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, size=3, label=F) +
+         scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
+
+ OverdispersedGeneList %>%
+        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        top_n(-50, MeanDispersion) %>%
+        pull(MGI.symbol) %>%
+DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, size=3, label=F) +
+         scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
+```
+
+
+aggregate count matrix by cell-type to calculate cell-type specificiy score for each gene
+
+```{r}
+Heart.seur@assays$RNA[1:10,1:10] %>% as.data.frame()
+
+Heart.seur@meta.data$Cell.ontology.class %>% head()
+
+CountMatrixAggregatedToCellType <- data.frame(Cell.ID=colnames(Heart.seur@assays$SCT), Cell.type=Heart.seur@meta.data$Cell.ontology.class) %>%
+  left_join(Heart.seur@assays$RNA[,] %>% t() %>% as.data.frame() %>% rownames_to_column("Cell.ID")) %>%
+  group_by(Cell.type) %>%
+  summarise_each(funs(sum), -Cell.ID) %>%
+  as.data.frame() %>%
+  remove_rownames() %>% column_to_rownames("Cell.type") %>% t() %>%
+  as.data.frame()
+
+
+# Normalize the matrix to CPM
+CountMatrixAggregated.CPM <- CountMatrixAggregatedToCellType/colSums(CountMatrixAggregatedToCellType) * 1E6
+
+# Add a pseudocount. Normally pseudocounts are added before library size normalization. But since these libraries (cell clusters) may have vastly different library sizes, it makes more sense to me to add after normalization so that pseudocounts in different samples carry similar magnitude. I will add a pseudocount that is equivalent to the smallest non-zero value in the CPM table.
+CountMatrixAggregated.CPM.PlusPseudocount <- CountMatrixAggregated.CPM + min(CountMatrixAggregated.CPM[CountMatrixAggregated.CPM > 0])
+
+write.table(CountMatrixAggregated.CPM.PlusPseudocount, file="../data/TabulaMuris.CellType.Aggregated.CPM.table.tsv", sep='\t', quote=F)
+```
+

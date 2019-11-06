@@ -1,0 +1,18 @@
+---
+title: "MCA_Dataset"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+## read in mouse cell atlas data
+[Instructions](https://github.com/czbiohub/tabula-muris-vignettes/tree/master/data) for downloading data partly pre-processed from Satija lab
+```{r}
+mca.matrix = readRDS("~/Downloads/MCA/MCA_merged_mat.rds")
+mca.metadata = read_csv("~/Downloads/MCA/MCA_All-batch-removed-assignments.csv")
+
+```
+

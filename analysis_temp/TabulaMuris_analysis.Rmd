@@ -1,0 +1,176 @@
+---
+title: "TabulaMurisDataset"
+author: "Ben Fair"
+date: "10/28/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Getting to know tabula muris dataset...
+
+```{r}
+library(tidyverse)
+library(biomaRt)
+library("Matrix")
+library(Seurat)
+library(sctransform)
+
+
+
+tm.facs.matrix = readRDS("/Users/benfair/Downloads/TM_facs_mat.rds")
+tm.facs.metadata = read_csv("/Users/benfair/Downloads/TM_facs_metadata.csv")
+
+
+dim(tm.facs.matrix)
+dim(tm.facs.metadata)
+
+tm.facs.matrix[1:10,1:10]
+head(tm.facs.metadata)
+
+table(tm.facs.metadata$tissue)
+
+tm.facs.matrix %>% rownames() %>% tail()
+tm.facs.matrix %>% colnames() %>% tail()
+```
+
+Converting mouse gene names to human ensembl gene name
+
+```{r}
+
+require("biomaRt")
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+
+Mouse_mito_genes = getBM(attributes=c("ensembl_gene_id", "gene_biotype"), mart=mouse)
+
+MouseGenes = rownames(tm.facs.matrix)
+genes = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = MouseGenes ,mart = mouse, attributesL = c("ensembl_gene_id", "chromosome_name", "start_position"), martL = human, uniqueRows=T)
+
+Mouse.MT.genes = getBM(attributes = c("mgi_symbol", "ensembl_gene_id", "chromosome_name"), filters = "chromosome_name", values = "MT", mart = mouse, uniqueRows=T)
+
+
+```
+
+Subset count matrix for genes that can be converted and cells that are from heart
+
+```{r}
+
+HeartCells <- tm.facs.metadata %>%
+        filter(tissue=="Heart") %>%
+        pull(cell)
+
+Heart.CountTable <- tm.facs.matrix[,HeartCells]
+AddMetaData(Heart.seur, tm.facs.metadata, col.name = NULL)
+
+
+Heart.seur <- CreateSeuratObject(Heart.CountTable)
+Heart.seur[["percent.mt"]] <- PercentageFeatureSet(Heart.seur, pattern = "^mt-")
+head(Heart.seur@meta.data, 5)
+VlnPlot(Heart.seur, pt.size=0, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol = 3)
+
+
+#Subset at least 1000 genes counted
+Heart.seur <- subset(Heart.seur, subset = nFeature_RNA > 1000)
+
+
+VlnPlot(Heart.seur, pt.size=0, features = c("nFeature_RNA", "nCount_RNA"), ncol = 3)
+
+Heart.seur <- SCTransform(Heart.seur)
+
+Heart.seur <- RunPCA(Heart.seur)
+
+VizDimLoadings(Heart.seur, dims = 1:2, reduction = "pca")
+DimHeatmap(Heart.seur, dims = 1:3, cells = 500, balanced = TRUE)
+
+
+#Investigate how many PCs to use
+Heart.seur <- JackStraw(Heart.seur, num.replicate = 100)
+Heart.seur <- ScoreJackStraw(Heart.seur, dims = 1:21)
+
+JackStrawPlot(Heart.seur, dims = 1:21)
+
+ElbowPlot(Heart.seur)
+
+
+
+Heart.seur <- RunUMAP(Heart.seur, dims = 1:30, verbose = FALSE)
+Heart.seur <- FindNeighbors(Heart.seur, dims = 1:30, verbose = FALSE)
+Heart.seur <- FindClusters(Heart.seur, verbose = FALSE)
+DimPlot(Heart.seur, label = TRUE, repel=F)
+
+# add cell ontology annotations 
+Heart.seur@meta.data$Cell.ontology.class <- data.frame(cell=colnames(Heart.seur)) %>%
+        left_join(tm.facs.metadata, by="cell") %>% pull(cell_ontology_class) %>% replace_na("unassigned cell type")
+
+DimPlot(Heart.seur, label=F, repel=F, group.by="Cell.ontology.class")
+FeaturePlot(Heart.seur, features = c("Lyz2", "Tpm1", "Dcn"))
+
+saveRDS(Heart.seur, file = "~/Downloads/TabMuris_heart_seurat.rds")
+
+```
+
+Finally, now ask if overdispersed genes fall into different clusters
+```{r}
+OverdispersedGeneList <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz", sep='\t', header=T)
+
+OverdispersedGeneList$MeanDispersion <- (log(OverdispersedGeneList$Chimp.Residual) + log(OverdispersedGeneList$Human.Residual))/2
+
+
+#I want to grab the top overdispersed genes, but only those that are reliably expressed in at least 5 cells, and have an ensembl homolog match to human
+CellNonZeroCounts <- data.frame(
+        NumCellsExpressing=rowSums(Heart.seur@assays$RNA[,] > 0)) %>%
+        tibble::rownames_to_column("MGI.symbol")
+Top9Dispersed <- OverdispersedGeneList %>%
+        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        top_n(9, MeanDispersion) %>%
+        pull(MGI.symbol)
+
+Bottom9Dispersed <- OverdispersedGeneList %>%
+        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        top_n(-9, MeanDispersion) %>%
+        pull(MGI.symbol)
+
+
+Top9Dispersed.umap <- FeaturePlot(Heart.seur, features = Top9Dispersed, order=T)
+
+Bottom9Dispersed.umap <- FeaturePlot(Heart.seur, features = Bottom9Dispersed, order=T)
+
+Top9Dispersed.umap
+Bottom9Dispersed.umap
+
+#Need to scale data for heatmap
+Heart.seur <- ScaleData(object = Heart.seur)
+
+ OverdispersedGeneList %>%
+        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        top_n(50, MeanDispersion) %>%
+        pull(MGI.symbol) %>%
+DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, size=3, label=F) +
+         scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
+
+ OverdispersedGeneList %>%
+        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        top_n(-50, MeanDispersion) %>%
+        pull(MGI.symbol) %>%
+DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, size=3, label=F) +
+         scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
+ 
+
+
+```
+
