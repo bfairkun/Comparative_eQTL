@@ -397,6 +397,15 @@ rule CalculateTissueSpecificity:
         tspex --log {output.TissueMatrixCondensedBrain} {output.gini_log} gini
         """
 
+rule CalculateHeartCellTypeSpecificity:
+    input:
+        "../../data/TabulaMuris.CellType.Aggregated.CPM.table.tsv"
+    output:
+        "../../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt"
+    shell:
+        """
+        tspex --log {input} {output} tau
+        """
 
 
 # rule MatrixEQTL_SharedSNPs:

@@ -4,6 +4,7 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "../../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt",
         "../../data/TSS_annotations/TataAnnotations.txt.gz",
         "../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.NoLengthNorm.txt",
         expand("../../output/GtexTissueMatrix.mu.NoLengthNorm.{listname}.txt.gz", listname=["40EachTissue","AllModeExtractionSamples"]),
