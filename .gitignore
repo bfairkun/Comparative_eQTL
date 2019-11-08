@@ -9,5 +9,6 @@ analysis/*png
 analysis/*html
 analysis/*_cache
 analysis/site_libs
+figures/*
 .DS_Store
 ._.DS_Store
