@@ -399,12 +399,14 @@ rule CalculateTissueSpecificity:
 
 rule CalculateHeartCellTypeSpecificity:
     input:
-        "../../data/TabulaMuris.CellType.Aggregated.CPM.table.tsv"
+        "../../data/CIBERSORT.Reference_sample_file.tsv"
     output:
-        "../../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt"
+        tau = "../../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt",
+        z = "../../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.z.log.txt"
     shell:
         """
-        tspex --log {input} {output} tau
+        tspex --log {input} {output.tau} tau
+        tspex --log {input} {output.z} zscore
         """
 
 
