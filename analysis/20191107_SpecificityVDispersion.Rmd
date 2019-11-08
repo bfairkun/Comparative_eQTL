@@ -1,0 +1,84 @@
+---
+title: "20191107_SpecificityVDispersion"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+```{r}
+library(tidyverse)
+library(biomaRt)
+source("../code/CustomFunctions.R")
+library(latex2exp)
+```
+
+Read in dispersion estimates and cell-type specificity statistic (tau).
+
+```{r}
+OverdispersedGeneList <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz", sep='\t', header=T)
+
+OverdispersedGeneList$MeanDispersion <- (log(OverdispersedGeneList$Chimp.Residual) + log(OverdispersedGeneList$Human.Residual))/2
+
+CellTypeSpecificity <- read.table("../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt", col.names=c("MouseGeneID", "tau"), sep='\t')
+
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+
+genes = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = CellTypeSpecificity$MouseGeneID ,mart = mouse, attributesL = c("ensembl_gene_id", "chromosome_name", "start_position"), martL = human, uniqueRows=T)
+
+CombinedTable <- genes %>%
+  left_join(CellTypeSpecificity, by=c("MGI.symbol"="MouseGeneID")) %>% 
+  inner_join(OverdispersedGeneList, by=c("Gene.stable.ID"="gene"))
+
+```
+
+Check for correlation with cell specificity and overdispersion
+```{r}
+ggplot(CombinedTable, aes(x=MeanDispersion, y=tau)) +
+  geom_point(alpha=0.05) +
+  geom_density_2d() +
+  xlim(c(-4,4)) +
+  theme_bw()
+
+cor.test(x=CombinedTable$MeanDispersion, y=CombinedTable$tau, method="spearman")
+```
+
+Let's see if chimp overdispersed genes are more likely chimp eGenes, and same for human
+
+```{r}
+EgenesTested <- AddGroups(TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx"), HumanEgeneCount = 500)
+
+A<-Plot.dNdS.byGroup(EgenesTested)
+A$plot
+
+
+ToPlot <- EgenesTested %>%
+  left_join(CombinedTable, by=c("H.gene"="Gene.stable.ID")) %>%
+  mutate(SpeciesDispersionDifference = Chimp.Residual-Human.Residual)
+ggplot(ToPlot, aes(x=SpeciesDispersionDifference, color=group)) +
+    stat_ecdf(geom = "step") +
+    xlim(c(-3,3)) +
+    xlab(expression("More dispersed in chimp" %<->% "More dispersed in human")) +
+    ylab("Cumulative frequency") +
+    theme_bw()
+
+SharedLabel <- "both"
+NeitherLabel <- "neither"
+ChimpLabel <- "chimp"
+HumanLabel <- "human"
+AlternativeHypothesis <- c(
+  "chimp > neither",
+  "human < neither")
+Pvalues <- c(
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), SpeciesDispersionDifference ~ group, alternative="greater")$p.value, 2),
+    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), SpeciesDispersionDifference ~ group, alternative="less")$p.value, 2)
+  )
+PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
+colnames(PvalTable) <- c('"H"[a]', "`P-value`")
+```
+
+
+

@@ -56,10 +56,8 @@ TsvToCombinedEgenes <- function(Chimp.tsv, Human.tsv, SysToID.tsv, HumanTsvType 
 }
 
 
-
-
-# Return plots for dN/dS, etc. from dataframe. If HumanEgeneCount==NULL, use 0.1 FDR, else, use the HumanEgeneCount to classify the top N human genes by FDR as eGenes
-Plot.PercentNonIdentity.byGroup <- function(TsvToCombinedEgenes.df, HumanEgeneCount=NULL){
+# Add groups of chimp eGene, human eGene, shared eGene, neither
+AddGroups <- function(TsvToCombinedEgenes.df, HumanEgeneCount=NULL){
   SharedLabel <- "both"
   NeitherLabel <- "neither"
   ChimpLabel <- "chimp"
@@ -82,8 +80,16 @@ Plot.PercentNonIdentity.byGroup <- function(TsvToCombinedEgenes.df, HumanEgeneCo
         rank >= HumanEgeneCount & C.FDR>=0.1 ~ NeitherLabel)) %>%
       dplyr::select(-rank)
   }
+  return(ToPlot)
+}
 
 
+# Return plots for dN/dS, etc. from dataframe. If HumanEgeneCount==NULL, use 0.1 FDR, else, use the HumanEgeneCount to classify the top N human genes by FDR as eGenes
+Plot.PercentNonIdentity.byGroup <- function(ToPlot){
+  SharedLabel <- "both"
+  NeitherLabel <- "neither"
+  ChimpLabel <- "chimp"
+  HumanLabel <- "human"
   AlternativeHypothesis <- c(
     "chimp > neither",
     "human > neither",
@@ -110,37 +116,18 @@ Plot.PercentNonIdentity.byGroup <- function(TsvToCombinedEgenes.df, HumanEgeneCo
 }
 
 ###
-Plot.dNdS.byGroup <- function(TsvToCombinedEgenes.df, HumanEgeneCount=NULL){
+Plot.dNdS.byGroup <- function(ToPlot){
   SharedLabel <- "both"
   NeitherLabel <- "neither"
   ChimpLabel <- "chimp"
   HumanLabel <- "human"
-
-  if (is.null(HumanEgeneCount)){
-    ToPlot <- TsvToCombinedEgenes.df %>%
-      mutate(dN.dS=dN/dS) %>%
-      mutate(group = case_when(
-        H.FDR <=0.1 & C.FDR<=0.1 ~ SharedLabel,
-        H.FDR <=0.1 & C.FDR>=0.1 ~ HumanLabel,
-        H.FDR >=0.1 & C.FDR<=0.1 ~ ChimpLabel,
-        H.FDR >=0.1 & C.FDR>=0.1 ~ NeitherLabel))
-  } else {
-    ToPlot <- TsvToCombinedEgenes.df %>%
-      mutate(dN.dS=dN/dS) %>%
-      mutate(rank = dense_rank(H.FDR)) %>%
-      mutate(group = case_when(
-        rank <= HumanEgeneCount & C.FDR<=0.1 ~ SharedLabel,
-        rank <= HumanEgeneCount & C.FDR>=0.1 ~ HumanLabel,
-        rank >= HumanEgeneCount & C.FDR<=0.1 ~ ChimpLabel,
-        rank >= HumanEgeneCount & C.FDR>=0.1 ~ NeitherLabel)) %>%
-      dplyr::select(-rank)
-  }
-
   AlternativeHypothesis <- c(
     "chimp > neither",
     "human > neither",
     "both > chimp",
     "both > human")
+  ToPlot <- ToPlot %>%
+    mutate(dN.dS=dN/dS)
   Pvalues <- c(
     signif(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
     signif(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
@@ -162,7 +149,8 @@ Plot.dNdS.byGroup <- function(TsvToCombinedEgenes.df, HumanEgeneCount=NULL){
 }
 
 
-Plot.Interpecies.DE.byGroup <- function(TsvToCombinedEgenes.df, DE.df, HumanEgeneCount=NULL){
+
+Plot.Interpecies.DE.byGroup <- function(TsvToCombinedEgenes.df, DE.df){
   SharedLabel <- "both"
   NeitherLabel <- "neither"
   ChimpLabel <- "chimp"
@@ -171,23 +159,11 @@ Plot.Interpecies.DE.byGroup <- function(TsvToCombinedEgenes.df, DE.df, HumanEgen
   if (is.null(HumanEgeneCount)){
     ToPlot <- TsvToCombinedEgenes.df %>%
       left_join(DE.df, by=c("H.gene"= "gene")) %>%
-      mutate(InterspeciesEffectSize=abs(coefficients)) %>%
-      mutate(group = case_when(
-        H.FDR <=0.1 & C.FDR<=0.1 ~ SharedLabel,
-        H.FDR <=0.1 & C.FDR>=0.1 ~ HumanLabel,
-        H.FDR >=0.1 & C.FDR<=0.1 ~ ChimpLabel,
-        H.FDR >=0.1 & C.FDR>=0.1 ~ NeitherLabel))
+      mutate(InterspeciesEffectSize=abs(coefficients))
   } else {
     ToPlot <- TsvToCombinedEgenes.df %>%
       left_join(DE.df, by=c("H.gene"= "gene")) %>%
-      mutate(InterspeciesEffectSize=abs(coefficients)) %>%
-      mutate(rank = dense_rank(H.FDR)) %>%
-      mutate(group = case_when(
-        rank <= HumanEgeneCount & C.FDR<=0.1 ~ SharedLabel,
-        rank <= HumanEgeneCount & C.FDR>=0.1 ~ HumanLabel,
-        rank >= HumanEgeneCount & C.FDR<=0.1 ~ ChimpLabel,
-        rank >= HumanEgeneCount & C.FDR>=0.1 ~ NeitherLabel)) %>%
-      dplyr::select(-rank)
+      mutate(InterspeciesEffectSize=abs(coefficients))
   }
 
   AlternativeHypothesis <- c(

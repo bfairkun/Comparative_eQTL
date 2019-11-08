@@ -16,6 +16,7 @@ library("Matrix")
 library(Seurat)
 library(sctransform)
 library(data.table)
+library(cowplot)
 
 
 
@@ -35,12 +36,32 @@ human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
 mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
 
 MouseGenes = rownames(Heart.seur)
-genes = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = MouseGenes ,mart = mouse, attributesL = c("ensembl_gene_id", "chromosome_name", "start_position"), martL = human, uniqueRows=T)
+genes = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = MouseGenes ,mart = mouse, attributesL = c("ensembl_gene_id", "chromosome_name", "start_position", "mmusculus_homolog_orthology_type"), martL = human, uniqueRows=T)
+
+# Get list of one to one orthologs
+one2one_HumanMouseOrthologs <- genes %>%
+  filter(Mouse.homology.type=="ortholog_one2one") %>%
+  dplyr::select(MGI.symbol, Gene.stable.ID)
+
+CellTypeSpecificity <- read.table("../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt", col.names=c("MouseGeneID", "tau"), sep='\t')
+
+
+CombinedTable <- one2one_HumanMouseOrthologs %>%
+  left_join(CellTypeSpecificity, by=c("MGI.symbol"="MouseGeneID")) %>% 
+  inner_join(OverdispersedGeneList, by=c("Gene.stable.ID"="gene"))
+
 
 #I want to grab the top overdispersed genes, but only those that are reliably expressed in at least 5 cells, and have an ensembl homolog match to human
 CellNonZeroCounts <- data.frame(
         NumCellsExpressing=rowSums(Heart.seur@assays$RNA[,] > 0)) %>%
         tibble::rownames_to_column("MGI.symbol")
+
+
+
+```
+
+Umaps
+```{r, eval=F}
 Top9Dispersed <- OverdispersedGeneList %>%
         left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
         filter(!is.na(MGI.symbol)) %>% 
@@ -57,10 +78,6 @@ Bottom9Dispersed <- OverdispersedGeneList %>%
         top_n(-9, MeanDispersion) %>%
         pull(MGI.symbol)
 
-```
-
-Umaps
-```{r, eval=F}
 Top9Dispersed.umap <- FeaturePlot(Heart.seur, features = Top9Dispersed, order=T)
 
 Bottom9Dispersed.umap <- FeaturePlot(Heart.seur, features = Bottom9Dispersed, order=T)
@@ -73,8 +90,8 @@ Bottom9Dispersed.umap
 #Need to scale data for heatmap
 Heart.seur <- ScaleData(object = Heart.seur)
 
- OverdispersedGeneList %>%
-        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+HighlyDispersed.p <- OverdispersedGeneList %>%
+        left_join(one2one_HumanMouseOrthologs, by=c("gene"="Gene.stable.ID")) %>%
         filter(!is.na(MGI.symbol)) %>% 
         left_join(CellNonZeroCounts, by="MGI.symbol") %>%
         filter(NumCellsExpressing>50) %>%
@@ -83,8 +100,8 @@ Heart.seur <- ScaleData(object = Heart.seur)
 DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, size=3, label=F) +
          scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
 
- OverdispersedGeneList %>%
-        left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
+LowlyDispersed.p <- OverdispersedGeneList %>%
+        left_join(one2one_HumanMouseOrthologs, by=c("gene"="Gene.stable.ID")) %>%
         filter(!is.na(MGI.symbol)) %>% 
         left_join(CellNonZeroCounts, by="MGI.symbol") %>%
         filter(NumCellsExpressing>50) %>%
@@ -92,12 +109,99 @@ DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, 
         pull(MGI.symbol) %>%
 DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, size=3, label=F) +
          scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
+
+HighlyDispersed.data <- ggplot_build(HighlyDispersed.p)
+HighlyDispersed.data$layout$panel_params[[1]]$y.labels
+
+LowlyDispersed.data <- ggplot_build(LowlyDispersed.p)
+LowlyDispersed.data$layout$panel_params[[1]]$y.labels
+
+```
+
+Make plots pretty with tau specificity on the side
+```{r}
+
+HighlyDisp.tau.p <- data.frame(genes=HighlyDispersed.data$layout$panel_params[[1]]$y.labels) %>% left_join(CombinedTable, by=c("genes"="MGI.symbol")) %>%
+  ggplot(aes(y=1:length(genes), x=1, fill=tau)) +
+    geom_tile() +
+    scale_x_discrete(expand=c(0,0))+
+    scale_y_discrete(expand=c(0,0)) +
+    scale_fill_gradient(limits=c(0,1)) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+    theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+prow <- plot_grid(
+  HighlyDispersed.p + theme(legend.position="none"),
+  HighlyDisp.tau.p + theme(legend.position="none"),
+  align = 'b',
+  hjust = -1,
+  nrow = 1,
+  axis = "b",
+  rel_widths = c(1, 0.05),
+  scale = c(1,0.9)
+)
+
+ggsave("../figures/HighlyDisperesed.heatmap.png", plot=prow)
+
+legend.p1 <- get_legend(
+  HighlyDispersed.p + 
+  theme(legend.position="right"))
+legend.p2 <- get_legend(
+  HighlyDisp.tau.p + theme(legend.position="right"))
+legends <- plot_grid(legend.p1, legend.p2, nrow=2, scale=c(0.8,0.5), rel_heights = c(1,0.2), align='b')
+
+ggsave("../figures/HighlyDisperesed.heatmap.legend.pdf", plot=legends)
+
+
+### For lowly dispersed
+LowlyDisp.tau.p <- data.frame(genes=LowlyDispersed.data$layout$panel_params[[1]]$y.labels) %>% left_join(CombinedTable, by=c("genes"="MGI.symbol")) %>%
+  ggplot(aes(y=1:length(genes), x=1, fill=tau)) +
+    geom_tile() +
+    scale_x_discrete(expand=c(0,0))+
+    scale_y_discrete(expand=c(0,0)) +
+    scale_fill_gradient(limits=c(0,1)) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+    theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+prow <- plot_grid(
+  LowlyDispersed.p + theme(legend.position="none"),
+  LowlyDisp.tau.p + theme(legend.position="none"),
+  align = 'b',
+  hjust = -1,
+  nrow = 1,
+  axis = "b",
+  rel_widths = c(1, 0.05),
+  scale = c(1,0.85)
+)
+
+ggsave("../figures/LowlyDisperesed.heatmap.png", plot=prow)
+
+legend.p1 <- get_legend(
+  LowlyDispersed.p + 
+  theme(legend.position="right"))
+legend.p2 <- get_legend(
+  LowlyDisp.tau.p + theme(legend.position="right"))
+legends <- plot_grid(legend.p1, legend.p2, nrow=2, scale=c(0.8,0.5), rel_heights = c(1,0.2), align='b')
+
+ggsave("../figures/LowlyDisperesed.heatmap.legend.pdf", plot=legends)
+
+
 ```
 
 
-aggregate count matrix by cell-type to calculate cell-type specificiy score for each gene
+aggregate count matrix by cell-type to calculate cell-type specificiy score for each gene. Did this once and wrote the results to a file in data
 
-```{r}
+```{r, eval=F}
 Heart.seur@assays$RNA[1:10,1:10] %>% as.data.frame()
 
 Heart.seur@meta.data$Cell.ontology.class %>% head()
@@ -120,3 +224,94 @@ CountMatrixAggregated.CPM.PlusPseudocount <- CountMatrixAggregated.CPM + min(Cou
 write.table(CountMatrixAggregated.CPM.PlusPseudocount, file="../data/TabulaMuris.CellType.Aggregated.CPM.table.tsv", sep='\t', quote=F)
 ```
 
+
+Finally, I would like to run CIBERSORT. Here is code to make the necessary input files for CIBERSORT:
+
+```{r, eval=F}
+head(CountMatrixAggregated.CPM.PlusPseudocount)
+
+# Get human/chimp genes measured... I will only consider these genes (or rather, their mouse orthologs) for CIBERSORT
+
+DE.results <- read.table("../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', header=T)
+
+head(DE.results$gene)
+
+
+## Write references samples file
+#Leave out the unassigned cell types and genes that aren't 1to1 ortho, and finally use the human gene ID instead of the mouseID. And also filter for genes measured in DE results
+ReferenceSamples <- CountMatrixAggregated.CPM.PlusPseudocount %>%
+  rownames_to_column("gene") %>%
+  dplyr::select(-`unassigned cell type`) %>%
+  inner_join(one2one_HumanMouseOrthologs, by=c("gene"="MGI.symbol")) %>%
+  dplyr::select(-gene) %>%
+  dplyr::select(Gene.stable.ID, everything()) %>%
+  filter(Gene.stable.ID %in% DE.results$gene) %>%
+  drop_na()
+
+write.table(ReferenceSamples, file="../data/CIBERSORT.Reference_sample_file.tsv", quote=F, row.names = F, col.names = T, sep='\t')
+
+## Write phenotype classes file
+PhenotypeClassesMatrix <- abs((ReferenceSamples %>% dplyr::select(-Gene.stable.ID) %>% ncol() %>%
+  diag(.)) - 2)
+rownames(PhenotypeClassesMatrix) = colnames(ReferenceSamples %>% dplyr::select(-Gene.stable.ID))
+
+write.table(PhenotypeClassesMatrix, file="../data/CIBERSORT.Phenotype_classes_file.tsv", row.names = T, col.names = F, sep='\t', quote=F)
+
+## Write cpm count table of samples
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+
+HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
+
+CountTables <- GetCountTables(ChimpCountTableFile = CountTableChimpFile, HumanCountTableFile = CountTableHumanFile, 0, ReferenceSamples$Gene.stable.ID, ChimpSampleDrop=c(), HumanSampleDrop = HumanSamplesToDrop)
+
+Chimp.CountTable <- CountTables$Chimp$Counts/colSums(CountTables$Chimp$Counts) * 1E6
+Human.CountTable <- CountTables$Human$Counts/colSums(CountTables$Human$Counts) * 1E6
+
+cbind(Chimp.CountTable, Human.CountTable) %>%
+  write.table(file="../data/CIBERSORT.MixtureFile.tsv", sep='\t', quote=F, row.names = T, col.names = NA)
+
+# CIBERSORT does not work with n=1 for each group.
+# Need to find cell type markers with seurat, like in GTEx companion paper
+Cell.Types <- rownames(PhenotypeClassesMatrix)
+AllMarkers <- NULL
+for (i in seq_along(Cell.Types)){
+  print(Cell.Types[i])
+  Markers<-FindMarkers(Heart.seur,
+               ident.1=Cell.Types[i],
+               ident.2=Cell.Types[-i],
+               group.by = "Cell.ontology.class",
+               only.pos=T,
+               features=one2one_HumanMouseOrthologs$MGI.symbol,
+               logfc.threshold=1
+               )
+  Markers$CellType <- Cell.Types[i]
+  AllMarkers <- rbind(AllMarkers, Markers)
+}
+
+#Check markers are specific
+AllMarkers %>% rownames_to_column("gene") %>%
+  group_by(CellType) %>%
+  top_n(n = 10, wt = avg_logFC) %>% pull(gene) %>%
+  DoHeatmap(Heart.seur, features = ., group.by = "Cell.ontology.class") + NoLegend()
+
+Top200Markers <- AllMarkers %>%
+  rownames_to_column("gene") %>%
+  left_join(one2one_HumanMouseOrthologs, by=c("gene"="MGI.symbol")) %>%
+  filter(Gene.stable.ID %in% rownames(Chimp.CountTable)) %>%
+  group_by(CellType) %>%
+  top_n(n = 200, wt = avg_logFC)
+
+# Write signature genes file
+ReferenceSamples %>%
+  filter(Gene.stable.ID %in% Top200Markers$Gene.stable.ID) %>%
+write.table("../data/CIBERSORT.SignatureGenes.tsv", quote=F, row.names = F, col.names = T, sep='\t')
+
+# And rewrite the count table but filtering just for the signature genes
+cbind(Chimp.CountTable, Human.CountTable) %>%
+  rownames_to_column("Gene.stable.ID") %>%
+  filter(Gene.stable.ID %in% Top200Markers$Gene.stable.ID) %>%
+  column_to_rownames("Gene.stable.ID") %>%
+  write.table(file="../data/CIBERSORT.MixtureFile.OnlyMeasuredSignatureGenes.tsv", sep='\t', quote=F, row.names = T, col.names = NA)
+
+```
