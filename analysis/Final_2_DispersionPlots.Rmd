@@ -76,7 +76,7 @@ An example of the raw data (log2RPKM) of a few genes with various dispersion est
 HighDispersionGene <- ChimpOverdispersionTable %>%
   filter(Chimp.Mean.Log2RPKM >= 2 & Chimp.Mean.Log2RPKM <= 3) %>%
   mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %>%
-  filter(DifferenceInDispersion < 0.1) %>%
+  filter(DifferenceInDispersion < 0.1) %>% head()
   top_n(1, Human.Residual) %>% pull(gene)
 
 LowDispersionGene <- ChimpOverdispersionTable %>%
@@ -94,15 +94,16 @@ BigDifferenceInDispersion <- ChimpOverdispersionTable %>%
 GenesToPlot <- c(HighDispersionGene, LowDispersionGene, BigDifferenceInDispersion)
 
 Colplots <- ChimpOverdispersionTable %>%
-  dplyr::select(Chimp.Residual, Human.Residual, hgnc_symbol, gene) %>%
+  dplyr::select(Chimp.Dispersion, Human.Dispersion, hgnc_symbol, gene) %>%
   filter(gene %in% GenesToPlot) %>%
-  gather(key="sample", value="dispersion", -hgnc_symbol, -gene) %>%
+  gather(key="sample", value="dispersion", -hgnc_symbol, -gene) %>% head()
   mutate(Species = case_when(sample=="Chimp.Residual" ~ "Chimp",
                              sample=="Human.Residual" ~ "Human")) %>%
   ggplot(aes(x=Species, y=dispersion)) +
     geom_col() +
     ylab("Dispersion, a.u.") +
     facet_grid(.~hgnc_symbol) +
+    scale_y_continuous(trans='log10') +
     theme_bw() +
     theme(axis.title.x=element_blank(),
           strip.background = element_blank(),

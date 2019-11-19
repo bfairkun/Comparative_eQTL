@@ -1,5 +1,5 @@
 setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
-# setwd("/Users/benfair/Documents/GiladLiProjects/Repos/Comparative_eQTL/code/snakemake_workflow/")
+setwd("/Users/benfair/Documents/GiladLiProjects/Repos/Comparative_eQTL/code/snakemake_workflow/")
 
 source("../CustomFunctions.R")
 library(readxl)
@@ -28,7 +28,7 @@ CountTables <- GetCountTables(CountTableChimpFile,
                               0, GeneListForOverdispersionCalculation, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
 
 NumRowsToAnalyze=length(GeneListForOverdispersionCalculation)
-# NumRowsToAnalyze=10
+NumRowsToAnalyze=10
 
 
 Chimp.NB.fit.parameters<-GetParameterEstimatesOfUnderlyingGamma_lengthAdjusted_FromTable(CountTables$Chimp$Counts[1:NumRowsToAnalyze,], CountTables$Chimp$GeneLengths[1:NumRowsToAnalyze])
@@ -41,6 +41,7 @@ cbind(Chimp.NB.fit.parameters,
   setNames(
     c("Chimp.Mean.Expression", "Chimp.Overdispersion", "Chimp.theta.se", "Chimp.Mean.Log2RPKM", "Human.Mean.Expression", "Human.Overdispersion", "Human.theta.se","Human.Mean.Log2RPKM")
   ) %>%
+  rownames_to_column(var="gene") %>%
   mutate(
     Chimp.Residual = GetLoessResidual(Chimp.Mean.Expression, log(Chimp.Overdispersion)),
     Human.Residual = GetLoessResidual(Human.Mean.Expression, log(Human.Overdispersion))
@@ -50,7 +51,6 @@ cbind(Chimp.NB.fit.parameters,
     Chimp.Dispersion = exp(Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T)),
     Human.Dispersion = exp(Human.Residual + median(log(Human.Overdispersion), na.rm = T))
   ) %>%
-  rownames_to_column(var="gene") %>%
   dplyr::select(gene, everything()) %>%
 write.table("../../output/OverdispersionEstimatesFromChimp.txt", sep='\t', quote=F, row.names = F)
 
@@ -66,6 +66,7 @@ cbind(Chimp.NB.fit.parameters,
   setNames(
     c("Chimp.Mean.Expression", "Chimp.Overdispersion", "Chimp.theta.se", "Chimp.Mean.Log2RPKM", "Human.Mean.Expression", "Human.Overdispersion", "Human.theta.se","Human.Mean.Log2RPKM")
   ) %>%
+  rownames_to_column(var="gene") %>%
   mutate(
     Chimp.Residual = GetLoessResidual(Chimp.Mean.Expression, log(Chimp.Overdispersion)),
     Human.Residual = GetLoessResidual(Human.Mean.Expression, log(Human.Overdispersion))
@@ -75,7 +76,6 @@ cbind(Chimp.NB.fit.parameters,
     Chimp.Dispersion = exp(Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T)),
     Human.Dispersion = exp(Human.Residual + median(log(Human.Overdispersion), na.rm = T))
   ) %>%
-  rownames_to_column(var="gene") %>%
   dplyr::select(gene, everything()) %>%
   write.table("../../output/OverdispersionEstimatesFromChimp.NoLengthNorm.txt", sep='\t', quote=F, row.names = F)
 
@@ -96,6 +96,7 @@ cbind(Chimp.NB.fit.parameters,
   setNames(
     c("Chimp.Mean.Expression", "Chimp.Overdispersion", "Chimp.theta.se", "Chimp.Mean.Log2RPKM", "Human.Mean.Expression", "Human.Overdispersion", "Human.theta.se","Human.Mean.Log2RPKM")
   ) %>%
+  rownames_to_column(var="gene") %>%
   mutate(
     Chimp.Residual = GetLoessResidual(Chimp.Mean.Expression, log(Chimp.Overdispersion)),
     Human.Residual = GetLoessResidual(Human.Mean.Expression, log(Human.Overdispersion))
@@ -105,7 +106,6 @@ cbind(Chimp.NB.fit.parameters,
     Chimp.Dispersion = exp(Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T)),
     Human.Dispersion = exp(Human.Residual + median(log(Human.Overdispersion), na.rm = T))
   ) %>%
-  rownames_to_column(var="gene") %>%
   dplyr::select(gene, everything()) %>%
   write.table("../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", sep='\t', quote=F, row.names = F)
 
@@ -121,6 +121,7 @@ cbind(Chimp.NB.fit.parameters,
   setNames(
     c("Chimp.Mean.Expression", "Chimp.Overdispersion", "Chimp.theta.se", "Chimp.Mean.Log2RPKM", "Human.Mean.Expression", "Human.Overdispersion", "Human.theta.se","Human.Mean.Log2RPKM")
   ) %>%
+  rownames_to_column(var="gene") %>%
   mutate(
     Chimp.Residual = GetLoessResidual(Chimp.Mean.Expression, log(Chimp.Overdispersion)),
     Human.Residual = GetLoessResidual(Human.Mean.Expression, log(Human.Overdispersion))
@@ -130,7 +131,6 @@ cbind(Chimp.NB.fit.parameters,
     Chimp.Dispersion = exp(Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T)),
     Human.Dispersion = exp(Human.Residual + median(log(Human.Overdispersion), na.rm = T))
   ) %>%
-  rownames_to_column(var="gene") %>%
   dplyr::select(gene, everything()) %>%
   write.table("../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.NoLengthNorm.txt", sep='\t', quote=F, row.names = F)
 
