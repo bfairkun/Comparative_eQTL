@@ -4,7 +4,7 @@
 # individual jobs from the compute node.
 
 #SBATCH --job-name=snakemake
-#SBATCH --output=/home/bjf79/slurm_stdout_logs/project1_repo_snakemake.txt
+#SBATCH --output=snakemake.sbatch.log
 #SBATCH --time=1-00:00:00
 #SBATCH --partition=broadwl
 #SBATCH --mem=4G
