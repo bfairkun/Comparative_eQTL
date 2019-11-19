@@ -1,5 +1,5 @@
 setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
-setwd("/Users/benfair/Documents/GiladLiProjects/Repos/Comparative_eQTL/code/snakemake_workflow/")
+# setwd("/Users/benfair/Documents/GiladLiProjects/Repos/Comparative_eQTL/code/snakemake_workflow/")
 
 source("../CustomFunctions.R")
 library(readxl)
@@ -28,7 +28,7 @@ CountTables <- GetCountTables(CountTableChimpFile,
                               0, GeneListForOverdispersionCalculation, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
 
 NumRowsToAnalyze=length(GeneListForOverdispersionCalculation)
-NumRowsToAnalyze=10
+# NumRowsToAnalyze=10
 
 
 Chimp.NB.fit.parameters<-GetParameterEstimatesOfUnderlyingGamma_lengthAdjusted_FromTable(CountTables$Chimp$Counts[1:NumRowsToAnalyze,], CountTables$Chimp$GeneLengths[1:NumRowsToAnalyze])
