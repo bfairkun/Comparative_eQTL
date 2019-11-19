@@ -1,0 +1,485 @@
+---
+title: "Final_plots_2_CumDist"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+## Introduction
+
+This markdown will be used to generate publication quality figures that I have already made at some point in my exploratory Rmarkdown analyses. This will mostly be plots that have to do with dispersion
+
+## Plots
+
+First, load necessary libraries
+```{r}
+library(tidyverse)
+library(stringr)
+library(biomaRt)
+library(readxl)
+library(latex2exp)
+library(cowplot)
+library(Seurat)
+library(sctransform)
+library(psych)
+library(corrplot)
+
+source("../code/CustomFunctions.R")
+
+
+```
+
+Read in data...
+
+```{r}
+#read in table of overdispersion, dispersion, mean expresion estimates
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
+
+#Add gene symbols for prettier labels instead of ENSEMBL ID
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+Symbols <- getBM(attributes=c("hgnc_symbol", "ensembl_gene_id"), filters="ensembl_gene_id", values=ChimpOverdispersionTable$gene, mart=human)
+
+ChimpOverdispersionTable <- ChimpOverdispersionTable %>%
+  left_join(Symbols, by=c("gene"="ensembl_gene_id"))
+
+# Read in eGene data
+EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
+
+# Read in count data
+HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
+ChimpSamplesToDrop <- c("Little_R")
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+VirusChallengedChimps <- OtherMetadata %>% filter(grepl("V+",Viral.status)) %>% pull(Individual.ID)
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+CountTables <- GetCountTables(CountTableChimpFile,
+                              CountTableHumanFile,
+                              0, ChimpOverdispersionTable$gene, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+```
+
+
+### Illustrative dispersion example with boxplots
+
+An example of the raw data (log2RPKM) of a few genes with various dispersion estimates.
+
+```{r}
+# Get a high dispersion and a low dispersion gene at similar RPKM as an example. Also get a gene with a big difference in dispersion between the two species.
+
+HighDispersionGene <- ChimpOverdispersionTable %>%
+  filter(Chimp.Mean.Log2RPKM >= 2 & Chimp.Mean.Log2RPKM <= 3) %>%
+  mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %>%
+  filter(DifferenceInDispersion < 0.1) %>%
+  top_n(1, Human.Residual) %>% pull(gene)
+
+LowDispersionGene <- ChimpOverdispersionTable %>%
+  filter(Chimp.Mean.Log2RPKM >= 2 & Chimp.Mean.Log2RPKM <= 3) %>%
+  mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %>%
+  filter(DifferenceInDispersion < 0.1) %>%
+  top_n(-1, Human.Residual) %>% pull(gene)
+
+BigDifferenceInDispersion <- ChimpOverdispersionTable %>%
+  filter(Chimp.Mean.Log2RPKM >= 2 & Chimp.Mean.Log2RPKM <= 3) %>%
+  mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %>%
+  filter(DifferenceInDispersion > 1.7 & DifferenceInDispersion < 2.2) %>%
+  top_n(1, DifferenceInDispersion) %>% pull(gene)
+
+GenesToPlot <- c(HighDispersionGene, LowDispersionGene, BigDifferenceInDispersion)
+
+Colplots <- ChimpOverdispersionTable %>%
+  dplyr::select(Chimp.Residual, Human.Residual, hgnc_symbol, gene) %>%
+  filter(gene %in% GenesToPlot) %>%
+  gather(key="sample", value="dispersion", -hgnc_symbol, -gene) %>%
+  mutate(Species = case_when(sample=="Chimp.Residual" ~ "Chimp",
+                             sample=="Human.Residual" ~ "Human")) %>%
+  ggplot(aes(x=Species, y=dispersion)) +
+    geom_col() +
+    ylab("Dispersion, a.u.") +
+    facet_grid(.~hgnc_symbol) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+          strip.background = element_blank(),
+          strip.text.x = element_blank())
+
+Boxplots <- cbind(CountTables$Chimp$log2RPKM[GenesToPlot,],
+      CountTables$Human$log2RPKM[GenesToPlot,]) %>%
+  as.data.frame() %>%
+  rownames_to_column("gene") %>%
+  left_join(Symbols, by=c("gene"="ensembl_gene_id")) %>%
+  gather(key="Individual", value="log2RPKM", -hgnc_symbol, -gene) %>%
+  mutate(Species = case_when(str_detect(Individual, "C.") ~ "Chimp",
+                   str_detect(Individual, "H.") ~ "Human")) %>%
+  ggplot(aes(x=Species, y=log2RPKM)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_jitter(width=.15, height=0, alpha=0.7) +
+    facet_grid(.~hgnc_symbol) +
+    ylab(TeX("Expression, log_{2}RPKM")) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank())
+
+plot_grid(Boxplots, Colplots, align="hv", ncol=1, nrow=2)
+
+ggsave("../figures/OriginalArt/Dispersion.chimp_human_example_genes.pdf", units="mm", height=100, width=100)
+```
+
+### Illustrative regressing out mean effect
+
+This illustrates how dispersion is calculated, after obtaining a gene-wise overdispersion parameter estimate by fitting negative binomial model to the count data
+
+```{r}
+Before <- ChimpOverdispersionTable %>%
+  ggplot(aes(y=log(Human.Overdispersion), x=Human.Mean.Expression)) +
+  stat_binhex(bins=100) +
+  ylim(c(-5,3)) +
+  xlab(TeX("Expression, $\\hat{\\mu}$")) +
+  ylab(TeX("Overdispersion, log($\\hat{\\phi})$")) +
+  scale_fill_viridis_c(option="C", limits=c(0,25)) +
+  geom_smooth(method="loess", method.args=list(degree=1)) +
+  theme_bw() +
+  theme(aspect.ratio = 1)
+
+
+After <- ChimpOverdispersionTable %>%
+  ggplot(aes(y=Human.Residual, x=Human.Mean.Expression)) +
+  stat_binhex(bins=100) +
+  ylim(c(-3,3)) +
+  xlab("Expression") +
+  ylab("Dispersion") +
+  lims(fill=c(0,25)) +
+  scale_fill_viridis_c(option="C", limits=c(0,25), guide=F) +
+  geom_hline(yintercept=0, color = "blue") +
+  theme_bw() +
+  theme(aspect.ratio = 1)
+
+prow <- plot_grid(
+  plot_grid(
+    Before +
+      theme(legend.position = "none",
+            plot.margin = margin(6, 6, 6, 0)),
+    After +
+      theme(legend.position = "none",
+            plot.margin = margin(6, 6, 6, 0)),
+    align = 'hv',
+    nrow = 1,
+    axis='bt',
+    # axis='tblr',
+    labels=c("A", "B"),
+    vjust=1.5),
+  get_legend(Before +
+                theme(legend.box.margin = margin(0, 12, 0, 12))),
+  rel_widths = c(2,0.2),
+  align='hv',
+  greedy=F,
+  ncol=2,
+  scale=c(1,0.5))
+prow
+
+ggsave("../figures/OriginalArt/Dispersion.regression.pdf", units="mm", height=50, width=120)
+```
+
+
+### dispersion chimp v human
+
+correlation of dispersion in chimp vs human
+
+```{r}
+Correlation <-cor.test(ChimpOverdispersionTable$Chimp.Residual,
+       ChimpOverdispersionTable$Human.Residual,
+       use="complete.obs")
+
+lb1 = paste0('atop(R^2==', signif(Correlation$estimate**2,2), ', P', format.pval(Correlation$p.value), ')')
+
+ChimpOverdispersionTable %>%
+  ggplot(aes(x=Chimp.Residual, y=Human.Residual)) +
+  # geom_point(alpha=0.05) +
+  # stat_bin2d(bins=100) +
+  stat_binhex(bins=100) +
+  xlim(c(-3,3)) +
+  ylim(c(-3,3)) +
+  xlab("Chimp dispersion") +
+  ylab("Human dispersion") +
+  scale_fill_viridis_c(option="C") +
+  coord_fixed() +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+  theme_bw()
+
+ggsave("../figures/OriginalArt/Dispersion.chimp_human_scatter.pdf", units="mm", height=70, width=70)
+```
+
+### highly dispersed genes in tabula muris
+
+tabula muris mouse heart FACS dataset is perhaps the most extensive single cell mammalian heart dataset available. Use this to see if highly dispersed genes correspond to cell type specific genes.
+
+```{r}
+Heart.seur = readRDS("../big_data/TabMuris_heart_seurat.rds")
+
+
+ChimpOverdispersionTable$MeanDispersion <- (ChimpOverdispersionTable$Chimp.Residual + ChimpOverdispersionTable$Human.Residual)/2
+
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+
+MouseGenes = rownames(Heart.seur)
+genes = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = MouseGenes ,mart = mouse, attributesL = c("ensembl_gene_id", "chromosome_name", "start_position", "mmusculus_homolog_orthology_type"), martL = human, uniqueRows=T)
+
+# Get list of one to one orthologs
+one2one_HumanMouseOrthologs <- genes %>%
+  filter(Mouse.homology.type=="ortholog_one2one") %>%
+  dplyr::select(MGI.symbol, Gene.stable.ID)
+
+CellTypeSpecificity <- read.table("../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt", col.names=c("Gene.stable.ID", "tau"), sep='\t')
+
+
+CombinedTable <- one2one_HumanMouseOrthologs %>%
+  inner_join(CellTypeSpecificity, by="Gene.stable.ID") %>%
+  inner_join(ChimpOverdispersionTable, by=c("Gene.stable.ID"="gene")) %>%
+  drop_na()
+
+
+#I want to grab the top overdispersed genes, but only those that are reliably expressed in at least 5 cells, and have an ensembl homolog match to human
+CellNonZeroCounts <- data.frame(
+        NumCellsExpressing=rowSums(as.data.frame(Heart.seur@assays$RNA[,] > 0))) %>%
+        tibble::rownames_to_column("MGI.symbol")
+
+HighlyDispersed.p <- ChimpOverdispersionTable %>%
+        left_join(one2one_HumanMouseOrthologs, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        filter(gene %in% CombinedTable$Gene.stable.ID) %>%
+        top_n(50, MeanDispersion) %>%
+        pull(MGI.symbol) %>%
+DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, size=3, label=F) +
+         scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
+
+LowlyDispersed.p <- ChimpOverdispersionTable %>%
+        left_join(one2one_HumanMouseOrthologs, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+        filter(NumCellsExpressing>50) %>%
+        filter(gene %in% CombinedTable$Gene.stable.ID) %>%
+        top_n(-50, MeanDispersion) %>%
+        pull(MGI.symbol) %>%
+DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, size=3, label=F) +
+         scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
+
+HighlyDispersed.data <- ggplot_build(HighlyDispersed.p)
+# HighlyDispersed.data$layout$panel_params[[1]]$y.labels
+
+LowlyDispersed.data <- ggplot_build(LowlyDispersed.p)
+# LowlyDispersed.data$layout$panel_params[[1]]$y.labels
+
+HighlyDisp.tau.p <- data.frame(genes=HighlyDispersed.data$layout$panel_params[[1]]$y.labels) %>% left_join(CombinedTable, by=c("genes"="MGI.symbol")) %>%
+  ggplot(aes(y=1:length(genes), x=1, fill=tau)) +
+    geom_tile() +
+    scale_x_discrete(expand=c(0,0))+
+    scale_y_discrete(expand=c(0,0)) +
+    scale_fill_viridis_c(option="C", limits=c(0,1)) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+    theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+prow <- plot_grid(
+  HighlyDispersed.p + theme(legend.position="none"),
+  HighlyDisp.tau.p + theme(legend.position="none", plot.margin = margin(t=6)),
+  align = 'b',
+  hjust = -1,
+  nrow = 1,
+  axis = "b",
+  rel_widths = c(1, 0.05),
+  scale = c(1,0.89)
+)
+
+ggsave("../figures/OriginalArt/Dispersion.tabmuris.high.png", plot=prow)
+```
+
+### lowly dispersed genes in tab muris
+
+...same for lowly dispersed genes. As seen below, they tend to be not cell type specific.
+
+```{r}
+LowlyDisp.tau.p <- data.frame(genes=LowlyDispersed.data$layout$panel_params[[1]]$y.labels) %>% left_join(CombinedTable, by=c("genes"="MGI.symbol")) %>%
+  ggplot(aes(y=1:length(genes), x=1, fill=tau)) +
+    geom_tile() +
+    scale_x_discrete(expand=c(0,0))+
+    scale_y_discrete(expand=c(0,0)) +
+    scale_fill_viridis_c(option="C", limits=c(0,1)) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+    theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+prow <- plot_grid(
+  LowlyDispersed.p + theme(legend.position="none"),
+  LowlyDisp.tau.p + theme(legend.position="none", plot.margin = margin(t=3.3)),
+  align = 'b',
+  hjust = -1,
+  nrow = 1,
+  axis = "b",
+  rel_widths = c(1, 0.05),
+  scale = c(1,0.842)
+)
+
+ggsave("../figures/OriginalArt/Dispersion.tabmuris.low.png", plot=prow)
+
+legend.p1 <- get_legend(
+  LowlyDispersed.p + 
+  theme(legend.position="right"))
+legend.p2 <- get_legend(
+  LowlyDisp.tau.p + theme(legend.position="right"))
+legends <- plot_grid(legend.p1, legend.p2, nrow=2, scale=c(0.8,0.5), rel_heights = c(1,0.2), align='b')
+
+ggsave("../figures/OriginalArt/Dispersion.tabmuris.legend.pdf", plot=legends)
+```
+
+### Dispersion vs tabmuris cell specificity
+
+More generally, tau correlates with dispersion
+
+```{r}
+
+Correlation <-cor.test(CombinedTable$MeanDispersion, CombinedTable$tau,
+       use="complete.obs", method="pearson")
+
+lb1 = paste0('atop(R^2==', signif(Correlation$estimate**2,2), ', P', format.pval(Correlation$p.value, 2), ')')
+
+CombinedTable %>%
+  ggplot(aes(x=tau, y=MeanDispersion)) +
+    stat_binhex(bins=100) +
+    ylim(c(-3,3)) +
+    xlab(TeX("Cell type specificity, $\\tau$")) +
+    ylab(TeX("Dispersion, a.u.")) +
+    scale_fill_viridis_c(option="C") +
+    annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+    theme_bw() +
+    theme(aspect.ratio = 0.8)
+
+ggsave("../figures/OriginalArt/Dispersion.Correlation.tau.pdf", units="mm", height=70)
+```
+
+### Dispersion species difference vs cell specificity
+But check that cell-type specificity tau is not strongly correlated with difference in dispersion, since I will use difference in dispersion for Gene ontology analysis I want to know if the gene ontology results to be totally driven by cell-type specifity
+```{r}
+CombinedTable <- CombinedTable  %>%
+  mutate(DifferenceInDispersion = Chimp.Residual- Human.Residual)
+
+Correlation <-cor.test(CombinedTable$DifferenceInDispersion, CombinedTable$tau,
+       use="complete.obs", method="pearson")
+
+lb1 = paste0('atop(R^2==', signif(Correlation$estimate**2,2), ', P==', format.pval(Correlation$p.value, 2), ')')
+
+CombinedTable %>%
+  ggplot(aes(x=tau, y=DifferenceInDispersion)) +
+    stat_binhex(bins=100) +
+    ylim(c(-3,3)) +
+    xlab(TeX("Cell type specificity, $\\tau$")) +
+    ylab(TeX("Dispersion_{Chimp} - Dispersion_{Human}")) +
+    scale_fill_viridis_c(option="C") +
+    annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+    theme_bw() +
+    theme(aspect.ratio = 0.8)
+ggsave("../figures/OriginalArt/DispersionDiff.Correlation.tau.pdf", units="mm", height=70)
+
+```
+
+
+### CIBERSORT results
+
+results of cell type deconvolution using CIBERSORT
+
+```{r}
+CIBERSORT <- read.table("../data/CIBERSORT.Output_Job2.csv", sep=',', header=T) %>%
+  arrange(cardiac.muscle.cell) %>%
+  gather(key="cell.type", value="percent", -Input.Sample, -P.value, -Pearson.Correlation, -RMSE) %>%
+  mutate(Species = case_when(str_detect(Input.Sample, "C.") ~ "Chimp",
+                   str_detect(Input.Sample, "H.") ~ "Human"))
+
+ggplot(CIBERSORT, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat="identity") +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_grid(~Species, scales="free_x", space="free_x") +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+ggsave("../figures/OriginalArt/Dispersion.CIBERSORT.pdf", units="mm", height=70)
+```
+
+### CIBERSORT vs expression PCs
+
+Do cell type estimates correlate with expression PCs
+
+```{r}
+cibersort.results <- read.table("../data/CIBERSORT.Output_Job2.csv", sep=',', header=T) %>%
+  filter(grepl("^C.",Input.Sample)) %>%
+  mutate(IID=gsub("^C.", "", Input.Sample, perl=T)) %>%
+  dplyr::select(-c("Input.Sample", "P.value", "Pearson.Correlation", "RMSE"))
+
+PCs <- read.table("../output/Covariates/0GenotypePCs_and_10RNASeqPCs.covariates", header=T, check.names = F) %>%
+  mutate(IID=gsub(".RS", "", IID, perl=T)) %>%
+  column_to_rownames("IID") %>% t() %>% as.data.frame() %>%
+  dplyr::select(-SX) %>% rownames_to_column("IID")
+
+cibersort.results.combined.PCs <- cibersort.results %>%
+  left_join(PCs, by="IID") %>% column_to_rownames("IID")
+
+MyCorMatrix <- corr.test(x=cibersort.results.combined.PCs[,1:9],
+                         y=cibersort.results.combined.PCs[,-(1:9)],
+                         method="pearson",
+                         adjust="BH")
+
+pdf(file = "../figures/OriginalArt/CIBERSORT.v.PCs.pdf")
+corrplot(MyCorMatrix$r, method='color', pch.cex=1.8, tl.srt=45, tl.col = "black", insig='label_sig', is.corr=F, p.mat=MyCorMatrix$p, sig.level=c(0.01))
+dev.off()
+
+```
+
+
+### dispersion grouped by essentiality
+
+Are non essential genes more dispersed than essential genes?
+
+```{r}
+pLI.data <- as.data.frame(read_excel("../data/Lek_etal_nature19057-SI Table 13.xlsx", sheet=2))
+
+ToPlot <- ChimpOverdispersionTable %>%
+  left_join(pLI.data, by=c("hgnc_symbol"="gene")) %>%
+  mutate(pLI.Score.essentiality=case_when(
+    pLI>=0.1  ~ "Essential",
+    pLI<=0.1 ~ "NonEssential")) %>%
+  filter(pLI.Score.essentiality %in% c("Essential", "NonEssential"))
+
+Test <- wilcox.test(data=ToPlot, MeanDispersion ~ pLI.Score.essentiality)
+lb1 = paste0('P==', format.pval(Test$p.value, 2))
+
+ggplot(ToPlot, aes(color=pLI.Score.essentiality,x=MeanDispersion)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous() +
+    xlim(c(-2,3)) +
+    ylab("Cumulative frequency") +
+    annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+    theme_bw()
+
+ggsave("../figures/OriginalArt/Dispersion.by.Essentiality.pdf")
+```
+
+## Conclusions
+
+

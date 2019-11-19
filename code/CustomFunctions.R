@@ -96,10 +96,10 @@ Plot.PercentNonIdentity.byGroup <- function(ToPlot){
     "both > chimp",
     "both > human")
   Pvalues <- c(
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2),
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2),
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2),
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2)
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), PercentIdentitiyHumanToChimp ~ group, alternative="less")$p.value, 2)
   )
   PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
   colnames(PvalTable) <- c('"H"[a]', "`P-value`")
@@ -129,10 +129,10 @@ Plot.dNdS.byGroup <- function(ToPlot){
   ToPlot <- ToPlot %>%
     mutate(dN.dS=dN/dS)
   Pvalues <- c(
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), dN.dS ~ group, alternative="greater")$p.value, 2)
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), dN.dS ~ group, alternative="greater")$p.value, 2)
   )
   PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
   colnames(PvalTable) <- c('"H"[a]', "`P-value`")
@@ -156,15 +156,10 @@ Plot.Interpecies.DE.byGroup <- function(TsvToCombinedEgenes.df, DE.df){
   ChimpLabel <- "chimp"
   HumanLabel <- "human"
 
-  if (is.null(HumanEgeneCount)){
-    ToPlot <- TsvToCombinedEgenes.df %>%
-      left_join(DE.df, by=c("H.gene"= "gene")) %>%
-      mutate(InterspeciesEffectSize=abs(coefficients))
-  } else {
-    ToPlot <- TsvToCombinedEgenes.df %>%
-      left_join(DE.df, by=c("H.gene"= "gene")) %>%
-      mutate(InterspeciesEffectSize=abs(coefficients))
-  }
+
+  ToPlot <- TsvToCombinedEgenes.df %>%
+    left_join(DE.df, by=c("H.gene"= "gene")) %>%
+    mutate(InterspeciesEffectSize=abs(coefficients))
 
   AlternativeHypothesis <- c(
     "chimp > neither",
@@ -172,10 +167,10 @@ Plot.Interpecies.DE.byGroup <- function(TsvToCombinedEgenes.df, DE.df){
     "both > chimp",
     "both > human")
   Pvalues <- c(
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2),
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2),
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2),
-    signif(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2)
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), InterspeciesEffectSize ~ group, alternative="greater")$p.value, 2)
   )
   PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
   colnames(PvalTable) <- c('"H"[a]', "`P-value`")
@@ -191,6 +186,39 @@ Plot.Interpecies.DE.byGroup <- function(TsvToCombinedEgenes.df, DE.df){
   return(list(plot=EffectSize.plot, PvalTable=PvalTable))
 }
 
+
+Plot.DispersionDifference.byGroup <- function(TsvToCombinedEgenes.df, Dispersion.df){
+  SharedLabel <- "both"
+  NeitherLabel <- "neither"
+  ChimpLabel <- "chimp"
+  HumanLabel <- "human"
+
+
+  ToPlot <- TsvToCombinedEgenes.df %>%
+    left_join(Dispersion.df, by=c("H.gene"= "gene")) %>%
+    mutate(DispersionDiff=Chimp.Residual-Human.Residual)
+
+  AlternativeHypothesis <- c(
+    "chimp > neither",
+    "human < neither",
+    "chimp > human")
+  Pvalues <- c(
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), DispersionDiff ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), DispersionDiff ~ group, alternative="less")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,ChimpLabel)), DispersionDiff ~ group, alternative="greater")$p.value, 2)
+  )
+  PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
+  colnames(PvalTable) <- c('"H"[a]', "`P-value`")
+  EffectSize.plot <- ggplot(ToPlot, aes(color=group,x=DispersionDiff)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous(limits=c(-2,2), name="Difference in dispersion") +
+    ylab("Cumulative frequency") +
+    labs(color = "eGene discovered in") +
+    theme_bw() +
+    theme(legend.position="bottom")
+
+  return(list(plot=EffectSize.plot, PvalTable=PvalTable))
+}
 ###
 
 
@@ -403,6 +431,8 @@ DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize
   efit <- treat(tmp, lfc = FC.NullInterval)
   return(efit)
 }
+
+
 
 ### tests
 

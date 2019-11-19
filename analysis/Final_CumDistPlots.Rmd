@@ -1,0 +1,230 @@
+---
+title: "Final_plots_1_CumDist"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Introduction
+
+This markdown will be used to generate publication quality figures that I have already made at some point in my exploratory Rmarkdown analyses. This markdown will just make plots that i anticipate for publication that are shown as empricial cdf plots for various unrelated things.
+
+
+First, load necessary libraries
+```{r}
+library(tidyverse)
+source("../code/CustomFunctions.R")
+```
+
+Load eGene data for humans and chimp.
+
+```{r}
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp.NoLengthNorm.txt", header=T, sep='\t')
+
+EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
+
+DE.results <- read.table("../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', header=T)
+
+EgenesTested.grouped <- AddGroups(EgenesTested, HumanEgeneCount=500)
+```
+
+## Make plots.
+
+Note that plots make come out with odd looking dimensions, that only look better through my experimentation with ggsave that saves the final figure to a file not included in the rendered markdown.
+
+### DE by eGene group
+
+First plot interspecies DE effect size by eGene group. Only save the plot for the ~8000 genes that are significantly DE. (Similar results are obtained if you make the plot for all genes as shown first). eGenes are more likely to be differentially expressed between species. this is even more true for species shared eGenes. All consistent with most neutral selection. Traits that are varied within a species, should be varied between species as well.
+
+```{r}
+
+DE.results %>% pull(DE) %>% table()
+
+
+Plot.Interpecies.DE.byGroup(EgenesTested.grouped, DE.results)$plot
+Plot.Interpecies.DE.byGroup(EgenesTested.grouped, DE.results)$PvalTable
+
+DE.By.Group <- Plot.Interpecies.DE.byGroup(EgenesTested.grouped, (DE.results %>% filter(DE != 0)))
+
+DE.Fig <- ggdraw(DE.By.Group$plot +                            guides(color=guide_legend(nrow=2,byrow=TRUE))
+) +
+  draw_grob(tableGrob(DE.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.3, width=0.3, height=0.3)
+DE.Fig
+ggsave("../figures/OriginalArt/eGeneGroup.DE.pdf", DE.Fig, height=120, width=120, units="mm")
+```
+
+### Percent identity by eGene group
+
+plot percent identity by eGene group. Hypothesis being that eGenes are genes which are evolving neautrally, so they will have less conservation at coding level (more percent non-identity)
+
+```{r}
+Identity.By.Group <- Plot.PercentNonIdentity.byGroup(EgenesTested.grouped)
+
+Identity.Fig <- ggdraw(Identity.By.Group$plot +                            guides(color=guide_legend(nrow=2,byrow=TRUE))
+) +
+  draw_grob(tableGrob(Identity.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.3, width=0.3, height=0.3)
+Identity.Fig
+ggsave("../figures/OriginalArt/eGeneGroup.identity.pdf", Identity.Fig, height=120, width=120, units="mm")
+```
+
+### plot dN/dS by group
+
+plot dN/dS ratio by group. Hypothesis being that eGenes are genes which are evolving neautrally, so they will have less conservation at coding level (higher dN/dS)
+```{r}
+dNdS.By.Group <- Plot.dNdS.byGroup(EgenesTested.grouped)
+
+dNdS.Fig <- ggdraw(dNdS.By.Group$plot +                                       guides(color=guide_legend(nrow=2,byrow=TRUE))
+) +
+  draw_grob(tableGrob(dNdS.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)), base_size = 10)), x=0.65, y=0.3, width=0.25, height=0.25)
+dNdS.Fig
+ggsave("../figures/OriginalArt/eGeneGroup.dNdS.pdf", dNdS.Fig, height=120, width=120, units="mm")
+```
+
+### Plot difference in dispersion by group
+
+plot difference in dispersion by group. Hypothesis being that chimp eGenes will be more dispersed in chimp, human eGenes will be more dispersed in human, consistent with there being a measurable genetic component to dispersion.
+
+```{r}
+Dispersion.By.Group <-Plot.DispersionDifference.byGroup(EgenesTested.grouped, ChimpOverdispersionTable)
+
+
+Dispersion.Fig <- ggdraw(Dispersion.By.Group$plot +
+                           guides(color=guide_legend(nrow=2,byrow=TRUE))
+                         ) +
+  draw_grob(tableGrob(Dispersion.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.25, width=0.3, height=0.3)
+Dispersion.Fig
+ggsave("../figures/OriginalArt/eGeneGroup.dispersion.pdf", Dispersion.Fig, height=120, width=120, units="mm")
+```
+
+### Difference in fdr rank vs difference in dispersion
+
+Another way to look at the same thing. This is important investigate since considered using this difference in ranks as a less arbitrary way of categorizing eGenes vs non eGenes and doing gene overlap analysis.
+
+```{r}
+DifferenceInFDR.vs.DiffInDispersion <- EgenesTested.grouped %>%
+  mutate(H.rank = dense_rank(H.FDR),
+         C.rank = dense_rank(C.FDR)) %>%
+  filter(C.FDR <= 0.1) %>%
+  mutate(RankDiff=C.rank-H.rank) %>%
+  left_join(ChimpOverdispersionTable, by=c("H.gene"="gene")) %>%
+  mutate(DispersionDiff = Chimp.Residual-Human.Residual ) %>%
+  filter(DispersionDiff < 2 & DispersionDiff > -2)
+
+cor.test(x=DifferenceInFDR.vs.DiffInDispersion$RankDiff, y=DifferenceInFDR.vs.DiffInDispersion$DispersionDiff)
+
+ggplot(DifferenceInFDR.vs.DiffInDispersion, aes(x=RankDiff, y=DispersionDiff)) +
+  geom_point()
+```
+
+Ok so maybe the gene categorization makes more sense
+
+### essentiality by group
+
+Not a plot but just make some contingency tables and do some tests to see if eGenes (in human, and or chimp) are more to be non essential. Perhaps the more appropriate way to test this but for now I will just stick to 2x2 contingency tables and doing a Fisher test with the expectation that chimp eGenes are more likely to be non essential than genes that are not eGenes in either species. Same for human eGenes. Furthermore, genes that are eGenes in both will be even more likely to be non essential than eGenes in just one species.
+
+
+```{r}
+pLI.data <- as.data.frame(read_excel("../data/Lek_etal_nature19057-SI Table 13.xlsx", sheet=2))
+
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+Symbols <- getBM(attributes=c("hgnc_symbol", "ensembl_gene_id"), filters="ensembl_gene_id", values=ChimpOverdispersionTable$gene, mart=human)
+
+LargeContingencyTable <- EgenesTested.grouped %>%
+  left_join(Symbols, by=c("H.gene" ="ensembl_gene_id")) %>%
+  left_join(pLI.data, by=c("hgnc_symbol"="gene")) %>%
+  mutate(pLI.Score.essentiality=case_when(
+    pLI>=0.1  ~ "Essential",
+    pLI<=0.1 ~ "NonEssential")) %>%
+  filter(pLI.Score.essentiality %in% c("Essential", "NonEssential")) %>%
+  group_by(group, pLI.Score.essentiality) %>%
+  summarise(n = n()) %>%
+  spread(key=group, value=n) %>%
+  column_to_rownames("pLI.Score.essentiality")
+
+LargeContingencyTable
+
+fisher.test(LargeContingencyTable[,c("chimp", "neither")], alternative="less")
+
+ChimpContingencyTable <- LargeContingencyTable %>%
+  rownames_to_column("essentiality") %>%
+  mutate(eGene=both+chimp,
+         not.eGene=human+neither) %>%
+  dplyr::select(essentiality, eGene, not.eGene) %>%
+  column_to_rownames("essentiality")
+
+HumanContingencyTable <- LargeContingencyTable %>%
+  rownames_to_column("essentiality") %>%
+  mutate(eGene=both+human,
+         not.eGene=chimp+neither) %>%
+  dplyr::select(essentiality, eGene, not.eGene) %>%
+  column_to_rownames("essentiality")
+
+# Are chimp eGenes (not chimp specific eGenes, but all chimp eGenes) more likely to be non-essential
+fisher.test(ChimpContingencyTable, alternative="less")
+
+# Are human eGenes (not human specific eGenes, but all human eGenes, top500) more likely to be non-essential
+fisher.test(HumanContingencyTable, alternative="less")
+
+```
+
+### Number of tissues eGene in GTEx by group.
+
+Are chimp eGenes more likely to be eGenes across many GTEx tissues?
+
+```{r}
+GTEx <- read.table("../data/AllGTExTissues.egenes.txt", header=T, sep='\t')
+
+Threshold=0.1
+TissueEgeneCount <- data.frame(TissueCount=rowSums(GTEx[,-1]<=Threshold, na.rm=T), Gene.stable.ID=gsub("\\.\\d+", "", GTEx$gene_id, perl=T))
+
+EgenesTested.grouped %>%
+  left_join(TissueEgeneCount, by=c("H.gene"="Gene.stable.ID")) %>%
+  # filter(group %in% c("both", "human")) %>%
+  ggplot(aes(color=group,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  theme_bw() +
+  theme(legend.position = c(.80, .2), legend.title=element_blank())
+
+```
+
+Ok that was silly. Obviously human eGenes will be eGenes in more tissues. Although it is worth noting that the both eGene group doesn't look different than the human eGene group.
+
+Perhaps the more relevant grouping for this question is comparing chimp eGene and not chimp eGene, and asking how many GTEx tissues it is an eGene in..
+
+```{r}
+ToPlot <- EgenesTested.grouped %>%
+  left_join(TissueEgeneCount, by=c("H.gene"="Gene.stable.ID")) %>%
+  mutate(Chimp.eGene = case_when(
+    group == "both" ~ "chimp eGene",
+    group == "chimp" ~ "chimp eGene",
+    group == "neither" ~ "not chimp eGene",
+    group == "human" ~ "not chimp eGene"
+  ))
+
+Test <- wilcox.test(data=ToPlot, TissueCount ~ Chimp.eGene)
+lb1 = paste0('P==', format.pval(Test$p.value, 2))
+
+  ggplot(ToPlot, aes(color=Chimp.eGene,x=TissueCount)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  xlab("TissueCount") +
+  theme_bw() +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.1, vjust=-0.1, parse=TRUE) +
+  theme(legend.position="bottom")
+
+
+ggsave("../figures/OriginalArt/eGeneGroup.num.GTEx.eGenes.pdf", units="mm", height=120, width=120)
+```
+
+
+## Conclusions
+
+

@@ -15,12 +15,15 @@ library(CorShrink)
 library(gplots)
 library(readxl)
 library("org.Hs.eg.db")
+library(ggrepel)
 
 source("../code/CustomFunctions.R")
 ```
 
 
-make correlation matrix heatmaps of gtex tissues for overdispersion.
+make correlation matrix heatmaps of gtex tissues for dispersion and other things...
+
+First read in the data of mean expression estimates and overdispersion estimates across all genes across all GTEx tissues and also calculate residual overdispersion
 
 ```{r}
 
@@ -79,8 +82,12 @@ GtexColors[nrow(GtexColors) + 1,] = c("ThisStudy_HumanHeart","black", "#000000")
 
 TissueColorVector <- GtexColors$HEX
 names(TissueColorVector)<-GtexColors$Tissue
+```
 
-#Do tissues generally differ in their levels of overdispersion
+
+Do tissues generally differ in their levels of overdispersion
+
+```{r}
 OverdispersionCombined %>%
   gather() %>% mutate(TissueColor=TissueColorVector[key]) %>%
   ggplot(aes(x=key, y=log(value))) +
@@ -92,16 +99,68 @@ OverdispersionCombined %>%
     theme(legend.position="none") +
     scale_fill_manual(values=TissueColorVector) +
     guides(color=guide_legend(nrow=2,byrow=TRUE))
+```
 
+Ok, we can see whole blood is the most overdispersed. This could be consistent with the idea that whole blood is a hetergeneous mix of cell types that is different person to person.
+
+Do these different levels of overdispersion relate to power in eQTL studies?
+
+```{r}
 # Do these different levels of overdispersion relate to power in eQTL studies
 GtexEgeneCounts <- read_excel("../data/NumberEgenesPerGtexTissue.xlsx")
 GtexEgeneCounts %>%
-  ggplot(aes(x=`# RNASeq and Genotyped samples`, y=as.numeric(eGenes), fill=Tissue)) +
+  ggplot(aes(x=`# RNASeq and Genotyped samples`, y=as.numeric(eGenes), color=Tissue, label=Tissue)) +
   geom_point() +
-  scale_fill_manual(values=TissueColorVector) +
+  scale_color_manual(values=TissueColorVector) +
+  geom_text_repel(size=2) +
   theme_bw() +
   theme(legend.position = "none")
+```
 
+Well it sort of looks like whole blood and testis and some cerebellum and spleen are outliers in number of eGenes, and in directions that are concordant with the idea that more overdispersed tissues have less eQTL power. Let's test this more explicitly with a linear model using sampleCount and MedianOverdispersion as predictors of eGene count
+
+```{r}
+MedianOverdispersion <- apply(log(OverdispersionCombined), 2, FUN = median, na.rm=T)
+
+DataForLm <- as.data.frame(MedianOverdispersion) %>%
+  rownames_to_column("Tissue") %>%
+  right_join(GtexEgeneCounts, by="Tissue") %>%
+  drop_na()
+
+My.lm <- lm(eGenes ~ `# RNASeq and Genotyped samples` + MedianOverdispersion, DataForLm)
+summary(My.lm)
+```
+
+Ok that model says MedianOverdispersion is a significant predictor for eGene count, wherein more overdispersed tissues have less eGenes. Just to be sure, let me try regressing out the sampleCount effect and fitting the MedianOverdispersion to the residuals.
+
+```{r}
+#Fit model using just sample count as predictor
+My.simpler.lm <- lm(eGenes ~ `# RNASeq and Genotyped samples`, DataForLm)
+
+#Save residuals
+DataForLm$ResidualAfterRegressingOutSampleCount <- My.simpler.lm$residuals
+
+#Fit MedianOverdispersion to the residuals 
+LmOnResidual <- lm(ResidualAfterRegressingOutSampleCount ~ MedianOverdispersion, DataForLm)
+
+summary(LmOnResidual)
+
+DataForLm %>%
+  ggplot(aes(x=MedianOverdispersion, y=ResidualAfterRegressingOutSampleCount, color=Tissue, label=Tissue)) +
+  geom_point() +
+  scale_color_manual(values=TissueColorVector) +
+  geom_text_repel(size=1.5) +
+  stat_smooth(method = "lm", col = "red", size=0.5) +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+Ok, yeah, same result.
+
+
+Now plot heatmap correlation matrix of overdispersion estimates, to check if similar tissues are correlated in terms of dispersion or overdispersion
+
+```{r}
 
 ResidOD.Corshrink <- ResidualOverdispersionCombined %>%
   as.matrix() %>% scale() %>%

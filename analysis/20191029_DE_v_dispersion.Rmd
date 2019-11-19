@@ -31,6 +31,7 @@ EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.t
 
 DE.results <- read.table("../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', header=T)
 
+EgenesTested.grouped <- AddGroups(EgenesTested, HumanEgeneCount=500)
 
 ```
 
@@ -51,12 +52,17 @@ No. Probably same conclusion for chimp eGenes, though chimp eGenes in my case is
 
 ```{r}
 
-left_join(ChimpOverdispersionTable, EgenesTested, by=c("gene"="H.gene")) %>%
+left_join(ChimpOverdispersionTable, EgenesTested.grouped, by=c("gene"="H.gene")) %>%
   mutate(eGene=case_when(
     C.FDR <= 0.1 ~ "eGene",
     C.FDR >= 0.1 ~ "not eGene"
   )) %>%
   ggplot(aes(x=Human.Residual, color=eGene)) +
+    stat_ecdf(geom = "step") +
+    theme_bw()
+
+EgenesTested.grouped %>%
+  ggplot(aes(x=Human.Residual, color=group)) +
     stat_ecdf(geom = "step") +
     theme_bw()
 ```
@@ -96,7 +102,9 @@ left_join(EgenesTested, DE.results, by=c("H.gene"= "gene")) %>%
 
 Yes, eGenes slightly stronger between species effects. Now let's make the plot for eGenes that are in both as a separate category.
 
-```{r}
+```{r, eval=F}
+#This code breaks since I changed the Plot.Interpecies.DE.byGroup function. See final figure markdowns instead 
+
 DE.plot.results <- Plot.Interpecies.DE.byGroup(EgenesTested, DE.results, HumanEgeneCount = 500)
 DE.plot.results$plot
 DE.plot.results$PvalTable
@@ -105,11 +113,11 @@ DE.Fig <- ggdraw(DE.plot.results$plot) +
   draw_grob(tableGrob(DE.plot.results$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.25, width=0.3, height=0.3)
 ggsave("~/Desktop/My.DE.pdf", DE.Fig, height=120, width=120, units="mm")
 
-
 ```
 
 Percent identity and dn/ds plot
-```{r}
+```{r, eval=F}
+#This code breaks since I changed the Plot.Interpecies.DE.byGroup function. See final figure markdowns instead 
 PercentIdentityPlot <- Plot.PercentNonIdentity.byGroup(EgenesTested, HumanEgeneCount = 500)
 PercentIdentityPlot$plot
 PercentIdentityPlot$PvalTable

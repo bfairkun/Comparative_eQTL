@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Benjamin Fair" />
+
+<meta name="date" content="2019-11-14" />
+
+<title>Final_plots_1_CumDist</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Final_plots_1_CumDist</h1>
+<h4 class="author">Benjamin Fair</h4>
+<h4 class="date">November 14, 2019</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-11-14
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreedd7d60fecd2d78c00a6ca6ddbd778579060b8879targetblankdd7d60fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/dd7d60fecd2d78c00a6ca6ddbd778579060b8879" target="_blank">dd7d60f</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreedd7d60fecd2d78c00a6ca6ddbd778579060b8879targetblankdd7d60fa" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    big_data/
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    docs/.DS_Store
+    Ignored:    docs/assets/.DS_Store
+    Ignored:    figures/
+
+Untracked files:
+    Untracked:  Untitled/
+    Untracked:  analysis/Final_2_DispersionPlots.Rmd
+    Untracked:  analysis/Final_3_GSEA.Rmd
+    Untracked:  analysis/Final_CumDistPlots.Rmd
+    Untracked:  docs/figure/Final_2_DispersionPlots.Rmd/
+    Untracked:  docs/figure/Final_CumDistPlots.Rmd/
+
+Unstaged changes:
+    Modified:   .gitignore
+    Deleted:    GSEA_eQTL.pdf
+    Modified:   analysis/20191025_FullGtexOverdispEstimates.Rmd
+    Modified:   analysis/20191029_DE_v_dispersion.Rmd
+    Modified:   analysis/20191107_SpecificityVDispersion.Rmd
+    Modified:   analysis_temp/TabulaMuris_analysis2.Rmd
+    Modified:   code/CustomFunctions.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This markdown will be used to generate publication quality figures that I have already made at some point in my exploratory Rmarkdown analyses. This markdown will just make plots that i anticipate for publication that are shown as empricial cdf plots for various unrelated things.</p>
+<p>First, load necessary libraries</p>
+<pre class="r"><code>library(tidyverse)
+source(&quot;../code/CustomFunctions.R&quot;)</code></pre>
+<p>Load eGene data for humans and chimp.</p>
+<pre class="r"><code>ChimpOverdispersionTable &lt;- read.table(&quot;../output/OverdispersionEstimatesFromChimp.NoLengthNorm.txt&quot;, header=T, sep=&#39;\t&#39;)
+
+EgenesTested &lt;- TsvToCombinedEgenes(Chimp.tsv = &quot;../output/ChimpEgenes.eigenMT.txt.gz&quot;, Human.tsv = &quot;../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz&quot;, SysToID.tsv = &quot;../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz&quot;, HumanTsvType = &quot;GTEx&quot;)
+
+DE.results &lt;- read.table(&quot;../data/DE_genes.NoVirusChallangedInds.txt&quot;, sep=&#39;\t&#39;, header=T)
+
+EgenesTested.grouped &lt;- AddGroups(EgenesTested, HumanEgeneCount=500)</code></pre>
+</div>
+<div id="make-plots." class="section level2">
+<h2>Make plots.</h2>
+<p>Note that plots make come out with odd looking dimensions, that only look better through my experimentation with ggsave that saves the final figure to a file not included in the rendered markdown.</p>
+<div id="de-by-egene-group" class="section level3">
+<h3>DE by eGene group</h3>
+<p>First plot interspecies DE effect size by eGene group. Only save the plot for the ~8000 genes that are significantly DE. (Similar results are obtained if you make the plot for all genes as shown first). eGenes are more likely to be differentially expressed between species. this is even more true for species shared eGenes. All consistent with most neutral selection. Traits that are varied within a species, should be varied between species as well.</p>
+<pre class="r"><code>DE.results %&gt;% pull(DE) %&gt;% table()</code></pre>
+<pre><code>.
+  -1    0    1 
+4338 4337 4417 </code></pre>
+<pre class="r"><code>Plot.Interpecies.DE.byGroup(EgenesTested.grouped, DE.results)$plot</code></pre>
+<p><img src="figure/Final_CumDistPlots.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Plot.Interpecies.DE.byGroup(EgenesTested.grouped, DE.results)$PvalTable</code></pre>
+<pre><code>           &quot;H&quot;[a] `P-value`
+1 chimp &gt; neither     0.095
+2 human &gt; neither   1.7e-10
+3    both &gt; chimp     0.033
+4    both &gt; human     0.098</code></pre>
+<pre class="r"><code>DE.By.Group &lt;- Plot.Interpecies.DE.byGroup(EgenesTested.grouped, (DE.results %&gt;% filter(DE != 0)))
+
+DE.Fig &lt;- ggdraw(DE.By.Group$plot +                            guides(color=guide_legend(nrow=2,byrow=TRUE))
+) +
+  draw_grob(tableGrob(DE.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.3, width=0.3, height=0.3)
+DE.Fig</code></pre>
+<p><img src="figure/Final_CumDistPlots.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/eGeneGroup.DE.pdf&quot;, DE.Fig, height=120, width=120, units=&quot;mm&quot;)</code></pre>
+</div>
+<div id="percent-identity-by-egene-group" class="section level3">
+<h3>Percent identity by eGene group</h3>
+<p>plot percent identity by eGene group. Hypothesis being that eGenes are genes which are evolving neautrally, so they will have less conservation at coding level (more percent non-identity)</p>
+<pre class="r"><code>Identity.By.Group &lt;- Plot.PercentNonIdentity.byGroup(EgenesTested.grouped)
+
+Identity.Fig &lt;- ggdraw(Identity.By.Group$plot +                            guides(color=guide_legend(nrow=2,byrow=TRUE))
+) +
+  draw_grob(tableGrob(Identity.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.3, width=0.3, height=0.3)
+Identity.Fig</code></pre>
+<p><img src="figure/Final_CumDistPlots.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/eGeneGroup.identity.pdf&quot;, Identity.Fig, height=120, width=120, units=&quot;mm&quot;)</code></pre>
+</div>
+<div id="plot-dnds-by-group" class="section level3">
+<h3>plot dN/dS by group</h3>
+<p>plot dN/dS ratio by group. Hypothesis being that eGenes are genes which are evolving neautrally, so they will have less conservation at coding level (higher dN/dS)</p>
+<pre class="r"><code>dNdS.By.Group &lt;- Plot.dNdS.byGroup(EgenesTested.grouped)
+
+dNdS.Fig &lt;- ggdraw(dNdS.By.Group$plot +                                       guides(color=guide_legend(nrow=2,byrow=TRUE))
+) +
+  draw_grob(tableGrob(dNdS.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)), base_size = 10)), x=0.65, y=0.3, width=0.25, height=0.25)
+dNdS.Fig</code></pre>
+<p><img src="figure/Final_CumDistPlots.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/eGeneGroup.dNdS.pdf&quot;, dNdS.Fig, height=120, width=120, units=&quot;mm&quot;)</code></pre>
+</div>
+<div id="plot-difference-in-dispersion-by-group" class="section level3">
+<h3>Plot difference in dispersion by group</h3>
+<p>plot difference in dispersion by group. Hypothesis being that chimp eGenes will be more dispersed in chimp, human eGenes will be more dispersed in human, consistent with there being a measurable genetic component to dispersion.</p>
+<pre class="r"><code>Dispersion.By.Group &lt;-Plot.DispersionDifference.byGroup(EgenesTested.grouped, ChimpOverdispersionTable)
+
+
+Dispersion.Fig &lt;- ggdraw(Dispersion.By.Group$plot +
+                           guides(color=guide_legend(nrow=2,byrow=TRUE))
+                         ) +
+  draw_grob(tableGrob(Dispersion.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.25, width=0.3, height=0.3)
+Dispersion.Fig</code></pre>
+<p><img src="figure/Final_CumDistPlots.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/eGeneGroup.dispersion.pdf&quot;, Dispersion.Fig, height=120, width=120, units=&quot;mm&quot;)</code></pre>
+</div>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] cowplot_1.0.0   gridExtra_2.3   edgeR_3.26.8    limma_3.40.6   
+ [5] MASS_7.3-51.4   forcats_0.4.0   stringr_1.4.0   dplyr_0.8.3    
+ [9] purrr_0.3.3     readr_1.3.1     tidyr_1.0.0     tibble_2.1.3   
+[13] ggplot2_3.2.1   tidyverse_1.2.1
+
+loaded via a namespace (and not attached):
+ [1] locfit_1.5-9.1   tidyselect_0.2.5 xfun_0.10        haven_2.1.1     
+ [5] lattice_0.20-38  colorspace_1.4-1 vctrs_0.2.0      generics_0.0.2  
+ [9] htmltools_0.4.0  yaml_2.2.0       rlang_0.4.1      pillar_1.4.2    
+[13] glue_1.3.1       withr_2.1.2      modelr_0.1.5     readxl_1.3.1    
+[17] lifecycle_0.1.0  munsell_0.5.0    gtable_0.3.0     workflowr_1.4.0 
+[21] cellranger_1.1.0 rvest_0.3.4      evaluate_0.14    labeling_0.3    
+[25] knitr_1.25       broom_0.5.2      Rcpp_1.0.2       scales_1.0.0    
+[29] backports_1.1.5  jsonlite_1.6     fs_1.3.1         hms_0.5.1       
+[33] digest_0.6.22    stringi_1.4.3    grid_3.6.1       rprojroot_1.3-2 
+[37] cli_1.1.0        tools_3.6.1      magrittr_1.5     lazyeval_0.2.2  
+[41] crayon_1.3.4     pkgconfig_2.0.3  zeallot_0.1.0    xml2_1.2.2      
+[45] lubridate_1.7.4  assertthat_0.2.1 rmarkdown_1.16   httr_1.4.1      
+[49] rstudioapi_0.10  R6_2.4.0         nlme_3.1-141     git2r_0.26.1    
+[53] compiler_3.6.1  </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

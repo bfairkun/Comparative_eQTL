@@ -1,0 +1,213 @@
+---
+title: "Final_3_GSEA"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Introduction
+
+This markdown will be used to generate publication quality figures that I have already made at some point in my exploratory Rmarkdown analyses. This will mostly be plots that have to do with gene ontology or gene set association analysis.
+
+## Analysis
+
+First, load necessary libraries and read in data
+```{r}
+library(tidyverse)
+library("clusterProfiler")
+library("org.Hs.eg.db")
+library(enrichplot)
+library(stringr)
+source("../code/CustomFunctions.R")
+```
+
+read in eGene data
+
+```{r}
+EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
+EgenesTested.grouped <- AddGroups(EgenesTested, HumanEgeneCount=500)
+```
+
+
+Perform GSEA based on difference in dispersion. What genes are more dispersed in chimp than human, vice-versa
+
+```{r}
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
+
+
+DifferenceInDispersion <- ChimpOverdispersionTable %>%
+  mutate(DispersionDiff = Chimp.Residual-Human.Residual ) %>%
+  dplyr::select(gene, DispersionDiff) %>%
+  deframe() %>% sort(decreasing = T)
+
+gsea.difference.in.disp <- gsea.full(DifferenceInDispersion)
+gsea.difference.in.disp$CC.simple$Description
+
+gsea.difference.in.disp$MF.simple %>%
+  dplyr::select(Description, enrichmentScore,p.adjust)
+
+gsea.difference.in.disp<-gseGO(gene=DifferenceInDispersion,
+            ont = "ALL",
+            OrgDb=org.Hs.eg.db,
+            keyType='ENSEMBL',
+            nPerm=500000,
+            pAdjustMethod='fdr',
+            pvalueCutoff=0.1)
+
+gsea.difference.in.disp %>% as.data.frame() %>%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize) %>%
+  filter(p.adjust<=0.05) %>%
+  # filter(str_detect(Description, 'DNA')) %>%
+  group_by(ONTOLOGY) %>%
+  top_n(n = -5, wt = abs(enrichmentScore)) %>%
+  ungroup() %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 60, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  theme_bw()
+```
+
+
+Now, Perform differential GSEA based on difference in qvalue ranks. I set eval=F to this code since it takes so long and based on the fact that the difference in FDR doesn't correlate with dispersion, I think this is convoluted and a generally not good way to ask the question "what genes are more eGene-y in chimp than human?"
+
+```{r, eval=F}
+
+DifferenceInFDR.Rank <- EgenesTested.grouped %>%
+  mutate(H.rank = dense_rank(H.FDR),
+         C.rank = dense_rank(C.FDR)) %>%
+  filter(C.FDR <= 0.1) %>%
+  mutate(RankDiff=C.rank-H.rank) %>%
+  dplyr::select(H.gene, RankDiff) %>%
+  deframe() %>% sort(decreasing = T)
+
+gsea.difference.in.fdr <-gseGO(gene=DifferenceInFDR.Rank,
+            ont = "ALL",
+            OrgDb=org.Hs.eg.db,
+            keyType='ENSEMBL',
+            nPerm=500000,
+            pAdjustMethod='fdr',
+            pvalueCutoff=0.1)
+
+gsea.difference.in.fdr %>% as.data.frame() %>%
+  dplyr::select(Description)
+
+gsea.difference.in.fdr %>% as.data.frame() %>%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  xlim(c(-1,1)) +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 60, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  theme_bw()
+
+gseaplot2(gsea.difference.in.fdr, geneSetID = c("GO:0006366","GO:0006355"), title="Chimp eGenes ordered by difference in species rank", pvalue_table = TRUE)
+
+#Compare gene lists using fdr vs dispersion
+A<- gsea.difference.in.fdr %>% as.data.frame() %>% pull(ID)
+
+B<- gsea.difference.in.disp %>% as.data.frame() %>% pull(ID)
+
+length(A)
+length(B)
+length(intersect(A,B))
+
+```
+
+None of the same categories.
+
+Since the difference in FDR rank appraoch is convoluted, I will ask that same question ("What genes are more of eGenes in chimp than in human") by doing gene overlap analysis using chimp specific eGenes as foreground, and all chimp eGenes as background.
+
+
+```{r}
+
+EgenesTested.FDR10 <- AddGroups(TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx"))
+
+
+EgenesTested.FDR10 %>% pull(group) %>% table()
+
+Foreground <- EgenesTested.FDR10 %>%
+  filter(group %in% c("chimp")) %>% pull(H.gene)
+
+Background <- EgenesTested.FDR10 %>%
+  filter(group %in% c("chimp", "both")) %>% pull(H.gene)
+
+ChimpSpecificEgene.GO <- enrichGO(gene = Foreground,
+                 universe = Background,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 ont = "ALL", 
+                 pAdjustMethod = "BH", 
+                 pvalueCutoff=0.1)
+
+ChimpSpecificEgene.GO %>% as.data.frame() %>%
+  separate(GeneRatio, c("FgY", "BgY"), sep="/", convert=TRUE) %>%
+  separate(BgRatio, c("FgN", "BgN"), sep="/", convert=TRUE) %>%
+  mutate(OddsRatio=(FgY/BgY)/(FgN/BgN)) %>%
+  dplyr::filter(p.adjust < 0.1) %>%
+  ggplot(aes(x=OddsRatio, y=Description, color=-log10(p.adjust), size=Count)) +
+  geom_point(aes(size=FgN), color="black", alpha=0.5) +
+  geom_point() +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  xlab("Odds ratio") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 60, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  theme_bw()
+
+barplot(ChimpSpecificEgene.GO)
+  
+# A<-ChimpSpecificEgene.GO %>% as.data.frame() %>% pull(ID)
+# B<-gsea.difference.in.disp %>% as.data.frame() %>% pull(ID)
+# 
+# length(A)
+# length(B)
+# length(intersect(A,B))
+# 
+# ChimpSpecificEgene.GO %>% as.data.frame() %>%
+#   filter(ID == "GO:0007346") %>% pull(Description)
+```
+
+### GO overrepresentation of shared eGenes comared to chimp or human specific
+```{r}
+
+Foreground <- EgenesTested.grouped %>%
+  filter(group %in% c("both")) %>% pull(H.gene)
+
+Background <- EgenesTested.FDR10 %>%
+  filter(group %in% c("chimp", "both", "human")) %>% pull(H.gene)
+
+Shared.eGene.GO <- enrichGO(gene = Foreground,
+                 universe = Background,
+                 OrgDb = org.Hs.eg.db,
+                 keyType = 'ENSEMBL',
+                 ont = "ALL", 
+                 pAdjustMethod = "BH", 
+                 pvalueCutoff=0.05)
+
+dotplot(Shared.eGene.GO, showCategory=30)
+
+```
+
+
+## Conclusions
+
+

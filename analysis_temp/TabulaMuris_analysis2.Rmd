@@ -1,5 +1,7 @@
 ---
-title: "TabulaMuris_analysis2"
+title: "20191001_GtexAnnotations"
+author: "Ben Fair"
+date: "10/1/2019"
 output: html_document
 ---
 
@@ -17,20 +19,19 @@ library(Seurat)
 library(sctransform)
 library(data.table)
 library(cowplot)
+source("../code/CustomFunctions.R")
 
-
-
-Heart.seur = readRDS("~/Downloads/TabMuris_heart_seurat.rds")
-
+Heart.seur = readRDS("../big_data/TabMuris_heart_seurat.rds")
 
 ```
 
 
 Finally, now ask if overdispersed genes fall into different clusters
 ```{r}
-OverdispersedGeneList <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz", sep='\t', header=T)
+#read in table of overdispersion, dispersion, mean expresion estimates
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
 
-OverdispersedGeneList$MeanDispersion <- (log(OverdispersedGeneList$Chimp.Residual) + log(OverdispersedGeneList$Human.Residual))/2
+ChimpOverdispersionTable$MeanDispersion <- (ChimpOverdispersionTable$Chimp.Residual + ChimpOverdispersionTable$Human.Residual)/2
 
 human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
 mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
@@ -43,19 +44,19 @@ one2one_HumanMouseOrthologs <- genes %>%
   filter(Mouse.homology.type=="ortholog_one2one") %>%
   dplyr::select(MGI.symbol, Gene.stable.ID)
 
-CellTypeSpecificity <- read.table("../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt", col.names=c("MouseGeneID", "tau"), sep='\t')
+CellTypeSpecificity <- read.table("../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt", col.names=c("Gene.stable.ID", "tau"), sep='\t')
 
 
 CombinedTable <- one2one_HumanMouseOrthologs %>%
-  left_join(CellTypeSpecificity, by=c("MGI.symbol"="MouseGeneID")) %>% 
-  inner_join(OverdispersedGeneList, by=c("Gene.stable.ID"="gene"))
+  inner_join(CellTypeSpecificity, by="Gene.stable.ID") %>%
+  inner_join(ChimpOverdispersionTable, by=c("Gene.stable.ID"="gene")) %>%
+  drop_na()
 
 
 #I want to grab the top overdispersed genes, but only those that are reliably expressed in at least 5 cells, and have an ensembl homolog match to human
 CellNonZeroCounts <- data.frame(
         NumCellsExpressing=rowSums(Heart.seur@assays$RNA[,] > 0)) %>%
         tibble::rownames_to_column("MGI.symbol")
-
 
 
 ```
@@ -194,8 +195,6 @@ legend.p2 <- get_legend(
 legends <- plot_grid(legend.p1, legend.p2, nrow=2, scale=c(0.8,0.5), rel_heights = c(1,0.2), align='b')
 
 ggsave("../figures/LowlyDisperesed.heatmap.legend.pdf", plot=legends)
-
-
 ```
 
 
@@ -292,7 +291,10 @@ for (i in seq_along(Cell.Types)){
 #Check markers are specific
 AllMarkers %>% rownames_to_column("gene") %>%
   group_by(CellType) %>%
-  top_n(n = 10, wt = avg_logFC) %>% pull(gene) %>%
+  top_n(n = 200, wt = avg_logFC) %>%
+  group_by(CellType) %>%
+  top_n(n = -10, wt = avg_logFC) %>%
+  pull(gene) %>%
   DoHeatmap(Heart.seur, features = ., group.by = "Cell.ontology.class") + NoLegend()
 
 Top200Markers <- AllMarkers %>%

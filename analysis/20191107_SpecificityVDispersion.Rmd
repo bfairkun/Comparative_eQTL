@@ -13,24 +13,24 @@ library(tidyverse)
 library(biomaRt)
 source("../code/CustomFunctions.R")
 library(latex2exp)
+library(corrplot)
+library(psych)
+
 ```
 
-Read in dispersion estimates and cell-type specificity statistic (tau).
+Read in dispersion estimates and cell-type specificity statistic (tau) described in [Nadezda Kryuchkova-Mostacci et al](https://academic.oup.com/bib/article/18/2/205/2562739).
 
 ```{r}
-OverdispersedGeneList <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz", sep='\t', header=T)
+OverdispersedGeneList <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt.gz", sep='\t', header=T) %>%
+  mutate(SpeciesDispersionDifference = log(Chimp.Residual)-log(Human.Residual),
+         MeanDispersion = (log(OverdispersedGeneList$Chimp.Residual) + log(OverdispersedGeneList$Human.Residual))/2
+         )
 
-OverdispersedGeneList$MeanDispersion <- (log(OverdispersedGeneList$Chimp.Residual) + log(OverdispersedGeneList$Human.Residual))/2
 
-CellTypeSpecificity <- read.table("../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt", col.names=c("MouseGeneID", "tau"), sep='\t')
+CellTypeSpecificity <- read.table("../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt", col.names=c("Gene.stable.ID", "tau"), sep='\t')
 
-human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
-mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
 
-genes = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = CellTypeSpecificity$MouseGeneID ,mart = mouse, attributesL = c("ensembl_gene_id", "chromosome_name", "start_position"), martL = human, uniqueRows=T)
-
-CombinedTable <- genes %>%
-  left_join(CellTypeSpecificity, by=c("MGI.symbol"="MouseGeneID")) %>% 
+CombinedTable <- CellTypeSpecificity %>%
   inner_join(OverdispersedGeneList, by=c("Gene.stable.ID"="gene"))
 
 ```
@@ -38,7 +38,7 @@ CombinedTable <- genes %>%
 Check for correlation with cell specificity and overdispersion
 ```{r}
 ggplot(CombinedTable, aes(x=MeanDispersion, y=tau)) +
-  geom_point(alpha=0.05) +
+  geom_point(alpha=0.2) +
   geom_density_2d() +
   xlim(c(-4,4)) +
   theme_bw()
@@ -46,7 +46,44 @@ ggplot(CombinedTable, aes(x=MeanDispersion, y=tau)) +
 cor.test(x=CombinedTable$MeanDispersion, y=CombinedTable$tau, method="spearman")
 ```
 
-Let's see if chimp overdispersed genes are more likely chimp eGenes, and same for human
+Ok. dispersed genes are more likely to be cell type specific genes. Now let's use the z-score metric for tissue specificity [Nadezda Kryuchkova-Mostacci et al](https://academic.oup.com/bib/article/18/2/205/2562739) to see what what cell-type specific genes from which cell types are more dispsersed.
+
+```{r}
+CellTypeSpecificity.z <- read.table("../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.z.log.txt", header=T, sep='\t')
+
+CellTypeSpecificity.z.combined <- OverdispersedGeneList %>%
+  dplyr::select(gene, MeanDispersion, SpeciesDispersionDifference) %>%
+  inner_join(CellTypeSpecificity.z, by=c("gene"="Gene.stable.ID")) %>% column_to_rownames("gene")
+
+MyCorMatrix <- corr.test(x=CellTypeSpecificity.z.combined[,1:2], y=CellTypeSpecificity.z.combined[,-(1:2)], method="spearman")
+corrplot(MyCorMatrix$r, method='color', pch.cex=1.8, tl.srt=45, tl.col = "black", insig='label_sig', is.corr=F, p.mat=MyCorMatrix$p, sig.level=c(0.00001, 0.001), cl.lim=c(-0.4, 0.4))
+```
+
+Ok, now check if CIBERSORT correlates with expression PCs
+
+```{r}
+cibersort.results <- read.table("../data/CIBERSORT.Output_Job2.csv", sep=',', header=T) %>%
+  filter(grepl("^C.",Input.Sample)) %>%
+  mutate(IID=gsub("^C.", "", Input.Sample, perl=T)) %>%
+  dplyr::select(-c("Input.Sample", "P.value", "Pearson.Correlation", "RMSE"))
+
+PCs <- read.table("../output/Covariates/0GenotypePCs_and_10RNASeqPCs.covariates", header=T, check.names = F) %>%
+  mutate(IID=gsub(".RS", "", IID, perl=T)) %>%
+  column_to_rownames("IID") %>% t() %>% as.data.frame() %>%
+  dplyr::select(-SX) %>% rownames_to_column("IID")
+
+cibersort.results.combined.PCs <- cibersort.results %>%
+  left_join(PCs, by="IID") %>% column_to_rownames("IID")
+
+MyCorMatrix <- corr.test(x=cibersort.results.combined.PCs[,1:9],
+                         y=cibersort.results.combined.PCs[,-(1:9)],
+                         method="pearson",
+                         adjust="BH")
+corrplot(MyCorMatrix$r, method='color', pch.cex=1.8, tl.srt=45, tl.col = "black", insig='label_sig', is.corr=F, p.mat=MyCorMatrix$p, sig.level=c(0.01))
+```
+
+
+Now, Let's see if chimp overdispersed genes are more likely chimp eGenes, and same for human
 
 ```{r}
 EgenesTested <- AddGroups(TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx"), HumanEgeneCount = 500)
@@ -56,8 +93,7 @@ A$plot
 
 
 ToPlot <- EgenesTested %>%
-  left_join(CombinedTable, by=c("H.gene"="Gene.stable.ID")) %>%
-  mutate(SpeciesDispersionDifference = Chimp.Residual-Human.Residual)
+  left_join(OverdispersedGeneList, by=c("H.gene"="gene"))
 ggplot(ToPlot, aes(x=SpeciesDispersionDifference, color=group)) +
     stat_ecdf(geom = "step") +
     xlim(c(-3,3)) +

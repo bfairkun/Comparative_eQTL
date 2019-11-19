@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Benjamin Fair" />
+
+<meta name="date" content="2019-11-14" />
+
+<title>Final_plots_2_CumDist</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Final_plots_2_CumDist</h1>
+<h4 class="author">Benjamin Fair</h4>
+<h4 class="date">November 14, 2019</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-11-14
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreedd7d60fecd2d78c00a6ca6ddbd778579060b8879targetblankdd7d60fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/dd7d60fecd2d78c00a6ca6ddbd778579060b8879" target="_blank">dd7d60f</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreedd7d60fecd2d78c00a6ca6ddbd778579060b8879targetblankdd7d60fa" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/figure/
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    big_data/
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    docs/.DS_Store
+    Ignored:    docs/assets/.DS_Store
+    Ignored:    figures/
+
+Untracked files:
+    Untracked:  Untitled/
+    Untracked:  analysis/Final_2_DispersionPlots.Rmd
+    Untracked:  analysis/Final_3_GSEA.Rmd
+    Untracked:  analysis/Final_CumDistPlots.Rmd
+    Untracked:  docs/figure/Final_2_DispersionPlots.Rmd/
+    Untracked:  docs/figure/Final_CumDistPlots.Rmd/
+
+Unstaged changes:
+    Modified:   .gitignore
+    Deleted:    GSEA_eQTL.pdf
+    Modified:   analysis/20191025_FullGtexOverdispEstimates.Rmd
+    Modified:   analysis/20191029_DE_v_dispersion.Rmd
+    Modified:   analysis/20191107_SpecificityVDispersion.Rmd
+    Modified:   analysis_temp/TabulaMuris_analysis2.Rmd
+    Modified:   code/CustomFunctions.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This markdown will be used to generate publication quality figures that I have already made at some point in my exploratory Rmarkdown analyses. This will mostly be plots that have to do with dispersion</p>
+</div>
+<div id="plots" class="section level2">
+<h2>Plots</h2>
+<p>First, load necessary libraries</p>
+<pre class="r"><code>library(tidyverse)
+library(stringr)
+library(biomaRt)
+library(readxl)
+library(latex2exp)
+library(cowplot)
+library(Seurat)
+library(sctransform)
+library(psych)
+library(corrplot)
+
+source(&quot;../code/CustomFunctions.R&quot;)</code></pre>
+<p>Read in data…</p>
+<pre class="r"><code>#read in table of overdispersion, dispersion, mean expresion estimates
+ChimpOverdispersionTable &lt;- read.table(&quot;../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt&quot;, header=T, sep=&#39;\t&#39;, stringsAsFactors = F)
+
+#Add gene symbols for prettier labels instead of ENSEMBL ID
+human = useMart(&quot;ensembl&quot;, dataset = &quot;hsapiens_gene_ensembl&quot;)
+Symbols &lt;- getBM(attributes=c(&quot;hgnc_symbol&quot;, &quot;ensembl_gene_id&quot;), filters=&quot;ensembl_gene_id&quot;, values=ChimpOverdispersionTable$gene, mart=human)
+
+ChimpOverdispersionTable &lt;- ChimpOverdispersionTable %&gt;%
+  left_join(Symbols, by=c(&quot;gene&quot;=&quot;ensembl_gene_id&quot;))
+
+# Read in eGene data
+EgenesTested &lt;- TsvToCombinedEgenes(Chimp.tsv = &quot;../output/ChimpEgenes.eigenMT.txt.gz&quot;, Human.tsv = &quot;../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz&quot;, SysToID.tsv = &quot;../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz&quot;, HumanTsvType = &quot;GTEx&quot;)
+
+# Read in count data
+HumanSamplesToDrop &lt;- c(c(&quot;SRR1507229&quot;,&quot;SRR603918&quot;, &quot;SRR1478149&quot;, &quot;SRR598509&quot;, &quot;SRR613186&quot;), c(&quot;SRR1489693&quot;, &quot;SRR598148&quot;, &quot;59167&quot;, &quot;SRR1478900&quot;, &quot;SRR1474730&quot;, &quot;61317&quot;))
+ChimpSamplesToDrop &lt;- c(&quot;Little_R&quot;)
+OtherMetadata &lt;- as.data.frame(read_excel(&quot;../data/Metadata.xlsx&quot;))
+VirusChallengedChimps &lt;- OtherMetadata %&gt;% filter(grepl(&quot;V+&quot;,Viral.status)) %&gt;% pull(Individual.ID)
+CountTableChimpFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz&#39;
+CountTableHumanFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Human.subread.txt.gz&#39;
+CountTables &lt;- GetCountTables(CountTableChimpFile,
+                              CountTableHumanFile,
+                              0, ChimpOverdispersionTable$gene, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)</code></pre>
+<div id="illustrative-dispersion-example-with-boxplots" class="section level3">
+<h3>Illustrative dispersion example with boxplots</h3>
+<p>An example of the raw data (log2RPKM) of a few genes with various dispersion estimates.</p>
+<pre class="r"><code># Get a high dispersion and a low dispersion gene at similar RPKM as an example. Also get a gene with a big difference in dispersion between the two species.
+
+HighDispersionGene &lt;- ChimpOverdispersionTable %&gt;%
+  filter(Chimp.Mean.Log2RPKM &gt;= 2 &amp; Chimp.Mean.Log2RPKM &lt;= 3) %&gt;%
+  mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %&gt;%
+  filter(DifferenceInDispersion &lt; 0.1) %&gt;%
+  top_n(1, Human.Residual) %&gt;% pull(gene)
+
+LowDispersionGene &lt;- ChimpOverdispersionTable %&gt;%
+  filter(Chimp.Mean.Log2RPKM &gt;= 2 &amp; Chimp.Mean.Log2RPKM &lt;= 3) %&gt;%
+  mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %&gt;%
+  filter(DifferenceInDispersion &lt; 0.1) %&gt;%
+  top_n(-1, Human.Residual) %&gt;% pull(gene)
+
+BigDifferenceInDispersion &lt;- ChimpOverdispersionTable %&gt;%
+  filter(Chimp.Mean.Log2RPKM &gt;= 2 &amp; Chimp.Mean.Log2RPKM &lt;= 3) %&gt;%
+  mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %&gt;%
+  filter(DifferenceInDispersion &gt; 1.7 &amp; DifferenceInDispersion &lt; 2.2) %&gt;%
+  top_n(1, DifferenceInDispersion) %&gt;% pull(gene)
+
+GenesToPlot &lt;- c(HighDispersionGene, LowDispersionGene, BigDifferenceInDispersion)
+
+Colplots &lt;- ChimpOverdispersionTable %&gt;%
+  dplyr::select(Chimp.Residual, Human.Residual, hgnc_symbol, gene) %&gt;%
+  filter(gene %in% GenesToPlot) %&gt;%
+  gather(key=&quot;sample&quot;, value=&quot;dispersion&quot;, -hgnc_symbol, -gene) %&gt;%
+  mutate(Species = case_when(sample==&quot;Chimp.Residual&quot; ~ &quot;Chimp&quot;,
+                             sample==&quot;Human.Residual&quot; ~ &quot;Human&quot;)) %&gt;%
+  ggplot(aes(x=Species, y=dispersion)) +
+    geom_col() +
+    ylab(&quot;Dispersion, a.u.&quot;) +
+    facet_grid(.~hgnc_symbol) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+          strip.background = element_blank(),
+          strip.text.x = element_blank())
+
+Boxplots &lt;- cbind(CountTables$Chimp$log2RPKM[GenesToPlot,],
+      CountTables$Human$log2RPKM[GenesToPlot,]) %&gt;%
+  as.data.frame() %&gt;%
+  rownames_to_column(&quot;gene&quot;) %&gt;%
+  left_join(Symbols, by=c(&quot;gene&quot;=&quot;ensembl_gene_id&quot;)) %&gt;%
+  gather(key=&quot;Individual&quot;, value=&quot;log2RPKM&quot;, -hgnc_symbol, -gene) %&gt;%
+  mutate(Species = case_when(str_detect(Individual, &quot;C.&quot;) ~ &quot;Chimp&quot;,
+                   str_detect(Individual, &quot;H.&quot;) ~ &quot;Human&quot;)) %&gt;%
+  ggplot(aes(x=Species, y=log2RPKM)) +
+    geom_boxplot(outlier.shape=NA) +
+    geom_jitter(width=.15, height=0, alpha=0.7) +
+    facet_grid(.~hgnc_symbol) +
+    ylab(TeX(&quot;Expression, log_{2}RPKM&quot;)) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank())
+
+plot_grid(Boxplots, Colplots, align=&quot;hv&quot;, ncol=1, nrow=2)</code></pre>
+<p><img src="figure/Final_2_DispersionPlots.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/Dispersion.chimp_human_example_genes.pdf&quot;, units=&quot;mm&quot;, height=100, width=100)</code></pre>
+</div>
+<div id="illustrative-regressing-out-mean-effect" class="section level3">
+<h3>Illustrative regressing out mean effect</h3>
+<p>This illustrates how dispersion is calculated, after obtaining a gene-wise overdispersion parameter estimate by fitting negative binomial model to the count data</p>
+<pre class="r"><code>Before &lt;- ChimpOverdispersionTable %&gt;%
+  ggplot(aes(y=log(Human.Overdispersion), x=Human.Mean.Expression)) +
+  stat_binhex(bins=100) +
+  ylim(c(-5,3)) +
+  xlab(TeX(&quot;Expression, $\\hat{\\mu}$&quot;)) +
+  ylab(TeX(&quot;Overdispersion, log($\\hat{\\phi})$&quot;)) +
+  scale_fill_viridis_c(option=&quot;C&quot;, limits=c(0,25)) +
+  geom_smooth(method=&quot;loess&quot;, method.args=list(degree=1)) +
+  theme_bw() +
+  theme(aspect.ratio = 1)
+
+
+After &lt;- ChimpOverdispersionTable %&gt;%
+  ggplot(aes(y=Human.Residual, x=Human.Mean.Expression)) +
+  stat_binhex(bins=100) +
+  ylim(c(-3,3)) +
+  xlab(&quot;Expression&quot;) +
+  ylab(&quot;Dispersion&quot;) +
+  lims(fill=c(0,25)) +
+  scale_fill_viridis_c(option=&quot;C&quot;, limits=c(0,25), guide=F) +
+  geom_hline(yintercept=0, color = &quot;blue&quot;) +
+  theme_bw() +
+  theme(aspect.ratio = 1)
+
+prow &lt;- plot_grid(
+  plot_grid(
+    Before +
+      theme(legend.position = &quot;none&quot;,
+            plot.margin = margin(6, 6, 6, 0)),
+    After +
+      theme(legend.position = &quot;none&quot;,
+            plot.margin = margin(6, 6, 6, 0)),
+    align = &#39;hv&#39;,
+    nrow = 1,
+    axis=&#39;bt&#39;,
+    # axis=&#39;tblr&#39;,
+    labels=c(&quot;A&quot;, &quot;B&quot;),
+    vjust=1.5),
+  get_legend(Before +
+                theme(legend.box.margin = margin(0, 12, 0, 12))),
+  rel_widths = c(2,0.2),
+  align=&#39;hv&#39;,
+  greedy=F,
+  ncol=2,
+  scale=c(1,0.5))
+prow</code></pre>
+<p><img src="figure/Final_2_DispersionPlots.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/Dispersion.regression.pdf&quot;, units=&quot;mm&quot;, height=50, width=120)</code></pre>
+</div>
+<div id="dispersion-chimp-v-human" class="section level3">
+<h3>dispersion chimp v human</h3>
+<p>correlation of dispersion in chimp vs human</p>
+<pre class="r"><code>Correlation &lt;-cor.test(ChimpOverdispersionTable$Chimp.Residual,
+       ChimpOverdispersionTable$Human.Residual,
+       use=&quot;complete.obs&quot;)
+
+lb1 = paste0(&#39;atop(R^2==&#39;, round(Correlation$estimate**2,2), &#39;, P&#39;, format.pval(Correlation$p.value), &#39;)&#39;)
+
+ChimpOverdispersionTable %&gt;%
+  ggplot(aes(x=Chimp.Residual, y=Human.Residual)) +
+  # geom_point(alpha=0.05) +
+  # stat_bin2d(bins=100) +
+  stat_binhex(bins=100) +
+  xlim(c(-3,3)) +
+  ylim(c(-3,3)) +
+  xlab(&quot;Chimp dispersion&quot;) +
+  ylab(&quot;Human dispersion&quot;) +
+  scale_fill_viridis_c(option=&quot;C&quot;) +
+  coord_fixed() +
+  annotate(&quot;text&quot;,x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+  theme_bw()</code></pre>
+<p><img src="figure/Final_2_DispersionPlots.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/Dispersion.chimp_human_scatter.pdf&quot;, units=&quot;mm&quot;, height=70, width=70)</code></pre>
+</div>
+<div id="highly-dispersed-genes-in-tabula-muris" class="section level3">
+<h3>highly dispersed genes in tabula muris</h3>
+<p>tabula muris mouse heart FACS dataset is perhaps the most extensive single cell mammalian heart dataset available. Use this to see if highly dispersed genes correspond to cell type specific genes.</p>
+<pre class="r"><code>Heart.seur = readRDS(&quot;../big_data/TabMuris_heart_seurat.rds&quot;)
+
+
+ChimpOverdispersionTable$MeanDispersion &lt;- (ChimpOverdispersionTable$Chimp.Residual + ChimpOverdispersionTable$Human.Residual)/2
+
+human = useMart(&quot;ensembl&quot;, dataset = &quot;hsapiens_gene_ensembl&quot;)
+mouse = useMart(&quot;ensembl&quot;, dataset = &quot;mmusculus_gene_ensembl&quot;)
+
+MouseGenes = rownames(Heart.seur)
+genes = getLDS(attributes = c(&quot;mgi_symbol&quot;), filters = &quot;mgi_symbol&quot;, values = MouseGenes ,mart = mouse, attributesL = c(&quot;ensembl_gene_id&quot;, &quot;chromosome_name&quot;, &quot;start_position&quot;, &quot;mmusculus_homolog_orthology_type&quot;), martL = human, uniqueRows=T)
+
+# Get list of one to one orthologs
+one2one_HumanMouseOrthologs &lt;- genes %&gt;%
+  filter(Mouse.homology.type==&quot;ortholog_one2one&quot;) %&gt;%
+  dplyr::select(MGI.symbol, Gene.stable.ID)
+
+CellTypeSpecificity &lt;- read.table(&quot;../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.tau.log.txt&quot;, col.names=c(&quot;Gene.stable.ID&quot;, &quot;tau&quot;), sep=&#39;\t&#39;)
+
+
+CombinedTable &lt;- one2one_HumanMouseOrthologs %&gt;%
+  inner_join(CellTypeSpecificity, by=&quot;Gene.stable.ID&quot;) %&gt;%
+  inner_join(ChimpOverdispersionTable, by=c(&quot;Gene.stable.ID&quot;=&quot;gene&quot;)) %&gt;%
+  drop_na()
+
+
+#I want to grab the top overdispersed genes, but only those that are reliably expressed in at least 5 cells, and have an ensembl homolog match to human
+CellNonZeroCounts &lt;- data.frame(
+        NumCellsExpressing=rowSums(as.data.frame(Heart.seur@assays$RNA[,] &gt; 0))) %&gt;%
+        tibble::rownames_to_column(&quot;MGI.symbol&quot;)
+
+HighlyDispersed.p &lt;- ChimpOverdispersionTable %&gt;%
+        left_join(one2one_HumanMouseOrthologs, by=c(&quot;gene&quot;=&quot;Gene.stable.ID&quot;)) %&gt;%
+        filter(!is.na(MGI.symbol)) %&gt;% 
+        left_join(CellNonZeroCounts, by=&quot;MGI.symbol&quot;) %&gt;%
+        filter(NumCellsExpressing&gt;50) %&gt;%
+        filter(gene %in% CombinedTable$Gene.stable.ID) %&gt;%
+        top_n(50, MeanDispersion) %&gt;%
+        pull(MGI.symbol) %&gt;%
+DoHeatmap(Heart.seur, features = ., group.by=&quot;Cell.ontology.class&quot;, disp.min=0, size=3, label=F) +
+         scale_fill_gradientn(colours = hcl.colors(10, &quot;YlOrRd&quot;))
+
+LowlyDispersed.p &lt;- ChimpOverdispersionTable %&gt;%
+        left_join(one2one_HumanMouseOrthologs, by=c(&quot;gene&quot;=&quot;Gene.stable.ID&quot;)) %&gt;%
+        filter(!is.na(MGI.symbol)) %&gt;% 
+        left_join(CellNonZeroCounts, by=&quot;MGI.symbol&quot;) %&gt;%
+        filter(NumCellsExpressing&gt;50) %&gt;%
+        filter(gene %in% CombinedTable$Gene.stable.ID) %&gt;%
+        top_n(-50, MeanDispersion) %&gt;%
+        pull(MGI.symbol) %&gt;%
+DoHeatmap(Heart.seur, features = ., group.by=&quot;Cell.ontology.class&quot;, disp.min=0, size=3, label=F) +
+         scale_fill_gradientn(colours = hcl.colors(10, &quot;YlOrRd&quot;))
+
+HighlyDispersed.data &lt;- ggplot_build(HighlyDispersed.p)
+# HighlyDispersed.data$layout$panel_params[[1]]$y.labels
+
+LowlyDispersed.data &lt;- ggplot_build(LowlyDispersed.p)
+# LowlyDispersed.data$layout$panel_params[[1]]$y.labels
+
+HighlyDisp.tau.p &lt;- data.frame(genes=HighlyDispersed.data$layout$panel_params[[1]]$y.labels) %&gt;% left_join(CombinedTable, by=c(&quot;genes&quot;=&quot;MGI.symbol&quot;)) %&gt;%
+  ggplot(aes(y=1:length(genes), x=1, fill=tau)) +
+    geom_tile() +
+    scale_x_discrete(expand=c(0,0))+
+    scale_y_discrete(expand=c(0,0)) +
+    scale_fill_viridis_c(option=&quot;C&quot;, limits=c(0,1)) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+    theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+prow &lt;- plot_grid(
+  HighlyDispersed.p + theme(legend.position=&quot;none&quot;),
+  HighlyDisp.tau.p + theme(legend.position=&quot;none&quot;, plot.margin = margin(t=6)),
+  align = &#39;b&#39;,
+  hjust = -1,
+  nrow = 1,
+  axis = &quot;b&quot;,
+  rel_widths = c(1, 0.05),
+  scale = c(1,0.89)
+)
+
+ggsave(&quot;../figures/OriginalArt/Dispersion.tabmuris.high.png&quot;, plot=prow)</code></pre>
+</div>
+<div id="lowly-dispersed-genes-in-tab-muris" class="section level3">
+<h3>lowly dispersed genes in tab muris</h3>
+<p>…same for lowly dispersed genes. As seen below, they tend to be not cell type specific.</p>
+<pre class="r"><code>LowlyDisp.tau.p &lt;- data.frame(genes=LowlyDispersed.data$layout$panel_params[[1]]$y.labels) %&gt;% left_join(CombinedTable, by=c(&quot;genes&quot;=&quot;MGI.symbol&quot;)) %&gt;%
+  ggplot(aes(y=1:length(genes), x=1, fill=tau)) +
+    geom_tile() +
+    scale_x_discrete(expand=c(0,0))+
+    scale_y_discrete(expand=c(0,0)) +
+    scale_fill_viridis_c(option=&quot;C&quot;, limits=c(0,1)) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+    theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+
+prow &lt;- plot_grid(
+  LowlyDispersed.p + theme(legend.position=&quot;none&quot;),
+  LowlyDisp.tau.p + theme(legend.position=&quot;none&quot;, plot.margin = margin(t=3.3)),
+  align = &#39;b&#39;,
+  hjust = -1,
+  nrow = 1,
+  axis = &quot;b&quot;,
+  rel_widths = c(1, 0.05),
+  scale = c(1,0.842)
+)
+
+ggsave(&quot;../figures/OriginalArt/Dispersion.tabmuris.low.png&quot;, plot=prow)
+
+legend.p1 &lt;- get_legend(
+  LowlyDispersed.p + 
+  theme(legend.position=&quot;right&quot;))
+legend.p2 &lt;- get_legend(
+  LowlyDisp.tau.p + theme(legend.position=&quot;right&quot;))
+legends &lt;- plot_grid(legend.p1, legend.p2, nrow=2, scale=c(0.8,0.5), rel_heights = c(1,0.2), align=&#39;b&#39;)
+
+ggsave(&quot;../figures/OriginalArt/Dispersion.tabmuris.legend.pdf&quot;, plot=legends)</code></pre>
+</div>
+<div id="dispersion-vs-tabmuris-cell-specificity" class="section level3">
+<h3>Dispersion vs tabmuris cell specificity</h3>
+<p>More generally, tau correlates with dispersion</p>
+<pre class="r"><code>Correlation &lt;-cor.test(CombinedTable$MeanDispersion, CombinedTable$tau,
+       use=&quot;complete.obs&quot;, method=&quot;spearman&quot;)
+
+lb1 = paste0(&#39;atop(rho==&#39;, round(Correlation$estimate**2,2), &#39;, P&#39;, format.pval(Correlation$p.value, 2), &#39;)&#39;)
+
+CombinedTable %&gt;%
+  ggplot(aes(x=tau, y=MeanDispersion)) +
+    stat_binhex(bins=100) +
+    ylim(c(-3,3)) +
+    xlab(TeX(&quot;Cell type specificity, $\\tau$&quot;)) +
+    ylab(TeX(&quot;Dispersion, a.u.&quot;)) +
+    scale_fill_viridis_c(option=&quot;C&quot;) +
+    annotate(&quot;text&quot;,x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+    theme_bw() +
+    theme(aspect.ratio = 0.8)</code></pre>
+<p><img src="figure/Final_2_DispersionPlots.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/Dispersion.Correlation.tau.pdf&quot;, units=&quot;mm&quot;, height=70)</code></pre>
+</div>
+<div id="cibersort-results" class="section level3">
+<h3>CIBERSORT results</h3>
+<p>results of cell type deconvolution using CIBERSORT</p>
+<pre class="r"><code>CIBERSORT &lt;- read.table(&quot;../data/CIBERSORT.Output_Job2.csv&quot;, sep=&#39;,&#39;, header=T) %&gt;%
+  arrange(cardiac.muscle.cell) %&gt;%
+  gather(key=&quot;cell.type&quot;, value=&quot;percent&quot;, -Input.Sample, -P.value, -Pearson.Correlation, -RMSE) %&gt;%
+  mutate(Species = case_when(str_detect(Input.Sample, &quot;C.&quot;) ~ &quot;Chimp&quot;,
+                   str_detect(Input.Sample, &quot;H.&quot;) ~ &quot;Human&quot;)) %&gt;% head()
+
+ggplot(CIBERSORT, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat=&quot;identity&quot;) +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_grid(~Species, scales=&quot;free_x&quot;, space=&quot;free_x&quot;) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())</code></pre>
+<p><img src="figure/Final_2_DispersionPlots.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/Dispersion.CIBERSORT.pdf&quot;, units=&quot;mm&quot;, height=70)</code></pre>
+</div>
+<div id="cibersort-vs-expression-pcs" class="section level3">
+<h3>CIBERSORT vs expression PCs</h3>
+<p>Do cell type estimates correlate with expression PCs</p>
+<pre class="r"><code>cibersort.results &lt;- read.table(&quot;../data/CIBERSORT.Output_Job2.csv&quot;, sep=&#39;,&#39;, header=T) %&gt;%
+  filter(grepl(&quot;^C.&quot;,Input.Sample)) %&gt;%
+  mutate(IID=gsub(&quot;^C.&quot;, &quot;&quot;, Input.Sample, perl=T)) %&gt;%
+  dplyr::select(-c(&quot;Input.Sample&quot;, &quot;P.value&quot;, &quot;Pearson.Correlation&quot;, &quot;RMSE&quot;))
+
+PCs &lt;- read.table(&quot;../output/Covariates/0GenotypePCs_and_10RNASeqPCs.covariates&quot;, header=T, check.names = F) %&gt;%
+  mutate(IID=gsub(&quot;.RS&quot;, &quot;&quot;, IID, perl=T)) %&gt;%
+  column_to_rownames(&quot;IID&quot;) %&gt;% t() %&gt;% as.data.frame() %&gt;%
+  dplyr::select(-SX) %&gt;% rownames_to_column(&quot;IID&quot;)
+
+cibersort.results.combined.PCs &lt;- cibersort.results %&gt;%
+  left_join(PCs, by=&quot;IID&quot;) %&gt;% column_to_rownames(&quot;IID&quot;)
+
+MyCorMatrix &lt;- corr.test(x=cibersort.results.combined.PCs[,1:9],
+                         y=cibersort.results.combined.PCs[,-(1:9)],
+                         method=&quot;pearson&quot;,
+                         adjust=&quot;BH&quot;)
+
+pdf(file = &quot;../figures/OriginalArt/CIBERSORT.v.PCs.pdf&quot;)
+corrplot(MyCorMatrix$r, method=&#39;color&#39;, pch.cex=1.8, tl.srt=45, tl.col = &quot;black&quot;, insig=&#39;label_sig&#39;, is.corr=F, p.mat=MyCorMatrix$p, sig.level=c(0.01))
+dev.off()</code></pre>
+<pre><code>quartz_off_screen 
+                2 </code></pre>
+</div>
+<div id="dispersion-grouped-by-essentiality" class="section level3">
+<h3>dispersion grouped by essentiality</h3>
+<p>Are non essential genes more dispersed than essential genes?</p>
+<pre class="r"><code>pLI.data &lt;- as.data.frame(read_excel(&quot;../data/Lek_etal_nature19057-SI Table 13.xlsx&quot;, sheet=2))
+
+ToPlot &lt;- ChimpOverdispersionTable %&gt;%
+  left_join(pLI.data, by=c(&quot;hgnc_symbol&quot;=&quot;gene&quot;)) %&gt;%
+  mutate(pLI.Score.essentiality=case_when(
+    pLI&gt;=0.1  ~ &quot;Essential&quot;,
+    pLI&lt;=0.1 ~ &quot;NonEssential&quot;)) %&gt;%
+  filter(pLI.Score.essentiality %in% c(&quot;Essential&quot;, &quot;NonEssential&quot;))
+
+Test &lt;- wilcox.test(data=ToPlot, MeanDispersion ~ pLI.Score.essentiality)
+lb1 = paste0(&#39;P==&#39;, format.pval(Test$p.value, 2))
+
+ggplot(ToPlot, aes(color=pLI.Score.essentiality,x=MeanDispersion)) +
+    stat_ecdf(geom = &quot;step&quot;) +
+    scale_x_continuous() +
+    xlim(c(-2,3)) +
+    ylab(&quot;Cumulative frequency&quot;) +
+    annotate(&quot;text&quot;,x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+    theme_bw()</code></pre>
+<p><img src="figure/Final_2_DispersionPlots.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/Dispersion.by.Essentiality.pdf&quot;)</code></pre>
+</div>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] gridExtra_2.3     edgeR_3.26.8      limma_3.40.6     
+ [4] MASS_7.3-51.4     corrplot_0.84     psych_1.8.12     
+ [7] sctransform_0.2.0 Seurat_3.1.1      cowplot_1.0.0    
+[10] latex2exp_0.4.0   readxl_1.3.1      biomaRt_2.40.5   
+[13] forcats_0.4.0     stringr_1.4.0     dplyr_0.8.3      
+[16] purrr_0.3.3       readr_1.3.1       tidyr_1.0.0      
+[19] tibble_2.1.3      ggplot2_3.2.1     tidyverse_1.2.1  
+
+loaded via a namespace (and not attached):
+  [1] backports_1.1.5      workflowr_1.4.0      plyr_1.8.4          
+  [4] igraph_1.2.4.1       lazyeval_0.2.2       splines_3.6.1       
+  [7] listenv_0.7.0        digest_0.6.22        htmltools_0.4.0     
+ [10] gdata_2.18.0         magrittr_1.5         memoise_1.1.0       
+ [13] cluster_2.1.0        ROCR_1.0-7           globals_0.12.4      
+ [16] modelr_0.1.5         RcppParallel_4.4.4   R.utils_2.9.0       
+ [19] prettyunits_1.0.2    colorspace_1.4-1     blob_1.2.0          
+ [22] rvest_0.3.4          ggrepel_0.8.1        haven_2.1.1         
+ [25] xfun_0.10            hexbin_1.27.3        crayon_1.3.4        
+ [28] RCurl_1.95-4.12      jsonlite_1.6         zeallot_0.1.0       
+ [31] survival_2.44-1.1    zoo_1.8-6            ape_5.3             
+ [34] glue_1.3.1           gtable_0.3.0         leiden_0.3.1        
+ [37] future.apply_1.3.0   BiocGenerics_0.30.0  scales_1.0.0        
+ [40] DBI_1.0.0            bibtex_0.4.2         Rcpp_1.0.2          
+ [43] metap_1.1            viridisLite_0.3.0    progress_1.2.2      
+ [46] reticulate_1.13      foreign_0.8-72       bit_1.1-14          
+ [49] rsvd_1.0.2           SDMTools_1.1-221.1   stats4_3.6.1        
+ [52] tsne_0.1-3           htmlwidgets_1.5.1    httr_1.4.1          
+ [55] gplots_3.0.1.1       RColorBrewer_1.1-2   ellipsis_0.3.0      
+ [58] ica_1.0-2            pkgconfig_2.0.3      XML_3.98-1.20       
+ [61] R.methodsS3_1.7.1    uwot_0.1.4           locfit_1.5-9.1      
+ [64] labeling_0.3         tidyselect_0.2.5     rlang_0.4.1         
+ [67] reshape2_1.4.3       AnnotationDbi_1.46.1 munsell_0.5.0       
+ [70] cellranger_1.1.0     tools_3.6.1          cli_1.1.0           
+ [73] generics_0.0.2       RSQLite_2.1.2        broom_0.5.2         
+ [76] ggridges_0.5.1       evaluate_0.14        yaml_2.2.0          
+ [79] npsurv_0.4-0         knitr_1.25           bit64_0.9-7         
+ [82] fs_1.3.1             fitdistrplus_1.0-14  caTools_1.17.1.2    
+ [85] RANN_2.6.1           pbapply_1.4-2        future_1.14.0       
+ [88] nlme_3.1-141         R.oo_1.22.0          xml2_1.2.2          
+ [91] compiler_3.6.1       rstudioapi_0.10      curl_4.2            
+ [94] plotly_4.9.0         png_0.1-7            lsei_1.2-0          
+ [97] stringi_1.4.3        lattice_0.20-38      Matrix_1.2-17       
+[100] vctrs_0.2.0          pillar_1.4.2         lifecycle_0.1.0     
+[103] Rdpack_0.11-0        lmtest_0.9-37        RcppAnnoy_0.0.13    
+[106] data.table_1.12.6    bitops_1.0-6         irlba_2.3.3         
+[109] gbRd_0.4-11          R6_2.4.0             KernSmooth_2.23-16  
+[112] IRanges_2.18.3       codetools_0.2-16     gtools_3.8.1        
+[115] assertthat_0.2.1     rprojroot_1.3-2      withr_2.1.2         
+[118] mnormt_1.5-5         S4Vectors_0.22.1     parallel_3.6.1      
+[121] hms_0.5.1            grid_3.6.1           rmarkdown_1.16      
+[124] Rtsne_0.15           git2r_0.26.1         Biobase_2.44.0      
+[127] lubridate_1.7.4     </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
