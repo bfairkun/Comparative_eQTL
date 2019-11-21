@@ -48,8 +48,8 @@ cbind(Chimp.NB.fit.parameters,
 
   ) %>%
   mutate(
-    Chimp.Dispersion = exp(Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T)),
-    Human.Dispersion = exp(Human.Residual + median(log(Human.Overdispersion), na.rm = T))
+    Chimp.Dispersion = Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T),
+    Human.Dispersion = Human.Residual + median(log(Human.Overdispersion), na.rm = T)
   ) %>%
   dplyr::select(gene, everything()) %>%
 write.table("../../output/OverdispersionEstimatesFromChimp.txt", sep='\t', quote=F, row.names = F)
@@ -73,8 +73,8 @@ cbind(Chimp.NB.fit.parameters,
 
   ) %>%
   mutate(
-    Chimp.Dispersion = exp(Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T)),
-    Human.Dispersion = exp(Human.Residual + median(log(Human.Overdispersion), na.rm = T))
+    Chimp.Dispersion = Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T),
+    Human.Dispersion = Human.Residual + median(log(Human.Overdispersion), na.rm = T)
   ) %>%
   dplyr::select(gene, everything()) %>%
   write.table("../../output/OverdispersionEstimatesFromChimp.NoLengthNorm.txt", sep='\t', quote=F, row.names = F)
@@ -103,8 +103,8 @@ cbind(Chimp.NB.fit.parameters,
 
   ) %>%
   mutate(
-    Chimp.Dispersion = exp(Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T)),
-    Human.Dispersion = exp(Human.Residual + median(log(Human.Overdispersion), na.rm = T))
+    Chimp.Dispersion = Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T),
+    Human.Dispersion = Human.Residual + median(log(Human.Overdispersion), na.rm = T)
   ) %>%
   dplyr::select(gene, everything()) %>%
   write.table("../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", sep='\t', quote=F, row.names = F)
@@ -128,8 +128,8 @@ cbind(Chimp.NB.fit.parameters,
 
   ) %>%
   mutate(
-    Chimp.Dispersion = exp(Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T)),
-    Human.Dispersion = exp(Human.Residual + median(log(Human.Overdispersion), na.rm = T))
+    Chimp.Dispersion = Chimp.Residual + median(log(Chimp.Overdispersion), na.rm = T),
+    Human.Dispersion = Human.Residual + median(log(Human.Overdispersion), na.rm = T)
   ) %>%
   dplyr::select(gene, everything()) %>%
   write.table("../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.NoLengthNorm.txt", sep='\t', quote=F, row.names = F)

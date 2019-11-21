@@ -15,6 +15,21 @@
 #         tabix -p vcf {output.vcf}
 #         """
 
+rule GetTestSNPsForEgenes:
+    input:
+        eqtls = "../../output/ChimpEgenes.eigenMT.txt.gz",
+        snps = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc",
+        genelocs = "../../output/Genes.bed",
+        fai = config["ref"]["genome"] + ".fai"
+    output:
+        "../../output/ChimpEgenes.testsnps.txt.gz"
+    params:
+        window = 250000
+    shell:
+        """
+        zcat {input.eqtls} | awk -F'\\t' 'NR>1 && $6 <=0.1 {{print $2}}' | grep -w -f - {input.genelocs} | bedtools slop -b {params.window} -i - -g {input.fai} | bedtools intersect -a <(awk -F'\\t' -v OFS='\\t' 'NR>1 {{print $2, $3, $3+1}}' {input.snps}) -b - -wo | awk -F'\\t' -v OFS='\\t' 'BEGIN {{print "chr", "snp.pos", "gene", "strand", "TSS.dist", "TES.dist"}} $9=="+" {{print $1,$2,$7,$9, $2-($5+250000), $2-($6-250000)}} $9=="-" {{print $1,$2,$7,$9,($6-250000)-$2, ($5+250000)-$2}}' | gzip - > {output}
+        """
+
 rule AddChrToVcf:
     input:
         # vcf = "filtered/all.vcf.gz",
