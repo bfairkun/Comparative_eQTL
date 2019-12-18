@@ -4,6 +4,8 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "../../data/Appris.principal.isoforms.txt",
+        # "vep/vcf/Chimp.Ref_Plus_ThisStudy.vcf.gz",
         "../../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.z.log.txt",
         "../../output/ChimpEgenes.testsnps.txt.gz",
         "../../data/TSS_annotations/TataAnnotations.txt.gz",
@@ -101,6 +103,8 @@ include: "rules/eQTL_analysis.smk"
 include: "rules/Overdispersion.smk"
 include: "rules/GTExReanalysis.smk"
 include: "rules/GTExReanalysis_constantSampleSize.smk"
+include: "rules/vep.smk"
+include: "rules/CalculateSubstitutionsWithGorilla.smk"
 # eQTL_analysis requires an eqtl model results file to be defined in config
 # include: "rules/qc.smk"
 #include: "rules/annotation.smk"

@@ -19,19 +19,32 @@ output_file_name_cis <- args[7]
 ouput_QQ <- args[8]
 cisDistance <- args[9]
 
-setwd("/project/gilad/bjf79/projects/Comparative_eQTL/code/snakemake_workflow/")
-SNP_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps"
-snps_location_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc"
-expression_file_name <- "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
-gene_location_file_name <- "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
-covariates_file_name <- "../../output/Covariates/0GenotypePCs_and_10RNASeqPCs.covariates"
-errorCovariance_file <- "eQTL_mapping/Kinship/GRM.cXX.txt"
+# setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
+# SNP_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps"
+# snps_location_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc"
+# expression_file_name <- "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
+# gene_location_file_name <- "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
+# covariates_file_name <- "../../output/Covariates/0GenotypePCs_and_10RNASeqPCs.covariates"
+# errorCovariance_file <- "eQTL_mapping/Kinship/GRM.cXX.txt"
+# output_file_name_cis = tempfile()
+# cisDistance = 1E6
+# SNP_file_name_matched <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snps"
+# snps_location_file_name_matched <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snploc"
+# OutCisImage <- "~/temp/Cis.png"
+# OutTransImage <- "~/temp/Trans.png"
+
+SNP_file_name <- args[1]
+snps_location_file_name <- args[2]
+expression_file_name <- args[3]
+gene_location_file_name <- args[4]
+covariates_file_name <- args[5]
+errorCovariance_file <- args[6]
 output_file_name_cis = tempfile()
-cisDistance = 1000000
-
-SNP_file_name_matched <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snps"
-snps_location_file_name_matched <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snploc"
-
+cisDistance = args[7]
+SNP_file_name_matched <- args[8]
+snps_location_file_name_matched <- args[9]
+OutCisImage <- args[10]
+OutTransImage <- args[11]
 
 # SNP_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps"
 # snps_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc"
@@ -99,12 +112,17 @@ if(length(covariates_file_name)>0) {
   cvrt$LoadFile(covariates_file_name);
 }
 
+
+
 ## Run the analysis
 snpspos = read.table(snps_location_file_name, header = TRUE, stringsAsFactors = FALSE);
 snpspos_matched = read.table(snps_location_file_name_matched, header = TRUE, stringsAsFactors = FALSE);
 
 genepos = read.table(gene_location_file_name, header = TRUE, stringsAsFactors = FALSE);
 
+
+
+#### Real pass
 #Include all pvalues in output so that qvalues can be calculated. Filter after.
 me = Matrix_eQTL_main(
   snps = snps,
@@ -124,6 +142,7 @@ me = Matrix_eQTL_main(
   min.pv.by.genesnp = FALSE,
   noFDRsaveMemory = FALSE);
 
+#Pass with matched snps
 me_matched = Matrix_eQTL_main(
   snps = snps_matched,
   gene = gene,
@@ -143,47 +162,94 @@ me_matched = Matrix_eQTL_main(
   noFDRsaveMemory = FALSE);
 print('done with real pass')
 
+#### make data for permutation pass
+ActualData.ExpressionMatrix <- read.table(expression_file_name, header=T, row.names = 1, check.names = FALSE )
+ActualData.Cov <- read.table(covariates_file_name, header=T, row.names = 1, check.names = FALSE )
+
+### Run permutation pass
+print("Running permutation pass ")
+
+# Permute column labels for both (using same seed for randomization)
+# technically I am permuting the column data, and preserving the column labels. That way, I do not have to do the same for the (huge) genotype file, which would take more computational time
+set.seed(0)
+Temp.df <- ActualData.ExpressionMatrix %>% select(sample(colnames(ActualData.ExpressionMatrix), length(colnames(ActualData.ExpressionMatrix))))
+set.seed(i+InitialSeed)
+Temp.df.cov <- ActualData.Cov %>% select(sample(colnames(ActualData.ExpressionMatrix), length(colnames(ActualData.ExpressionMatrix))))
+colnames(Temp.df) <- colnames(ActualData.ExpressionMatrix)
+colnames(Temp.df.cov) <- colnames(ActualData.ExpressionMatrix)
+
+# Write out permutated expression matrix and reload it
+TempFilepath.ExpressionMatrix <- tempfile("ExpressionMatrix.")
+write.table(Temp.df, file=TempFilepath.ExpressionMatrix, sep='\t', quote=F, col.names =NA)
+gene$LoadFile(TempFilepath.ExpressionMatrix);
+
+TempFilepath.Covariates <- tempfile("Covariates.")
+write.table(Temp.df.cov, file=TempFilepath.Covariates, sep='\t', quote=F, col.names =NA)
+cvrt$LoadFile(TempFilepath.Covariates);
+
+#Calculate Pvalues from permutated data
+permuted = Matrix_eQTL_main(
+  snps = snps,
+  gene = gene,
+  cvrt = cvrt,
+  output_file_name     = NULL,
+  pvOutputThreshold     = 1,
+  useModel = useModel,
+  errorCovariance = errorCovariance,
+  verbose = F,
+  output_file_name.cis = NULL,
+  pvOutputThreshold.cis = 1,
+  snpspos = snpspos,
+  genepos = genepos,
+  cisDist = cisDist,
+  pvalue.hist = "qqplot",
+  min.pv.by.genesnp = FALSE,
+  noFDRsaveMemory = FALSE);
+
+print('done with permutation pass')
+
 plot(me)
 plot(me_matched)
+plot(permuted)
 
 length(me$trans$eqtls$pvalue)
 
-ggplot(me_matched$cis$eqtls, aes(color="Matched chimp variants", y=-log10(sort(pvalue)), x=-log10(1:length(pvalue)/length(pvalue)))) +
-  geom_point() +
-  geom_point(data=me$cis$eqtls, aes(color="Variants shared with human")) +
+CisQQPlot <- ggplot(me$cis$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(pvalue)/length(pvalue)))) +
+  geom_point(aes(color="Variants shared with human")) +
+  geom_point(data=permuted$cis$eqtls, aes(color="Variants shared with human; permuted data")) +
+  geom_point(data=me_matched$cis$eqtls, aes(color="Matched control variants")) +
   xlab("-log10(Theoretical-Pvalues)") +
   ylab("-log10(Observed-Pvalues)") +
   geom_abline() +
+  scale_color_manual(values = c("Variants shared with human" = "red",
+                                "Variants shared with human; permuted data" = "light blue",
+                                "Matched control variants" = "blue") ) +
   theme_bw() +
   theme(legend.position="bottom") +
-  theme(legend.title=element_blank())
+  theme(legend.title=element_blank()) +
+  theme(legend.key.width=unit(0.2, "cm"),
+        legend.direction = "vertical")
 
-ggplot(me_matched$trans$eqtls, aes(color="Matched chimp variants", y=-log10(sort(pvalue)), x=-log10(1:length(pvalue)/length(pvalue)))) +
-  geom_point() +
-  geom_point(data=me$trans$eqtls, aes(color="Variants shared with human")) +
+ggsave(OutCisImage, plot=CisQQPlot, height=3.7, width=3.7)
+
+wilcox.test(me_matched$cis$eqtls$pvalue, me$cis$eqtls$pvalue)
+
+TransQQPlot <- ggplot(me$trans$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(pvalue)/length(pvalue)))) +
+  geom_point(aes(color="Variants shared with human")) +
+  geom_point(data=permuted$trans$eqtls, aes(color="Variants shared with human; permuted data")) +
+  geom_point(data=me_matched$trans$eqtls, aes(color="Matched control variants")) +
   xlab("-log10(Theoretical-Pvalues)") +
   ylab("-log10(Observed-Pvalues)") +
   geom_abline() +
+  scale_color_manual(values = c("Variants shared with human" = "red",
+                                "Variants shared with human; permuted data" = "light blue",
+                                "Matched control variants" = "blue") ) +
   theme_bw() +
   theme(legend.position="bottom") +
-  theme(legend.title=element_blank())
+  theme(legend.title=element_blank()) +
+  theme(legend.key.width=unit(0.2, "cm"),
+        legend.direction = "vertical")
 
-
-#Transform Pvalues to Qvalues
-#If pi_0 is close to 1 (which is often case in eQTL calling), BH-p will be equal to Q-value within precision of saved digits.
-me$cis$eqtls$qvalue <- qvalue(me$cis$eqtls$pvalue)$qvalues
-
-print('done with qval stuff')
-#Write out results, while filtering by pvalue
-me$cis$eqtls %>%
-  select(snps, gene, beta, statistic, pvalue, FDR, qvalue) %>%
-  write.table(file=output_file_name_cis, sep='\t', quote = F, row.names = F)
-
-cat('Analysis done in: ', me$time.in.sec, ' seconds', '\n');
-
-## Plot the Q-Q plot of local p-values
-
-ggsave(file=ouput_QQ, plot(me))
-
+ggsave(OutTransImage, plot=TransQQPlot, height=3.7, width=3.7)
 
 
