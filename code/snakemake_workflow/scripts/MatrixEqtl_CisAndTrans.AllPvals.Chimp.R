@@ -8,16 +8,16 @@ library(MatrixEQTL)
 library(tidyverse)
 # library(qvalue)
 
-args = commandArgs(trailingOnly=TRUE)
-SNP_file_name <- args[1]
-snps_location_file_name <- args[2]
-expression_file_name <- args[3]
-gene_location_file_name <- args[4]
-covariates_file_name <- args[5]
-errorCovariance_file <- args[6]
-output_file_name_cis <- args[7]
-ouput_QQ <- args[8]
-cisDistance <- args[9]
+# args = commandArgs(trailingOnly=TRUE)
+# SNP_file_name <- args[1]
+# snps_location_file_name <- args[2]
+# expression_file_name <- args[3]
+# gene_location_file_name <- args[4]
+# covariates_file_name <- args[5]
+# errorCovariance_file <- args[6]
+# output_file_name_cis <- args[7]
+# ouput_QQ <- args[8]
+# cisDistance <- args[9]
 
 # setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
 # SNP_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps"
@@ -33,7 +33,7 @@ cisDistance <- args[9]
 # OutCisImage <- "~/temp/Cis.png"
 # OutTransImage <- "~/temp/Trans.png"
 
-setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
+# setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
 SNP_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps"
 snps_location_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc"
 expression_file_name <- "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
@@ -49,18 +49,18 @@ OutTransImage <- "../../output/LeflerTestedSnps.Chimp.Trans.QQ.png"
 CisResults <- "../../output/LeflerTestedSnps.Chimp.cis.tsv"
 
 
-SNP_file_name <- args[1]
-snps_location_file_name <- args[2]
-expression_file_name <- args[3]
-gene_location_file_name <- args[4]
-covariates_file_name <- args[5]
-errorCovariance_file <- args[6]
-output_file_name_cis = tempfile()
-cisDistance = args[7]
-SNP_file_name_matched <- args[8]
-snps_location_file_name_matched <- args[9]
-OutCisImage <- args[10]
-OutTransImage <- args[11]
+# SNP_file_name <- args[1]
+# snps_location_file_name <- args[2]
+# expression_file_name <- args[3]
+# gene_location_file_name <- args[4]
+# covariates_file_name <- args[5]
+# errorCovariance_file <- args[6]
+# output_file_name_cis = tempfile()
+# cisDistance = args[7]
+# SNP_file_name_matched <- args[8]
+# snps_location_file_name_matched <- args[9]
+# OutCisImage <- args[10]
+# OutTransImage <- args[11]
 
 # SNP_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps"
 # snps_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc"

@@ -97,3 +97,4 @@ rule AddQvalueColumn:
         Rscript scripts/AddQvaluesToFastQTLPermutationOutput.R {input} ../../output/GTEX_renalysis/SampleSize_{wildcards.n}.txt
         gzip ../../output/GTEX_renalysis/SampleSize_{wildcards.n}.txt
         """
+

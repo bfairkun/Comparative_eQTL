@@ -135,7 +135,8 @@ MergedPrincipalTranscripts <- PrincipalHuamnTranscripts %>%
   )
 
 print("Aligning CDS and writing out...")
-for(i in 1:nrow(MergedPrincipalTranscripts)){
+NumberGenes <- nrow(MergedPrincipalTranscripts)
+for(i in 1:NumberGenes){
   Gene <- MergedPrincipalTranscripts[i,"Ensembl.gene"]
   HumanID <- MergedPrincipalTranscripts[i,"Ensembl.transcript"]
   ChimpID <- MergedPrincipalTranscripts[i,"ensembl_transcript_id.chimp"]
@@ -148,8 +149,10 @@ for(i in 1:nrow(MergedPrincipalTranscripts)){
 
   CDS <- AlignTranslation(cds, verbose=FALSE, readingFrame = 1)
   CDS.df <- data.frame(Seq=as.character(CDS), row.names = names(CDS))
-  head(CDS.df)
-  write.table(CDS.df, file = paste0("~/temp/AlignedCDS.", Gene, ".tab"), col.names=F, quote=F, sep='\t')
+  fileout <- paste0("CDS_alignments/", Gene, ".tab")
+  write.table(CDS.df, file = fileout, col.names=F, quote=F, sep='\t')
+  SNAP.command <- paste0("scripts/SNAP.pl ", fileout, " ", Gene, " ./CDS_alignment_SNAPfiles")
+  system(SNAP.command)
 }
 
 print("wrote file")

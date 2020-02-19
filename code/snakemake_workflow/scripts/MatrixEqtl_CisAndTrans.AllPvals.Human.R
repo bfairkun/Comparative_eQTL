@@ -8,16 +8,16 @@ library(MatrixEQTL)
 library(tidyverse)
 # library(qvalue)
 
-args = commandArgs(trailingOnly=TRUE)
-SNP_file_name <- args[1]
-snps_location_file_name <- args[2]
-expression_file_name <- args[3]
-gene_location_file_name <- args[4]
-covariates_file_name <- args[5]
-errorCovariance_file <- args[6]
-output_file_name_cis <- args[7]
-ouput_QQ <- args[8]
-cisDistance <- args[9]
+# args = commandArgs(trailingOnly=TRUE)
+# SNP_file_name <- args[1]
+# snps_location_file_name <- args[2]
+# expression_file_name <- args[3]
+# gene_location_file_name <- args[4]
+# covariates_file_name <- args[5]
+# errorCovariance_file <- args[6]
+# output_file_name_cis <- args[7]
+# ouput_QQ <- args[8]
+# cisDistance <- args[9]
 
 # setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
 # SNP_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps"
@@ -34,33 +34,32 @@ cisDistance <- args[9]
 # OutTransImage <- "~/temp/Trans.png"
 
 setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
-SNP_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps"
-snps_location_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc"
-expression_file_name <- "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
-gene_location_file_name <- "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt"
-covariates_file_name <- "../../output/Covariates/0GenotypePCs_and_10RNASeqPCs.covariates"
+SNP_file_name <- "GTEX_renalysis/LeflerSnps/MatrixEQTL/Genotypes.txt"
+snps_location_file_name <- "GTEX_renalysis/LeflerSnps/MatrixEQTL/snploc.txt"
+expression_file_name <- "GTEX_renalysis/LeflerSnps/MatrixEQTL/expression.txt"
+gene_location_file_name <- "GTEX_renalysis/LeflerSnps/MatrixEQTL/geneloc.txt"
+covariates_file_name <- "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Heart_Left_Ventricle.v8.covariates.txt"
 errorCovariance_file <- "eQTL_mapping/Kinship/GRM.cXX.txt"
 output_file_name_cis = tempfile()
 cisDistance = 1E6
-SNP_file_name_matched <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snps"
-snps_location_file_name_matched <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snploc"
-OutCisImage <- "../../output/LeflerTestedSnps.Chimp.Cis.QQ.png"
-OutTransImage <- "../../output/LeflerTestedSnps.Chimp.Trans.QQ.png"
-CisResults <- "../../output/LeflerTestedSnps.Chimp.cis.tsv"
+SNP_file_name_matched <- "GTEX_renalysis/LeflerSnps/MatrixEQTL/Genotypes.control.txt"
+snps_location_file_name_matched <- "GTEX_renalysis/LeflerSnps/MatrixEQTL/snploc.control.txt"
+OutCisImage <- "../../output/LeflerTestedSnps.Human.Cis.QQ.png"
+OutTransImage <- "../../output/LeflerTestedSnps.Human.Trans.QQ.png"
+CisResults <- "../../output/LeflerTestedSnps.Human.cis.tsv"
 
-
-SNP_file_name <- args[1]
-snps_location_file_name <- args[2]
-expression_file_name <- args[3]
-gene_location_file_name <- args[4]
-covariates_file_name <- args[5]
-errorCovariance_file <- args[6]
-output_file_name_cis = tempfile()
-cisDistance = args[7]
-SNP_file_name_matched <- args[8]
-snps_location_file_name_matched <- args[9]
-OutCisImage <- args[10]
-OutTransImage <- args[11]
+# SNP_file_name <- args[1]
+# snps_location_file_name <- args[2]
+# expression_file_name <- args[3]
+# gene_location_file_name <- args[4]
+# covariates_file_name <- args[5]
+# errorCovariance_file <- args[6]
+# output_file_name_cis = tempfile()
+# cisDistance = args[7]
+# SNP_file_name_matched <- args[8]
+# snps_location_file_name_matched <- args[9]
+# OutCisImage <- args[10]
+# OutTransImage <- args[11]
 
 # SNP_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.snps"
 # snps_location_file_name <- "code/snakemake_workflow/eQTL_mapping/MatrixEQTL/ForAssociationTesting.snploc"
@@ -147,7 +146,6 @@ me = Matrix_eQTL_main(
   output_file_name     = NULL,
   pvOutputThreshold     = 1,
   useModel = useModel,
-  errorCovariance = errorCovariance,
   verbose = TRUE,
   output_file_name.cis = NULL,
   pvOutputThreshold.cis = 1,
@@ -166,7 +164,6 @@ me_matched = Matrix_eQTL_main(
   output_file_name     = NULL,
   pvOutputThreshold     = 1,
   useModel = useModel,
-  errorCovariance = errorCovariance,
   verbose = TRUE,
   output_file_name.cis = NULL,
   pvOutputThreshold.cis = 1,
@@ -211,7 +208,6 @@ permuted = Matrix_eQTL_main(
   output_file_name     = NULL,
   pvOutputThreshold     = 1,
   useModel = useModel,
-  errorCovariance = errorCovariance,
   verbose = F,
   output_file_name.cis = NULL,
   pvOutputThreshold.cis = 1,
@@ -251,14 +247,14 @@ ggsave(OutCisImage, plot=CisQQPlot, height=3.7, width=3.7)
 wilcox.test(me_matched$cis$eqtls$pvalue, me$cis$eqtls$pvalue)
 
 TransQQPlot <- ggplot(me$trans$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(pvalue)/length(pvalue)))) +
-  geom_point(aes(color="Variants shared with human")) +
-  geom_point(data=permuted$trans$eqtls, aes(color="Variants shared with human; permuted data")) +
+  geom_point(aes(color="Variants shared with chimp")) +
+  geom_point(data=permuted$trans$eqtls, aes(color="Variants shared with chimp; permuted data")) +
   geom_point(data=me_matched$trans$eqtls, aes(color="Matched control variants")) +
   xlab("-log10(Theoretical-Pvalues)") +
   ylab("-log10(Observed-Pvalues)") +
   geom_abline() +
-  scale_color_manual(values = c("Variants shared with human" = "red",
-                                "Variants shared with human; permuted data" = "black",
+  scale_color_manual(values = c("Variants shared with chimp" = "red",
+                                "Variants shared with chimp; permuted data" = "black",
                                 "Matched control variants" = "blue") ) +
   theme_bw() +
   theme(legend.position="bottom") +
@@ -269,4 +265,3 @@ TransQQPlot <- ggplot(me$trans$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:len
 ggsave(OutTransImage, plot=TransQQPlot, height=3.7, width=3.7)
 
 write.table(me$cis$eqtls, file = CisResults, quote=F, row.names = F, sep='\t')
-

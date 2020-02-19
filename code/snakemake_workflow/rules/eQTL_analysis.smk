@@ -424,18 +424,141 @@ rule CalculateHeartCellTypeSpecificity:
         tspex --log {input} {output.z} zscore
         """
 
+rule ReorganizeAndLiftLeflerSnps:
+    input:
+        TableS = "../../data/Lefler_TableS4.txt",
+        hg19Tohg38Chain = "/project2/gilad/bjf79/genomes/LiftoverChains/hg19ToHg38.over.chain.gz",
+        hg38ToPanTro5Chain = "/project2/gilad/bjf79/genomes/LiftoverChains/hg38ToPanTro5.over.chain.gz",
+        GtexVcf = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz",
+        covariates = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Heart_Left_Ventricle.v8.covariates.txt",
+        ChimpVcf = "PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz",
+    output:
+        SharedSnpsHg38 = "MiscOutput/Lefler.hg38.bed",
+        SharedSnpsHg38Named = "MiscOutput/Lefler.hg38.list.txt",
+        SharedSnpsHg38NamedFreq = "MiscOutput/Lefler.hg38.frq",
+        SharedSnpsPanTro5 = "MiscOutput/Lefler.PanTro5.bed",
+        SharedSnpsPanTro5Named = "MiscOutput/Lefler.PanTro5.list.txt",
+        SharedSnpsPanTro5NamedFreq = "MiscOutput/Lefler.PanTro5.frq",
+        CombinedOutput = "../../output/LeflerTestedSnps.tsv"
+    shell:
+        """
+        #Liftover Lefler data to hg38
+        cat {input.TableS} | awk -F'\\t' -v OFS='\\t' 'NR>1 {{print "chr"$5,$6,$6+1, $9"."$13"."$14}}' | liftOver /dev/stdin {input.hg19Tohg38Chain} /dev/stdout /dev/null > {output.SharedSnpsHg38}
+        #Grab SNPs with human SNP name
+        bcftools view -S <(cat {input.covariates} | head -1 |transpose | awk 'NR>1') -q 0.01:minor -H -R <(cat {output.SharedSnpsHg38}) {input.GtexVcf} | awk -F'\\t' '{{ print $1,$2,$3 }}' > {output.SharedSnpsHg38Named}
+        #Get allele frequency in this cohort
+        bcftools view -S <(cat {input.covariates} | head -1 |transpose | awk 'NR>1') -q 0.01:minor -R <(cat {output.SharedSnpsHg38}) {input.GtexVcf} | vcftools --vcf - --freq --out MiscOutput/Lefler.hg38
+        #Liftover to PanTro5
+        liftOver {output.SharedSnpsHg38} {input.hg38ToPanTro5Chain} /dev/stdout /dev/null | sed 's/^chr//' > {output.SharedSnpsPanTro5}
+        #Get SNPs with chimp SNP name
+        bcftools view -S <(bcftools query -l {input.ChimpVcf} | grep "ThisStudy" | grep -v "MD_And") -q 0.1:minor -H -R <(cat {output.SharedSnpsPanTro5} | awk -F'\\t' -v OFS='\\t' '{{ print $1, $2-1, $3+1, $4 }}') {input.ChimpVcf} | awk -F'\\t' '{{ print $1,$2,$3 }}' > {output.SharedSnpsPanTro5Named}
+        #Get AF in the chimp cohort
+        bcftools view -S <(bcftools query -l {input.ChimpVcf} | grep "ThisStudy" | grep -v "MD_And") -q 0.1:minor -R <(cat {output.SharedSnpsPanTro5} | awk -F'\\t' -v OFS='\\t' '{{ print $1, $2-1, $3+1, $4 }}') {input.ChimpVcf} | vcftools --vcf - --freq --out MiscOutput/Lefler.PanTro5
+        #Rscript to combine relevant info
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/ReorganizeLeflerSharedSnps.R
+        """
 
-# rule MatrixEQTL_SharedSNPs:
-#     input:
+rule PrepareLeflerSnpsForMatrixEQTL:
+    input:
+        LeflerSnps = "../../data/LeflerSharedPolymorphisms.hg38.bed",
+        GtexVcf = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz",
+        GtexVcfTbi = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz.tbi",
+        covariates = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Heart_Left_Ventricle.v8.covariates.txt",
+        expression = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Heart_Left_Ventricle.v8.normalized_expression.bed.gz"
+    output:
+        GenotypeRaw = "GTEX_renalysis/LeflerSnps/Genotypes.012",
+        IndvRaw = "GTEX_renalysis/LeflerSnps/Genotypes.012.indv",
+        PosRaw = "GTEX_renalysis/LeflerSnps/Genotypes.012.pos",
+        GenotypeFinished = "GTEX_renalysis/LeflerSnps/MatrixEQTL/Genotypes.txt",
+        SnpPos = "GTEX_renalysis/LeflerSnps/MatrixEQTL/snploc.txt",
+        expression = "GTEX_renalysis/LeflerSnps/MatrixEQTL/expression.txt",
+        geneloc = "GTEX_renalysis/LeflerSnps/MatrixEQTL/geneloc.txt"
+    shell:
+        """
+        bcftools view -S <(cat {input.covariates} | head -1 |transpose | awk 'NR>1') -q 0.01:minor -R <(cat {input.LeflerSnps}) {input.GtexVcf} | vcftools --vcf - --012 --out GTEX_renalysis/LeflerSnps/Genotypes
+        paste -d '\\t' {output.IndvRaw} {output.GenotypeRaw} | transpose | awk -F'\\t' -v OFS='\\t' 'NR==1 {{ print "id", $0 }} NR>2 {{ print "snp_"NR-2, $0 }}' > {output.GenotypeFinished}
+        awk -F'\\t' -v OFS='\\t' 'BEGIN {{ print "snp", "chr", "pos" }} {{ print "snp_"NR, $1, $2 }}' {output.PosRaw} > {output.SnpPos}
+        zcat {input.expression} | awk -F'\\t' -v OFS='\\t' 'BEGIN {{print "geneid", "chr", "s1", "s2"}} NR>1 {{print $4, $1, $2, $3}}' > {output.geneloc}
+        zcat {input.expression} | transpose | awk 'NR>3' | transpose > {output.expression}
+        """
 
+rule GetHumanSnpsMatchedToLeflerSharedPolymorphisms:
+    input:
+        LeflerSnps = "../../data/LeflerSharedPolymorphisms.hg38.bed",
+        GtexVcf = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz",
+        GtexVcfTbi = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz.tbi",
+        covariates = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Heart_Left_Ventricle.v8.covariates.txt",
+    output:
+        bed = "GTEX_renalysis/LeflerSnps/ControlMatrixEQTL/SnpRegions.bed",
+        snps = "GTEX_renalysis/LeflerSnps/ControlMatrixEQTL/SharedSNPs.txt",
+        LD = "GTEX_renalysis/LeflerSnps/ControlMatrixEQTL/SharedSNPs.ld",
+        snp_loc_raw = "GTEX_renalysis/LeflerSnps/ControlMatrixEQTL/ControlSnps.loc"
+    shell:
+        """
+        bcftools view -S <(cat {input.covariates} | head -1 |transpose | awk 'NR>1') -q 0.01:minor -H -R <(cat {input.LeflerSnps}) {input.GtexVcf} | awk -F'\\t' '{{ print $3 }}' > {output.snps}
+        bcftools view -S <(cat {input.covariates} | head -1 |transpose | awk 'NR>1') -q 0.01:minor -R <(cat {input.LeflerSnps} | awk -F'\\t' -v OFS='\\t' '{{ print $1, $2-100000, $3+100000 }}' | bedtools merge -i - ) {input.GtexVcf} | bcftools norm -d all | plink --vcf /dev/stdin --vcf-half-call m --make-bed --out GTEX_renalysis/LeflerSnps/ControlMatrixEQTL/SnpRegions
+        plink --r2 with-freqs --bfile GTEX_renalysis/LeflerSnps/ControlMatrixEQTL/SnpRegions --ld-snp-list {output.snps} --ld-window-kb 100 --ld-window-r2 0 --ld-window 99999 --allow-extra-chr --out GTEX_renalysis/LeflerSnps/ControlMatrixEQTL/SharedSNPs
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/GetLeflerMatchedSnps.R {output.LD} {output.snp_loc}
+        """
 
-# bedtools slop -i ../../data/LeflerSharedPolymorphisms.PanTro5.bed -r 1 -l 1 -g ../../data/PanTro5.chrome.sizes | sed 's/^chr//' | bcftools view -H -R - eQTL_mapping/FastQTL/ForAssociationTesting.vcf.gz | awk -F'\t' '{print $3}' | head
-# rule GetMatchedPolymorphisms:
-#     input:
-#         "../../data/LeflerSharedPolymorphisms.PanTro5.bed"
-#     output:
-#         MatchedSnps = ""
-        
+rule PrepareLeflerHumanMatchedSnpsForMatrixEQTL:
+    input:
+        MatchedSnps = "GTEX_renalysis/LeflerSnps/ControlMatrixEQTL/ControlSnps.loc",
+        GtexVcf = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz",
+        GtexVcfTbi = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz.tbi",
+        covariates = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Heart_Left_Ventricle.v8.covariates.txt",
+        expression = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Heart_Left_Ventricle.v8.normalized_expression.bed.gz"
+    output:
+        GenotypeRaw = "GTEX_renalysis/LeflerSnps/Genotypes.Control.012",
+        IndvRaw = "GTEX_renalysis/LeflerSnps/Genotypes.Control.012.indv",
+        PosRaw = "GTEX_renalysis/LeflerSnps/Genotypes.Control.012.pos",
+        GenotypeFinished = "GTEX_renalysis/LeflerSnps/MatrixEQTL/Genotypes.control.txt",
+        SnpPos = "GTEX_renalysis/LeflerSnps/MatrixEQTL/snploc.control.txt",
+    shell:
+        """
+        bcftools view -S <(cat {input.covariates} | head -1 |transpose | awk 'NR>1') -q 0.01:minor -R <(cat {input.MatchedSnps} | awk -F'\\t' -v OFS='\\t' 'NR>1 {{ print "chr"$2, $3, $3+1 }}') {input.GtexVcf} | vcftools --vcf - --012 --out GTEX_renalysis/LeflerSnps/Genotypes.Control
+        paste -d '\\t' {output.IndvRaw} {output.GenotypeRaw} | transpose | awk -F'\\t' -v OFS='\\t' 'NR==1 {{ print "id", $0 }} NR>2 {{ print "snp_"NR-2, $0 }}' > {output.GenotypeFinished}
+        awk -F'\\t' -v OFS='\\t' 'BEGIN {{ print "snp", "chr", "pos" }} {{ print "snp_"NR, $1, $2 }}' {output.PosRaw} > {output.SnpPos}
+        """
+
+rule LeflerSnpsMatrixEqtl:
+    input:
+        GenotypeRaw = "GTEX_renalysis/LeflerSnps/Genotypes.012",
+        IndvRaw = "GTEX_renalysis/LeflerSnps/Genotypes.012.indv",
+        PosRaw = "GTEX_renalysis/LeflerSnps/Genotypes.012.pos",
+        GenotypeFinished = "GTEX_renalysis/LeflerSnps/MatrixEQTL/Genotypes.txt",
+        SnpPos = "GTEX_renalysis/LeflerSnps/MatrixEQTL/snploc.txt",
+        expression = "GTEX_renalysis/LeflerSnps/MatrixEQTL/expression.txt",
+        geneloc = "GTEX_renalysis/LeflerSnps/MatrixEQTL/geneloc.txt",
+        GenotypeRaw_m = "GTEX_renalysis/LeflerSnps/Genotypes.Control.012",
+        IndvRaw_m = "GTEX_renalysis/LeflerSnps/Genotypes.Control.012.indv",
+        PosRaw_m = "GTEX_renalysis/LeflerSnps/Genotypes.Control.012.pos",
+        GenotypeFinished_m = "GTEX_renalysis/LeflerSnps/MatrixEQTL/Genotypes.control.txt",
+        SnpPos_m = "GTEX_renalysis/LeflerSnps/MatrixEQTL/snploc.control.txt",
+        SNP_file_name = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps",
+        snps_location_file_name = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc",
+        expression_file_name = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt",
+        gene_location_file_name = "eQTL_mapping/MatrixEQTL/ForAssociationTesting.geneloc.txt",
+        covariates_file_name = "../../output/Covariates/0GenotypePCs_and_10RNASeqPCs.covariates",
+        errorCovariance_file = "eQTL_mapping/Kinship/GRM.cXX.txt",
+        SNP_file_name_matched = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snps",
+        snps_location_file_name_matched = "eQTL_mapping/SharedPolymorphisms/SpeciesSharedMatchedSnps.PanTro5.snploc"
+    output:
+        "../../output/LeflerTestedSnps.Chimp.cis.tsv"
+    shell:
+        """
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/MatrixEqtl_CisAndTrans.AllPvals.Chimp.R
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/MatrixEqtl_CisAndTrans.AllPvals.Human.R
+        """
+
+rule CopySnpPosKeyHumanLeflerSnps:
+    input:
+        "GTEX_renalysis/LeflerSnps/MatrixEQTL/snploc.txt",
+    output:
+        "../../output/LeflerTestedSnps.Human.snploc.txt",
+    shell:
+        "cp {input} {output}"
+
 
 # rule DownloadGTExSummaryStatsAllTissues:
 #     output:

@@ -1,12 +1,13 @@
 rule vep_chimp_ref_panel:
     input:
     output:
+        "test"
     log:
     conda:
         "../envs/vep.yaml"
     shell:
         """
-        vep -i ../../PopulationSubstructure/ReferencePanelMerged.annotated.splits/22.vcf --format vcf -o Chimp.22.test.txt --stats_text --sf Chimp.22.test.stats.txt --cache --dir_cache cachedir/ --species pan_troglodytes --force --pick --no_intergenic
+        vep -i ../../PopulationSubstructure/ReferencePanelMerged.annotated.splits/22.vcf --format vcf -o Chimp.22.test.txt --stats_text --sf Chimp.22.test.stats.txt --cache --dir_cache cachedir/ --species pan_troglodytes --force --pick --coding_only
         """
 
 rule vep_chimp_ref_panel_merge:

@@ -3,8 +3,8 @@ args = commandArgs(trailingOnly=TRUE)
 plink_ld_out <- args[1]
 snps_location_out <- args[2]
 
-plink_ld_out<-"MiscOutput/SpeciesSharedSNPs.ld"
-setwd("/project/gilad/bjf79/projects/Comparative_eQTL/code/snakemake_workflow/")
+# plink_ld_out<-"MiscOutput/SpeciesSharedSNPs.ld"
+# setwd("/project/gilad/bjf79/projects/Comparative_eQTL/code/snakemake_workflow/")
 
 LD <- read.table(plink_ld_out, header=TRUE)
 # head(LD)

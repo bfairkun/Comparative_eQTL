@@ -4,7 +4,11 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "../../output/LeflerTestedSnps.Chimp.cis.tsv",
+        "../../output/LeflerTestedSnps.Human.snploc.txt",
+        "../../output/LeflerTestedSnps.tsv",
         "../../data/Appris.principal.isoforms.txt",
+        # "../../output/GorillaChimpHumanFixedSubstitutionsCount.gz",
         # "vep/vcf/Chimp.Ref_Plus_ThisStudy.vcf.gz",
         "../../output/TissueSpecificity/CellTypeSpecificity.TabulaMurisHeart.z.log.txt",
         "../../output/ChimpEgenes.testsnps.txt.gz",
