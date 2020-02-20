@@ -559,6 +559,26 @@ rule CopySnpPosKeyHumanLeflerSnps:
     shell:
         "cp {input} {output}"
 
+rule GetGenotypesForSharedSnpBoxplot:
+    input:
+        GtexVcf = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz",
+        GtexVcfTbi = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz.tbi",
+        covariates = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Heart_Left_Ventricle.v8.covariates.txt",
+        ChimpVcf = "PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz",
+        expression = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Heart_Left_Ventricle.v8.normalized_expression.bed.gz"
+    params:
+        human_snp = "chr5:128978923",
+        chimp_snp = "5:128875253",
+    output:
+         human_gt = "../../output/SharedSnpExampleBoxplot.human.012",
+         chimp_gt = "../../output/SharedSnpExampleBoxplot.chimp.012",
+         expression = "../../output/SharedSnpExampleBoxplot.human.expression.txt"
+    shell:
+        """
+        bcftools view -S <(cat {input.covariates} | head -1 |transpose | awk 'NR>1')  -r {params.human_snp} {input.GtexVcf} | vcftools --vcf - --012 --out ../../output/SharedSnpExampleBoxplot.human
+        bcftools view -S <(bcftools query -l {input.ChimpVcf} | grep "ThisStudy" | grep -v "MD_And") -r {params.chimp_snp} {input.ChimpVcf} | vcftools --vcf - --012 --out ../../output/SharedSnpExampleBoxplot.chimp
+        cat {input.expression} | awk 'NR==1 || $1=="ENSG00000113396.12"' | transpose > {output.expression}
+        """
 
 # rule DownloadGTExSummaryStatsAllTissues:
 #     output:

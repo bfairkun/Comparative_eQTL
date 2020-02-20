@@ -5,6 +5,7 @@ include: "rules/common.smk"
 rule all:
     input:
         "../../output/LeflerTestedSnps.Chimp.cis.tsv",
+        "../../output/SharedSnpExampleBoxplot.human.expression.txt",
         "../../output/LeflerTestedSnps.Human.snploc.txt",
         "../../output/LeflerTestedSnps.tsv",
         "../../data/Appris.principal.isoforms.txt",
