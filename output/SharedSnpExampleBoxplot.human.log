@@ -14,4 +14,4 @@ Warning: Expected at least 2 parts in INFO entry: ID=AF,Number=A,Type=Float,Desc
 After filtering, kept 386 out of 386 Individuals
 Writing 012 matrix files ... Done.
 After filtering, kept 1 out of a possible 1 Sites
-Run Time = 3.00 seconds
+Run Time = 1.00 seconds
