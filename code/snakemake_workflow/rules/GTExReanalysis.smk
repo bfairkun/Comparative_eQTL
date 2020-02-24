@@ -98,3 +98,16 @@ rule AddQvalueColumn:
         gzip ../../output/GTEX_renalysis/SampleSize_{wildcards.n}.txt
         """
 
+rule QQPlot:
+    input:
+        "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt",
+        "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.Permuted.txt",
+    output:
+        "../../output/QQPlot.png"
+    log:
+        "logs/eQTL_mapping/QQPlot.log"
+    shell:
+        """
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/RealVsPermutatedQQPlot.R &> {log}
+        """
+

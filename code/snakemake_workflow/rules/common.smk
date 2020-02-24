@@ -131,5 +131,56 @@ def get_vcf_chunks_by_contig(wildcards):
 def GetInitialSeedNumberForPermutationChunk(wildcards):
     return int(wildcards.n) * int(config["eQTL_mapping"]["PermutationChunkSize"])
 
+def GetSpeciesDbKey(wildcards):
+    if wildcards.species == "chimp":
+        return("pan_troglodytes")
+    elif wildcards.species == "human":
+        return("homo_sapiens")
+
+def GetChromPrefix(wildcards):
+    if wildcards.species == "chimp":
+        return("")
+    elif wildcards.species == "human":
+        return("chr")
+
+def GetTbiForVep(wildcards):
+    if wildcards.species == "chimp":
+        return("PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz.tbi")
+    elif wildcards.species == "human":
+        return("GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz.tbi")
+
+def GetVcfForVep(wildcards):
+    if wildcards.species == "chimp":
+        return("PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz")
+    elif wildcards.species == "human":
+        return("GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz")
+
+def GetChromsBySpecies(wildcards):
+    if wildcards.species == "chimp":
+        return(expand())
+
+def GetCommandBetweenBcftoolsAndVep(wildcards):
+    if wildcards.species == "chimp":
+        return("")
+    elif wildcards.species == "human":
+        return("| sed 's/^chr//'")
+
+
+def GetExtraParamsForBvctoolsBeforeVep(wildcards):
+    if wildcards.IndvSubsample == "ChimpsThisStudy":
+        return("""-S <(bcftools query -l PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz | grep 'ThisStudy')""")
+    elif wildcards.IndvSubsample == "ChimpsAllTroglodytes":
+        return("""-S <(bcftools query -l PopulationSubstructure/ReferencePanelMerged.annotated.vcf.gz | grep -v 'paniscus')""")
+    elif wildcards.IndvSubsample == "HumansGtexSubsample":
+        return("""-S <(awk '{print $2}' ../../data/GtexSamplesForOverdispersion.tsv)""")
+    elif wildcards.IndvSubsample == "AllGtex":
+        return("")
+
+def GetVepOutput(wildcards):
+    if wildcards.species=="chimp":
+        return(expand("vep/chimp/{IndvSubsample}/{chromosome}.txt", IndvSubsample=wildcards.IndvSubsample, chromosome=[str(i) for i in list(range(3,23))] + ["1", "2A", "2B"]))
+    if wildcards.species=="human":
+        return(expand("vep/human/{IndvSubsample}/{chromosome}.txt", IndvSubsample=wildcards.IndvSubsample, chromosome=[str(i) for i in list(range(1,23))] ))
+
 genotypedregions, = glob_wildcards("genotyped/all.{region}.vcf.gz")
 Num_subsamples = int(config["GTEx_eQTL_mapping"]["number_subsamples"])

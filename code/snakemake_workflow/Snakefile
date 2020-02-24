@@ -4,7 +4,16 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "MiscOutput/ExonicRegions.chimp.bed",
+        "../../output/GorillaChimpHumanFixedSubstitutionsCount.gz",
+        "../../output/NeutralityIndex/chimp/ChimpsThisStudy/PnPs.txt",
+        "../../output/NeutralityIndex/chimp/ChimpsAllTroglodytes/PnPs.txt",
+        "../../output/NeutralityIndex/human/AllGtex/PnPs.txt",
+        "../../output/NeutralityIndex/human/HumansGtexSubsample/PnPs.txt",
+        "MiscOutput/ExonicRegions.human.bed",
         "../../output/LeflerTestedSnps.Chimp.cis.tsv",
+        "../../output/QQPlot.png",
+        "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.Permuted.txt",
         "../../output/SharedSnpExampleBoxplot.human.expression.txt",
         "../../output/LeflerTestedSnps.Human.snploc.txt",
         "../../output/LeflerTestedSnps.tsv",

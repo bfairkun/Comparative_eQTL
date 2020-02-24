@@ -4,7 +4,7 @@ library(DECIPHER)
 
 
 ### Get human principal transcripts and lengths
-
+# setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
 Appris <- read.table("../../data/Appris.principal.isoforms.txt", sep='\t', col.names = c("SYMBOL", "Ensembl.gene", "Ensembl.transcript", "transcript", "apris"), stringsAsFactors = F) %>%
   separate(apris, into=c("apris.type", "apris.score"), remove=F, sep=':')
 
@@ -13,6 +13,8 @@ PrincipalHuamnTranscripts <- Appris %>%
   distinct(Ensembl.gene, .keep_all = T)
 
 human_mart = useMart("ensembl",dataset="hsapiens_gene_ensembl")
+# human_mart = useMart("ensembl",dataset="hsapiens_gene_ensembl", ensemblRedirect = F)
+
 # searchAttributes(human_mart, "cds")
 print("Got human Mart")
 AttributesDesired <- c("ensembl_gene_id",
@@ -153,6 +155,7 @@ for(i in 1:NumberGenes){
   write.table(CDS.df, file = fileout, col.names=F, quote=F, sep='\t')
   SNAP.command <- paste0("scripts/SNAP.pl ", fileout, " ", Gene, " ./CDS_alignment_SNAPfiles")
   system(SNAP.command)
+  #parse SNAP output and save to matrix
 }
 
 print("wrote file")

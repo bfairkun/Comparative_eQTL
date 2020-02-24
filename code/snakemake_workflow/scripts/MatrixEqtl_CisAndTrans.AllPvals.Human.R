@@ -245,6 +245,8 @@ CisQQPlot <- ggplot(me$cis$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(
 ggsave(OutCisImage, plot=CisQQPlot, height=3.7, width=3.7)
 
 wilcox.test(me_matched$cis$eqtls$pvalue, me$cis$eqtls$pvalue)
+wilcox.test(me_matched$trans$eqtls$pvalue, me$trans$eqtls$pvalue)
+
 
 TransQQPlot <- ggplot(me$trans$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(pvalue)/length(pvalue)))) +
   geom_point(aes(color="Variants shared with chimp")) +

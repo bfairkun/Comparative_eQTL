@@ -1,16 +1,71 @@
-rule vep_chimp_ref_panel:
+rule GetExonicRegions:
+    """
+    Create files to subset vcf with bcftools with vep (much faster than running
+    vep on full vcf). Used CDS regions +/- 3bp to allow vep to search for
+    alterations in stop codons which are 3bp outside of CDS boundaries.
+    """
     input:
+        gtf_chimp = "/project2/gilad/bjf79/genomes/Pan_tro_3.0_Ensembl/GeneAnnotation/Pan_troglodytes.Pan_tro_3.0.94.chr.gtf",
+        gtf_human = "/project2/gilad/bjf79/genomes/GRCh38_Ensembl/Annotations/Homo_sapiens.GRCh38.94.chr.gtf"
     output:
-        "test"
-    log:
-    conda:
-        "../envs/vep.yaml"
+        exonic_bed_chimp = "MiscOutput/ExonicRegions.chimp.bed",
+        exonic_bed_human = "MiscOutput/ExonicRegions.human.bed"
     shell:
         """
-        vep -i ../../PopulationSubstructure/ReferencePanelMerged.annotated.splits/22.vcf --format vcf -o Chimp.22.test.txt --stats_text --sf Chimp.22.test.stats.txt --cache --dir_cache cachedir/ --species pan_troglodytes --force --pick --coding_only
+        awk -F'\\t' -v OFS='\\t' '$3=="CDS" {{ print $1, $4-4, $5+3 }}' {input.gtf_chimp} | bedtools sort -i - | bedtools merge -i - > {output.exonic_bed_chimp}
+        awk -F'\\t' -v OFS='\\t' '$3=="CDS" {{ print "chr"$1, $4-4, $5+3 }}' {input.gtf_human} | bedtools sort -i - | bedtools merge -i - > {output.exonic_bed_human}
         """
 
-rule vep_chimp_ref_panel_merge:
+rule vep:
+    input:
+        vcf = GetVcfForVep,
+        tbi = GetTbiForVep,
+        CDS_bed = "MiscOutput/ExonicRegions.{species}.bed"
+    output:
+        results = "vep/{species}/{IndvSubsample}/{chromosome}.txt",
+    log:
+        "logs/vep/{species}.{IndvSubsample}.{chromosome}.log"
+    conda:
+        "../envs/vep.yaml"
+    params:
+        ExtraBcftoolsParam = GetExtraParamsForBvctoolsBeforeVep,
+        SpeciesDb = GetSpeciesDbKey,
+        IntermediateCommand = GetCommandBetweenBcftoolsAndVep,
+        chromprefix = GetChromPrefix
+    wildcard_constraints:
+        species="\w+",
+        chromosome="\w+",
+        IndvSubsample="\w+"
+    shell:
+        """
+        bcftools view -q 0.1:minor --force-samples {params.ExtraBcftoolsParam}  -R <(cat {input.CDS_bed} | awk -F'\\t' '$1=="{params.chromprefix}{wildcards.chromosome}"') {input.vcf} {params.IntermediateCommand} | vep -i /dev/stdin --offline --format vcf -o {output.results} --no_stats --cache --dir_cache /project2/gilad/bjf79/genomes/vep_cache_dir/ --species {params.SpeciesDb} --force --pick --coding_only &> {log}
+        """
+
+
+rule CountPnPs:
+    input:
+        GetVepOutput
+    output:
+        # Pn = "vep/PnPs/{species}/{IndvSubsample}/Pn.txt",
+        # Ps = "vep/PnPs/{species}/{IndvSubsample}/Ps.txt"
+        # PnPs = "vep/PnPs/{species}/{IndvSubsample}/PnPs.txt"
+        Catted = "vep/MergedResults/{species}/{IndvSubsample}/Merged.txt",
+        PnPs = "../../output/NeutralityIndex/{species}/{IndvSubsample}/PnPs.txt"
+    wildcard_constraints:
+        species="\w+",
+        IndvSubsample="\w+"
+    shell:
+        """
+        cat {input} | awk '!/^#/' > {output.Catted}
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/PnPsMergeTables.R {output.Catted} {output.PnPs}
+        """
+
+        # cat {input} | awk -F'\\t' '!/^#/ {{ print $4, $7 }}' | awk '$2!~"synonymous" {{ print $1 }}' | sort | uniq -c | awk '{{ print $2, $1 }}' | sort > {output.Pn}
+        # cat {input} | awk -F'\\t' '!/^#/ {{ print $4, $7 }}' | awk '$2~"synonymous" {{ print $1 }}' | sort | uniq -c | awk '{{ print $2, $1 }}' | sort > {output.Ps}
+# rule vep_merge:
+
+#     input:
+#         expand("vep/{{species}}/{{IndvSubsample}}/{chrom}.txt", chrom=)
 
 rule extract_test_snp_positions:
     """
@@ -33,8 +88,3 @@ rule extract_test_snp_positions:
         mv vep/vcf/0001.vcf.gz {output.vcf}
         tabix -p vcf {output.vcf}
         """
-
-
-rule vep_chimp_tested_snps:
-
-rule vep_chimp_tested_snps_merge:

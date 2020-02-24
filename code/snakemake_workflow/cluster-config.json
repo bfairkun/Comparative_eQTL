@@ -111,6 +111,11 @@
   {"partition" : "broadwl", "mem": 58000, "tasks-per-node" : 10},
 
   "MatrixEQTL_BestModelFromConfigFullResults":
-  {"mem" : 24000}
+  {"mem" : 24000},
 
+  "QQPlot":
+  {"mem" : 10000},
+
+  "MatrixEQTL_BestModelFromConfigFullResultsPermuted":
+  {"mem" : 24000}
 }
