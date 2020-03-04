@@ -233,8 +233,8 @@ CisQQPlot <- ggplot(me$cis$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(
   xlab("-log10(Theoretical-Pvalues)") +
   ylab("-log10(Observed-Pvalues)") +
   geom_abline() +
-  scale_color_manual(values = c("Variants shared with human" = "red",
-                                "Variants shared with human; permuted data" = "black",
+  scale_color_manual(values = c("Variants shared with chimp" = "red",
+                                "Variants shared with chimp; permuted data" = "black",
                                 "Matched control variants" = "blue") ) +
   theme_bw() +
   theme(legend.position="bottom") +

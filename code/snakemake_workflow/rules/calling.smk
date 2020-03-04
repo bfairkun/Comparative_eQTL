@@ -53,6 +53,18 @@ rule DetermineCallableSites:
         bedtools subtract -sorted -g {input.fai} -a {input.AdequateCoverageRegions} -b {input.LCRegions} > {output}
         """
 
+rule CountCallableSites:
+    input:
+        Callable = "MiscOutput/CallableSites.bed",
+        fai = config["ref"]["genome"] + ".fai"
+    output:
+        "MiscOutput/CallableSites.summary"
+    shell:
+        """
+        printf "callable sites: $(awk -F'\\t' '{{sum+=$3-$2}} END{{print sum}}' {input.Callable})\\n" > {output}
+        printf "total sites: $(awk -F'\\t' '{{sum+=$2}} END{{print sum}}' {input.fai})\\n" >> {output}
+        """
+
 rule FilterReadsAtUncallableSites:
     """
     Some regions contain extremely high coverage at regions that are uncallable for variant calling. These regions are filtered from bam to reduce memory footprint for freebayes. More specifically, reads are left in if they are in CallableRegions (which excludes these high coverage regions)

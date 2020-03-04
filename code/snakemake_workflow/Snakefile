@@ -5,6 +5,7 @@ include: "rules/common.smk"
 rule all:
     input:
         "MiscOutput/ExonicRegions.chimp.bed",
+        "MiscOutput/CallableSites.summary",
         "../../output/GorillaChimpHumanFixedSubstitutionsCount.gz",
         "../../output/NeutralityIndex/chimp/ChimpsThisStudy/PnPs.txt",
         "../../output/NeutralityIndex/chimp/ChimpsAllTroglodytes/PnPs.txt",
