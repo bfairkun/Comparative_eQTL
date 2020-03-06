@@ -26,12 +26,25 @@ LeflerPanTro5Names <- read.delim("MiscOutput/Lefler.PanTro5.list.txt", col.names
 LeflerPanTro5Frq <- read.delim("MiscOutput/Lefler.PanTro5.frq", skip=1, col.names=c("chrom", "pos", "N_alleles", "N_chr", "AlleleFreq1", "AlleleFreq2"))%>%
   mutate(ChrPos=paste(chrom, pos, sep="."))
 
-ChimpJoined <- inner_join(LeflerPanTro5Bed, LeflerPanTro5Names, by="ChrPos", keep=T) %>%
-  inner_join(LeflerPanTro5Frq, by="ChrPos") %>%
-  dplyr::select(Human.rsID=rsID, Chimp.chrom=chrom.x, Chimp.pos=pos.x, Chimp.snpName=name.y, AlleleFreq1, AlleleFreq2) %>%
-  separate(AlleleFreq1, into=c("Chimp.RefAllele", "RefAlleleFrq"), sep=":") %>%
-  separate(AlleleFreq2, into=c("Chimp.AltAllele", "Chimp.AltAlleleFrq"), sep=":") %>%
-  dplyr::select(-RefAlleleFrq)
+#Need to do something special to join LeflerPanTro5Bed to LeflerPanTro5Names since some snps are off by 1bp
+#The chrom pos in Names is correct.
+TranslationTable <- read.delim("MiscOutput/Lefler.PanTro5.rsID.chimpSNP.tab", col.names=c("HumanID", "ChimpID", "dist", "A", "B", "C", "D")) %>%
+  separate(HumanID, into=c("rsID", "humanRef", "HumanAlt"), sep="\\.") %>%
+  dplyr::select(rsID, ChimpID)
+
+# ChimpJoined <- inner_join(LeflerPanTro5Bed, LeflerPanTro5Names, by="ChrPos", keep=T) %>%
+#   inner_join(LeflerPanTro5Frq, by="ChrPos") %>%
+#   dplyr::select(Human.rsID=rsID, Chimp.chrom=chrom.x, Chimp.pos=pos.x, Chimp.snpName=name.y, AlleleFreq1, AlleleFreq2) %>%
+#   separate(AlleleFreq1, into=c("Chimp.RefAllele", "RefAlleleFrq"), sep=":") %>%
+#   separate(AlleleFreq2, into=c("Chimp.AltAllele", "Chimp.AltAlleleFrq"), sep=":") %>%
+#   dplyr::select(-RefAlleleFrq)
+
+ChimpJoined <- inner_join(LeflerPanTro5Names, TranslationTable, by=c("name"="ChimpID"), keep=T) %>%
+    inner_join(LeflerPanTro5Frq, by="ChrPos") %>%
+    dplyr::select(Human.rsID=rsID, Chimp.chrom=chrom.x, Chimp.pos=pos.x, Chimp.snpName=name, AlleleFreq1, AlleleFreq2) %>%
+    separate(AlleleFreq1, into=c("Chimp.RefAllele", "RefAlleleFrq"), sep=":") %>%
+    separate(AlleleFreq2, into=c("Chimp.AltAllele", "Chimp.AltAlleleFrq"), sep=":") %>%
+    dplyr::select(-RefAlleleFrq)
 
 full_join(HumanJoined, ChimpJoined, by="Human.rsID") %>%
   write.table("../../output/LeflerTestedSnps.tsv", sep='\t', quote=F, row.names = F)

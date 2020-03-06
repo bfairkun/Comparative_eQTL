@@ -439,6 +439,7 @@ rule ReorganizeAndLiftLeflerSnps:
         SharedSnpsPanTro5 = "MiscOutput/Lefler.PanTro5.bed",
         SharedSnpsPanTro5Named = "MiscOutput/Lefler.PanTro5.list.txt",
         SharedSnpsPanTro5NamedFreq = "MiscOutput/Lefler.PanTro5.frq",
+        ClosestMatchingSnps = "MiscOutput/Lefler.PanTro5.rsID.chimpSNP.tab",
         CombinedOutput = "../../output/LeflerTestedSnps.tsv"
     shell:
         """
@@ -454,6 +455,9 @@ rule ReorganizeAndLiftLeflerSnps:
         bcftools view -S <(bcftools query -l {input.ChimpVcf} | grep "ThisStudy" | grep -v "MD_And") -q 0.1:minor -H -R <(cat {output.SharedSnpsPanTro5} | awk -F'\\t' -v OFS='\\t' '{{ print $1, $2-1, $3+1, $4 }}') {input.ChimpVcf} | awk -F'\\t' '{{ print $1,$2,$3 }}' > {output.SharedSnpsPanTro5Named}
         #Get AF in the chimp cohort
         bcftools view -S <(bcftools query -l {input.ChimpVcf} | grep "ThisStudy" | grep -v "MD_And") -q 0.1:minor -R <(cat {output.SharedSnpsPanTro5} | awk -F'\\t' -v OFS='\\t' '{{ print $1, $2-1, $3+1, $4 }}') {input.ChimpVcf} | vcftools --vcf - --freq --out MiscOutput/Lefler.PanTro5
+        #Create translation table of snp positions where the snp position is off by 1.
+        bedtools closest -a <(bedtools sort -i {output.SharedSnpsPanTro5}) -b <(awk -v OFS='\\t' '{{print $1, $2, $2+1, $3}}' {output.SharedSnpsHg38Named} | bedtools sort -i -) -d | awk -F'\\t' -v OFS='\\t' '{{split($4,H,"."); split($8,C,"."); print $4,$8, $NF, H[2]H[3], H[3]H[2], C[4]C[5],C[5]C[4]}}' | awk -F'\\t' -v OFS='\\t' '$3<3' | awk '$4==$6 || $4==$7' > {output.ClosestMatchingSnps}
+        
         #Rscript to combine relevant info
         /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/ReorganizeLeflerSharedSnps.R
         """
