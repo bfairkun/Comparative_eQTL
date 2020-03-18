@@ -39,6 +39,21 @@ rule qualimap:
         qualimap bamqc -bam {input}  -nt 12 -outdir qc/qualimap/{wildcards.sample}-{wildcards.unit} --java-mem-size=29G &> {log}
         """
 
+rule QC_to_publish:
+    input:
+        bcftools_smplstats = "MiscOutput/filtered.bcftools.smplstats",
+        Coverage = "MiscOutput/FoldCoveragePerSample.tab",
+        RNASeqCov = "scratch/multiqcOnRNASeq/multiqc_data/multiqc_general_stats.txt"
+    output:
+        bcftools_smplstats = "../../output/QC/bcftools.smplstats.tab",
+        Coverage = "../../output/QC/FoldCoverPerSample.tab",
+        RNASeqCov = "../../output/QC/RNASeqMultiQC.stats.tab"
+    shell:
+        """
+        cp {input.bcftools_smplstats} {output.bcftools_smplstats}
+        cp {input.Coverage} {output.Coverage}
+        cp {input.RNASeqCov} {output.RNASeqCov}
+        """
 
 #rule multiqc:
 #    input:

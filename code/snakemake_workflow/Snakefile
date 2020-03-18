@@ -5,6 +5,7 @@ include: "rules/common.smk"
 rule all:
     input:
         "MiscOutput/ExonicRegions.chimp.bed",
+        "../../output/QC/RNASeqMultiQC.stats.tab",
         "MiscOutput/CallableSites.summary",
         "../../output/GorillaChimpHumanFixedSubstitutionsCount.gz",
         "../../output/NeutralityIndex/chimp/ChimpsThisStudy/PnPs.txt",
@@ -120,6 +121,5 @@ include: "rules/GTExReanalysis.smk"
 include: "rules/GTExReanalysis_constantSampleSize.smk"
 include: "rules/vep.smk"
 include: "rules/CalculateSubstitutionsWithGorilla.smk"
-# eQTL_analysis requires an eqtl model results file to be defined in config
-# include: "rules/qc.smk"
+include: "rules/qc.smk"
 #include: "rules/annotation.smk"
