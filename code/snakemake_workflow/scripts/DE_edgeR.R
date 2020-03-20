@@ -5,9 +5,13 @@ source("../CustomFunctions.R")
 CountTableChimpFile <- '../../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
 CountTableHumanFile <- '../../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
 OutputDE <- '../../output/Final/TableS1.tab'
+GeneIDs <- '../../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz'
 
 HumanSamplesToDrop <- c("SRR613186",  "SRR598509",  "SRR1478149", "SRR603918",  "SRR1507229", "SRR1478900", "SRR1477015", "SRR601986",  "SRR614996",  "SRR1474730") 
 ChimpSamplesToDrop <- c()
+
+GeneID.df <- read.delim(GeneIDs) %>%
+  dplyr::select(-HGNC.ID)
 
 CountTableChimp <- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)
 colnames(CountTableChimp) <- paste0("C.", colnames(CountTableChimp))
@@ -37,7 +41,14 @@ True.efit <- DE.Subsampled(CountTableChimpFile, CountTableHumanFile, SubsampleSi
 
 TrueResponse <- decideTests(True.efit, p.value=0.05)
 TableOut <- toptable(True.efit, n=Inf, sort.by="none") %>%
-  dplyr::select(-B) %>%
-  rownames_to_column("Ensembl_geneID")
+  rownames_to_column("Ensembl_geneID") %>%
+  left_join(GeneID.df, by=c("Ensembl_geneID"="Gene.stable.ID")) %>%
+  dplyr::select(Ensembl_geneID,
+                HGNC.symbol,
+                logFC,
+                t,
+                P.Value,
+                adj.P.Val)
+  
 
 write.table(x=TableOut, file=OutputDE, sep='\t', row.names = F, quote=F)
