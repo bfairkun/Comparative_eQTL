@@ -1,0 +1,535 @@
+---
+title: "Final_DiffExpressionQC"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+### load libs
+
+```{r}
+library(tidyverse)
+library(knitr)
+library("edgeR")
+library(gplots)
+library(qvalue)
+library(reshape2)
+library(gridExtra)
+library(scales)
+library(readxl)
+library(ggrepel)
+source("../code/CustomFunctions.R")
+
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+ChimpSampleIDs <- OtherMetadata %>%
+  dplyr::select(Individual.ID, Label)
+
+```
+
+## Plot depth per sample
+
+```{r}
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableChimp <- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)
+colnames(CountTableChimp) <- paste0("C.", colnames(CountTableChimp))
+kable(CountTableChimp[1:10,1:10])
+
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+CountTableHuman <- read.table(gzfile(CountTableHumanFile), header=T, check.names=FALSE, skip=1)
+colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
+kable(CountTableHuman[1:10,1:10])
+
+CombinedTable <- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=c("C.Geneid"="H.Geneid")) %>%
+  column_to_rownames("C.Geneid") %>% as.matrix()
+
+# HumanSampleNames <- read.delim("../data/GtexSamplesForDE.tsv", col.names=c("SRA", "GTExName", "Tissue"), stringsAsFactors = F)
+# 
+# HumanSampleNames2 <- read.delim("../data/GtexSamplesForOverdispersion.tsv", col.names=c("SRA", "GTExName"), stringsAsFactors = F, sep=" ")
+
+HumanSampleNames3 <- read.delim("../output/PowerAnalysisCountTable.Human.SampleList.txt", col.names=c("SRA", "GTExName"), header=F, stringsAsFactors = F, sep=" ")
+
+HumanSamplesToDropOutOfCluster <- c("SRR613186", "SRR598509", "SRR1478149", "SRR603918", "SRR1507229")
+HumanSamplesToDropLowReads <- CombinedTable %>% colSums() %>%
+  as.data.frame() %>%
+  rownames_to_column("Sample") %>%
+  mutate(SampleNoSpecies = gsub("^[HC].", "", Sample)) %>%
+  inner_join(HumanSampleNames3, by=c("SampleNoSpecies"="SRA")) %>%
+  mutate(Species=substr(Sample, 1,1)) %>%
+  filter(Species=="H") %>%
+  filter(!SampleNoSpecies %in% HumanSamplesToDropOutOfCluster) %>%
+  top_n(-5, wt=as.numeric(`.`)) %>% pull(SampleNoSpecies)
+HumanSamplesToDrop <- c(HumanSamplesToDropOutOfCluster, HumanSamplesToDropLowReads) 
+ 
+
+ChimpSamplesToDrop <- c()
+
+
+#Plot depth per sample
+ToPlot <- CombinedTable %>% colSums() %>% as.data.frame() %>%
+  rownames_to_column("Sample") %>%
+  mutate(SampleNoSpecies = gsub("^[HC].", "", Sample)) %>%
+  left_join(HumanSampleNames3, by=c("SampleNoSpecies"="SRA")) %>%
+  mutate(Label=case_when(
+    is.na(GTExName) ~ SampleNoSpecies,
+    !is.na(GTExName) ~ GTExName
+  )) %>%
+  left_join(ChimpSampleIDs, by=c("Label"="Individual.ID")) %>%
+  mutate(Label=case_when(
+    is.na(Label.y) ~ Label,
+    !is.na(Label.y) ~ Label.y
+  )) %>%
+  mutate(PassFilter=!SampleNoSpecies %in% c(HumanSamplesToDrop, ChimpSamplesToDrop)) %>%
+  arrange(`.`) %>%
+  mutate(Species=substr(Sample, 1,1))
+ToPlot %>%
+  mutate(Species = recode(Species, "C"="Chimp", "H"="Human")) %>%
+  ggplot(aes(x=reorder(Label,`.`), y=./1000000, fill=Species, color=PassFilter)) +
+  geom_col() +
+  facet_grid(~Species, scales = "free_x", space = "free_x") +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme_bw() +
+  xlab("Sample") +
+  ylab("RNA-seq reads mapped to expressed genes (Millions)") +
+  scale_colour_manual(name="Used in DE and dispersion analysis", values=c("gray","black"), labels=c("No","Yes"), ) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size=5, vjust=0.5),
+        legend.position = "bottom")
+ggsave("../figures/OriginalArt/ReadsPerSample.pdf", width=7, height=7)
+
+cols <- setNames(ToPlot$Label, ToPlot$Sample)
+
+cpm <- cpm(CombinedTable, log=TRUE, prior.count=0.5)
+kable(cpm[1:10,1:10])
+
+show_col(hue_pal()(2))
+
+
+SpeciesFactorCol <- colnames(cpm) %>% substr(1,1) %>% factor() %>% unclass() %>% as.character() %>% recode("1"="#F8766D", "2"="#00BFC4")
+SpeciesFactor <- colnames(cpm) %>% substr(1,1) %>% factor() %>% unclass() %>% as.character()
+
+
+PassFilterCol <- data.frame(Sample=colnames(cpm)) %>%left_join(ToPlot, by="Sample") %>% pull(PassFilter) %>% if_else("black", "gray")
+
+# cor(cpm, method = c("spearman")) %>%
+# heatmap.2(trace="none", ColSideColors=SpeciesFactorCol, dendrogram='column', labRow=cols, labCol=cols)
+
+d0 <- DGEList(CombinedTable)
+
+#Calculate normalization factors
+d0 <- calcNormFactors(d0)
+
+mm <- model.matrix(~0 + SpeciesFactor)
+voom(d0, mm, plot = T, normalize.method="cyclicloess")
+
+#Note: calcNormFactors doesn’t normalize the data, it just calculates normalization factors for use downstream.
+#Filter low-expressed genes
+
+cutoff <- 6
+# drop <- which(apply(cpm(d0), 1, median) < cutoff)
+drop <- which(apply(cpm(d0), 1, max) < cutoff)
+
+# drop.H <- which(apply(
+#                   cpm(d0) %>% as.data.frame() %>%
+#                   dplyr::select(contains("H.")),
+#                   1,
+#                   max) < cutoff)
+# drop.C <- which(apply(
+#                   cpm(d0) %>% as.data.frame() %>%
+#                   dplyr::select(contains("C.")),
+#                   1,
+#                   max) < cutoff)
+# drop <- union(drop.C, drop.H)
+d <- d0[-drop,] 
+dim(d)
+voom(d, mm, plot = T, normalize.method="cyclicloess")
+# voom(d0, mm, plot = T, normalize.method="cyclicloess")
+
+
+# dev.off()
+pdf(file="../figures/OriginalArt/RNASeqHeatmap.pdf")
+cor(cpm(d, log=T, prior.count=0.5)) %>%
+heatmap.2(trace="none", ColSideColors=SpeciesFactorCol, RowSideColors=PassFilterCol, labRow=cols, labCol=cols, dendrogram='column', cexRow=0.35, cexCol=0.35, offsetRow=0, offsetCol=0)
+dev.off()
+
+show_col(hue_pal()(2))
+
+PCs <- cpm(d, log=T, prior.count=0.5) %>%
+  as.data.frame() %>%
+  dplyr::select(-c(paste0("H.", HumanSamplesToDrop))) %>%
+  as.matrix() %>%
+  t() %>%
+  prcomp()
+A<-summary(PCs)$importance
+
+PCsToPlot <- PCs$x %>% as.data.frame() %>%
+  rownames_to_column("Sample") %>%
+  dplyr::select(Sample, PC1:PC6) %>%
+  mutate(SampleNoSpecies = gsub("^[HC].", "", Sample)) %>%
+  left_join(HumanSampleNames3, by=c("SampleNoSpecies"="SRA")) %>%
+  mutate(Label=case_when(
+    is.na(GTExName) ~ SampleNoSpecies,
+    !is.na(GTExName) ~ GTExName
+  )) %>%
+  left_join(ChimpSampleIDs, by=c("Label"="Individual.ID")) %>%
+  mutate(Label=case_when(
+    is.na(Label.y) ~ Label,
+    !is.na(Label.y) ~ Label.y
+  )) %>%
+  mutate(PassFilter=!SampleNoSpecies %in% c(HumanSamplesToDrop, ChimpSamplesToDrop)) %>%
+  arrange(`.`) %>%
+  mutate(Species=substr(Sample, 1,1)) %>%
+  mutate(Species = recode(Species, "C"="Chimp", "H"="Human"))
+ggplot(PCsToPlot, aes(x=PC1, y=PC2, color=Species, label=Label)) +
+  geom_text(size=2) +
+  xlab("PC1 (40.5% variance explained)") +
+  ylab("PC2 (11.5% variance explained)") +
+  theme_bw() +
+  theme(legend.position = "bottom")
+ggsave("../figures/OriginalArt/RNASeqPCA.pdf", height=3, width=3)
+ggplot(PCsToPlot, aes(x=PC3, y=PC4, color=Species, label=Label)) +
+  geom_text(size=3) +
+  theme_bw()
+
+```
+
+Do the power analysis. First get the genes to analyze based on the 39 + 39 samples.
+
+```{r}
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableChimp <- read.table(gzfile(CountTableChimpFile), header=T, check.names=FALSE, skip=1)
+colnames(CountTableChimp) <- paste0("C.", colnames(CountTableChimp))
+
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+CountTableHuman <- read.table(gzfile(CountTableHumanFile), header=T, check.names=FALSE, skip=1)
+colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
+
+CombinedTable <- inner_join(CountTableChimp[,c(1,7:length(CountTableChimp))], CountTableHuman[,c(1,7:length(CountTableHuman))], by=c("C.Geneid"="H.Geneid")) %>%
+  column_to_rownames("C.Geneid") %>%
+  dplyr::select(-c(paste0("H.", HumanSamplesToDrop))) %>%
+  as.matrix()
+
+cpm <- cpm(CombinedTable, log=TRUE, prior.count=0.5)
+d0 <- DGEList(CombinedTable)
+
+#Calculate normalization factors
+d0 <- calcNormFactors(d0)
+cutoff <- 6
+drop <- which(apply(cpm(d0), 1, max) < cutoff)
+d <- d0[-drop,] 
+dim(d)
+
+# DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, FC.NullInterval, drop, ChimpSampleDrop=NULL, HumanSampleDrop=NULL)
+FC.NullInterval <- log2(1.0)
+
+True.efit <- DE.Subsampled('../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz', '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz', SubsampleSize = 39, FC.NullInterval = FC.NullInterval, drop=drop, ChimpSampleDrop = NULL, HumanSampleDrop = HumanSamplesToDrop)
+
+TrueResponse <- decideTests(True.efit, p.value=0.05)
+TableOut <- toptable(True.efit, n=Inf)
+
+
+SampleSizes <- c(2,4,8,16,24,32,39)
+FDRLevels <- c(0.01, 0.05, 0.1)
+
+
+RocCurveDataToPlot <- data.frame()
+DEGeneCountToPlot <- matrix(nrow=length(SampleSizes), ncol=length(FDRLevels))
+rownames(DEGeneCountToPlot) <- SampleSizes
+EffectSizesToPlot <- data.frame()
+
+set.seed(100)
+for (i in seq_along(SampleSizes)){
+  print(paste0("processing sample size = ", SampleSizes[i]))
+  Results <- DE.Subsampled(CountTableChimpFile,
+              CountTableHumanFile,
+              SampleSizes[i], FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+  
+  RocCurveData <- as.data.frame(coords(roc(response=as.vector(abs(TrueResponse)), quiet=T, predictor=as.numeric(Results$p.value), plot=F), transpose=F))
+  RocCurveData$samplesize <- SampleSizes[i]
+  RocCurveDataToPlot <- rbind(RocCurveDataToPlot, RocCurveData)
+  
+  
+  for (j in seq_along(FDRLevels)){
+    
+    SubSampledResponse <- decideTests(Results, p.value=FDRLevels[j])
+    
+    DEGeneCountToPlot[i,j] <- sum(table(SubSampledResponse)[c("-1","1")])
+    
+    if (length(table(TrueResponse==SubSampledResponse & SubSampledResponse!=0)) > 1){
+      EffectSizes.df <-data.frame(EffectSizes=abs(True.efit$coefficients[TrueResponse==SubSampledResponse & SubSampledResponse!=0]), FDR=FDRLevels[j], SampleSize=SampleSizes[i])
+      EffectSizesToPlot <- rbind(EffectSizesToPlot, EffectSizes.df)
+    }
+
+    
+  }
+}
+
+RocCurve <- function(RocCurveData.df){
+  RocCurveLandmarks<-RocCurveDataToPlot %>%
+  group_by(samplesize) %>%
+  filter(abs(threshold - 0.01) == min(abs(threshold - 0.01)) |
+          abs(threshold - 0.05) == min(abs(threshold - 0.05)) |
+          abs(threshold - 0.1) == min(abs(threshold - 0.1))
+         ) %>%
+  ungroup() %>%
+  mutate(threshold=signif(threshold, digits=1)) %>%
+  mutate(FDR=factor(threshold))
+  
+  PlotOut <- ggplot(RocCurveDataToPlot, aes(x=1-specificity, y=sensitivity, color=factor(samplesize))) +
+  geom_line() +
+  geom_point(data=RocCurveLandmarks, aes(x=1-specificity, y=sensitivity, color=factor(samplesize), shape=FDR)) +
+  xlab("false positive rate (1-specificity)") +
+  ylab("true positive rate (sensitivity)") +
+  scale_colour_discrete(name  ="Sample size") +
+  geom_abline(linetype="dashed") +
+  theme_bw()
+  return(PlotOut)
+}
+
+
+DEGeneCountPlot <- function(DEGeneCount.df){
+  DEGeneCountToPlot.df<-as.data.frame(DEGeneCount.df)
+colnames(DEGeneCountToPlot.df) <- FDRLevels
+DEGeneCountToPlot.df$SampleSize <- rownames(DEGeneCountToPlot.df)
+DEGeneCountToPlot.df$SampleSize
+DEGeneCountToPlot.df[is.na(DEGeneCountToPlot.df)] <- 0
+PlotOut<-DEGeneCountToPlot.df %>% melt() %>%
+  dplyr::rename(Number.DE.genes=value, FDR=variable) %>%
+ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
+  geom_line() +
+  geom_point() +
+  xlab("Sample size") +
+  ylab("Number DE genes") +
+  theme_bw()
+return(PlotOut)
+}
+
+f <- function(x) {
+  r <- quantile(x, probs = c(0.05, 0.25, 0.5, 0.75, 0.95))
+  names(r) <- c("ymin", "lower", "middle", "upper", "ymax")
+  r
+}
+
+
+EffectSizesPlot <- function(EffectSizesToPlot.df){
+  PlotOut <- ggplot(EffectSizesToPlot.df, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
+  # geom_violin()
+  # geom_boxplot() +
+  stat_summary(fun.data = f, geom="boxplot", position="dodge2") +
+  ylab(expression(atop("Effect-size of true positive DE genes",'|log'[2]*'(FoldChange)|'))) +
+    xlab("Sample size") +
+  scale_colour_discrete(name  ="FDR") +
+  theme_bw()
+  return(PlotOut)
+}
+EffectSizesPlot(EffectSizesToPlot)
+
+DEGeneCountPlot(DEGeneCountToPlot)
+
+
+RocCurve(RocCurveDataToPlot)
+
+ggsave("../figures/OriginalArt/PowerAnalysis.FullDepth.ROC.pdf", RocCurve(RocCurveDataToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.FullDepth.DE.pdf", DEGeneCountPlot(DEGeneCountToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.FullDepth.EffectSize.pdf", EffectSizesPlot(EffectSizesToPlot), height=3, width=4)
+
+data.frame(coefficients=as.numeric(True.efit$coefficients), pval=as.numeric(True.efit$p.value), signif=decideTests(True.efit)) %>%
+ggplot(aes(x=coefficients, y=-log10(pval), color=factor(DE))) +
+  geom_point() +
+  scale_x_continuous(limits=c(-5,5))
+```
+
+
+```{r}
+###25M reads for each sample
+
+RocCurveDataToPlot <- data.frame()
+DEGeneCountToPlot <- matrix(nrow=length(SampleSizes), ncol=length(FDRLevels))
+rownames(DEGeneCountToPlot) <- SampleSizes
+EffectSizesToPlot <- data.frame()
+
+ReadDepthControlledChimpCountFile <- "../output/PowerAnalysisCountTable.Chimp.25000000.subread.txt.gz"
+ReadDepthControlledHumanCountFile <- "../output/PowerAnalysisCountTable.Human.25000000.subread.txt.gz"
+
+for (i in seq_along(SampleSizes)){
+  paste0("processing ", SampleSizes[i])
+  Results <- DE.Subsampled(ReadDepthControlledChimpCountFile,
+              ReadDepthControlledHumanCountFile,
+              SampleSizes[i], FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+  
+  RocCurveData <- as.data.frame(coords(roc(response=as.vector(abs(TrueResponse)), quiet=T, predictor=as.numeric(Results$p.value), plot=F), transpose=F))
+  RocCurveData$samplesize <- SampleSizes[i]
+  RocCurveDataToPlot <- rbind(RocCurveDataToPlot, RocCurveData)
+  
+  for (j in seq_along(FDRLevels)){
+    
+    SubSampledResponse <- decideTests(Results, p.value=FDRLevels[j])
+    
+    DEGeneCountToPlot[i,j] <- sum(table(SubSampledResponse)[c("-1","1")])
+    
+    if (length(table(TrueResponse==SubSampledResponse & SubSampledResponse!=0)) > 1){
+      EffectSizes.df <-data.frame(EffectSizes=abs(True.efit$coefficients[TrueResponse==SubSampledResponse & SubSampledResponse!=0]), FDR=FDRLevels[j], SampleSize=SampleSizes[i])
+      EffectSizesToPlot <- rbind(EffectSizesToPlot, EffectSizes.df)
+    }
+
+    
+  }
+}
+
+
+ggsave("../figures/OriginalArt/PowerAnalysis.25M.ROC.pdf", RocCurve(RocCurveDataToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.25M.DE.pdf", DEGeneCountPlot(DEGeneCountToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.25M.EffectSize.pdf", EffectSizesPlot(EffectSizesToPlot), height=3, width=4)
+
+
+```
+
+
+```{r}
+###10M reads for each sample
+
+RocCurveDataToPlot <- data.frame()
+DEGeneCountToPlot <- matrix(nrow=length(SampleSizes), ncol=length(FDRLevels))
+rownames(DEGeneCountToPlot) <- SampleSizes
+EffectSizesToPlot <- data.frame()
+
+ReadDepthControlledChimpCountFile <- "../output/PowerAnalysisCountTable.Chimp.10000000.subread.txt.gz"
+ReadDepthControlledHumanCountFile <- "../output/PowerAnalysisCountTable.Human.10000000.subread.txt.gz"
+
+for (i in seq_along(SampleSizes)){
+  paste0("processing ", SampleSizes[i])
+  Results <- DE.Subsampled(ReadDepthControlledChimpCountFile,
+              ReadDepthControlledHumanCountFile,
+              SampleSizes[i], FC.NullInterval, drop, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+  
+  RocCurveData <- as.data.frame(coords(roc(response=as.vector(abs(TrueResponse)), quiet=T, predictor=as.numeric(Results$p.value), plot=F), transpose=F))
+  RocCurveData$samplesize <- SampleSizes[i]
+  RocCurveDataToPlot <- rbind(RocCurveDataToPlot, RocCurveData)
+  
+  for (j in seq_along(FDRLevels)){
+    
+    SubSampledResponse <- decideTests(Results, p.value=FDRLevels[j])
+    
+    DEGeneCountToPlot[i,j] <- sum(table(SubSampledResponse)[c("-1","1")])
+    
+    if (length(table(TrueResponse==SubSampledResponse & SubSampledResponse!=0)) > 1){
+      EffectSizes.df <-data.frame(EffectSizes=abs(True.efit$coefficients[TrueResponse==SubSampledResponse & SubSampledResponse!=0]), FDR=FDRLevels[j], SampleSize=SampleSizes[i])
+      EffectSizesToPlot <- rbind(EffectSizesToPlot, EffectSizes.df)
+    }
+
+    
+  }
+}
+
+
+ggsave("../figures/OriginalArt/PowerAnalysis.5M.ROC.pdf", RocCurve(RocCurveDataToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.5M.DE.pdf", DEGeneCountPlot(DEGeneCountToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.5M.EffectSize.pdf", EffectSizesPlot(EffectSizesToPlot), height=3, width=4)
+
+
+RocCurve(RocCurveDataToPlot)
+DEGeneCountPlot(DEGeneCountToPlot)
+EffectSizesPlot(EffectSizesToPlot)
+
+```
+
+Multiple iterations of the 4x4 comparison
+
+```{r}
+
+NumDE.vec <- c()
+NumDEUnderLFC2.vec <- c()
+
+for (i in 1:15){
+  print(i)
+  FourByFour.efit <- DE.Subsampled('../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz', '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz', SubsampleSize = 4, FC.NullInterval = FC.NullInterval, drop=drop, ChimpSampleDrop = NULL, HumanSampleDrop = HumanSamplesToDrop)
+
+FourByFourResults <- toptable(FourByFour.efit, n=Inf)
+left_join(FourByFourResults,TableOut)
+
+CombinedResults <- left_join(rownames_to_column(FourByFourResults), rownames_to_column(TableOut), by="rowname")
+
+NumIdentified <- CombinedResults %>%
+  filter(adj.P.Val.y<0.05) %>%
+  filter(adj.P.Val.x<0.05) %>% nrow()
+
+NumIdentifiedUnderLFC2 <- CombinedResults %>%
+  filter(adj.P.Val.y<0.05) %>%
+  filter(abs(logFC.y)<1) %>%
+  filter(adj.P.Val.x<0.05) %>% nrow()
+
+  NumDE.vec <- c(NumDE.vec, NumIdentified)
+  NumDEUnderLFC2.vec <- c(NumDEUnderLFC2.vec, NumIdentifiedUnderLFC2)
+}
+
+median(NumDE.vec)
+median(NumDEUnderLFC2.vec)
+
+```
+
+Write table of full results
+
+```{r}
+Orthologs <- read.delim("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz") %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one") %>%
+  dplyr::select(Gene.stable.ID) %>%
+  distinct()
+
+TableOut %>%
+  rownames_to_column("gene") %>%
+  dplyr::select(gene, logFC.Chimp.Over.Human=logFC, P.Value, adj.P.Val) %>%
+  mutate(OneToOneOrthologInEnsembl=gene %in% Orthologs$Gene.stable.ID) %>%
+  write.table("../figures/TableS_DE.tab", sep='\t', row.names = F, quote=F)
+```
+
+Plot genotype PCs
+
+```{r}
+PCs <- read.table("../output/PopulationStructure/pca.eigenvec", header=T) %>%
+  mutate(Subspecies=recode(FID,
+                           Pan_troglodytes_schweinfurthii="Eastern",
+                           Pan_troglodytes_ellioti="Nigeria-Cameroon",
+                           Pan_troglodytes_ThisStudy="This Study",
+                           Pan_troglodytes_troglodytes="Central",
+                           Pan_troglodytes_verus="Western")) %>%
+  filter(Subspecies!="Pan_troglodytes") %>%
+  left_join(ChimpSampleIDs, by=c("IID"="Individual.ID")) %>%
+  mutate(hybrids=(Subspecies=="This Study" & PC1 > -0.1))
+
+GenotypePCs <- PCs %>%
+  mutate(label=case_when(
+    hybrids==T  ~ Label,
+    IID=="9730_Donald" ~ "Donald",
+    T ~ ""
+  )) %>%
+ggplot(aes(color=Subspecies, x=PC1, y=PC2, label=label)) +
+  geom_point() +
+  geom_text_repel(size=3) +
+  scale_color_manual(values = c("#7CAE00", "#F8766D", "black", "#00BFC4", "#C77CFF")) +
+  theme_bw() +
+  theme(legend.position="bottom") +
+  guides(color=guide_legend(nrow=3,byrow=TRUE))
+
+ggsave("../figures/OriginalArt/GenotypePCs.pdf", GenotypePCs, width=4, height=4)
+
+
+
+show_col(hue_pal()(4))
+```
+
+
+
+Make metadata output table.
+
+```{r}
+HumanSamplesToDropOutOfCluster <- c("SRR613186", "SRR598509", "SRR1478149", "SRR603918", "SRR1507229")
+
+#Read metadata
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+
+#RNA-seq reads
+```
+
+

@@ -1,0 +1,131 @@
+---
+title: "20191121_DifferenceInDisp_Conserv"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Introduction
+
+Some genes are have larger point estimates of dispersion in chimps than in human (still haven't come up with a way to test which differences are significant). Even though I know dispersion is primarily driven by cell type heterogeneity (which may be technical in nature), it is possible that genetics may contribute some measurable amount to differences in dispersion. I have already observed that chimp specific eGenes are (on average) more dispersed in chimps, and vice versa, which lends support to idea that genetics contribute to some level of dispersion.
+
+Now I want to know if point estimates in species differences in dispersion at all correlates with other metrics related to evolution. For example, one hypothesis to explore is that genes which are less dispersed in human, underwent some strong positive selection pressure in human and the %(coding identity) between human and gorilla (an outgroup) will be larger than between chimp and gorilla. The null hypothesis would be that there is no difference in these evolutionary statistics (percent identity between gorilla/human, gorilla/chimp, dN/dS ratios, etc) between the differentially dispersed genes.
+
+
+## Analysis
+
+First, load necessary libraries
+```{r}
+library(tidyverse)
+library(biomaRt)
+
+```
+
+Load dispersion estimates
+
+```{r}
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
+```
+
+
+Get conservation statistics from Biomart, oriented from Gorilla (outgroup to chimp and human).
+
+Now load ensembl mart, find the gorilla keyword.
+
+```{r}
+ensembl <- useMart("ensembl")
+
+searchDatasets(ensembl, "Gorilla")
+```
+
+load gorilla biomart
+
+```{r}
+gorilla_mart = useMart("ensembl",dataset="ggorilla_gene_ensembl")
+```
+
+find the attributes I want...
+
+```{r}
+searchAttributes(gorilla_mart, "Chimp")
+
+searchAttributes(gorilla_mart, "Human")
+```
+
+```{r}
+AttributesDesired <- c("hsapiens_homolog_ensembl_gene",
+                       "hsapiens_homolog_orthology_type",
+                       "hsapiens_homolog_perc_id",
+                       "hsapiens_homolog_wga_coverage",
+                       "hsapiens_homolog_dn",
+                       "hsapiens_homolog_ds",
+                       "ptroglodytes_homolog_orthology_type",
+                       "ptroglodytes_homolog_perc_id",
+                       "ptroglodytes_homolog_wga_coverage",
+                       "ptroglodytes_homolog_dn",
+                       "ptroglodytes_homolog_ds"
+                       )
+
+MyQuery <- getBM(attributes = AttributesDesired, mart=gorilla_mart)
+
+Combined <- MyQuery %>%
+  filter(hsapiens_homolog_orthology_type=="ortholog_one2one" & ptroglodytes_homolog_orthology_type=="ortholog_one2one") %>%
+  right_join(ChimpOverdispersionTable, by=c("hsapiens_homolog_ensembl_gene"="gene")) %>% mutate(
+    C.H.G.PercentIdentityDiff = ptroglodytes_homolog_wga_coverage - hsapiens_homolog_wga_coverage,
+    C.H.G.WgaCovDiff = ptroglodytes_homolog_wga_coverage - hsapiens_homolog_wga_coverage,
+    C.H.G.dNdSDiff = (ptroglodytes_homolog_dn/ptroglodytes_homolog_ds)/(ptroglodytes_homolog_dn/hsapiens_homolog_ds),
+    DispDiff = Chimp.Residual-Human.Residual
+  )
+
+
+cor.test(Combined$DispDiff, Combined$C.H.G.PercentIdentityDiff, method="spearman")
+cor.test(Combined$DispDiff, Combined$C.H.G.WgaCovDiff, method="spearman")
+cor.test(Combined$DispDiff, Combined$C.H.G.dNdSDiff, method="spearman")
+
+```
+
+Could not reject the null for any of these tests.
+
+Perhaps I should ask one more question:
+
+I hypothesize that genes that are more dispersed in chimp, will have more snps tested (more variation in and around the gene).
+
+```{r}
+EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
+
+
+chimp_tests <- read.table("../output/ChimpEgenes.eigenMT.txt.gz", header=T) %>%
+  dplyr::select(gene, TESTS)
+human_tests <- read.table("../output/GTEX_renalysis/SampleSize_60.txt.gz", header=T) %>%
+  mutate(gene=gsub("(.+?)\\.\\d+$", "\\1", pid)) %>%
+  dplyr::select(gene, nvar)
+
+CombinedTestCount <- EgenesTested %>%
+  dplyr::select(C.gene, H.gene) %>%
+  left_join(chimp_tests, by = c("C.gene"="gene")) %>%
+  left_join(human_tests, by=c("H.gene" = "gene")) %>%
+  left_join(ChimpOverdispersionTable, by = c("H.gene"="gene")) %>%
+  mutate(DispDiff = Chimp.Residual-Human.Residual,
+         SNP.Count.Diff = TESTS/nvar)
+  
+#SNP.Count.Diff is the ratio of tested snps (Chimp/human)
+cor.test(CombinedTestCount$SNP.Count.Diff, CombinedTestCount$DispDiff, method="spearman")
+```
+
+No correlation. If anything, the expected correlation is opposite what I expected (which is almost certainly due to chance). Maybe worth trying doing the same thing but only considering snps near promoter, since thats where large fraction of fine-mapped eQTL snps lie (+/- 10kb). Or maybe I should also be annotating SNPs for predicted effects and seeing if there is a large change in high effect SNPs.
+
+Used snakemake code to extract counts of snps (maf>10%) in that area..
+
+
+
+
+
+## Conclusions
+
+

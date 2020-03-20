@@ -1,0 +1,358 @@
+---
+title: "Untitled"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Introduction
+
+Calculate neutrality index (MKT odds ratio) from Pn Ps Dn Ds tabulations between chimp, human, and gorilla.
+
+
+## Analysis
+
+First, load necessary libraries
+```{r}
+library(tidyverse)
+library(data.table)
+library(latex2exp)
+source("../code/CustomFunctions.R")
+
+
+```
+
+```{r}
+#Read Pn Ps within chimp and human
+ChimpPnPsFile <- "../output/NeutralityIndex/chimp/ChimpsAllTroglodytes/PnPs.txt"
+HumanPnPsFile <- "../output/NeutralityIndex/human/AllGtex/PnPs.txt"
+
+# ChimpPnPsFile <- "../output/NeutralityIndex/chimp/ChimpsThisStudy/PnPs.txt"
+# HumanPnPsFile <- "../output/NeutralityIndex/human/HumansGtexSubsample/PnPs.txt"
+
+
+
+PnPs.chimp <- read.delim(ChimpPnPsFile)
+PnPs.human <- read.delim(HumanPnPsFile)
+
+GeneConversionTable <- read.delim("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz")
+
+PnPs.Combined <- GeneConversionTable %>%
+  dplyr::select(Gene.stable.ID, Chimpanzee.gene.stable.ID) %>%
+  inner_join(PnPs.chimp, by=c("Chimpanzee.gene.stable.ID"="gene")) %>% 
+  inner_join(PnPs.human, by=c("Gene.stable.ID"="gene"), suffix=c(".chimp", ".human")) %>%
+  distinct(.keep_all = T) %>%
+  mutate(PnPs.chimp=Pn.chimp/Ps.chimp,
+         PnPs.human=Pn.human/Ps.human)
+
+ggplot(PnPs.Combined, aes(x=log(PnPs.chimp), y=log(PnPs.human))) +
+  geom_point()
+cor.test(PnPs.Combined$PnPs.chimp, PnPs.Combined$Pn.human, method='spearman')
+```
+
+Ok, as expected, Pn/Ps is correlated between species. This is to be expected, and is partly why the MKT test is constructed... Just considering Dn/Ds doesn't consider that some genes have different null expected Dn/Ds due to mutation rate and scaling each gene by the polymorhism Pn/Ps somewhat fixes this to identify more meaningful changes in Dn/Ds.
+
+Now let's read in Dn/Ds. I already calculated the Dn and Ds counts for human/chimp, human/gorilla, and chimp/gorilla. But it needs some tidying..
+
+```{r}
+
+DnDsRaw <- fread("../output/GorillaChimpHumanFixedSubstitutionsCount.gz", col.names = c("Compare1", "Compare2", "Species1", "Species2", "Sd", "Sn", "S", "N", "ps", "pn", "ds", "dn", "ds.dn", "ps.pn", "FILENAME"))
+
+DnDs.tidy <- DnDsRaw %>%
+  mutate(gene=gsub("./CDS_alignment_SNAPfiles/summary.", "", FILENAME)) %>%
+  mutate(SpeciesComparison=paste(Species1, Species2, sep=".")) %>%
+  dplyr::select(gene, SpeciesComparison, ds.dn, Sd, Sn) %>%
+  pivot_wider(values_from = c("ds.dn", "Sd", "Sn"),
+              names_from = SpeciesComparison,
+              id_cols = gene)
+
+
+#check that dn/ds calculate by snap is similar to ensembl biomart
+GeneConversionTable %>%
+  distinct(Gene.stable.ID, .keep_all = T) %>%
+inner_join(DnDs.tidy, by=c("Gene.stable.ID"="gene")) %>%
+  mutate(dn.ds.ensembl=dN.with.Chimpanzee/dS.with.Chimpanzee,
+         dn.ds.snap=1/ds.dn_Chimp.Human) %>%
+  dplyr::select(dn.ds.ensembl, dn.ds.snap, Gene.stable.ID) %>%
+  ggplot(aes(x=log10(dn.ds.ensembl), y=log10(dn.ds.snap))) +
+  geom_point(alpha=0.1) +
+  theme_bw()
+```
+
+Ok now I am ready to calculate neutrality index. Let's calculate it and see if it correlates between chimp and human (when I use the gorilla as an outgroup to calculate Dn and Ds)
+
+```{r}
+
+head(DnDs.tidy)
+head(PnPs.Combined)
+NI.Index <- DnDs.tidy %>%
+  inner_join(PnPs.Combined, by=c("gene"="Gene.stable.ID")) %>%
+  mutate(NI.human=PnPs.human/(Sn_Human.Gorilla/Sd_Human.Gorilla),
+         NI.chimp=PnPs.chimp/(Sn_Chimp.Gorilla/Sd_Chimp.Gorilla))
+
+ggplot(NI.Index, aes(x=log(NI.human), y=log(NI.chimp))) +
+  geom_point() +
+  theme_bw()
+cor.test(NI.Index$NI.human, NI.Index$NI.chimp, method='spearman')
+
+#NI index compared to dn/ds. We expect a negative correlation. NI>1 suggests negative selection. dn/ds < 1 suggests negative selection.
+ggplot(NI.Index, aes(x=log(NI.human), y=log(1/ds.dn_Human.Gorilla))) +
+  geom_hex(bins=50) +
+  scale_fill_viridis_c() +
+  theme_bw()
+cor.test(NI.Index$NI.human, 1/NI.Index$ds.dn_Human.Gorilla, method='spearman')
+
+```
+
+Ok, the neutrality index clearly correlates between human and chimp. And it clearly negatively correlates with dn/ds as expected. There are a lot of undefined NI values though, maybe I should consider adding a pseudocount to avoid division by 0...
+
+```{r}
+psuedocount = 0.5
+
+#Redo calculation of Pn Ps with pseudocount
+PnPs.Combined.wPseudo <- GeneConversionTable %>%
+  dplyr::select(Gene.stable.ID, Chimpanzee.gene.stable.ID) %>%
+  inner_join(PnPs.chimp, by=c("Chimpanzee.gene.stable.ID"="gene")) %>% 
+  inner_join(PnPs.human, by=c("Gene.stable.ID"="gene"), suffix=c(".chimp", ".human")) %>%
+  distinct(.keep_all = T) %>%
+  mutate(PnPs.chimp=(Pn.chimp+psuedocount)/(Ps.chimp+psuedocount),
+         PnPs.human=(Pn.human+psuedocount)/(Ps.human+psuedocount))
+
+#Redo calculation of NI.Index while adding pseudocounts to Dn and Ds
+NI.Index.wPseudo <- DnDs.tidy %>%
+  inner_join(PnPs.Combined.wPseudo, by=c("gene"="Gene.stable.ID")) %>%
+  mutate(DnDs.human=(Sn_Human.Gorilla+psuedocount)/(Sd_Human.Gorilla+psuedocount),
+         DnDs.chimp=(Sn_Chimp.Gorilla+psuedocount)/(Sd_Chimp.Gorilla+psuedocount)) %>%
+  mutate(NI.human=PnPs.human/DnDs.human,
+         NI.chimp=PnPs.chimp/DnDs.chimp)
+
+
+
+#Does NI index correlate between chimp and human
+ggplot(NI.Index.wPseudo, aes(x=log(NI.human), y=log(NI.chimp))) +
+  # geom_hex(bins=50) +
+  # scale_fill_viridis_c() +
+  geom_point(alpha=0.1) +
+  theme_bw()
+cor.test(NI.Index.wPseudo$NI.human, NI.Index.wPseudo$NI.chimp, method='spearman')
+
+hist(log10(NI.Index.wPseudo$NI.human))
+hist(log10(1/NI.Index$ds.dn_Human.Gorilla))
+
+#Neutrality index compared to dn/ds.
+ggplot(NI.Index.wPseudo, aes(x=log(NI.human), y=log(1/ds.dn_Human.Gorilla))) +
+  geom_point(alpha=0.1) +
+  # geom_hex(bins=50) +
+  # scale_fill_viridis_c() +
+  theme_bw()
+cor.test(NI.Index.wPseudo$NI.human, 1/NI.Index.wPseudo$ds.dn_Human.Gorilla, method='spearman')
+
+#DnDs vs dnds
+ggplot(NI.Index.wPseudo, aes(x=log(DnDs.human), y=log(1/ds.dn_Human.Gorilla))) +
+  geom_point(alpha=0.1) +
+  # geom_hex(bins=50) +
+  # scale_fill_viridis_c() +
+  theme_bw()
+cor.test(NI.Index.wPseudo$DnDs.human, 1/NI.Index.wPseudo$ds.dn_Human.Gorilla, method='spearman')
+
+#Does PnPs correlate b/n chimp and human
+ggplot(NI.Index.wPseudo, aes(x=log(PnPs.human), y=log(PnPs.chimp))) +
+  geom_point(alpha=0.1) +
+  # geom_hex(bins=50) +
+  # scale_fill_viridis_c() +
+  theme_bw()
+cor.test(NI.Index.wPseudo$PnPs.human, NI.Index.wPseudo$PnPs.chimp, method='spearman')
+
+```
+
+Finally, let's ask if the change in NI between human and chimp is correlated at all with change in dispersion. The hypothesis is that genes with higher dispersion in chimp will have smaller neutrality index in chimp because these are the genes less subject to negative selection in chimp than in human.
+
+First read in some data and make it more tidy...
+
+```{r}
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F) %>%
+  mutate(DispersionDiff = Chimp.Residual-Human.Residual )
+#Big DispersionDiff means more dispersed in chimp
+
+Combined <- inner_join(ChimpOverdispersionTable, NI.Index.wPseudo, by="gene") %>%
+  mutate(DifferenceInNI=log(NI.chimp/NI.human),
+         DifferenceInDnDs=log(DnDs.chimp/DnDs.human),
+         DifferenceIndnds_omega=log((1/ds.dn_Chimp.Gorilla)/(1/ds.dn_Human.Gorilla)),
+         DifferenceInPnPs=log(PnPs.chimp/PnPs.human))
+
+#Big DifferenceInNI means higher neutrality index in chimp
+```
+
+First let's check for correlation of NI with dispersion. let's look at humans first. I'm not sure what to expect here, since I know dispersion is primarily driven by cell type heterogeneity.
+
+```{r, eval=F}
+ggplot(Combined, aes(x=Human.Residual, y=log(NI.human))) +
+  geom_point(alpha=0.1) +
+  xlim(c(-5,5)) +
+  theme_bw()
+cor.test(Combined$Human.Residual, Combined$NI.human, method='spearman')
+
+ggplot(Combined, aes(x=Human.Residual, y=log(PnPs.human))) +
+  geom_point(alpha=0.1) +
+  xlim(c(-5,5)) +
+  theme_bw()
+cor.test(Combined$Human.Residual, Combined$PnPs.human, method='spearman', alternative = "greater")
+
+
+ggplot(Combined, aes(x=Chimp.Residual, y=log(NI.chimp))) +
+  geom_point(alpha=0.1) +
+  xlim(c(-5,5)) +
+  theme_bw()
+cor.test(Combined$Chimp.Residual, Combined$NI.chimp, method='spearman')
+```
+
+There is no significant correlation, and the rho estimate is opposite direction in chimp than in human. Nothing of intersest, though I did not have any expectation. Maybe I should try the more extreme dispersion quantiles (and only consider those that are highly similar between human and chimp) and test correlation with PnPs, as well as dn/ds and other metrics. The idea is to ask if highly genes in general (not consdiering the species difference but just highly dispersed genes) have different dn/ds properties.
+
+```{r}
+A<-Combined %>%
+  filter(abs(DispersionDiff) < 1) %>%
+  mutate(MeanDispersion=(Chimp.Residual + Human.Residual)/2) %>%
+  mutate(DispQuant=ntile(MeanDispersion, 10)) %>%
+  filter(DispQuant %in% c(1,10))
+ggplot(A, aes(x=ds.dn_Chimp.Human, color=as.factor(DispQuant))) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(trans="log10") +
+  ylab("Cumulative frequency") +
+  theme_bw()
+
+
+wilcox.test(A%>%filter(DispQuant==1)%>%pull(ds.dn_Chimp.Human),
+         A%>%filter(DispQuant==10)%>%pull(ds.dn_Chimp.Human))
+
+```
+
+
+Now let's look at difference in dispersion with difference in NI.Or maybe difference in Pn/Ps is the more relevant metric? This was the original question at hand. Here I am expecting anti-correlation for NI; genes with more dispersion in chimp I reason will have more non-synoymous divergance from gorilla than humans from gorilla because these genes might be under less negative selection in chimp lineage than human lineage. For PnPs I expect positive correlation; genes more dispersed in chimp will have more non-synonymous polymorphisms in chimp.
+
+```{r}
+ggplot(Combined, aes(x=DifferenceInNI, y=DispersionDiff)) +
+  geom_point(alpha=0.1) +
+  ylim(c(-5,5)) +
+  theme_bw()
+
+cor.test(Combined$DifferenceInNI, Combined$DispersionDiff, method='spearman')
+
+ggplot(Combined, aes(x=DifferenceInDnDs, y=DispersionDiff)) +
+  geom_point(alpha=0.1) +
+  ylim(c(-5,5)) +
+  theme_bw()
+
+cor.test(Combined$DifferenceInDnDs, Combined$DispersionDiff, method='spearman')
+
+
+ggplot(Combined, aes(x=DifferenceInPnPs, y=DispersionDiff)) +
+  geom_point(alpha=0.1) +
+  ylim(c(-5,5)) +
+  theme_bw()
+
+
+cor.test(Combined$DifferenceInPnPs, Combined$DispersionDiff, method='spearman')
+
+```
+
+Ok, with these thousands of data points there is a significant but very small effect size correlation for PnPs. NI correlation was opposite from what I originally expected but maybe I shouldn't have expected that anyway... Pn/Ps is in the numerator of NI. 
+
+Let's see if there is a way to plot this to make the PnPs correlation and direction of correlation more visually apparent. Perhaps breaking the DispersionDifference into quartiles and plotting the NI index as an ecdf.
+
+```{r}
+#Grouped by quartile
+Combined %>%
+  dplyr::select(DispersionDiff, DifferenceInPnPs) %>%
+  mutate(DispersionDiffQuartile=ntile(DispersionDiff,4)) %>% 
+  ggplot(aes(x=DifferenceInPnPs, color=as.factor(DispersionDiffQuartile))) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  theme_bw()
+
+
+
+#grouped by whether more dispersed in human vs chimp
+PnPsTest <- cor.test(Combined$DifferenceInPnPs, Combined$DispersionDiff, method='spearman')
+lb1 = paste0('P==', format.pval(PnPsTest$p.value, 2))
+
+PnPs.Index.Ratio <- Combined %>%
+  mutate(DifferenceInDispersion=case_when(
+    DispersionDiff>0 ~ "chimp",
+    DispersionDiff<0 ~ "human")) %>%
+  ggplot(aes(x=exp(DifferenceInPnPs), color=DifferenceInDispersion)) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(trans="log10") +
+  ylab("Cumulative frequency") +
+  xlab(TeX('\\frac{Chimp P_n/P_s}{Human P_n/P_s}$')) +
+  labs(color = "Gene expression\nmore dispersed in") +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.1, vjust=-0.1, parse=TRUE) +
+  theme_bw() +
+  theme(legend.position = c(.3, .75),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA))
+PnPs.Index.Ratio
+ggsave("../figures/OriginalArt/DispersionDifference.by.PnPs_index.pdf", PnPs.Index.Ratio, height=3, width=3)
+
+```
+
+
+Maybe I should consider making a plot Pn/Ps grouped by eGene classification instead of using of dn/ds as I have done previously.
+
+Still working out this code chunk..
+```{r, eval=F}
+EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
+HumanEgeneCount <- 495 #Use 495 instead of 500 because of ties in ranks. 495 will get you 500.
+EgenesTested.grouped <- AddGroups(EgenesTested, HumanEgeneCount=HumanEgeneCount)
+
+# dNdS.By.Group <- Plot.dNdS.byGroup(EgenesTested.grouped)
+ToPlot.df <- EgenesTested.grouped %>%
+  inner_join(NI.Index.wPseudo, by=c("H.gene"="gene")) %>%
+  mutate(PnPs.Index.geomean=sqrt(PnPs.chimp * PnPs.human)) %>%
+  mutate(PnPs.Difference=PnPs.chimp/PnPs.human)
+
+Plot.PnPs.byGroup <- function(ToPlot){
+  SharedLabel <- "both"
+  NeitherLabel <- "neither"
+  ChimpLabel <- "chimp"
+  HumanLabel <- "human"
+  AlternativeHypothesis <- c(
+    "chimp > neither",
+    "human > neither",
+    "both > chimp",
+    "both > human")
+  Pvalues <- c(
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), PnPs.Index.geomean ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), PnPs.Index.geomean ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), PnPs.Index.geomean ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), PnPs.Index.geomean ~ group, alternative="greater")$p.value, 2)
+  )
+  PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
+  colnames(PvalTable) <- c('"H"[a]', "`P-value`")
+  Human.PercentNonIdentity.plot <- ggplot(ToPlot, aes(color=group,x=PnPs.Difference)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous(trans='log10') +
+    ylab("Cumulative frequency") +
+    xlab("Pn/Ps") +
+    labs(color = "eGene discovered in") +
+    theme_bw() +
+    theme(legend.position="bottom")
+
+  return(list(plot=Human.PercentNonIdentity.plot, PvalTable=PvalTable))
+}
+
+A<-Plot.PnPs.byGroup(ToPlot.df)
+A$plot
+A$PvalTable
+
+```
+
+
+## Conclusions
+
+

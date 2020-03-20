@@ -55,8 +55,8 @@ kable(cpm[1:10,1:10])
 # Heatmap of correlation. Species segregate as expected.
 SpeciesFactor <- colnames(cpm) %>% substr(1,1) %>% factor() %>% unclass() %>% as.character()
 
-cor(cpm, method = c("spearman")) %>%
-heatmap.2(trace="none", ColSideColors=SpeciesFactor)
+# cor(cpm, method = c("spearman")) %>%
+# heatmap.2(trace="none", ColSideColors=SpeciesFactor)
 ```
 Unsurprisingly, the samples with the lowest read depth in the human cohort are clear outliers. This might change once I filter out the more lowly expressed genes.
 
@@ -78,8 +78,8 @@ dim(d) # number of genes left
 plotMDS(d, col = as.numeric(SpeciesFactor))
 plotMDS(d, col = as.numeric(SpeciesFactor), dim=c(3,4))
 
-cor(cpm(d, log=T, prior.count=0.5), method = c("spearman")) %>%
-heatmap.2(trace="none", ColSideColors=SpeciesFactor)
+# cor(cpm(d, log=T, prior.count=0.5), method = c("spearman")) %>%
+# heatmap.2(trace="none", ColSideColors=SpeciesFactor)
 
 mm <- model.matrix(~0 + SpeciesFactor)
 y <- voom(d, mm, plot = T, normalize.method="cyclicloess")
@@ -90,6 +90,9 @@ In fact some of these samples seemed to have gotten worse. I'll just throw these
 ```{r}
 HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
 ChimpSamplesToDrop <- c("Little_R")
+
+HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
+ChimpSamplesToDrop <- c()
 ```
 
 
@@ -301,6 +304,7 @@ RocCurve <- function(RocCurveData.df){
   xlab("false positive rate (1-specificity)") +
   ylab("true positive rate (sensitivity)") +
   scale_colour_discrete(name  ="Sample size") +
+  geom_abline(linetype="dashed") +
   theme_bw()
   return(PlotOut)
 }
@@ -323,11 +327,18 @@ ggplot(aes(x=as.numeric(SampleSize), y=Number.DE.genes, color=FDR)) +
 return(PlotOut)
 }
 
+f <- function(x) {
+  r <- quantile(x, probs = c(0.05, 0.25, 0.5, 0.75, 0.95))
+  names(r) <- c("ymin", "lower", "middle", "upper", "ymax")
+  r
+}
+
 
 EffectSizesPlot <- function(EffectSizesToPlot.df){
   PlotOut <- ggplot(EffectSizesToPlot.df, aes(x=factor(SampleSize), y=EffectSizes, color=factor(FDR))) +
   # geom_violin()
-  geom_boxplot() +
+  # geom_boxplot() +
+  stat_summary(fun.data = f, geom="boxplot", position="dodge2") +
   ylab(expression(atop("Effect-size of true positive DE genes",'|log'[2]*'(FoldChange)|'))) +
     xlab("Sample size") +
   scale_colour_discrete(name  ="FDR") +
@@ -341,6 +352,9 @@ DEGeneCountPlot(DEGeneCountToPlot)
 
 RocCurve(RocCurveDataToPlot)
 
+ggsave("../figures/OriginalArt/PowerAnalysis.FullDepth.ROC.pdf", RocCurve(RocCurveDataToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.FullDepth.DE.pdf", DEGeneCountPlot(DEGeneCountToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.FullDepth.EffectSize.pdf", EffectSizesPlot(EffectSizesToPlot), height=3, width=4)
 
 data.frame(coefficients=as.numeric(True.efit$coefficients), pval=as.numeric(True.efit$p.value), signif=decideTests(True.efit)) %>%
 ggplot(aes(x=coefficients, y=-log10(pval), color=factor(DE))) +
@@ -415,9 +429,11 @@ for (i in seq_along(SampleSizes)){
   }
 }
 
-RocCurve(RocCurveDataToPlot)
-DEGeneCountPlot(DEGeneCountToPlot)
-EffectSizesPlot(EffectSizesToPlot)
+
+ggsave("../figures/OriginalArt/PowerAnalysis.25M.ROC.pdf", RocCurve(RocCurveDataToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.25M.DE.pdf", DEGeneCountPlot(DEGeneCountToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.25M.EffectSize.pdf", EffectSizesPlot(EffectSizesToPlot), height=3, width=4)
+
 
 ```
 
@@ -457,6 +473,12 @@ for (i in seq_along(SampleSizes)){
     
   }
 }
+
+
+ggsave("../figures/OriginalArt/PowerAnalysis.5M.ROC.pdf", RocCurve(RocCurveDataToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.5M.DE.pdf", DEGeneCountPlot(DEGeneCountToPlot), height=3, width=4)
+ggsave("../figures/OriginalArt/PowerAnalysis.5M.EffectSize.pdf", EffectSizesPlot(EffectSizesToPlot), height=3, width=4)
+
 
 RocCurve(RocCurveDataToPlot)
 DEGeneCountPlot(DEGeneCountToPlot)

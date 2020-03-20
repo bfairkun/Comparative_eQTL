@@ -19,6 +19,11 @@ This markdown will be used to generate publication quality figures that I have a
 First, load necessary libraries
 ```{r}
 library(tidyverse)
+library("org.Hs.eg.db")
+library(readxl)
+library(biomaRt)
+library(broom)
+
 source("../code/CustomFunctions.R")
 ```
 
@@ -31,7 +36,21 @@ EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.t
 
 DE.results <- read.table("../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', header=T)
 
-EgenesTested.grouped <- AddGroups(EgenesTested, HumanEgeneCount=500)
+HumanEgeneCount <- NULL
+HumanEgeneCount <- 495 #Use 495 instead of 500 because of ties in ranks. 495 will get you 500.
+EgenesTested.grouped <- AddGroups(EgenesTested, HumanEgeneCount=HumanEgeneCount)
+
+#hypergeom test (using one sided fisher test function) for overlap of eGenes
+EgenesTested.grouped %>%
+  dplyr::count(group, name="freq") %>%
+  pull(freq) %>%
+  matrix(ncol=2, nrow=2) %>% fisher.test(alternative="greater")
+
+#Same but using FDR=0.1 threshold in both species
+AddGroups(EgenesTested, HumanEgeneCount=NULL) %>%
+  dplyr::count(group, name="freq") %>%
+  pull(freq) %>%
+  matrix(ncol=2, nrow=2) %>% fisher.test(alternative="greater")
 ```
 
 ## Make plots.
@@ -56,8 +75,52 @@ DE.Fig <- ggdraw(DE.By.Group$plot +                            guides(color=guid
 ) +
   draw_grob(tableGrob(DE.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.3, width=0.3, height=0.3)
 DE.Fig
-ggsave("../figures/OriginalArt/eGeneGroup.DE.pdf", DE.Fig, height=120, width=120, units="mm")
+ggsave(paste0("../figures/OriginalArt/eGeneGroup.", HumanEgeneCount, ".DE.pdf"), DE.Fig, height=120, width=120, units="mm")
 ```
+
+
+### Cell specificity by group
+
+```{r}
+
+Plot.tau.byGroup <- function(ToPlot, tauFile){
+  CellSpecificity <- read.delim(tauFile, col.names=c("gene", "tau"))
+  ToPlot <- left_join(ToPlot, CellSpecificity, by=c("H.gene"="gene"))
+  
+  SharedLabel <- "both"
+  NeitherLabel <- "neither"
+  ChimpLabel <- "chimp"
+  HumanLabel <- "human"
+  AlternativeHypothesis <- c(
+    "chimp > neither",
+    "human > neither",
+    "both > chimp",
+    "both > human")
+  Pvalues <- c(
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), tau ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), tau ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), tau ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), tau ~ group, alternative="greater")$p.value, 2)
+  )
+  PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
+  colnames(PvalTable) <- c('"H"[a]', "`P-value`")
+  tau.byGroup.plot <- ggplot(ToPlot, aes(color=group,x=tau)) +
+    stat_ecdf(geom = "step") +
+    ylab("Cumulative frequency") +
+    xlab("Cell type specificity, tau") +
+    labs(color = "eGene discovered in") +
+    theme_bw() +
+    theme(legend.position="bottom")
+
+  return(list(plot=tau.byGroup.plot, PvalTable=PvalTable))
+}
+
+A<-Plot.tau.byGroup(EgenesTested.grouped, "../output/TissueSpecificity/tau.txt")
+A$plot
+A$PvalTable
+```
+
+
 
 ### Percent identity by eGene group
 
@@ -70,7 +133,7 @@ Identity.Fig <- ggdraw(Identity.By.Group$plot +                            guide
 ) +
   draw_grob(tableGrob(Identity.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.3, width=0.3, height=0.3)
 Identity.Fig
-ggsave("../figures/OriginalArt/eGeneGroup.identity.pdf", Identity.Fig, height=120, width=120, units="mm")
+ggsave(paste0("../figures/OriginalArt/eGeneGroup.", HumanEgeneCount, ".identity.pdf"), Identity.Fig, height=120, width=120, units="mm")
 ```
 
 ### plot dN/dS by group
@@ -83,7 +146,7 @@ dNdS.Fig <- ggdraw(dNdS.By.Group$plot +                                       gu
 ) +
   draw_grob(tableGrob(dNdS.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)), base_size = 10)), x=0.65, y=0.3, width=0.25, height=0.25)
 dNdS.Fig
-ggsave("../figures/OriginalArt/eGeneGroup.dNdS.pdf", dNdS.Fig, height=120, width=120, units="mm")
+ggsave(paste0("../figures/OriginalArt/eGeneGroup.", HumanEgeneCount, ".dNdS.pdf"), dNdS.Fig, height=120, width=120, units="mm")
 ```
 
 ### Plot difference in dispersion by group
@@ -99,7 +162,7 @@ Dispersion.Fig <- ggdraw(Dispersion.By.Group$plot +
                          ) +
   draw_grob(tableGrob(Dispersion.By.Group$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)))), x=0.6, y=0.25, width=0.3, height=0.3)
 Dispersion.Fig
-ggsave("../figures/OriginalArt/eGeneGroup.dispersion.pdf", Dispersion.Fig, height=120, width=120, units="mm")
+ggsave(paste0("../figures/OriginalArt/eGeneGroup.", HumanEgeneCount, ".dispersion.pdf"), Dispersion.Fig, height=120, width=120, units="mm")
 ```
 
 ### Difference in fdr rank vs difference in dispersion
@@ -143,13 +206,16 @@ LargeContingencyTable <- EgenesTested.grouped %>%
     pLI<=0.1 ~ "NonEssential")) %>%
   filter(pLI.Score.essentiality %in% c("Essential", "NonEssential")) %>%
   group_by(group, pLI.Score.essentiality) %>%
-  summarise(n = n()) %>%
+  dplyr::summarise(n = n()) %>% 
   spread(key=group, value=n) %>%
   column_to_rownames("pLI.Score.essentiality")
 
 LargeContingencyTable
 
 fisher.test(LargeContingencyTable[,c("chimp", "neither")], alternative="less")
+
+fisher.test(LargeContingencyTable[,c("both", "chimp")], alternative="less")
+fisher.test(LargeContingencyTable[,c("both", "human")], alternative="less")
 
 ChimpContingencyTable <- LargeContingencyTable %>%
   rownames_to_column("essentiality") %>%
@@ -172,6 +238,8 @@ fisher.test(ChimpContingencyTable, alternative="less")
 fisher.test(HumanContingencyTable, alternative="less")
 
 ```
+
+Seems the paradigm of eGenes are more likely non-essential is clearly true in human, and the pointing that way for chimp but could be due to chance.
 
 ### Number of tissues eGene in GTEx by group.
 
@@ -222,6 +290,224 @@ lb1 = paste0('P==', format.pval(Test$p.value, 2))
 
 
 ggsave("../figures/OriginalArt/eGeneGroup.num.GTEx.eGenes.pdf", units="mm", height=120, width=120)
+```
+
+### Plots about relating dn/ds to dispersion.
+
+```{r}
+
+A<-EgenesTested.grouped %>%
+  left_join(ChimpOverdispersionTable, by=c("H.gene"="gene")) %>%
+  mutate(MeanDisp=(Chimp.Residual+Human.Residual)/2,
+         DispDifference=Chimp.Residual-Human.Residual) %>%
+  mutate(dn.ds=dN/dS)
+
+A %>%
+  mutate(dn.ds.Quintile = ntile(dn.ds,10)) %>%
+  # filter(dn.ds.Quintile==1) %>% pull(dn.ds) %>% median(na.rm=T)
+  filter(dn.ds.Quintile %in% c(4,10)) %>%
+  ggplot(aes(x=MeanDisp, color=as.factor(dn.ds.Quintile))) +
+  stat_ecdf(geom = "step") +
+  # scale_x_continuous(trans="log10", limits=c(0.01,10)) +
+  ylab("Cumulative frequency") +
+  theme_bw()
+  
+
+
+A %>% 
+  do(tidy(cor.test(.$MeanDisp, log(.$dn.ds), method='spearman', alternative = 'less')))
+
+A %>% 
+  # filter(DispDifference<1) %>%
+  do(tidy(cor.test(.$MeanDisp, .$PercentIdentitiyHumanToChimp, method='spearman')))
+
+A %>% 
+  # filter(DispDifference<1) %>%
+  do(tidy(cor.test(.$dn.ds, .$PercentIdentitiyHumanToChimp, method='spearman')))
+
+```
+
+Ok I'm a little confused here. It seems I see the opposite of the expected effect with dn/ds. That is, higher dispersion genes have lower dn/ds. But I see the expected effect with percent identity (high dispersion genes are have less % identity). And there is the expected relationship with dn/ds (higher dn/ds is lower %identity.)... Maybe instead of using dn/ds between human and chimp I should be using a dn/ds that counts differences between many mammals as in [Lindblad-Toh et al](https://www.nature.com/articles/nature10530).
+
+```{r}
+PanMammal.dnds <- read.delim("../data/Overall_dN_dS.bed", col.names = c("chrom", 'start', "stop", "gene", "score", "strand", "blockstart", "blockstop", "color", "ensemblprotein", "dn.ds"))
+
+#Check correlation between chimp/human dn/ds and pan-mammal dn/ds
+PanMammal.dnds %>%
+  left_join(Symbols, by=c("gene"="hgnc_symbol")) %>%
+  inner_join(EgenesTested.grouped, by=c("ensembl_gene_id"="H.gene")) %>%
+  ggplot(aes(x=log10(dn.ds), y=log10(dN/dS))) +
+  geom_point()
+
+#Check correlation between dispersion and pan-mammal dn/ds
+Correlation <- PanMammal.dnds %>%
+  left_join(Symbols, by=c("gene"="hgnc_symbol")) %>%
+  inner_join(ChimpOverdispersionTable, by=c("ensembl_gene_id"="gene")) %>%
+  do(tidy(cor.test(.$Human.Residual, .$dn.ds, method='spearman')))
+Correlation
+lb1 = paste0('atop(rho==', signif(Correlation$estimate,2), ', P==', format.pval(Correlation$p.value, 2), ')')
+```
+
+Ok. now I see the expected correlation. Let's plot by breaking dn/ds into quantiles. maybe deciles. could show as a scatter but it the direction of the effect will be more visually obvious by plotting the ecdf of some extreme quantiles (like top 10% and bottom 10%)
+
+```{r}
+PanMammal.dnds %>%
+  left_join(Symbols, by=c("gene"="hgnc_symbol")) %>%
+  inner_join(ChimpOverdispersionTable, by=c("ensembl_gene_id"="gene")) %>%
+  mutate(dn.ds.ntile=ntile(dn.ds,10)) %>%
+  filter(dn.ds.ntile %in% c(1,10)) %>%
+  ggplot(aes(x=Human.Residual, color=as.factor(dn.ds.ntile))) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(limits=c(-2.5,2.5)) +
+  ylab("Cumulative frequency") +
+  xlab("Dispersion (Human)") +
+  scale_color_discrete(name = "dN/dS decile", labels = c("0-0.1; Low coding divergence", "0.9-1.0; High coding divergence")) +
+  theme_bw() +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+  theme(legend.position = c(.5, .8),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA))
+ggsave("../figures/OriginalArt/DispersionByDnDs.pdf", units="mm", height=70, width=70)
+
+```
+
+Let's make the analogous plot for percent identity, since I have it elsewhere in the manuscript.
+
+```{r}
+
+Correlation <- EgenesTested.grouped %>%
+  inner_join(ChimpOverdispersionTable, by=c("H.gene"="gene")) %>%
+  do(tidy(cor.test(.$Human.Residual, .$PercentIdentitiyHumanToChimp, method='spearman')))
+Correlation
+lb1 = paste0('atop(rho==', signif(Correlation$estimate,2), ', P==', format.pval(Correlation$p.value, 2), ')')
+
+EgenesTested.grouped %>%
+  inner_join(ChimpOverdispersionTable, by=c("H.gene"="gene")) %>%
+  mutate(dn.ds.ntile=ntile(PercentIdentitiyHumanToChimp*-1,10)) %>%
+  filter(dn.ds.ntile %in% c(1,10)) %>%
+  ggplot(aes(x=Human.Residual, color=as.factor(dn.ds.ntile))) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(limits=c(-2.5,2.5)) +
+  ylab("Cumulative frequency") +
+  xlab("Dispersion (Human)") +
+  scale_color_discrete(name = "%amino acid identity decile", labels = c("0.9-1.0; Low coding divergence", "0.0-0.1; High coding divergence")) +
+  theme_bw() +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+  theme(legend.position = c(.5, .8),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA))
+ggsave("../figures/OriginalArt/DispersionByPercentIdentity.pdf", units="mm", height=70, width=70)
+```
+
+
+### TATA box versus dispersion
+```{r}
+TSS.annotations <- read.table("../data/TSS_annotations/TssClassificationAnnotations.txt.gz", sep='\t', header=T, stringsAsFactors = F, fill=T)
+TATA.annotations <- read.table("../data/TSS_annotations/TataAnnotations.txt.gz", sep='\t', header=T, stringsAsFactors=F, quote = "", fill=T)
+
+
+TSS.filtered.annotations <- TSS.annotations %>% filter(TSSclassification=="yes") %>%
+  left_join(TATA.annotations, by=c("refTSSID")) %>%
+  dplyr::select(refTSSID, Chr, Start, End, Strand, Distance.to.TSS, Nearest.Ensembl, TATA=TATA.Box.TBP..Promoter.Homer.Distance.From.Peak.sequence.strand.conservation.) %>%
+  mutate(TATA.dist = as.numeric(gsub("^(.+?)\\(.+", "\\1", TATA, perl=T)))
+
+#TATA boxes are ~35bp upstream of TSS
+qplot(as.numeric(TSS.filtered.annotations$TATA.dist), xlim=c(-50,10))
+
+#annotated genes TSS are close distance to TSS from this database (based on CAGE and other data), but slightly biased
+qplot(TSS.filtered.annotations$Distance.to.TSS, xlim=c(-400,400))
+
+#let's keep only the TATA box genes where the TATA motif is within -40 to -30 of the TSS, assuming that the others are false positives in the functional sense. Also get rid of TSS where distance of gene to TSS is unreasonably far
+TATA.GeneList <- TSS.filtered.annotations %>%
+  filter(TATA.dist >= -40 & TATA.dist <= -30) %>%
+  filter(Distance.to.TSS >= -200 & Distance.to.TSS <= 500) %>%
+  distinct(Nearest.Ensembl, .keep_all = T) %>%
+  pull(Nearest.Ensembl)
+Not.TATA.GeneList <- TSS.filtered.annotations %>%
+  distinct(Nearest.Ensembl, .keep_all = T) %>%
+  filter(!Nearest.Ensembl %in% TATA.GeneList) %>%
+  pull(Nearest.Ensembl)
+
+TATA.disp <- ChimpOverdispersionTable %>%
+  mutate(PromoterType=case_when(
+    gene %in% TATA.GeneList ~ "TATA box",
+    gene %in% Not.TATA.GeneList ~ "No TATA box"
+  )) %>%
+  filter(!is.na(PromoterType))
+
+Test <- wilcox.test(TATA.disp %>%
+                    filter(PromoterType=="TATA box") %>%
+                    pull(Human.Residual),
+                    TATA.disp %>%
+                    filter(PromoterType=="No TATA box") %>%
+                    pull(Human.Residual))
+lb1 = paste0('P', format.pval(Test$p.value, 2))
+ggplot(TATA.disp, aes(x=Human.Residual, color=PromoterType)) +
+  stat_ecdf(geom = "step") +
+  xlim(c(-2.5,2.5)) +
+  ylab("Cumulative frequency") +
+  theme_bw() +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.1, vjust=-0.1, parse=TRUE) +
+  xlab("Dispersion (Human)") +
+  scale_color_discrete(name = "Promoter type") +
+  theme(legend.position = c(.3, .8),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA))
+
+ggsave("../figures/OriginalArt/DispersionByTATABox.pdf", units="mm", height=70, width=70)
+
+```
+
+
+### Essentiality versus dispersion
+```{r}
+Essentiality <- pLI.data %>%
+  left_join(Symbols, by=c("gene"="hgnc_symbol")) %>% 
+  inner_join(ChimpOverdispersionTable, by=c("ensembl_gene_id"="gene")) %>%
+  mutate(Essentiality=case_when(
+    pLI > 0.9 ~ "Essential; pLI>0.9",
+    pLI < 0.1 ~ "Non-essential; pLI<0.1",
+    )) %>%
+  filter(!is.na(Essentiality))
+
+Test <- wilcox.test(Essentiality %>%
+                    filter(Essentiality=="Essential; pLI>0.9") %>%
+                    pull(Human.Residual),
+                    Essentiality %>%
+                    filter(Essentiality=="Non-essential; pLI<0.1") %>%
+                    pull(Human.Residual))
+lb1 = paste0('P==', format.pval(Test$p.value, 2))
+
+ggplot(Essentiality, aes(x=Human.Residual, color=Essentiality)) +
+  stat_ecdf(geom = "step") +
+  xlim(c(-2.5,2.5)) +
+  ylab("Cumulative frequency") +
+  theme_bw() +
+  scale_color_discrete(name = "ExAC score", labels = c(">0.9; LoF intolerant", "<0.1; LoF tolerant")) +
+  xlab("Dispersion (Human)") +
+  theme(legend.position = c(.4, .8),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA)) +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.1, vjust=-0.1, parse=TRUE)
+ggsave("../figures/OriginalArt/DispersionByEssentiality.pdf", units="mm", height=70, width=70)
+
+```
+
+### dN/dS by group plot2
+...Remaking this plot with this new dN.dS calculation from 26 mammals.
+
+```{r}
+dNdS.By.Group2 <- PanMammal.dnds %>%
+  left_join(Symbols, by=c("gene"="hgnc_symbol")) %>%
+  inner_join(EgenesTested.grouped, by=c("ensembl_gene_id"="H.gene")) %>%
+  mutate(dN.dS=dn.ds) %>%
+  Plot.dNdS.byGroup2()
+
+dNdS.Fig2 <- ggdraw(dNdS.By.Group2$plot +                                       guides(color=guide_legend(nrow=2,byrow=TRUE))
+) +
+  draw_grob(tableGrob(dNdS.By.Group2$PvalTable, rows=NULL, theme=ttheme_default(colhead=list(fg_params = list(parse=TRUE)), base_size = 10)), x=0.65, y=0.3, width=0.25, height=0.25)
+dNdS.Fig2
+ggsave(paste0("../figures/OriginalArt/eGeneGroup.", HumanEgeneCount, ".dNdS_2.pdf"), dNdS.Fig2, height=120, width=120, units="mm")
 ```
 
 

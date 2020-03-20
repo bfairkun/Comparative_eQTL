@@ -1,0 +1,131 @@
+---
+title: "Untitled"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Introduction
+
+Is a binomial test based on concordance/discordance of effect size sign test more sensitive than other tests like those used in `cor.test()`? Let's simulate some data and find out.
+
+## Analysis
+
+First, load necessary libraries
+```{r}
+library(tidyverse)
+
+#Make mock data.
+#True negative correlation is bivariate normal sample
+#True positive correlation is same sample, where some fraction of points in Q2 or Q4 are sign-swap moved to Q1 or Q3 (mimicking concordant effect sign)
+set.seed(0)
+df <- data.frame(TrueNeg.x=rnorm(50), TrueNeg.y=rnorm(50)) %>%
+  mutate(n=1:nrow(.)) %>%
+  mutate(percentRank=percent_rank(n)) %>%
+  mutate(TruePos.x=case_when(
+    TrueNeg.x < 0 & TrueNeg.y > 0 & percentRank < 0.2 ~ TrueNeg.x * -1,
+    TrueNeg.x > 0 & TrueNeg.y < 0 & percentRank < 0.2 ~ TrueNeg.x * -1,
+    TRUE ~ TrueNeg.x
+  )) %>%
+  mutate(TruePos.y=TrueNeg.y)
+
+df %>%
+  ggplot(aes(x=TrueNeg.x, y=TrueNeg.y)) +
+  geom_point() +
+  geom_point(aes(x=TruePos.x, y=TruePos.y), color="red", size=0.5) +
+  geom_hline(yintercept=0) +
+  geom_vline(xintercept=0) +
+  xlim(c(-5,5)) +
+  ylim(c(-5,5)) +
+  theme_bw()
+
+#normal cor.test
+cor.test(df$TruePos.x, df$TruePos.y, alternative="greater")
+cor.test(df$TruePos.x, df$TruePos.y, method="spearman", alternative="greater")
+cor.test(df$TruePos.x, df$TruePos.y, method="kendall", alternative="greater")
+
+
+#test of concordance by counting number of points in Q1+Q3, vs Q2+Q4 with null expectation being that these are binomial with p=0.5
+x=((df$TruePos.x > 0 & df$TruePos.y > 0) | (df$TruePos.x < 0 & df$TruePos.y < 0)) %>% sum()
+binom.test(x=x, n=nrow(df), p=0.5, alternative="greater")
+
+```
+
+Ok it seems based on that one iteration, this quadrant test is less sensitive than the standard tests in `cor.test`. Let's do a few more iterations and check.
+
+```{r}
+SimulateData <- function(NumPoints=50, PercentConcordant=0.2){
+  df <- data.frame(TrueNeg.x=rnorm(NumPoints), TrueNeg.y=rnorm(NumPoints)) %>%
+  mutate(n=1:nrow(.)) %>%
+  mutate(percentRank=percent_rank(n)) %>%
+  mutate(TruePos.x=case_when(
+    TrueNeg.x < 0 & TrueNeg.y > 0 & percentRank < PercentConcordant ~ TrueNeg.x * -1,
+    TrueNeg.x > 0 & TrueNeg.y < 0 & percentRank < PercentConcordant ~ TrueNeg.x * -1,
+    TRUE ~ TrueNeg.x
+  )) %>%
+  mutate(TruePos.y=TrueNeg.y)
+  return(df)
+}
+
+TestData <- function(df){
+  True.Neg.Pearson.p <- cor.test(df$TrueNeg.x, df$TrueNeg.y, alternative="greater")$p.value
+  True.Neg.Spearman.p <- cor.test(df$TrueNeg.x, df$TrueNeg.y, alternative="greater", method="spearman")$p.value
+  True.Neg.Kendall.p <- cor.test(df$TrueNeg.x, df$TrueNeg.y, alternative="greater", method="kendall")$p.value
+  True.Neg.Binomial.p <- binom.test(x=((df$TrueNeg.x > 0 & df$TrueNeg.y > 0) | (df$TrueNeg.x < 0 & df$TrueNeg.y < 0)) %>% sum(),
+                                    n=nrow(df),
+                                    p=0.5,
+                                    alternative="greater")$p.value
+    True.Pos.Pearson.p <- cor.test(df$TruePos.x, df$TruePos.y, alternative="greater")$p.value
+  True.Pos.Spearman.p <- cor.test(df$TruePos.x, df$TruePos.y, alternative="greater", method="spearman")$p.value
+  True.Pos.Kendall.p <- cor.test(df$TruePos.x, df$TruePos.y, alternative="greater", method="kendall")$p.value
+  True.Pos.Binomial.p <- binom.test(x=((df$TruePos.x > 0 & df$TruePos.y > 0) | (df$TruePos.x < 0 & df$TruePos.y < 0)) %>% sum(),
+                                    n=nrow(df),
+                                    p=0.5,
+                                    alternative="greater")$p.value
+
+  return(c(True.Neg.Pearson.p, True.Neg.Spearman.p, True.Neg.Kendall.p, True.Neg.Binomial.p, True.Pos.Pearson.p, True.Pos.Spearman.p, True.Pos.Kendall.p, True.Pos.Binomial.p))
+}
+
+TestData(SimulateData())
+```
+
+Ok now that functions to simulate and test data work, let's do 100 simulations, and plot the resulting P-values for each test.
+
+```{r}
+set.seed(0)
+
+Iterations=1000
+NumPoints=50
+
+MatrixOut <- matrix(nrow=Iterations, ncol=8)
+colnames(MatrixOut) <- c("True.Neg.Pearson.p", "True.Neg.Spearman.p", "True.Neg.Kendall.p", "True.Neg.Binomial.p", "True.Pos.Pearson.p", "True.Pos.Spearman.p", "True.Pos.Kendall.p", "True.Pos.Binomial.p")
+
+for (i in 1:Iterations){
+  MatrixOut[i,] <- TestData(SimulateData(NumPoints=NumPoints))
+}
+
+MatrixOut %>% as.data.frame() %>%
+  # dplyr::select(True.Neg.Spearman.p, True.Neg.Binomial.p, True.Neg.Pearson.p, True.Pos.Binomial.p, True.Pos.Spearman.p) %>%
+  gather(value="Observed.P") %>%
+  dplyr::group_by(key) %>%
+  arrange(Observed.P) %>% 
+  mutate(Expected.P=percent_rank(Observed.P)) %>%
+ggplot(aes(y=-log10(Observed.P), x=-log10(Expected.P), color=key)) +
+  geom_point() +
+  geom_abline() +
+  theme_bw()
+
+
+```
+
+These tests are more or less equivalent power based on simulated data that is a reasonable approximation to the problem at hand.
+
+## Conclusions
+
+

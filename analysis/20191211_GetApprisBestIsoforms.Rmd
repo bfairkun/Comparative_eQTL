@@ -1,0 +1,269 @@
+---
+title: "20191211_Apris_GetMainIsoforms"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+```{r}
+library(tidyverse)
+library(biomaRt)
+library(DECIPHER)
+```
+
+Test out decipher alignment functions
+```{r}
+rna <- RNAStringSet(c(Chimp="AUGUUCAUCACCCCCUAA",
+                      Human="AUGUUCAUAACUCCUUGA",
+                      Gorilla="AUGUUCAUUACACCGUAG",
+                      Orangutan="AUGUUUACCCCAUAA"))
+
+RNA <- AlignTranslation(rna, verbose=FALSE, readingFrame = 1)
+RNA
+
+```
+
+
+```{r}
+Appris <- read.table("../data/appris_data.principal.hg38.txt", sep='\t', col.names = c("SYMBOL", "Ensembl.gene", "Ensembl.transcript", "transcript", "apris"), stringsAsFactors = F) %>%
+  separate(apris, into=c("apris.type", "apris.score"), remove=F, sep=':')
+```
+
+Check that there is only 1 principal transcript per gene
+```{r}
+
+Appris %>%
+  filter(apris.type=="PRINCIPAL") %>%
+  group_by(Ensembl.gene) %>%
+  tally() %>%
+  pull(n) %>% table()
+
+```
+
+Ok. There are multiple Appris transcripts labelled as principal for many genes. Does each gene have at least one pricipal transcript?
+
+```{r}
+#Num genes
+Appris %>%
+  distinct(Ensembl.gene) %>% dim()
+
+#Num genes with a principal transcript
+Appris %>%
+  filter(apris.type=="PRINCIPAL") %>%
+  distinct(Ensembl.gene) %>% dim()
+```
+
+Ok yes. Is there one and only one principal transcript with the lowest score (Or are there multiple principal transcripts with "PRINCIPLE:1" for example).
+
+```{r}
+#Note that top_n keeps multiple in case of ties
+Appris %>%
+  filter(apris.type=="PRINCIPAL") %>%
+  group_by(Ensembl.gene) %>%
+  top_n(n=-1, apris.score) %>%
+  mutate(Score=as.numeric(apris.score)) %>% pull(Score) %>% hist()
+
+```
+
+Now I understand what Appris does: it picks a single principal CDS for each gene, and transcripts which have the same CDS are both labelled as principal transcripts... So there can be multiple principal transcripts if they have the same CDS (for example, if the alternative splicing that distinguishes them is in the UTRs)
+
+
+```{r}
+PrincipalHuamnTranscripts <- Appris %>%
+  filter(apris.type=="PRINCIPAL") %>%
+  distinct(Ensembl.gene, .keep_all = T)
+
+human_mart = useMart("ensembl",dataset="hsapiens_gene_ensembl", host="www.ensembl.org")
+
+## Sometimes when ensembl is down, changing the mirror helps
+# human_mart = useEnsembl("ensembl",dataset="hsapiens_gene_ensembl", mirror="useast")
+
+searchAttributes(human_mart, "cds")
+AttributesDesired <- c("ensembl_gene_id",
+                       "ensembl_transcript_id",
+                       "cds_length"
+                       )
+
+
+
+# HumanTranscriptLengths <- getBM(attributes = AttributesDesired, mart=human_mart, filters = "ens_hs_transcript", values=PrincipalHuamnTranscripts$Ensembl.transcript)
+
+HumanTranscriptLengths <- getBM(attributes = AttributesDesired, mart=human_mart)
+
+
+HumanTranscriptLengths <- HumanTranscriptLengths %>%
+  filter(ensembl_transcript_id %in% PrincipalHuamnTranscripts$Ensembl.transcript)
+
+hist(log10(HumanTranscriptLengths$cds_length))
+
+```
+
+
+Then let's use biomart to get the transcript with the closest cds length for chimp, and gorilla as the human prinicipal transcript. These principal transcripts will be aligned across all three species to count synonymous and non-synonymous derived changes for each gene.
+
+
+First start by downloading all gorilla transcripts, with their coding sequence length and data on if it is 1to1 ortholog across chimp, and human, and if it is in the appris gene list. Note that this must be done in two queries, because biomart doesn't allow you to get cds-length attribute in the same query as orthology since these attributes are from different ensembl-pages.
+
+```{r}
+gorilla_mart = useMart("ensembl",dataset="ggorilla_gene_ensembl")
+searchAttributes(gorilla_mart, "Chimp")
+searchAttributes(gorilla_mart, "cds")
+listAttributes(gorilla_mart, "feature_page") %>% head()
+
+
+AttributesDesired1 <- c("ensembl_gene_id",
+                       "ensembl_transcript_id",
+                       "hsapiens_homolog_ensembl_gene",
+                       "hsapiens_homolog_orthology_type",
+                       "ptroglodytes_homolog_orthology_type"
+                       )
+AttributesDesire2 <- c("ensembl_transcript_id", "cds_length")
+
+GorillaQuery1 <- getBM(attributes = AttributesDesired1, mart=gorilla_mart)
+GorillaQuery2 <- getBM(attributes = AttributesDesire2, mart=gorilla_mart)
+
+
+#Combine the queries and filter for orthologs and select transcript closest in length to the human prinicipal transcript
+GorillaPrinicpalTranscripts <- GorillaQuery2 %>%
+  left_join(GorillaQuery1, by="ensembl_transcript_id") %>%
+  filter(
+    hsapiens_homolog_orthology_type=="ortholog_one2one" &
+    ptroglodytes_homolog_orthology_type=="ortholog_one2one") %>%
+  inner_join(HumanTranscriptLengths, by=c("hsapiens_homolog_ensembl_gene"="ensembl_gene_id"), suffix=c(".gorilla", ".human")) %>%
+  mutate(DifferenceIn.CDS.Length = abs(cds_length.human-cds_length.gorilla)) %>%
+  group_by(hsapiens_homolog_ensembl_gene) %>%
+  filter(rank(DifferenceIn.CDS.Length, ties.method="first")==1) %>%
+  ungroup()
+```
+
+Ok now let's check the difference in cds lengths for the human prinicipal transcript and the gorilla prinicipal transcript for each gene.
+
+```{r}
+GorillaPrinicpalTranscripts %>% dim()
+
+GorillaPrinicpalTranscripts %>%
+  filter(DifferenceIn.CDS.Length>0) %>% dim()
+
+
+GorillaPrinicpalTranscripts %>%
+  filter(DifferenceIn.CDS.Length<30) %>% 
+ggplot(aes(x=DifferenceIn.CDS.Length)) +
+  geom_bar()
+
+```
+
+Ok cool, most of the Gorilla transcripts that I categorized as primary are equal in length to the human appris primary transcript, and of the transcripts that are different, I see the expected 3nt periodicity in differences in cds length. Now let's get the sequences of these transcripts in gorilla...
+
+
+```{r}
+GorillSeqs <- getSequence(
+  id=GorillaPrinicpalTranscripts$ensembl_transcript_id.gorilla,
+  type='ensembl_transcript_id',
+  seqType = 'coding',
+  mart=gorilla_mart)
+
+# exportFASTA(seq, "~/Desktop/test.fa")
+GorillSeqs.vec <- GorillSeqs$coding
+names(GorillSeqs.vec) <- GorillSeqs$ensembl_transcript_id
+
+```
+
+Anow now let's repeat the process to get chimp primary transcripts...
+
+```{r}
+chimp_mart = useMart("ensembl",dataset="ptroglodytes_gene_ensembl")
+searchAttributes(chimp_mart, "Gorilla")
+searchAttributes(chimp_mart, "cds")
+listAttributes(chimp_mart, "feature_page") %>% head()
+
+
+AttributesDesired1 <- c("ensembl_gene_id",
+                       "ensembl_transcript_id",
+                       "hsapiens_homolog_ensembl_gene",
+                       "hsapiens_homolog_orthology_type",
+                       "ggorilla_homolog_orthology_type"
+                       )
+AttributesDesire2 <- c("ensembl_transcript_id", "cds_length")
+
+ChimpQuery1 <- getBM(attributes = AttributesDesired1, mart=chimp_mart)
+ChimpQuery2 <- getBM(attributes = AttributesDesire2, mart=chimp_mart)
+
+#Combine the queries and filter for orthologs and select transcript closest in length to the human prinicipal transcript
+ChimpPrinicpalTranscripts <- ChimpQuery2 %>%
+  left_join(ChimpQuery1, by="ensembl_transcript_id") %>%
+  filter(
+    hsapiens_homolog_orthology_type=="ortholog_one2one" &
+    ggorilla_homolog_orthology_type=="ortholog_one2one") %>%
+  inner_join(HumanTranscriptLengths, by=c("hsapiens_homolog_ensembl_gene"="ensembl_gene_id"), suffix=c(".chimp", ".human")) %>%
+  mutate(DifferenceIn.CDS.Length = abs(cds_length.human-cds_length.chimp)) %>%
+  group_by(hsapiens_homolog_ensembl_gene) %>%
+  filter(rank(DifferenceIn.CDS.Length, ties.method="first")==1) %>%
+  ungroup()
+
+ChimpPrinicpalTranscripts %>% dim()
+
+ChimpSeqs <- getSequence(
+  id=ChimpPrinicpalTranscripts$ensembl_transcript_id.chimp,
+  type='ensembl_transcript_id',
+  seqType = 'coding',
+  mart=chimp_mart)
+
+ChimpSeqs.vec <- ChimpSeqs$coding
+names(ChimpSeqs.vec) <- ChimpSeqs$ensembl_transcript_id
+
+```
+
+Now, get human coding sequences.
+
+```{r}
+HumanSeqs <-getSequence(
+  id=PrincipalHuamnTranscripts$Ensembl.transcript,
+  type='ensembl_transcript_id',
+  seqType = 'coding',
+  mart=human_mart)
+
+HumanSeqs.vec <- HumanSeqs$coding
+names(HumanSeqs.vec) <- HumanSeqs$ensembl_transcript_id
+  
+  
+```
+
+And lastly, inner_join the prinicipal transcript list for each species and align them by amino acid sequence and reverse translate back to get aligned coding sequences in nucleotide form. This is done using a function in DECIPHER package. The output can be written to files (one file per gene) which can then be parsed with SNAP.pl script to count synonymous and nonsynynymous changes.
+
+```{r, eval=F}
+MergedPrincipalTranscripts <- PrincipalHuamnTranscripts %>%
+  dplyr::select(Ensembl.gene, Ensembl.transcript) %>%
+  inner_join(
+    GorillaPrinicpalTranscripts %>%
+      dplyr::select(Ensembl.gene=hsapiens_homolog_ensembl_gene ,ensembl_transcript_id.gorilla),
+    by="Ensembl.gene"
+  ) %>%
+  inner_join(
+    ChimpPrinicpalTranscripts %>%
+      dplyr::select(Ensembl.gene=hsapiens_homolog_ensembl_gene ,ensembl_transcript_id.chimp),
+    by="Ensembl.gene"
+  )
+
+for(i in 1:1){
+  Gene <- MergedPrincipalTranscripts[i,"Ensembl.gene"]
+  HumanID <- MergedPrincipalTranscripts[i,"Ensembl.transcript"]
+  ChimpID <- MergedPrincipalTranscripts[i,"ensembl_transcript_id.chimp"]
+  GorillaID <- MergedPrincipalTranscripts[i,"ensembl_transcript_id.gorilla"]
+  cds <- DNAStringSet(c(
+    Chimp=as.character(ChimpSeqs.vec[ChimpID]),
+    Human=as.character(HumanSeqs.vec[HumanID]),
+    Gorilla=as.character(GorillSeqs.vec[GorillaID])
+    ))
+
+  CDS <- AlignTranslation(cds, verbose=FALSE, readingFrame = 1)
+  CDS.df <- data.frame(Seq=as.character(CDS), row.names = names(CDS))
+  
+  write.table(CDS.df, file = paste0("~/Temporary/AlignedCDS.", Gene, ".tab"), col.names=F, quote=F, sep='\t')
+}
+
+
+
+```
+

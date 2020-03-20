@@ -1,0 +1,325 @@
+---
+title: "Untitled"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Introduction
+
+Lefler et al identified human/chimp shared polymorphic haplotype regions (each haplotype region with >=2 SNPs, so likely polymorhic by descent and not recurrent mutation which might be plausible if only 1 isolated SNP) which are not in coding regions. They proposed that these regions are maintained as polymorphic in both species by balancing selection on gene expression. My data may address this...
+
+I took chimp/human shared snps (in shared regions; consered polymorphic haplotypes) and did cis-eQTL mapping in both human (n=384 heart left ventricle from GTEx) and chimp (n=38). For both species, I don't see much P-value inflation compared to control SNPs (snps within 100kb but not linked; $R^2<0.2$). And in the case of chimp (where small sample sizes makes us quite underpowered) I don't see any P-value inflation at all compared to uniform distribution. In any case, to be thorough, for the SNPs that do have apparent eQTL effects in human, I want to look at the corresponding SNPs in chimp and ask if at least the estimated effect size of genetic effects is concordant in chimp (more concordant than by chance?).
+
+## Analysis
+
+First, load necessary libraries
+```{r}
+library(tidyverse)
+library(ggrepel)
+library(knitr)
+library(broom)
+```
+
+Load the datasets and SNP info.
+```{r}
+
+#Basic info on snps, useful to map chimp and human equivalent snps
+SnpInfo <- read.delim("../output/LeflerTestedSnps.tsv", stringsAsFactors = F)
+
+#Info needed to map human snp names used in eqtls to snp names in SnpInfo
+HumanSnpLoc <- read.delim("../output/LeflerTestedSnps.Human.snploc.txt")
+
+LeflerSnpInfo <- read.delim("../data/Lefler_TableS4.txt") %>%
+  dplyr::select("rs.", "Region")
+
+SnpInfo <- left_join(SnpInfo, HumanSnpLoc, by=c("Human.chrom"="chr", "Human.pos"="pos")) %>%
+  left_join(LeflerSnpInfo, by=c("Human.rsID"="rs."))
+
+SnpInfo %>% head() %>% kable()
+SnpInfo %>% drop_na() %>% dim()
+SnpInfo %>% drop_na() %>% dplyr::select(Region) %>% distinct() %>% dim()
+
+#eqtl nominal P-values, effect sizes, etc
+HumanEqtls <- read.delim("../output/LeflerTestedSnps.Human.cis.tsv")
+HumanEqtls %>% dplyr::select(snps) %>% distinct() %>% dim()
+
+ChimpEqtls <- read.delim("../output/LeflerTestedSnps.Chimp.cis.tsv")
+ChimpEqtls %>% dplyr::select(snps) %>% distinct() %>% dim()
+
+HumanEqtls %>% head() %>% kable()
+
+HumanChimpGeneConversionKey <-
+read.delim("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz") %>%
+  dplyr::select(Gene.stable.ID, Chimpanzee.gene.stable.ID)
+
+HumanGeneSymbols <- read.delim("../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz")
+
+HumanChimpGeneConversionKey <- left_join(HumanChimpGeneConversionKey, HumanGeneSymbols, by="Gene.stable.ID") %>%
+  dplyr::select(-"HGNC.ID")
+
+```
+
+Start by grabbing best snp:gene pair for each snp tested in human... This represents the most plausible eqtl that might be under balancing selection. Actually, I think it is reasonable to the consider only best snp:gene pair within each haplotype.
+
+```{r}
+#top_n keeps multiple in case of ties. so keep the simpler single nucleotide chimp allele or pick randomly to tiebreak. this will make allele matching between species simpler.
+
+#Get best association for each snp, then top snp for each region, then, to tiebreak, select the shortest allele and then a random sample as a second tiebreak.
+BestHumanAssosciationPerRegion <- HumanEqtls %>% group_by(snps) %>%
+  top_n(-1, pvalue) %>%
+  inner_join(SnpInfo, by=c("snps"="snp")) %>%
+  group_by(Region) %>%
+  top_n(-1, pvalue) %>%
+  mutate(ChimpAlleleLen=nchar(as.character(Chimp.RefAllele))) %>%
+  top_n(-1, ChimpAlleleLen) %>%
+  sample_n(1) %>%
+  ungroup() %>%
+  mutate(Human.GeneId=sub("^(.+?).\\d+$", "\\1", gene, perl=T)) %>%
+  left_join(HumanChimpGeneConversionKey, by=c("Human.GeneId"="Gene.stable.ID")) %>%
+  distinct(.keep_all = T)
+
+head(BestHumanAssosciationPerRegion) %>% kable()
+```
+
+As a check, make sure the P-value distribution for this best haplotype:gene pair list is more inflated than for all tested snp:gene pairs.
+
+```{r}
+data.frame(BestEqtlTestsByHaplotype=BestHumanAssosciationPerRegion$pvalue, RandomEqtlTests=sample(HumanEqtls$pvalue, nrow(BestHumanAssosciationPerRegion))) %>%
+  tidyr::gather(key="key", value="Observed.P") %>%
+  dplyr::group_by(key) %>%
+  mutate(Expected.P=percent_rank(Observed.P)) %>%
+  ggplot(aes(x=-log10(Expected.P), y=-log10(Observed.P), color=key)) +
+  geom_point() +
+  geom_abline() +
+  theme_bw()
+```
+
+Ok. Sensible. Probably no bugs. Now let's find the matching haplotype:gene eQTL tests in chimp and look for concordant effect sizes.
+
+
+After properly polarizing effect sizes by matching haplotypes, if the effect sizes are concordant then the product of the two effect sizes will be positive (same haplotype gets a positive effect sign in both species, or a negative effect sign in both species). Discordant will be negative (positive in one species and negative in other). Null expectation is that there will be as many positive products as there are negatives (binomial, p=0.5).
+
+```{r}
+EffectSizesCombined <- BestHumanAssosciationPerRegion %>%
+  inner_join(ChimpEqtls, suffix=c(".human", ".chimp"), by=c("Chimp.snpName"="snps", "Chimpanzee.gene.stable.ID"="gene")) %>%
+  mutate(beta.chimp.relative.to.ref = case_when(
+    Chimp.AltAlleleFrq<0.5 ~ beta.chimp*-1,
+    Chimp.AltAlleleFrq>0.5 ~ beta.chimp)) %>% #Recode such that ref allele is 0 in genotype
+  mutate(beta.chimp.relative.to.human.ref = case_when(
+    Human.RefAllele==Chimp.RefAllele ~ beta.chimp.relative.to.ref,
+    Human.RefAllele==Chimp.AltAllele ~ beta.chimp.relative.to.ref*-1
+  )) %>%
+  mutate(effect.size.product=beta.chimp.relative.to.human.ref*beta.human)
+
+table(EffectSizesCombined$effect.size.product>0)
+
+#One sided binomial test.
+binom.test(x=sum(EffectSizesCombined$effect.size.product>0),
+           n=length(EffectSizesCombined$effect.size.product),
+           p=0.5,
+           alternative="greater")
+
+```
+
+Okay. no significant concordance in direction of effect sizes. But maybe I am introducing too much noise by including haplotype:gene pairs that aren't even significant in human. So maybe if I first filter for the haplotype:gene pairs where the top SNP passes a reasonable FDR threshold in human (<0.1). Let's visualize the scatter plot of effect sizes as well.
+
+```{r}
+#plot of effect size correlation
+EffectSizeScatter <- EffectSizesCombined %>% 
+  mutate(label=case_when(
+    FDR.human<0.1 ~ paste0(Human.rsID, ":", Human.AltAllele, "\n", HGNC.symbol),
+    FDR.human>0.1 ~ ""
+  )) %>%
+  mutate(SignificanceInHuman=case_when(
+    FDR.human<0.1 ~ "FDR<0.1",
+    FDR.human>0.1 ~ "FDR>0.1"
+  )) %>%
+ggplot(aes(x=beta.chimp.relative.to.human.ref, y=beta.human, color=SignificanceInHuman, label=label)) +
+  annotate("rect", xmin = Inf, xmax = 0, ymin = Inf, ymax = 0, fill= "green", alpha=0.1)  + 
+  annotate("rect", xmin = -Inf, xmax = 0, ymin = -Inf, ymax = 0 , fill= "green", alpha=0.1) + 
+  annotate("rect", xmin = 0, xmax = Inf, ymin = 0, ymax = -Inf, fill= "red", alpha=0.1) + 
+  annotate("rect", xmin = 0, xmax = -Inf, ymin = Inf, ymax = 0, fill= "red", alpha=0.1) + 
+  geom_point() +
+  geom_text_repel(size=2) +
+  scale_colour_manual(values=setNames(c("black", "gray"), c("FDR<0.1","FDR>0.1"))) +
+  xlim(c(-0.6,0.6)) +
+  annotate("text", x=Inf, y=Inf, label="Concordant", color="green", hjust=1, vjust=1) +
+  annotate("text", x=Inf, y=-Inf, label="Discordant", color="red", hjust=1, vjust=-1) +
+  xlab("Effect Size estimate, Chimp") +
+  ylab("Effect Size estimate, Human") +
+  theme_bw() +
+  theme(legend.direction = "horizontal", legend.position = "bottom")
+ggsave("../figures/OriginalArt/SharedSnpEffectSizes.pdf",EffectSizeScatter, height = 3, width=3)
+
+EffectSizesCombinedFiltered <- EffectSizesCombined %>%
+  filter(FDR.human<0.1)
+
+#One sided binomial test on human FDR<0.1 points
+binom.test(x=sum(EffectSizesCombinedFiltered$effect.size.product>0),
+           n=length(EffectSizesCombinedFiltered$effect.size.product),
+           p=0.5,
+           alternative="greater")
+```
+
+If anything, this looks discordant. I should double check the code for bugs. But with such small sample size this could all be chance. 
+
+I will also replot stuff and perform testing with more normal Pearson `cor.test` function, since I have done some simulations and it is similarly as powerful as the concordant/discorant thing while being simpler.
+
+```{r}
+Test <- EffectSizesCombined %>%
+  filter(FDR.human<0.1) %>%
+  do(tidy(cor.test(.$beta.chimp, .$beta.human, alternative="greater")))
+lb1 = paste0('P==', format.pval(Test$p.value, 2))
+
+EffectSizeScatterPearson <- EffectSizesCombined %>% 
+  mutate(label=case_when(
+    FDR.human<0.1 ~ paste0(Human.rsID, ":", Human.AltAllele, "\n", HGNC.symbol),
+    FDR.human>0.1 ~ ""
+  )) %>%
+ggplot(aes(x=beta.chimp.relative.to.human.ref, y=beta.human, color=pvalue.human, label=label)) +
+  geom_point() +
+  geom_text_repel(size=1.5, color="black", min.segment.length=0.2) +
+  scale_colour_viridis_c(trans="log10") +
+  xlim(c(-0.6,0.6)) +
+  xlab("Effect Size estimate, Chimp") +
+  ylab("Effect Size estimate, Human") +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+  theme_bw() +
+  theme(legend.text = element_text(size = 5)) +
+  theme(legend.direction = "horizontal", legend.position = "bottom")
+EffectSizeScatterPearson
+
+ggsave("../figures/OriginalArt/SharedSnpEffectSizesPearson.pdf",EffectSizeScatterPearson, height = 3, width=3)
+
+EffectSizesCombined %>%
+  dplyr::select(-snps) %>%
+write.table(file="../figures/Table_SharedPolymorphisms.tab", sep='\t', quote=F, row.names = F)
+
+```
+
+Finally, to lend all benefit of doubt that there could be any eQTL effect, I'll look at one of the most promising ones (rs10117921) in LocusZoom.
+
+```{r}
+EffectSizesCombinedFiltered %>%
+  filter(Human.rsID=="rs10117921")
+```
+
+And lastly, mostly for illustrative purposes, I want to make a genotype/expression boxplot of the best human eQTL SNP (of these species shared SNPs) and show how it is clearly an eQTL in human but the effect isn't detected in our chimp dataset.
+
+```{r}
+IllustrativeSnp <- EffectSizesCombinedFiltered %>% arrange(FDR.human) %>% head(1)
+
+IllustrativeSnp %>% kable()
+
+HumantGt <- read.delim("../output/SharedSnpExampleBoxplot.human.012", col.names = c("RowNumber", "genotype")) %>%
+  dplyr::select(genotype)
+HumantSamples <- read.delim("../output/SharedSnpExampleBoxplot.human.012.indv", col.names = c("Sample"))
+HumanExpression <- read.delim("../output/SharedSnpExampleBoxplot.human.expression.txt", col.names=c("Sample", "expression"))
+
+HumanDataToPlot <- cbind(HumantGt,HumantSamples) %>%
+  left_join(HumanExpression, by=c("Sample")) %>%
+  mutate(GenotypeLetter=case_when(
+    genotype==0 ~ "G/G",
+    genotype==1 ~ "G/A",
+    genotype==2 ~ "A/A"
+  )) %>%
+  mutate(Species="human")
+
+
+ChimpGt <- read.delim("../output/SharedSnpExampleBoxplot.chimp.012", col.names = c("RowNumber", "genotype")) %>%
+  dplyr::select(genotype)
+ChimpSamples <- read.delim("../output/SharedSnpExampleBoxplot.chimp.012.indv", col.names = c("Sample")) %>%
+  transmute(Sample=gsub("Pan_troglodytes_ThisStudy-", "", Sample))
+ChimpExpression <- read.delim("../output/ExpressionMatrix.normalized.txt.gz", check.names = F) %>%
+  filter(IID=="ENSPTRG00000017201") %>% column_to_rownames("IID") %>%
+  t() %>% as.data.frame() %>%
+  rownames_to_column("Sample") %>%
+  dplyr::select(Sample, expression=ENSPTRG00000017201)
+
+ChimpDataToPlot <- cbind(ChimpGt,ChimpSamples) %>%
+  left_join(ChimpExpression, by=c("Sample")) %>%
+  mutate(GenotypeLetter=case_when(
+    genotype==0 ~ "A/A",
+    genotype==1 ~ "G/A",
+    genotype==2 ~ "G/G"
+  )) %>%
+  mutate(Species="chimp")
+
+SharedSnpBoxplot <- rbind(ChimpDataToPlot, HumanDataToPlot) %>%
+  ggplot(aes(x = factor(GenotypeLetter, level = c('G/G', 'G/A', 'A/A')), y=expression, color=Species)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_point(position=position_jitterdodge(jitter.width=0.15), alpha=0.3) +
+  ylab("Normalized Expression of SLC27A6") +
+  xlab("rs257899 genotype") +
+  theme_bw() +
+  theme(legend.direction = "horizontal", legend.position = "bottom")
+
+
+SharedSnpBoxplot
+
+ggsave("../figures/OriginalArt/SharedSnpExample.pdf",SharedSnpBoxplot, height = 3, width=3)
+```
+
+Last thing I may want to look into, is whether the genes nearest the species shared SNPs are more variable than others.
+
+```{r}
+
+LeflerNearestGenes <- read.delim("../data/Lefler_TableS4.txt", sep='\t')
+
+DispersionEstimates <- read.delim("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt")
+
+ToPlot <- DispersionEstimates %>%
+  left_join(LeflerNearestGenes, by=c("gene"="Closest.protein.coding.gene..gencode.v12...Ensembl.name")) %>%
+  mutate(CloseToLeflerSNP=case_when(
+    Distance.to.closest.gene..bp. < 100000 ~ T,
+    Distance.to.closest.gene..bp. > 100000 ~ F,
+    TRUE ~ F
+  ))
+
+TestChimp <- wilcox.test(ToPlot %>%
+                    filter(CloseToLeflerSNP==T) %>%
+                    pull(Chimp.Residual),
+                    ToPlot %>%
+                    filter(CloseToLeflerSNP==F) %>%
+                    pull(Chimp.Residual))
+lbChimp = paste0('P==', format.pval(TestChimp$p.value, 2))
+
+TestHuman <- wilcox.test(ToPlot %>%
+                    filter(CloseToLeflerSNP==T) %>%
+                    pull(Human.Residual),
+                    ToPlot %>%
+                    filter(CloseToLeflerSNP==F) %>%
+                    pull(Human.Residual))
+lbHuman = paste0('P==', format.pval(TestHuman$p.value, 2))
+
+
+ClosestGeneDispersionPlot <- ToPlot %>%
+  dplyr::select(Chimp=Chimp.Residual, Human=Human.Residual, CloseToLeflerSNP) %>%
+  gather(key="Species", value="Dispersion", -CloseToLeflerSNP) %>% 
+ggplot(aes(x=Dispersion, color=Species, linetype=CloseToLeflerSNP)) +
+  stat_ecdf(geom = "step") +
+  xlim(c(-2.5,2.5)) +
+  ylab("Cumulative frequency") +
+  theme_bw() +
+  xlab("Dispersion") +
+  annotate("text",x=Inf,y=-Inf, label=lbChimp, hjust=1.1, vjust=-1.5, parse=TRUE, color="#F8766D") +
+  annotate("text",x=Inf,y=-Inf, label=lbHuman, hjust=1.1, vjust=-0.1, parse=TRUE, color="#00BFC4") +
+  scale_linetype_discrete(name = "Relation to trans-species polymorphisms", labels=c("Not closest gene", "Closest gene")) +
+  theme(legend.position="bottom", legend.box="vertical") +
+  guides(linetype=guide_legend(title.position="top"),
+         color=guide_legend(title.position="top"))
+
+ggsave("../figures/OriginalArt/ClosestGeneDispersion.pdf", ClosestGeneDispersionPlot, height=3.5, width=3.5)
+
+```
+
+## Conclusions
+
+

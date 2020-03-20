@@ -43,7 +43,7 @@ Read in data...
 ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
 
 #Add gene symbols for prettier labels instead of ENSEMBL ID
-human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl", ensemblRedirect = FALSE)
 Symbols <- getBM(attributes=c("hgnc_symbol", "ensembl_gene_id"), filters="ensembl_gene_id", values=ChimpOverdispersionTable$gene, mart=human)
 
 ChimpOverdispersionTable <- ChimpOverdispersionTable %>%
@@ -74,40 +74,41 @@ An example of the raw data (log2RPKM) of a few genes with various dispersion est
 # Get a high dispersion and a low dispersion gene at similar RPKM as an example. Also get a gene with a big difference in dispersion between the two species.
 
 HighDispersionGene <- ChimpOverdispersionTable %>%
-  filter(Chimp.Mean.Log2RPKM >= 2 & Chimp.Mean.Log2RPKM <= 3) %>%
+  filter(Chimp.Mean.Log2RPKM >= 1 & Chimp.Mean.Log2RPKM <= 4 & Human.Mean.Log2RPKM >= 1 & Human.Mean.Log2RPKM <= 4) %>%
   mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %>%
-  filter(DifferenceInDispersion < 0.1) %>% head()
+  filter(DifferenceInDispersion < 0.1) %>%
   top_n(1, Human.Residual) %>% pull(gene)
 
 LowDispersionGene <- ChimpOverdispersionTable %>%
-  filter(Chimp.Mean.Log2RPKM >= 2 & Chimp.Mean.Log2RPKM <= 3) %>%
+  filter(Chimp.Mean.Log2RPKM >= 1 & Chimp.Mean.Log2RPKM <= 4 & Human.Mean.Log2RPKM >= 1 & Human.Mean.Log2RPKM <= 4) %>%
   mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %>%
   filter(DifferenceInDispersion < 0.1) %>%
   top_n(-1, Human.Residual) %>% pull(gene)
 
 BigDifferenceInDispersion <- ChimpOverdispersionTable %>%
-  filter(Chimp.Mean.Log2RPKM >= 2 & Chimp.Mean.Log2RPKM <= 3) %>%
+  filter(Chimp.Mean.Log2RPKM >= 1 & Chimp.Mean.Log2RPKM <= 4 & Human.Mean.Log2RPKM >= 1 & Human.Mean.Log2RPKM <= 4) %>%
   mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %>%
-  filter(DifferenceInDispersion > 1.7 & DifferenceInDispersion < 2.2) %>%
+  filter(DifferenceInDispersion > 2 & DifferenceInDispersion < 3) %>%
   top_n(1, DifferenceInDispersion) %>% pull(gene)
 
 GenesToPlot <- c(HighDispersionGene, LowDispersionGene, BigDifferenceInDispersion)
 
 Colplots <- ChimpOverdispersionTable %>%
-  dplyr::select(Chimp.Dispersion, Human.Dispersion, hgnc_symbol, gene) %>%
+  dplyr::select(Chimp.Residual, Human.Residual, hgnc_symbol, gene) %>%
   filter(gene %in% GenesToPlot) %>%
-  gather(key="sample", value="dispersion", -hgnc_symbol, -gene) %>% head()
+  gather(key="sample", value="residual", -hgnc_symbol, -gene) %>%
   mutate(Species = case_when(sample=="Chimp.Residual" ~ "Chimp",
                              sample=="Human.Residual" ~ "Human")) %>%
-  ggplot(aes(x=Species, y=dispersion)) +
+  ggplot(aes(x=Species, y=residual)) +
     geom_col() +
+    # geom_point() +
     ylab("Dispersion, a.u.") +
     facet_grid(.~hgnc_symbol) +
-    scale_y_continuous(trans='log10') +
     theme_bw() +
     theme(axis.title.x=element_blank(),
           strip.background = element_blank(),
-          strip.text.x = element_blank())
+          strip.text.x = element_blank(),
+          plot.margin = margin(0, 6, 6, 6))
 
 Boxplots <- cbind(CountTables$Chimp$log2RPKM[GenesToPlot,],
       CountTables$Human$log2RPKM[GenesToPlot,]) %>%
@@ -117,19 +118,21 @@ Boxplots <- cbind(CountTables$Chimp$log2RPKM[GenesToPlot,],
   gather(key="Individual", value="log2RPKM", -hgnc_symbol, -gene) %>%
   mutate(Species = case_when(str_detect(Individual, "C.") ~ "Chimp",
                    str_detect(Individual, "H.") ~ "Human")) %>%
-  ggplot(aes(x=Species, y=log2RPKM)) +
+  ggplot(aes(x=Species, y=2**log2RPKM)) +
     geom_boxplot(outlier.shape=NA) +
     geom_jitter(width=.15, height=0, alpha=0.7) +
     facet_grid(.~hgnc_symbol) +
-    ylab(TeX("Expression, log_{2}RPKM")) +
+    scale_y_continuous(trans="log10") +
+    ylab(TeX("Expression, RPKM")) +
     theme_bw() +
     theme(axis.title.x=element_blank(),
           axis.text.x=element_blank(),
-          axis.ticks.x=element_blank())
+          axis.ticks.x=element_blank(),
+          plot.margin = margin(6, 6, 0, 6))
 
 plot_grid(Boxplots, Colplots, align="hv", ncol=1, nrow=2)
 
-ggsave("../figures/OriginalArt/Dispersion.chimp_human_example_genes.pdf", units="mm", height=100, width=100)
+ggsave("../figures/OriginalArt/Dispersion.chimp_human_example_genes.pdf", units="mm", height=100, width=90)
 ```
 
 ### Illustrative regressing out mean effect
@@ -137,30 +140,40 @@ ggsave("../figures/OriginalArt/Dispersion.chimp_human_example_genes.pdf", units=
 This illustrates how dispersion is calculated, after obtaining a gene-wise overdispersion parameter estimate by fitting negative binomial model to the count data
 
 ```{r}
+
+Mu.Is.RPKM <- ChimpOverdispersionTable %>%
+  ggplot(aes(y=Chimp.Mean.Log2RPKM, x=Human.Mean.Expression)) +
+  stat_binhex(bins=100) +
+  xlab(TeX("Mean Expression, $\\hat{\\mu} \\[a.u.\\]$")) +
+  ylab(TeX("Mean Expression $\\[log_{2}(RPKM)\\]$")) +
+  scale_fill_viridis_c(option="C") +
+  theme_bw() +
+  theme(aspect.ratio = 1) +
+  theme(legend.position = "none")
+
 Before <- ChimpOverdispersionTable %>%
   ggplot(aes(y=log(Human.Overdispersion), x=Human.Mean.Expression)) +
   stat_binhex(bins=100) +
-  ylim(c(-5,3)) +
-  xlab(TeX("Expression, $\\hat{\\mu}$")) +
+  ylim(c(-6,3)) +
+  xlab(TeX("Mean Expression, $\\hat{\\mu}$")) +
   ylab(TeX("Overdispersion, log($\\hat{\\phi})$")) +
-  scale_fill_viridis_c(option="C", limits=c(0,25)) +
+  lims(fill=c(0,25)) +
+  scale_fill_viridis_c(option="C") +
   geom_smooth(method="loess", method.args=list(degree=1)) +
   theme_bw() +
   theme(aspect.ratio = 1)
-
 
 After <- ChimpOverdispersionTable %>%
   ggplot(aes(y=Human.Residual, x=Human.Mean.Expression)) +
   stat_binhex(bins=100) +
   ylim(c(-3,3)) +
-  xlab("Expression") +
-  ylab("Dispersion") +
+  xlab(TeX("Expression, $\\hat{\\mu}$")) +
+  ylab(TeX("Dispersion$")) +
   lims(fill=c(0,25)) +
-  scale_fill_viridis_c(option="C", limits=c(0,25), guide=F) +
+  scale_fill_viridis_c(option="C", guide=F) +
   geom_hline(yintercept=0, color = "blue") +
   theme_bw() +
   theme(aspect.ratio = 1)
-
 prow <- plot_grid(
   plot_grid(
     Before +
@@ -197,7 +210,7 @@ Correlation <-cor.test(ChimpOverdispersionTable$Chimp.Residual,
        ChimpOverdispersionTable$Human.Residual,
        use="complete.obs")
 
-lb1 = paste0('atop(R^2==', signif(Correlation$estimate**2,2), ', P', format.pval(Correlation$p.value), ')')
+lb1 = paste0('atop(R==', signif(Correlation$estimate,2), ', P', format.pval(Correlation$p.value), ')')
 
 ChimpOverdispersionTable %>%
   ggplot(aes(x=Chimp.Residual, y=Human.Residual)) +
@@ -268,7 +281,7 @@ LowlyDispersed.p <- ChimpOverdispersionTable %>%
         left_join(CellNonZeroCounts, by="MGI.symbol") %>%
         filter(NumCellsExpressing>50) %>%
         filter(gene %in% CombinedTable$Gene.stable.ID) %>%
-        top_n(-50, MeanDispersion) %>%
+        top_n(-115, MeanDispersion) %>%
         pull(MGI.symbol) %>%
 DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, size=3, label=F) +
          scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
@@ -284,7 +297,7 @@ HighlyDisp.tau.p <- data.frame(genes=HighlyDispersed.data$layout$panel_params[[1
     geom_tile() +
     scale_x_discrete(expand=c(0,0))+
     scale_y_discrete(expand=c(0,0)) +
-    scale_fill_viridis_c(option="C", limits=c(0,1)) +
+    scale_fill_viridis_c(option="E", limits=c(0,1)) +
     theme_bw() +
     theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
@@ -317,7 +330,7 @@ LowlyDisp.tau.p <- data.frame(genes=LowlyDispersed.data$layout$panel_params[[1]]
     geom_tile() +
     scale_x_discrete(expand=c(0,0))+
     scale_y_discrete(expand=c(0,0)) +
-    scale_fill_viridis_c(option="C", limits=c(0,1)) +
+    scale_fill_viridis_c(option="E", limits=c(0,1)) +
     theme_bw() +
     theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
@@ -334,7 +347,7 @@ prow <- plot_grid(
   nrow = 1,
   axis = "b",
   rel_widths = c(1, 0.05),
-  scale = c(1,0.842)
+  scale = c(1,0.89)
 )
 
 ggsave("../figures/OriginalArt/Dispersion.tabmuris.low.png", plot=prow)
@@ -358,7 +371,7 @@ More generally, tau correlates with dispersion
 Correlation <-cor.test(CombinedTable$MeanDispersion, CombinedTable$tau,
        use="complete.obs", method="pearson")
 
-lb1 = paste0('atop(R^2==', signif(Correlation$estimate**2,2), ', P', format.pval(Correlation$p.value, 2), ')')
+lb1 = paste0('atop(R==', signif(Correlation$estimate,2), ', P', format.pval(Correlation$p.value, 2), ')')
 
 CombinedTable %>%
   ggplot(aes(x=tau, y=MeanDispersion)) +
@@ -367,6 +380,7 @@ CombinedTable %>%
     xlab(TeX("Cell type specificity, $\\tau$")) +
     ylab(TeX("Dispersion, a.u.")) +
     scale_fill_viridis_c(option="C") +
+    stat_smooth(method='lm') +
     annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
     theme_bw() +
     theme(aspect.ratio = 0.8)
@@ -383,15 +397,18 @@ CombinedTable <- CombinedTable  %>%
 Correlation <-cor.test(CombinedTable$DifferenceInDispersion, CombinedTable$tau,
        use="complete.obs", method="pearson")
 
-lb1 = paste0('atop(R^2==', signif(Correlation$estimate**2,2), ', P==', format.pval(Correlation$p.value, 2), ')')
+lb1 = paste0('atop(R==', signif(Correlation$estimate,2), ', P==', format.pval(Correlation$p.value, 2), ')')
+# lb1 = paste0('R==', signif(Correlation$estimate,2))
+
 
 CombinedTable %>%
   ggplot(aes(x=tau, y=DifferenceInDispersion)) +
     stat_binhex(bins=100) +
     ylim(c(-3,3)) +
-    xlab(TeX("Cell type specificity, $\\tau$")) +
-    ylab(TeX("Dispersion_{Chimp} - Dispersion_{Human}")) +
+    xlab(TeX("Cell type specificity, tau")) +
+    ylab(TeX("Difference in dispersion")) +
     scale_fill_viridis_c(option="C") +
+    stat_smooth(method='lm') +
     annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
     theme_bw() +
     theme(aspect.ratio = 0.8)
@@ -468,7 +485,7 @@ ToPlot <- ChimpOverdispersionTable %>%
   filter(pLI.Score.essentiality %in% c("Essential", "NonEssential"))
 
 Test <- wilcox.test(data=ToPlot, MeanDispersion ~ pLI.Score.essentiality)
-lb1 = paste0('P==', format.pval(Test$p.value, 2))
+lb1 = paste0('P', format.pval(Test$p.value, 2))
 
 ggplot(ToPlot, aes(color=pLI.Score.essentiality,x=MeanDispersion)) +
     stat_ecdf(geom = "step") +

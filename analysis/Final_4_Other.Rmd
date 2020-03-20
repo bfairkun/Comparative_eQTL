@@ -1,0 +1,332 @@
+---
+title: "Final_4_Other"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Introduction
+
+This markdown will be used to generate publication quality figures that I have already made at some point in my exploratory Rmarkdown analyses. These are miscelleous figures that are not very ideologically related.
+
+## Analysis
+
+First, load necessary libraries
+```{r}
+library(tidyverse)
+library(plyr)
+library(readxl)
+library(reshape2)
+library(ggrepel)
+library(psych)
+library(corrplot)
+source("../code/CustomFunctions.R")
+
+EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
+EgenesTested.grouped <- AddGroups(EgenesTested, HumanEgeneCount=500)
+```
+
+### hypergeometric test of nominal fdr<0.1 overlap
+
+```{r}
+EgenesTested.grouped.nominal <- AddGroups(EgenesTested)
+EgenesTested.grouped.nominal %>%
+  dplyr::count(group) %>%
+  pull(n) %>% matrix(data=., nrow=2) %>%
+  fisher.test(alternative="greater")
+
+```
+
+
+### Plot of moving hypoergeometric test
+
+I will probably add in contingency tables at specific points with illustrator later
+
+```{r}
+ArbitraryEgeneThresholdContingencyTable <- function(EgenesTested.df, HumanEgeneCount){
+  #Return the contingency table, where human eGene classification is thresholded at HumanEgeneCount
+  ContingencyTable <- EgenesTested.df %>%
+    mutate(H.rank = dense_rank(H.FDR)) %>%
+    mutate(
+      H.group=case_when(
+        H.rank<=HumanEgeneCount  ~ "human eGene",
+        H.rank>HumanEgeneCount ~ "not human eGene"),
+      C.group=case_when(
+        C.FDR<=0.1 ~ "chimp eGene",
+        C.FDR>0.1 ~ "not chimp eGene")
+    ) %>%
+  group_by(H.group, C.group) %>%
+  tally() %>%
+  spread(key=H.group, value=n) %>%
+  column_to_rownames("C.group")
+  return(ContingencyTable)
+}
+
+LengthOut=1000
+TopHumanEgeneCountList <- round(seq(100,sum(EgenesTested.grouped$H.FDR<0.1), length.out=LengthOut))
+OddsRatiosList <- rep(0,LengthOut)
+CI.lower <- rep(0,LengthOut)
+CI.upper <- rep(0,LengthOut)
+
+
+for (i in seq_along(TopHumanEgeneCountList)){
+  ContingencyTable <- ArbitraryEgeneThresholdContingencyTable(EgenesTested, TopHumanEgeneCountList[i])
+  test <- fisher.test(ContingencyTable, conf.int=T)
+  OddsRatiosList[i]<- as.numeric(test$estimate)
+  CI.lower[i] <- as.numeric(test$conf.int[1])
+  CI.upper[i] <- as.numeric(test$conf.int[2])
+}
+
+HeartOddsRatios <- data.frame(TopHumanEgeneCountList=TopHumanEgeneCountList, OddsRatio=OddsRatiosList, GTEx.Tissue="Heart_LeftVentricle", CI.lower=CI.lower, CI.upper=CI.upper)
+
+MovingThresholdPlot <- ggplot(HeartOddsRatios, aes(x=TopHumanEgeneCountList, y=OddsRatiosList)) +
+  geom_point() +
+  geom_ribbon(aes(ymin=CI.lower, ymax=CI.upper), alpha=0.2) +
+  theme_bw() +
+  ylim(c(0.5,3.5)) +
+  ylab("chimp eGene overlap\n(Odds Ratio)") +
+  xlab("Considering only top X human eGenes") +
+  geom_hline(yintercept=1, linetype="dashed")
+
+Threshold.500 <- ArbitraryEgeneThresholdContingencyTable(EgenesTested, 500)
+fisher.test.500 <- fisher.test(Threshold.500, alternative="greater")
+
+Threshold.FDR.0.1 <- ArbitraryEgeneThresholdContingencyTable(EgenesTested, sum(EgenesTested.grouped$H.FDR<0.1))
+fisher.test.Threshold.FDR.0.1 <- fisher.test(Threshold.FDR.0.1, alternative="greater")
+
+ggsave("../figures/OriginalArt/Other.MovingThreshold.pdf", MovingThresholdPlot, height=120, width=120, units="mm")
+
+```
+
+### GTEx subsampling plot
+```{r}
+OddsRatiosByHumanSampleSize.df <- data.frame()
+for (filename in Sys.glob("../output/GTEX_renalysis/SampleSize_*.txt.gz")){
+  E.genes.df <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = filename, SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz")
+  ContigencyTable <- matrix( c( sum(E.genes.df$H.FDR<=0.1 & E.genes.df$C.FDR<=0.1),
+                                sum(E.genes.df$H.FDR<=0.1 & E.genes.df$C.FDR>0.1),
+                                sum(E.genes.df$H.FDR>0.1 & E.genes.df$C.FDR<=0.1),
+                                sum(E.genes.df$H.FDR>0.1 & E.genes.df$C.FDR>0.1)),
+                             nrow = 2)
+
+  rownames(ContigencyTable) <- c("Chimp eGene", "Not Chimp eGene")
+  colnames(ContigencyTable) <- c("Human eGene", "Not human eGene")
+  FisherResults <- (fisher.test(ContigencyTable)
+)
+  E.genes.OddsRatios <- data.frame(
+    OR=FisherResults$estimate,
+    Upper=FisherResults$conf.int[[2]],
+    Lower=FisherResults$conf.int[[1]],
+    P=fisher.test(ContigencyTable, alternative="greater")$p.value,
+    NumHumanEgenes=sum(E.genes.df$H.FDR<=0.1),
+    SampleSize=gsub("../output/GTEX_renalysis/SampleSize_(\\d+).txt.gz", "\\1",filename, perl=T) %>% as.numeric()
+  )
+  OddsRatiosByHumanSampleSize.df <- rbind(OddsRatiosByHumanSampleSize.df, E.genes.OddsRatios)
+}
+ggplot(OddsRatiosByHumanSampleSize.df, aes(x=NumHumanEgenes, y=OR))+
+  geom_point(aes(size=SampleSize)) +
+  geom_hline(yintercept=1, linetype="dashed") +
+  ylab("chimp eGene overlap\n(Odds Ratio)") +
+  xlab("Number human eGenes discovered in GTEx subsample") +
+  theme_bw()
+
+ggsave("../figures/OriginalArt/Other.SubsamplingGTEx.eps", width=150, height=120, units="mm")
+```
+
+### Chimp admixture
+```{r}
+AdmixtureResults <- read.table("../output/PopulationStructure/Admixture/MergedForAdmixture.4.Q.labelled") %>%
+  dplyr::select(Fam=V1, Ind=V2, everything()) %>%
+  dplyr::select(-V3, -V4, -V5, -V6)
+  
+
+AdmixtureResults$Fam <- mapvalues(AdmixtureResults$Fam, from=c("Pan_troglodytes_schweinfurthii", "Pan_troglodytes_ellioti", "Pan_troglodytes_ThisStudy", "Pan_troglodytes", "Pan_troglodytes_troglodytes", "Pan_troglodytes_verus"), to=c("Eastern", "Nigeria\nCameroon", "This Study", "Eastern", "Central", "Western"))
+
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+
+AdmixtureResults %>% left_join((OtherMetadata %>% dplyr::select(Individual.ID, Label)), by=c("Ind"="Individual.ID")) %>%
+  mutate(Ind=case_when(
+    is.na(Label) ~ Ind,
+    !is.na(Label) ~ Label
+  )) %>%
+  dplyr::select(-Label) %>%
+  gather(key=K, value=Admix, -Fam, -Ind) %>%
+  ggplot(aes(x = reorder(Ind, Admix, FUN=max), y = Admix, fill = K)) +
+    geom_bar(stat = "identity") +
+    scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+    facet_grid(~Fam, scales="free_x", space="free_x") +
+    theme(legend.position="none") +
+    theme(axis.title.y=element_blank(), axis.title.x=element_blank(), axis.ticks.x=element_blank(), axis.text.x=element_text(size=rel(0.5), angle=70, hjust=1))
+
+ggsave("../figures/OriginalArt/Other.Admixture.pdf", width=160, height=100, units="mm")
+
+```
+
+### Kinship expectation scatter plot
+
+```{r}
+YerkesKinship_from_pedigree <- as.data.frame(read_excel("../data/Metadata.xlsx", sheet="Yerkes.coan", col_types = c("text", "text", "numeric")))
+
+
+SampleLabels <- read.table('../output/ForAssociationTesting.temp.fam', stringsAsFactors = F)$V2
+GemmaMatrix <- as.matrix(read.table('../output/GRM.cXX.txt'))
+colnames(GemmaMatrix) <- SampleLabels
+row.names(GemmaMatrix) <- SampleLabels
+
+KSort <- melt(GemmaMatrix) %>%
+  mutate(ID1=as.character(Var1), ID2=as.character(Var2)) %>%
+  mutate(Teams = paste(pmin(ID1, ID2), pmax(ID1, ID2), sep= " - ")) %>%
+  distinct(Teams, .keep_all=T)
+YSort <- YerkesKinship_from_pedigree %>%
+  mutate(Teams = paste(pmin(ind1, ind2), pmax(ind1, ind2), sep= " - ")) %>%
+  distinct(Teams, .keep_all=T)
+# Merge and plot
+Merged <- merge(KSort, YSort, by="Teams") %>%
+  left_join((OtherMetadata %>% dplyr::select(Individual.ID, Label)), by=c("ID1"="Individual.ID")) %>%
+  left_join((OtherMetadata %>% dplyr::select(Individual.ID, Label)), by=c("ID2"="Individual.ID")) %>%
+  mutate(label= paste(Label.x, "+",Label.y)) %>%
+  filter(!grepl("Unnamed",label))
+Merged$label[Merged$coeff==0] <- ""
+
+Merged %>%
+  filter(!ID1==ID2) %>%
+ggplot(aes(x=coeff, y=value*2, label=label)) +
+  geom_point() +
+  geom_abline(slope=1, intercept=0, color="red") +
+  geom_text_repel(size=2.5) +
+  xlab("Expected genetic relatedness") +
+  ylab("Estimated genetic relatedness") +
+  theme_bw()
+
+ggsave("../figures/OriginalArt/Other.Kinship.pdf", width=100, height=80, units="mm")
+```
+
+### eQTLs top snps around TSS
+
+```{r}
+GeneLocs <- read.table("../output/Genes.bed", col.names = c("chr", "start", "stop", "gene", "score", "strand"))
+
+SNPs <- read.table("../output/ChimpEgenes.testsnps.txt.gz", header=T) %>%
+  dplyr::select(TSS.dist, TES.dist) %>%
+  mutate(group="Test.SNPs")
+
+eQTL.SNPs <- EgenesTested %>%
+  left_join(GeneLocs, by=c("C.gene"="gene")) %>%
+  mutate(
+    BestSNP.pos = as.numeric(gsub("^.+?\\..+?\\.(.+?)\\..+", "\\1", C.bestsnp, perl=T))) %>%
+  mutate(
+    TSS.dist=case_when(
+      strand=="+" ~ BestSNP.pos - start,
+      strand=="-" ~ stop - BestSNP.pos),
+    TES.dist=case_when(
+      strand=="+" ~ BestSNP.pos - stop,
+      strand=="-" ~ start - BestSNP.pos),
+    ) %>%
+  filter(C.FDR<0.1) %>%
+  dplyr::select(TSS.dist, TES.dist) %>%
+  mutate(group="Top.eQTL.SNPs")
+
+rbind(SNPs, eQTL.SNPs) %>% 
+  mutate(TSS.dist=TSS.dist/1000) %>%
+  ggplot(aes(x=TSS.dist)) +
+  xlab("Distance to TSS (kb)") +
+  geom_histogram(bins=20) +
+  xlim(c(-100, 100)) +
+  facet_wrap(. ~ group, scales="free_y") +
+  theme_bw()
+
+ggsave("../figures/OriginalArt/Other.QTL_SNPs.TSS.metagene.pdf", width=100, height=60, units="mm")
+
+```
+
+### Highly overdispersed genes covary
+
+Since I have already showed that dispersion correlates with cell-type specificity, I expect that highly overdispersed genes will covary with other genes, moreso than lowly dispersed genes. The motivation for this is that I want understand if the species-differences in dispersion that I observe are solely explained by cell type hetergeneity. So to do that, start by seeing that 
+
+Here I will plot the dispersion vs the median squared correlation (from the correlation matrix of genes) for each gene.
+
+```{r}
+
+#Read overdispersion table to get gene list
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
+
+# Read in count data
+HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
+ChimpSamplesToDrop <- c("Little_R")
+OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
+VirusChallengedChimps <- OtherMetadata %>% filter(grepl("V+",Viral.status)) %>% pull(Individual.ID)
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+CountTables <- GetCountTables(CountTableChimpFile,
+                              CountTableHumanFile,
+                              0, ChimpOverdispersionTable$gene, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+CorMat <- CountTables$Chimp$log2RPKM %>% t() %>%
+  cor()
+
+MedCorSqrd.Ovredisp <- data.frame(MedianCorrelationSquared=apply(CorMat**2, 2, median)) %>%
+  rownames_to_column("gene") %>%
+  inner_join(ChimpOverdispersionTable, by="gene")
+
+cor.test(MedCorSqrd.Ovredisp$MedianCorrelationSquared, MedCorSqrd.Ovredisp$Chimp.Residual)
+
+MedCorSqrd.Ovredisp %>%
+  ggplot(aes(x=Chimp.Residual, y=MedianCorrelationSquared)) +
+    stat_binhex(bins=100) +
+    xlim(c(-3,3)) +
+    theme_bw()
+
+cor.test(MedCorSqrd.Ovredisp$MedianCorrelationSquared, MedCorSqrd.Ovredisp$Chimp.Mean.Log2RPKM)
+
+MedCorSqrd.Ovredisp %>%
+  ggplot(aes(x=Chimp.Mean.Log2RPKM, y=MedianCorrelationSquared)) +
+    stat_binhex(bins=100) +
+    xlim(c(-3,3)) +
+    theme_bw()
+```
+
+Ok if anything I see the opposite effect than what I expect... highly dispersed genes have weakly lower median correlation values across the entire gene matrix. Perhaps this is because squared correlation is not the right metric to use... Lowly expressed genes will have more error in their measurements, leading to upwardly biased squared correlation estimates. Maybe a different way to go about it is to check that PCA loadings correlate with dispersion estimates?
+
+```{r}
+GeneExpMatrix<-read.table("../output/log10TPM.StandardizedAndNormalized.txt", header=T, check.names = F) %>% column_to_rownames("IID")
+
+PCA.results <- prcomp(t(GeneExpMatrix))
+
+
+PCA.loadings <- EgenesTested %>%
+  dplyr::select(C.gene, H.gene) %>%
+  inner_join(
+    (PCA.results$rotation[,1:10] %>%
+    as.data.frame() %>%
+    rownames_to_column("gene")),
+    by=c("C.gene"="gene")) %>%
+    dplyr::select(-C.gene)
+  
+
+results.combined.PCs <- ChimpOverdispersionTable %>%
+  dplyr::select(gene, Chimp.Residual) %>%
+  inner_join(PCA.loadings, by=c("gene"="H.gene")) %>%
+  column_to_rownames("gene")
+
+MyCorMatrix <- corr.test(x=results.combined.PCs[,1],
+                         y=results.combined.PCs[,-1],
+                         method="pearson",
+                         adjust="BH")
+
+
+MyCorMatrix$r
+MyCorMatrix$p
+
+```
+
+Ok in retrospect this was silly and obvious and circular. Highly dispersed genes will be associated with top PCs.
+
+## Conclusions
+
+

@@ -148,6 +148,36 @@ Plot.dNdS.byGroup <- function(ToPlot){
   return(list(plot=Human.PercentNonIdentity.plot, PvalTable=PvalTable))
 }
 
+#Function assumes dN.dS column already in ToPlot
+Plot.dNdS.byGroup2 <- function(ToPlot){
+  SharedLabel <- "both"
+  NeitherLabel <- "neither"
+  ChimpLabel <- "chimp"
+  HumanLabel <- "human"
+  AlternativeHypothesis <- c(
+    "chimp > neither",
+    "human > neither",
+    "both > chimp",
+    "both > human")
+  Pvalues <- c(
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(ChimpLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(HumanLabel,NeitherLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,ChimpLabel)), dN.dS ~ group, alternative="greater")$p.value, 2),
+    format.pval(wilcox.test(data=ToPlot %>% filter(group %in% c(SharedLabel,HumanLabel)), dN.dS ~ group, alternative="greater")$p.value, 2)
+  )
+  PvalTable <- data.frame(AlternativeHypothesis,Pvalues)
+  colnames(PvalTable) <- c('"H"[a]', "`P-value`")
+  Human.PercentNonIdentity.plot <- ggplot(ToPlot, aes(color=group,x=dN.dS)) +
+    stat_ecdf(geom = "step") +
+    scale_x_continuous(trans='log10', limits=c(0.01,10)) +
+    ylab("Cumulative frequency") +
+    xlab("dN/dS") +
+    labs(color = "eGene discovered in") +
+    theme_bw() +
+    theme(legend.position="bottom")
+
+  return(list(plot=Human.PercentNonIdentity.plot, PvalTable=PvalTable))
+}
 
 
 Plot.Interpecies.DE.byGroup <- function(TsvToCombinedEgenes.df, DE.df){
