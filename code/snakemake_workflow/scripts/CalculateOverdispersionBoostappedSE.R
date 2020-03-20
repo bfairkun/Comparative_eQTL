@@ -43,8 +43,8 @@ CountTableHumanFile <- '../../output/PowerAnalysisFullCountTable.Human.subread.t
 OutputDE <- '../../output/Final/TableS1.tab'
 OutputDispersionEstimatesChimp <- 'OverdispersionBootsrappedIterations/Chimp.1.2.tab'
 OutputDispersionEstimatesHuman <- 'OverdispersionBootsrappedIterations/Human.1.2.tab'
-InitialSeed <- 1
 Npermutations <- 5
+InitialSeed <- 1
 
 args = commandArgs(trailingOnly=TRUE)
 CountTableChimpFile <- args[1]
@@ -52,8 +52,8 @@ CountTableHumanFile <- args[2]
 OutputDE <- args[3]
 OutputDispersionEstimatesChimp <- args[4]
 OutputDispersionEstimatesHuman <- args[5]
-InitialSeed <- args[6]
-Npermutations <- args[7]
+Npermutations <- args[6]
+InitialSeed <- args[7]
 
 ### Pick samples to drop
 
