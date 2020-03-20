@@ -127,6 +127,11 @@ eQTL_mapping:
     #Run matrix eqtl once and ouput summary statistics for every snp-gene pair
     #using this covariates file.
 
+Overdispersion:
+    BootstrapSE_ChunkSize: 5
+    BootstrapSE_NumChunks: 20
+
+
 
 
 # Extract DNA-seq and RNA-seq reads from this region to make mock data for

@@ -4,6 +4,7 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "../../output/Final/TableS1.tab",
         "MiscOutput/ExonicRegions.chimp.bed",
         "../../output/QC/RNASeqMultiQC.stats.tab",
         "MiscOutput/CallableSites.summary",
@@ -15,7 +16,7 @@ rule all:
         "MiscOutput/ExonicRegions.human.bed",
         "../../output/LeflerTestedSnps.Chimp.cis.tsv",
         "../../output/QQPlot.png",
-        "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.Permuted.txt",
+        # "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.Permuted.txt",
         "../../output/SharedSnpExampleBoxplot.human.expression.txt",
         "../../output/LeflerTestedSnps.Human.snploc.txt",
         "../../output/LeflerTestedSnps.tsv",
@@ -122,4 +123,5 @@ include: "rules/GTExReanalysis_constantSampleSize.smk"
 include: "rules/vep.smk"
 include: "rules/CalculateSubstitutionsWithGorilla.smk"
 include: "rules/qc.smk"
+include: "rules/MakeSupplementalTables.smk"
 #include: "rules/annotation.smk"
