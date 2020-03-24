@@ -44,16 +44,15 @@ OutputDE <- '../../output/Final/TableS1.tab'
 OutputDispersionEstimatesChimp <- 'OverdispersionBootsrappedIterations/Chimp.1.2.tab'
 OutputDispersionEstimatesHuman <- 'OverdispersionBootsrappedIterations/Human.1.2.tab'
 Npermutations <- 5
-InitialSeed <- 1
+# InitialSeed <- 1
 
 args = commandArgs(trailingOnly=TRUE)
 CountTableChimpFile <- args[1]
 CountTableHumanFile <- args[2]
 OutputDE <- args[3]
-OutputDispersionEstimatesChimp <- args[4]
-OutputDispersionEstimatesHuman <- args[5]
-Npermutations <- as.numeric(args[6])
-InitialSeed <- as.numeric(args[7])
+OutputDispersionEstimates <- args[4]
+Npermutations <- as.numeric(args[5])
+InitialSeed <- as.numeric(args[6])
 
 ### Pick samples to drop
 
@@ -72,28 +71,23 @@ NumRowsToAnalyze=length(GeneListForOverdispersionCalculation)
 CountTables <- GetCountTables(CountTableChimpFile,
                               CountTableHumanFile,
                               0, GeneListForOverdispersionCalculation, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+CombinedCountMatrix <- cbind(CountTables$Chimp$Counts, CountTables$Human$Counts)
+CombinedGeneLenMatrix <- cbind(rep.col(CountTables$Chimp$GeneLengths, ncol(CountTables$Chimp$Counts)), rep.col(CountTables$Human$GeneLengths, ncol(CountTables$Human$Counts)))
 
 
-HumanResultsMatrix <-matrix(data=NA, nrow=NumRowsToAnalyze, ncol=Npermutations)
-ChimpResultsMatrix <-matrix(data=NA, nrow=NumRowsToAnalyze, ncol=Npermutations)
+ResultsMatrix <-matrix(data=NA, nrow=NumRowsToAnalyze, ncol=Npermutations)
 
 for (i in 1:Npermutations){
-  HumanResultsMatrix[,i] <- Resampled.GetDispersion(CountTables$Human$Counts,
-                                                    rep.col(CountTables$Human$GeneLengths, ncol(CountTables$Human$Counts)),
+  print(i+InitialSeed)
+  ResultsMatrix[,i] <- Resampled.GetDispersion(CombinedCountMatrix,
+                                                    CombinedGeneLenMatrix,
                                                     seed=i + InitialSeed,
                                                     n=39,
                                                     N_genes=NumRowsToAnalyze)
-  ChimpResultsMatrix[,i] <- Resampled.GetDispersion(CountTables$Chimp$Counts,
-                                                    rep.col(CountTables$Chimp$GeneLengths, ncol(CountTables$Chimp$Counts)),
-                                                    seed=i + InitialSeed,
-                                                    n=39,
-                                                    N_genes=NumRowsToAnalyze)
-}
+} 
 
-row.names(ChimpResultsMatrix) <- rownames(CountTables$Chimp$Counts[1:NumRowsToAnalyze,])
-row.names(HumanResultsMatrix) <- rownames(CountTables$Human$Counts[1:NumRowsToAnalyze,])
+row.names(ResultsMatrix) <- rownames(CombinedCountMatrix[1:NumRowsToAnalyze,])
 
-write.table(t(ChimpResultsMatrix), OutputDispersionEstimatesChimp, quote=F, sep='\t', col.names = T, row.names=F)
-write.table(t(HumanResultsMatrix), OutputDispersionEstimatesHuman, quote=F, sep='\t', col.names = T, row.names=F)
+write.table(t(ResultsMatrix), OutputDispersionEstimates, quote=F, sep='\t', col.names = T, row.names=F)
 
 

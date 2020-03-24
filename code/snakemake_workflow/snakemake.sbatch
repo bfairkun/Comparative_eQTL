@@ -14,4 +14,4 @@
 #activate environment
 source activate my_ChimpEQTL_env
 
-snakemake --jobs 200 -p --ri --use-conda --cluster-config cluster-config.json --cluster "sbatch --partition={cluster.partition} --job-name={cluster.name} --output=/dev/null --job-name={cluster.name} --nodes={cluster.n} --mem={cluster.mem}"
+snakemake --jobs 199 -p --ri --use-conda --cluster-config cluster-config.json --cluster "sbatch --partition={cluster.partition} --job-name={cluster.name} --output=/dev/null --job-name={cluster.name} --nodes={cluster.n} --mem={cluster.mem}"

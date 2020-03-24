@@ -116,6 +116,9 @@
   "QQPlot":
   {"mem" : 10000},
 
+  "GetPValues_FromBootstrapReplicates":
+  {"mem" : 12000},
+
   "MatrixEQTL_BestModelFromConfigFullResultsPermuted":
   {"mem" : 24000}
 }

@@ -125,6 +125,4 @@ cat('Analysis done in: ', me$time.in.sec, ' seconds', '\n');
 ## Plot the Q-Q plot of local p-values
 
 ggsave(file=ouput_QQ, plot(me))
-
-
-
+cat('Done')

@@ -455,13 +455,13 @@ rule MatrixEQTL_BestModelFromConfigFullResults:
         GRM = CovarianceMatrix,
     output:
         results = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt",
-        BestGenePvals = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/BestPvalueNonPermuted.txt",
+        # BestGenePvals = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/BestPvalueNonPermuted.txt",
         fig = "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/images/Results.png",
     log:
         "logs/eQTL_mapping/MatrixEQTL/ConfigCovariateModel.log"
     shell:
         """
-        Rscript scripts/MatrixEqtl_Cis.AllPvals.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} 250000 &> {log}
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/MatrixEqtl_Cis.AllPvals.R {input.snps} {input.snp_locs} {input.phenotypes} {input.gene_loc} {input.covariates} {input.GRM} {output.results} {output.fig} 250000 &> {log}
         """
 
 rule MatrixEQTL_BestModelFromConfigFullResultsPermuted:

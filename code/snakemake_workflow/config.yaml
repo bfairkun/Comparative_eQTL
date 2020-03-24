@@ -128,11 +128,10 @@ eQTL_mapping:
     #using this covariates file.
 
 Overdispersion:
-    BootstrapSE_ChunkSize: 5
-    BootstrapSE_NumChunks: 20
-
-
-
+    BootstrapSE_ChunkSize: 20
+    BootstrapSE_NumChunks: 50
+    BoostrapInference_ChunkSize: 50
+    BoostrapInference_NumChunks: 400
 
 # Extract DNA-seq and RNA-seq reads from this region to make mock data for
 # testing purposes.

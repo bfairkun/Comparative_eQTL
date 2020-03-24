@@ -117,7 +117,7 @@ rule OverdispersionInChimps:
         "logs/OverdispersionAnalysis/CalculateOverdispersionChimps.log"
     shell:
         """
-        Rscript scripts/CalculateChimpOverdispersion.R 2> {log}
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/CalculateChimpOverdispersion.R 2> {log}
         """
 
 rule GetHeartLeftVentricleChromHMM:

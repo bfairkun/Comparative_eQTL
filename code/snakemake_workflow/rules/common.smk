@@ -128,6 +128,12 @@ def get_vcf_chunks_by_contig(wildcards):
                   contig=wildcards.contig,
                   coords=freebayes_region_chunks_dict[wildcards.contig])
 
+def GetInitialSeedNumberForPermutationChunkBootstrapSE(wildcards):
+    return int(wildcards.n) * int(config["Overdispersion"]["BootstrapSE_ChunkSize"])
+
+def GetInitialSeedNumberForPermutationChunkBootstrapInference(wildcards):
+    return int(wildcards.n) * int(config["Overdispersion"]["BoostrapInference_ChunkSize"])
+
 def GetInitialSeedNumberForPermutationChunk(wildcards):
     return int(wildcards.n) * int(config["eQTL_mapping"]["PermutationChunkSize"])
 

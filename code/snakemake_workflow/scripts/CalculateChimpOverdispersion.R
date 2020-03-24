@@ -11,16 +11,17 @@ GetLoessResidual <- function(x, y){
   return(loess.residual)
 }
 
-HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
-ChimpSamplesToDrop <- c("Little_R")
+HumanSamplesToDrop <- c("SRR613186",  "SRR598509",  "SRR1478149", "SRR603918",  "SRR1507229", "SRR1478900", "SRR1477015", "SRR601986",  "SRR614996",  "SRR1474730")
+ChimpSamplesToDrop <- c()
 OtherMetadata <- as.data.frame(read_excel("../../data/Metadata.xlsx"))
 VirusChallengedChimps <- OtherMetadata %>% filter(grepl("V+",Viral.status)) %>% pull(Individual.ID)
 
 CountTableChimpFile <- '../../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
 CountTableHumanFile <- '../../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
 
-DE.results <- read.table("../../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', header=T, stringsAsFactors = F)
-GeneListForOverdispersionCalculation <- DE.results$gene
+OutputDE <- '../../output/Final/TableS1.tab'
+DE.results <- read.delim(OutputDE, sep='\t', stringsAsFactors = F)
+GeneListForOverdispersionCalculation <- DE.results$Ensembl_geneID
 
 ### estimate overdispersion
 CountTables <- GetCountTables(CountTableChimpFile,

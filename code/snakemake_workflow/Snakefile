@@ -4,7 +4,11 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "Dispersion/HumanSE.tab",
+        "../../output/OverdispersionEstimatesFromChimp.txt.Pvals.tab",
         "../../output/Final/TableS1.tab",
+        "Dispersion/BoostrapSE.Chimp.PermutationsCombined.txt",
+        "Dispersion/BoostrapInference.PermutationsCombined.txt",
         "MiscOutput/ExonicRegions.chimp.bed",
         "../../output/QC/RNASeqMultiQC.stats.tab",
         "MiscOutput/CallableSites.summary",
@@ -15,7 +19,7 @@ rule all:
         "../../output/NeutralityIndex/human/HumansGtexSubsample/PnPs.txt",
         "MiscOutput/ExonicRegions.human.bed",
         "../../output/LeflerTestedSnps.Chimp.cis.tsv",
-        "../../output/QQPlot.png",
+        # "../../output/QQPlot.png",
         # "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.Permuted.txt",
         "../../output/SharedSnpExampleBoxplot.human.expression.txt",
         "../../output/LeflerTestedSnps.Human.snploc.txt",
