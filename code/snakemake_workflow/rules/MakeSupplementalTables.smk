@@ -101,6 +101,19 @@ rule GetSE_FromBootstrapReplicates:
         ./scripts/GetSE_FromBootstrapIterations.py
         """
 
+rule CopySE_toOutput:
+    input:
+        ChimpSEOut = "Dispersion/ChimpSE.tab",
+        HumanSEOut = "Dispersion/HumanSE.tab"
+    output:
+        "../../output/OverdispersionEstimatesFromChimp.txt.SE.tab.gz"
+    shell:
+        """
+        paste -d'\\t' {input.ChimpSEOut} {input.HumanSEOut} | awk -F'\\t' -v OFS='\\t' 'NR==1 {{ print "gene", "Chimp.SE", "Human.SE" }} NR>1 {{ print $1, $2, $4 }}' | gzip - > {output}
+        """
+
+
+
 rule GetPValues_FromBootstrapReplicates:
     input:
         BootsrapReps = "Dispersion/BoostrapInference.PermutationsCombined.txt",

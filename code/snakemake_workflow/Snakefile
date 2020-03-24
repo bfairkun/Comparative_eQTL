@@ -4,7 +4,7 @@ include: "rules/common.smk"
 
 rule all:
     input:
-        "Dispersion/HumanSE.tab",
+        "../../output/OverdispersionEstimatesFromChimp.txt.SE.tab.gz",
         "../../output/OverdispersionEstimatesFromChimp.txt.Pvals.tab",
         "../../output/Final/TableS1.tab",
         "Dispersion/BoostrapSE.Chimp.PermutationsCombined.txt",
