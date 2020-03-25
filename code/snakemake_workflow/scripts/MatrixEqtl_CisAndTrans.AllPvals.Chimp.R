@@ -33,7 +33,7 @@ library(tidyverse)
 # OutCisImage <- "~/temp/Cis.png"
 # OutTransImage <- "~/temp/Trans.png"
 
-# setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
+setwd("/project2/gilad/bjf79_project1/projects/Comparative_eQTL/code/snakemake_workflow/")
 SNP_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snps"
 snps_location_file_name <- "eQTL_mapping/SharedPolymorphisms/SpeciesSharedSnps.PanTro5.snploc"
 expression_file_name <- "eQTL_mapping/MatrixEQTL/ForAssociationTesting.phenotypes.txt"
@@ -230,12 +230,16 @@ plot(permuted)
 
 length(me$trans$eqtls$pvalue)
 
+TestResults <- wilcox.test(me_matched$cis$eqtls$pvalue, me$cis$eqtls$pvalue, alternative="greater")
+TestResults2 <- wilcox.test(permuted$cis$eqtls$pvalue, me_matched$cis$eqtls$pvalue, alternative="greater")
+lb1 = paste0('P==', format.pval(TestResults$p.value, 2))
 CisQQPlot <- ggplot(me$cis$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(pvalue)/length(pvalue)))) +
   geom_point(aes(color="Variants shared with human")) +
   geom_point(data=permuted$cis$eqtls, aes(color="Variants shared with human; permuted data")) +
   geom_point(data=me_matched$cis$eqtls, aes(color="Matched control variants")) +
   xlab("-log10(Theoretical-Pvalues)") +
   ylab("-log10(Observed-Pvalues)") +
+  annotate("text",x=-Inf,y=Inf, label=lb1, hjust=-0.1, vjust=1.2, parse=TRUE) +
   geom_abline() +
   scale_color_manual(values = c("Variants shared with human" = "red",
                                 "Variants shared with human; permuted data" = "black",
@@ -248,7 +252,6 @@ CisQQPlot <- ggplot(me$cis$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(
 
 ggsave(OutCisImage, plot=CisQQPlot, height=3.7, width=3.7)
 
-wilcox.test(me_matched$cis$eqtls$pvalue, me$cis$eqtls$pvalue)
 
 TransQQPlot <- ggplot(me$trans$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(pvalue)/length(pvalue)))) +
   geom_point(aes(color="Variants shared with human")) +
@@ -256,6 +259,7 @@ TransQQPlot <- ggplot(me$trans$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:len
   geom_point(data=me_matched$trans$eqtls, aes(color="Matched control variants")) +
   xlab("-log10(Theoretical-Pvalues)") +
   ylab("-log10(Observed-Pvalues)") +
+  annotate("text",x=-Inf,y=Inf, label=lb1, hjust=-0.1, vjust=1.2, parse=TRUE) +
   geom_abline() +
   scale_color_manual(values = c("Variants shared with human" = "red",
                                 "Variants shared with human; permuted data" = "black",

@@ -226,12 +226,17 @@ plot(permuted)
 
 length(me$trans$eqtls$pvalue)
 
+TestResults <- wilcox.test(me_matched$cis$eqtls$pvalue, me$cis$eqtls$pvalue, alternative="greater")
+TestResults2 <- wilcox.test(permuted$cis$eqtls$pvalue, me_matched$cis$eqtls$pvalue, alternative="greater")
+
+lb1 = paste0('P==', format.pval(TestResults$p.value, 2))
 CisQQPlot <- ggplot(me$cis$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(pvalue)/length(pvalue)))) +
-  geom_point(aes(color="Variants shared with human")) +
-  geom_point(data=permuted$cis$eqtls, aes(color="Variants shared with human; permuted data")) +
+  geom_point(aes(color="Variants shared with chimp")) +
+  geom_point(data=permuted$cis$eqtls, aes(color="Variants shared with chimp; permuted data")) +
   geom_point(data=me_matched$cis$eqtls, aes(color="Matched control variants")) +
   xlab("-log10(Theoretical-Pvalues)") +
   ylab("-log10(Observed-Pvalues)") +
+  annotate("text",x=-Inf,y=Inf, label=lb1, hjust=-0.1, vjust=1.2, parse=TRUE) +
   geom_abline() +
   scale_color_manual(values = c("Variants shared with chimp" = "red",
                                 "Variants shared with chimp; permuted data" = "black",
@@ -241,10 +246,11 @@ CisQQPlot <- ggplot(me$cis$eqtls, aes(y=-log10(sort(pvalue)), x=-log10(1:length(
   theme(legend.title=element_blank()) +
   theme(legend.key.width=unit(0.2, "cm"),
         legend.direction = "vertical")
-
+CisQQPlot
 ggsave(OutCisImage, plot=CisQQPlot, height=3.7, width=3.7)
 
-wilcox.test(me_matched$cis$eqtls$pvalue, me$cis$eqtls$pvalue)
+
+
 wilcox.test(me_matched$trans$eqtls$pvalue, me$trans$eqtls$pvalue)
 
 
