@@ -6,7 +6,7 @@ rule all:
     input:
         "../../output/OverdispersionEstimatesFromChimp.txt.SE.tab.gz",
         "../../output/OverdispersionEstimatesFromChimp.txt.Pvals.tab",
-        "../../output/Final/TableS1.tab",
+        "../../output/Final/TableS2.tab",
         "Dispersion/BoostrapSE.Chimp.PermutationsCombined.txt",
         "Dispersion/BoostrapInference.PermutationsCombined.txt",
         "MiscOutput/ExonicRegions.chimp.bed",

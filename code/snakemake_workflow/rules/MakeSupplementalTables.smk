@@ -4,7 +4,7 @@ rule DE_edgeR:
         HumanTable = "../../output/PowerAnalysisFullCountTable.Human.subread.txt.gz",
         GeneIDs = "../../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz"
     output:
-        "../../output/Final/TableS1.tab"
+        "../../output/Final/TableS2.tab"
     log:
         "logs/MakeSupplementalTables/DE_edgeR.log"
     shell:

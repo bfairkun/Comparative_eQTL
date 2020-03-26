@@ -4,7 +4,7 @@ source("../CustomFunctions.R")
 
 CountTableChimpFile <- '../../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
 CountTableHumanFile <- '../../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
-OutputDE <- '../../output/Final/TableS1.tab'
+OutputDE <- '../../output/Final/TableS2.tab'
 GeneIDs <- '../../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz'
 
 HumanSamplesToDrop <- c("SRR613186",  "SRR598509",  "SRR1478149", "SRR603918",  "SRR1507229", "SRR1478900", "SRR1477015", "SRR601986",  "SRR614996",  "SRR1474730") 
