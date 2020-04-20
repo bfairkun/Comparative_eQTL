@@ -119,6 +119,9 @@
   "GetPValues_FromBootstrapReplicates":
   {"mem" : 12000},
 
+  "PlotPowerResults":
+  {"mem" : 10000},
+
   "MatrixEQTL_BestModelFromConfigFullResultsPermuted":
   {"mem" : 24000}
 }

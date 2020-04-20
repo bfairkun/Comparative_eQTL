@@ -4,7 +4,9 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        expand("../../output/Final/FigS_Power_NumDE_{ReadDepthKey}.pdf", ReadDepthKey=config["PowerAnalysis"]["DepthsToTest"]+["Full"]),
         "../../output/OverdispersionEstimatesFromChimp.txt.SE.tab.gz",
+        "PowerAnalysis/BootstrapRepsMerged.txt.gz",
         "../../output/OverdispersionEstimatesFromChimp.txt.Pvals.tab",
         "../../output/Final/TableS2.tab",
         "Dispersion/BoostrapSE.Chimp.PermutationsCombined.txt",
@@ -56,7 +58,7 @@ rule all:
         # "MiscOutput/LocusZoomPlot",
         "MiscOutput/ForAssociationTesting.chromsrenamed.vcf.gz",
         "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt",
-        expand("PowerAnalysis/Subread/{species}.{depth}.subread.txt.gz", species=["Human", "Chimp"], depth=[10000000,25000000]),
+        expand("PowerAnalysis/Subread/{species}.{depth}.subread.txt.gz", species=["Human", "Chimp"], depth=config["PowerAnalysis"]["DepthsToTest"]),
         expand(config["gitinclude_output"] + "PowerAnalysisFullCountTable.{species}.subread.txt.gz", species=["Human", "Chimp"]),
 
         "PowerAnalysis/Multiqc/multiqc_report.html",

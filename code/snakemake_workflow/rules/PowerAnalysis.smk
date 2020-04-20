@@ -153,3 +153,40 @@ rule PowerAnalysisSubreadCountDepthMatched:
         rm {wildcards.species}.temp.txt {wildcards.species}.temp.txt.summary
         cp {output.Output} {output.OutputGit}
         """
+
+rule DE_edgeR_BootstrapRep:
+    input:
+        ChimpTable = "../../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz",
+        HumanTable = "../../output/PowerAnalysisFullCountTable.Human.subread.txt.gz",
+        CountTables = GetCountTablesForDE_Bootstrap,
+        DropFile = "../../data/DE_SamplesToDrop.txt"
+    output:
+        Results = "PowerAnalysis/BootstrapReps/{ReadDepthKey}_{seed}.txt.gz"
+    log:
+        "logs/MakeSupplementalTables/DE_edgeR_BootstrapRep.{ReadDepthKey}.{seed}.log"
+    shell:
+        """
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/DE_BootstrapSamples.R {wildcards.seed} {input.CountTables} {wildcards.ReadDepthKey} {output.Results} &> {log}
+        """
+
+rule MergePowerBootstrapReps:
+    input:
+        BootstrapRepOutput
+    output:
+        "PowerAnalysis/BootstrapRepsMerged.txt.gz"
+    shell:
+        "cat {input} > {output}"
+
+
+rule PlotPowerResults:
+    input:
+        bootsrap = "PowerAnalysis/BootstrapRepsMerged.txt.gz",
+        real = "../../output/Final/TableS2.tab",
+    output:
+        "../../output/Final/FigS_Power_NumDE_{ReadDepthKey}.pdf"
+    shell:
+        """
+        /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/PlotPowerAnalysisBootstrapResults.R {input.bootsrap} {input.real} {wildcards.ReadDepthKey}
+        """
+
+

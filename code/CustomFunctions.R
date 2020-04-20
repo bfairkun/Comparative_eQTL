@@ -410,7 +410,7 @@ GetCountTables <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSiz
 }
 
 
-DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, FC.NullInterval, drop, ChimpSampleDrop=NULL, HumanSampleDrop=NULL)
+DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize, FC.NullInterval, drop, ChimpSampleDrop=NULL, HumanSampleDrop=NULL, Replacement=FALSE)
   #if SubsampleSize parameter == 0, use full table, otherwise, subsample from it
 {
   FullChimpData <- read.table(gzfile(ChimpCountTableFile), header=T, check.names=FALSE, skip=1)
@@ -430,10 +430,10 @@ DE.Subsampled <-function(ChimpCountTableFile, HumanCountTableFile, SubsampleSize
     colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
 
   } else {
-    CountTableChimp <- FullChimpData %>% dplyr::select(c(1:6, sample(7:length(FullChimpData), SubsampleSize)))
+    CountTableChimp <- FullChimpData %>% dplyr::select(c(1:6, sample(7:length(FullChimpData), SubsampleSize, replace = Replacement)))
     colnames(CountTableChimp) <- paste0("C.", colnames(CountTableChimp))
 
-    CountTableHuman <- FullHumanData %>% dplyr::select(c(1:6, sample(7:length(FullHumanData), SubsampleSize)))
+    CountTableHuman <- FullHumanData %>% dplyr::select(c(1:6, sample(7:length(FullHumanData), SubsampleSize, replace = Replacement)))
     colnames(CountTableHuman) <- paste0("H.", colnames(CountTableHuman))
   }
 

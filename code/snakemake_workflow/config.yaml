@@ -153,6 +153,10 @@ PowerAnalysis:
             "/project2/gilad/bjf79/genomes/2017_July_ortho/2017_July_ortho_human.gtf"
         Chimp_gtf:
             "/project2/gilad/bjf79/genomes/2017_July_ortho/2017_July_ortho_chimp.nochr.gtf"
+    DepthsToTest:
+        - 10000000
+        - 25000000
+    BootstrapReps: 100
     #Chimp reference genome defined earlier
 
 LocusZoomDirectoryPath:

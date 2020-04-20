@@ -190,3 +190,13 @@ def GetVepOutput(wildcards):
 
 genotypedregions, = glob_wildcards("genotyped/all.{region}.vcf.gz")
 Num_subsamples = int(config["GTEx_eQTL_mapping"]["number_subsamples"])
+
+def GetCountTablesForDE_Bootstrap(wildcards):
+    ReadDepthKey = wildcards.ReadDepthKey
+    if ReadDepthKey == "Full":
+        OutList = ["../../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz", "../../output/PowerAnalysisFullCountTable.Human.subread.txt.gz"]
+    else:
+        OutList = ["../../output/PowerAnalysisCountTable.Chimp.{ReadDepthKey}.subread.txt.gz", "../../output/PowerAnalysisCountTable.Human.{ReadDepthKey}.subread.txt.gz"]
+    return(OutList)
+
+BootstrapRepOutput = expand("PowerAnalysis/BootstrapReps/{ReadDepthKey}_{seed}.txt.gz", ReadDepthKey=config["PowerAnalysis"]["DepthsToTest"]+["Full"], seed=range(0, int(config["PowerAnalysis"]["BootstrapReps"]))),
