@@ -5,7 +5,7 @@ include: "rules/common.smk"
 rule all:
     input:
         expand("../../output/Final/FigS_Power_NumDE_{ReadDepthKey}.pdf", ReadDepthKey=config["PowerAnalysis"]["DepthsToTest"]+["Full"]),
-        "../../output/OverdispersionEstimatesFromChimp.txt.SE.tab.gz",
+        expand("../../output/Overdispersion{DropSampleList}_P_SE_Combined.txt.gz", DropSampleList=list(samples_dispersion["WildcardIdentifier"])),
         "PowerAnalysis/BootstrapRepsMerged.txt.gz",
         "../../output/OverdispersionEstimatesFromChimp.txt.Pvals.tab",
         "../../output/Final/TableS2.tab",

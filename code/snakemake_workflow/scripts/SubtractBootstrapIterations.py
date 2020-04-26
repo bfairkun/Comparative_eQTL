@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import pandas as pd
 import numpy as np
+import sys
 
-a = pd.read_csv('Dispersion/BoostrapInference.PermutationsCombined.txt', header=0, sep='\t')
-Observed=pd.read_csv('../../output/OverdispersionEstimatesFromChimp.txt', header=0, sep='\t')
+InputBootstraps, InputObserved, Output = sys.argv[1:]
+
+a = pd.read_csv(InputBootstraps, header=0, sep='\t')
+Observed=pd.read_csv(InputObserved, header=0, sep='\t')
 print('read in files')
 
 # Get distrubtuon of abs difference under null
@@ -16,4 +19,4 @@ P=np.minimum(1.0, (np.sum(np.greater(AbsDifference, np.expand_dims(Actuals,0))) 
 mask=np.isnan(Actuals)
 P_masked = pd.DataFrame(np.ma.masked_array(P, mask))
 P_masked['gene'] = Observed['gene']
-P_masked.to_csv(path_or_buf="../../output/OverdispersionEstimatesFromChimp.txt.Pvals.tab", header=['P', 'gene'], na_rep="NA", sep='\t', index=False)
+P_masked.to_csv(path_or_buf=Output, header=['P', 'gene'], na_rep="NA", sep='\t', index=False)

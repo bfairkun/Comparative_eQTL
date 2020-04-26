@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 import pandas as pd
 import numpy as np
+import sys
 
-ChimpBootsrapReps = "Dispersion/BoostrapSE.Chimp.PermutationsCombined.txt"
-HumanBootsrapReps = "Dispersion/BoostrapSE.Human.PermutationsCombined.txt"
-ChimpSEOut = "Dispersion/ChimpSE.tab"
-HumanSEOut = "Dispersion/HumanSE.tab"
+# ChimpBootsrapReps = "Dispersion/BoostrapSE.Chimp.PermutationsCombined.txt"
+# HumanBootsrapReps = "Dispersion/BoostrapSE.Human.PermutationsCombined.txt"
+# ChimpSEOut = "Dispersion/ChimpSE.tab"
+# HumanSEOut = "Dispersion/HumanSE.tab"
+
+ChimpBootsrapReps, HumanBootsrapReps, ChimpSEOut, HumanSEOut = sys.argv[1:]
 
 Chimp = pd.read_csv(ChimpBootsrapReps, header=0, sep='\t')
 Human = pd.read_csv(HumanBootsrapReps, header=0, sep='\t')

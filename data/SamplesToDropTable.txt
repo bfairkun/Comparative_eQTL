@@ -1,0 +1,3 @@
+Description	WildcardIdentifier	DropSampleList	ObservedDispersionOutput
+39 human + 39 chimp		../../data/DE_SamplesToDrop.txt	../../output/OverdispersionEstimatesFromChimp.txt
+39 human + no virus challanged chimps	NoVirus	../../data/DE_SamplesToDrop.NoVirusChallangedChimps.txt	../../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt

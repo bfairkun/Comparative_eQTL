@@ -54,11 +54,15 @@ OutputDispersionEstimatesChimp <- args[4]
 OutputDispersionEstimatesHuman <- args[5]
 Npermutations <- as.numeric(args[6])
 InitialSeed <- as.numeric(args[7])
+DropFileName <- args[8]
 
 ### Pick samples to drop
 
-HumanSamplesToDrop <- c("SRR613186",  "SRR598509",  "SRR1478149", "SRR603918",  "SRR1507229", "SRR1478900", "SRR1477015", "SRR601986",  "SRR614996",  "SRR1474730")
-ChimpSamplesToDrop <- c()
+DropFile <- read.delim(DropFileName, sep='\t', col.names = c("Sample", "Species"), stringsAsFactors = F)
+
+HumanSamplesToDrop <- DropFile %>% filter(Species=="Human") %>% pull(Sample)
+ChimpSamplesToDrop <- DropFile %>% filter(Species=="Chimp") %>% pull(Sample)
+
 
 ### Pick genes to analyze
 

@@ -14,6 +14,8 @@ samples = pd.read_table(config["samples"]).set_index("sample", drop=False)
 samples_ForMockData = pd.read_table(config["MockDataMaker"]["SampleListForMockData"]).set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
 
+samples_dispersion = pd.read_table("../../data/SamplesToDropTable.txt").fillna('')
+
 units = pd.read_table(config["units"], dtype=str).set_index(["sample", "unit"], drop=False)
 units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])  # enforce str in index
 validate(units, schema="../schemas/units.schema.yaml")
