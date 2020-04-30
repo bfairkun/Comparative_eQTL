@@ -1,154 +1,14 @@
 # fastQTL --vcf genotypes.vcf.gz --bed phenotypes.bed.gz --region 22:17000000-18000000 --permute 1000 --out permutations.default.txt.gzfastQTL --vcf genotypes.vcf.gz --bed phenotypes.bed.gz --region 22:17000000-18000000 --permute 1000 --out permutations.default.txt.gz
 
 rule DownloadGtexData:
+    """
+    TODO. finish this wget rule for reproducibility sake. In the meantime I
+    just manually executed this rule but did not include it in this snakemake
+    pipeline
+    """
     output:
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Uterus.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Thyroid.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Hippocampus.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Esophagus_Muscularis.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Minor_Salivary_Gland.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Cerebellar_Hemisphere.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Colon_Transverse.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Kidney_Cortex.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Lung.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Caudate_basal_ganglia.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Ovary.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Artery_Aorta.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Pancreas.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Cerebellum.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Pituitary.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Prostate.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Heart_Left_Ventricle.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Artery_Tibial.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Cells_EBV-transformed_lymphocytes.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Adrenal_Gland.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Testis.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Uterus.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Stomach.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Adipose_Subcutaneous.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Cortex.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Colon_Sigmoid.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Nerve_Tibial.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Frontal_Cortex_BA9.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Esophagus_Muscularis.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Spinal_cord_cervical_c-1.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Skin_Not_Sun_Exposed_Suprapubic.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Hypothalamus.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Hippocampus.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Artery_Tibial.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Minor_Salivary_Gland.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Esophagus_Gastroesophageal_Junction.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Skin_Not_Sun_Exposed_Suprapubic.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Liver.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Anterior_cingulate_cortex_BA24.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Putamen_basal_ganglia.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Cerebellar_Hemisphere.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Heart_Left_Ventricle.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Muscle_Skeletal.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Anterior_cingulate_cortex_BA24.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Stomach.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Ovary.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Pituitary.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Cortex.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Spinal_cord_cervical_c-1.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Adrenal_Gland.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Colon_Transverse.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Vagina.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Kidney_Cortex.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Heart_Atrial_Appendage.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Spleen.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Cells_Cultured_fibroblasts.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Frontal_Cortex_BA9.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Nucleus_accumbens_basal_ganglia.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Heart_Atrial_Appendage.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Esophagus_Mucosa.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Artery_Coronary.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Liver.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Cells_Cultured_fibroblasts.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Esophagus_Gastroesophageal_Junction.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Lung.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Thyroid.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Whole_Blood.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Cerebellum.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Substantia_nigra.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Nucleus_accumbens_basal_ganglia.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Amygdala.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Putamen_basal_ganglia.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Muscle_Skeletal.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Skin_Sun_Exposed_Lower_leg.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Artery_Aorta.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Amygdala.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Nerve_Tibial.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Colon_Sigmoid.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Prostate.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Adipose_Visceral_Omentum.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Testis.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Esophagus_Mucosa.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Caudate_basal_ganglia.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Spleen.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Adipose_Visceral_Omentum.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Pancreas.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Substantia_nigra.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Small_Intestine_Terminal_Ileum.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Skin_Sun_Exposed_Lower_leg.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Breast_Mammary_Tissue.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Cells_EBV-transformed_lymphocytes.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Adipose_Subcutaneous.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Whole_Blood.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Breast_Mammary_Tissue.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Vagina.v8.normalized_expression.bed.gz",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Brain_Hypothalamus.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Small_Intestine_Terminal_Ileum.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Artery_Coronary.v8.normalized_expression.bed.gz.tbi",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Esophagus_Gastroesophageal_Junction.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Stomach.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Minor_Salivary_Gland.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Thyroid.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Heart_Atrial_Appendage.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Adipose_Subcutaneous.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Kidney_Cortex.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Colon_Sigmoid.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Breast_Mammary_Tissue.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Nerve_Tibial.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Nucleus_accumbens_basal_ganglia.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Liver.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Testis.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Adrenal_Gland.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Esophagus_Mucosa.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Cerebellar_Hemisphere.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Lung.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Artery_Aorta.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Substantia_nigra.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Artery_Coronary.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Colon_Transverse.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Artery_Tibial.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Hippocampus.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Cerebellum.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Cells_Cultured_fibroblasts.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Amygdala.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Skin_Not_Sun_Exposed_Suprapubic.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Hypothalamus.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Vagina.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Prostate.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Skin_Sun_Exposed_Lower_leg.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Pancreas.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Anterior_cingulate_cortex_BA24.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Putamen_basal_ganglia.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Frontal_Cortex_BA9.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Adipose_Visceral_Omentum.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Uterus.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Ovary.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Spleen.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Spinal_cord_cervical_c-1.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Heart_Left_Ventricle.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Caudate_basal_ganglia.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Whole_Blood.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Brain_Cortex.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Small_Intestine_Terminal_Ileum.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Cells_EBV-transformed_lymphocytes.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Pituitary.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Esophagus_Muscularis.v8.covariates.txt",
-        "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/Muscle_Skeletal.v8.covariates.txt",
+        expand("GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/{tissue}.v8.normalized_expression.bed.gz.tbi", tissue=GTExTissues),
+        expand("GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/{tissue}.v8.covariates.txt", tissue=GTExTissues)
     shell:
         """
         #incomplete
@@ -212,6 +72,75 @@ rule SubsetCovariatesFiles:
         set +o pipefail;
         grep -v "InferredCov" {input.covariates} > {output} 2> {log}
         grep "InferredCov" {input.covariates} | head -n {params} >> {output} 2>> {log}
+        """
+
+
+rule SubsetTSP_AndMatchedSnps:
+    input:
+        MatchedSnps = "GTEX_renalysis/LeflerSnps/ControlMatrixEQTL/ControlSnps.loc",
+        LeflerSnps = "../../data/LeflerSharedPolymorphisms.hg38.bed",
+        GtexVcf = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz",
+        GtexVcfTbi = "GTEX_renalysis/vcf/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files_GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.vcf.gz.tbi",
+    output:
+        GenotypeRaw = "GTEX_renalysis/LeflerSnps/Genotypes.Control.vcf.gz",
+        tbi = "GTEX_renalysis/LeflerSnps/Genotypes.Control.vcf.gz.tbi",
+        GenotypeRawLeffler = "GTEX_renalysis/LeflerSnps/Genotypes.vcf.gz",
+        tbiLeffler = "GTEX_renalysis/LeflerSnps/Genotypes.vcf.gz.tbi",
+    shell:
+        """
+        bcftools view -q 0.01:minor -R <(cat {input.MatchedSnps} | awk -F'\\t' -v OFS='\\t' 'NR>1 {{ print "chr"$2, $3, $3+1 }}') {input.GtexVcf} | bcftools sort -O z > {output.GenotypeRaw}
+        tabix -p vcf {output.GenotypeRaw}
+        bcftools view -q 0.01:minor -R <(cat {input.LeflerSnps}) {input.GtexVcf} | bcftools sort -O z > {output.GenotypeRawLeffler}
+        tabix -p vcf {output.GenotypeRawLeffler}
+        """
+
+rule FastQTL_GTEx_TSP:
+    input:
+        Vcf = "GTEX_renalysis/LeflerSnps/Genotypes{SnpSet}.vcf.gz",
+        tbi = "GTEX_renalysis/LeflerSnps/Genotypes{SnpSet}.vcf.gz.tbi",
+        bed = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/{tissue}.v8.normalized_expression.bed.gz",
+        bedtbi = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/{tissue}.v8.normalized_expression.bed.gz.tbi",
+        covariates = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/{tissue}.v8.covariates.txt"
+    log:
+        "logs/FastQTL_GTEx_TSP.{tissue}{SnpSet}.log"
+    output:
+        "eQTL_mapping/SharedPolymorphisms/GTExAllTissues/{tissue}{SnpSet}.txt.gz"
+    wildcard_constraints:
+        SnpSet = "|.Control",
+        tissue = "|".join(GTExTissues)
+    shell:
+        """
+        mkdir -p {config[temp_files_prefix]}
+        set +e
+        # fastqtl exits with error if no variants in chunk found. we want to allow that
+        for i in $(seq 1 30); do
+            ~/software/FastQTL/bin/fastQTL.static --cov {input.covariates} --vcf {input.Vcf}  --bed {input.bed} -L {log}  --chunk $i 30 --out {config[temp_files_prefix]}{wildcards.tissue}{wildcards.SnpSet}.$i
+        done
+        set -e
+        cat {config[temp_files_prefix]}{wildcards.tissue}{wildcards.SnpSet}.*  | gzip -c > {output}
+        """
+
+rule Merge_FastQTL_TSP:
+    input:
+        expand("eQTL_mapping/SharedPolymorphisms/GTExAllTissues/{tissue}{SnpSet}.txt.gz", tissue=GTExTissues, SnpSet=['', '.Control']),
+    output:
+        "eQTL_mapping/SharedPolymorphisms/GTExAllTissues.Combined.txt"
+    run:
+        import gzip
+        with open(output[0], "w") as out:
+            for f in input:
+                with gzip.open(f, 'rt') as f_in:
+                    for line in f_in:
+                        out.write(' '.join([f] + [line] ))
+
+rule FastQTL_TSP_compress:
+    input:
+        "eQTL_mapping/SharedPolymorphisms/GTExAllTissues.Combined.txt"
+    output:
+        "../../output/TSP.eQTLs.GTEx.AllTissues.txt.gz"
+    shell:
+        """
+        cat {input} | gzip - > {output}
         """
 
 rule FastQTL_GTEx_varyingSampleSize:

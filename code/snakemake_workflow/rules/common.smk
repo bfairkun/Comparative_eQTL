@@ -44,6 +44,9 @@ with open(config["RNASeqFileList"]) as RNASeqFileList_fh:
 
 PowerAnalysisFastqFrame = pd.read_csv(config["PowerAnalysis"]["RNASeqFileList"],sep='\t', index_col=0, comment='#')
 
+with open("../../data/GTEx_v8_tissueList.txt", 'r') as f:
+    GTExTissues =[i for i in f.read().split('\n') if i]
+
 ##### Wildcard constraints #####
 wildcard_constraints:
     vartype="snvs|indels",
