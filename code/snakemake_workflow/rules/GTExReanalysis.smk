@@ -84,8 +84,8 @@ rule SubsetTSP_AndMatchedSnps:
     output:
         GenotypeRaw = "GTEX_renalysis/LeflerSnps/Genotypes.Control.vcf.gz",
         tbi = "GTEX_renalysis/LeflerSnps/Genotypes.Control.vcf.gz.tbi",
-        GenotypeRawLeffler = "GTEX_renalysis/LeflerSnps/Genotypes.vcf.gz",
-        tbiLeffler = "GTEX_renalysis/LeflerSnps/Genotypes.vcf.gz.tbi",
+        GenotypeRawLeffler = "GTEX_renalysis/LeflerSnps/Genotypes.TSP.vcf.gz",
+        tbiLeffler = "GTEX_renalysis/LeflerSnps/Genotypes.TSP.vcf.gz.tbi",
     shell:
         """
         bcftools view -q 0.01:minor -R <(cat {input.MatchedSnps} | awk -F'\\t' -v OFS='\\t' 'NR>1 {{ print "chr"$2, $3, $3+1 }}') {input.GtexVcf} | bcftools sort -O z > {output.GenotypeRaw}
@@ -96,17 +96,17 @@ rule SubsetTSP_AndMatchedSnps:
 
 rule FastQTL_GTEx_TSP:
     input:
-        Vcf = "GTEX_renalysis/LeflerSnps/Genotypes{SnpSet}.vcf.gz",
-        tbi = "GTEX_renalysis/LeflerSnps/Genotypes{SnpSet}.vcf.gz.tbi",
+        Vcf = "GTEX_renalysis/LeflerSnps/Genotypes.{SnpSet}.vcf.gz",
+        tbi = "GTEX_renalysis/LeflerSnps/Genotypes.{SnpSet}.vcf.gz.tbi",
         bed = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/{tissue}.v8.normalized_expression.bed.gz",
         bedtbi = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/{tissue}.v8.normalized_expression.bed.gz.tbi",
         covariates = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_covariates/{tissue}.v8.covariates.txt"
     log:
-        "logs/FastQTL_GTEx_TSP.{tissue}{SnpSet}.log"
+        "logs/FastQTL_GTEx_TSP.{tissue}.{SnpSet}.log"
     output:
-        "eQTL_mapping/SharedPolymorphisms/GTExAllTissues/{tissue}{SnpSet}.txt.gz"
+        "eQTL_mapping/SharedPolymorphisms/GTExAllTissues/{tissue}.{SnpSet}.txt.gz"
     wildcard_constraints:
-        SnpSet = "|.Control",
+        SnpSet = "TSP|Control",
         tissue = "|".join(GTExTissues)
     shell:
         """
@@ -114,15 +114,15 @@ rule FastQTL_GTEx_TSP:
         set +e
         # fastqtl exits with error if no variants in chunk found. we want to allow that
         for i in $(seq 1 30); do
-            ~/software/FastQTL/bin/fastQTL.static --cov {input.covariates} --vcf {input.Vcf}  --bed {input.bed} -L {log}  --chunk $i 30 --out {config[temp_files_prefix]}{wildcards.tissue}{wildcards.SnpSet}.$i
+            ~/software/FastQTL/bin/fastQTL.static --cov {input.covariates} --vcf {input.Vcf}  --bed {input.bed} -L {log}  --chunk $i 30 --out {config[temp_files_prefix]}{wildcards.tissue}.{wildcards.SnpSet}.$i
         done
         set -e
-        cat {config[temp_files_prefix]}{wildcards.tissue}{wildcards.SnpSet}.*  | gzip -c > {output}
+        cat {config[temp_files_prefix]}{wildcards.tissue}.{wildcards.SnpSet}.*  | gzip -c > {output}
         """
 
 rule Merge_FastQTL_TSP:
     input:
-        expand("eQTL_mapping/SharedPolymorphisms/GTExAllTissues/{tissue}{SnpSet}.txt.gz", tissue=GTExTissues, SnpSet=['', '.Control']),
+        expand("eQTL_mapping/SharedPolymorphisms/GTExAllTissues/{tissue}.{SnpSet}.txt.gz", tissue=GTExTissues, SnpSet=['TSP', 'Control']),
     output:
         "eQTL_mapping/SharedPolymorphisms/GTExAllTissues.Combined.txt"
     run:
