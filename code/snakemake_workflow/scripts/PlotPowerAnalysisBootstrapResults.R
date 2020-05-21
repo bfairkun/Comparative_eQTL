@@ -22,6 +22,34 @@ ReadSubsetName = args[3]
 Results <- fread(Results.f, sep = '\t', header = F, col.names=c("gene", "log2FC", "P", "P.adjust", "SampleSize", "seed","ReadSubset"))
 RealResults <- fread(RealResults.f, sep='\t', header=T)
 
+#Num correct DE genes under two fold change:
+Results %>%
+  dplyr::select(-c("P")) %>%
+  filter(ReadSubset==ReadSubsetName) %>%
+  # filter(seed %in% 1:10) %>%
+  left_join(
+    (RealResults %>%
+       dplyr::select(Ensembl_geneID, logFC)),
+    suffix=c(".Real", ".Resampled"),
+    by=c("gene"="Ensembl_geneID")
+  ) %>%
+  mutate(FDR.01=P.adjust<0.01,
+         FDR.05=P.adjust<0.05,
+         FDR.10=P.adjust<0.1) %>%
+  gather(key="FDR", value = "TestResults", -c("gene", "P.adjust", "SampleSize", "seed", "ReadSubset", "logFC", "log2FC") ) %>%
+  mutate(FDR=recode(FDR, FDR.01="FDR<0.01", FDR.05="FDR<0.05", FDR.10="FDR<0.10")) %>%
+  mutate(NewTestResults=(TestResults & abs(logFC)<=1)) %>%
+  group_by(FDR, SampleSize, seed) %>%
+  summarize(NumDiscoveries=sum(NewTestResults, na.rm=T)) %>%
+  group_by(FDR, SampleSize) %>%
+  summarize(med=median(NumDiscoveries, na.rm=T),
+            se=sd(NumDiscoveries, na.rm=T),
+            LQ=quantile(NumDiscoveries, 0.25, na.rm=T),
+            UQ=quantile(NumDiscoveries, 0.75, na.rm=T)) %>%
+  filter(SampleSize==4)
+
+
+
 
 #Num DE genes
 ToPlot <- Results %>%
@@ -37,7 +65,12 @@ ToPlot <- Results %>%
 
 ToPlotMed <- ToPlot %>%
   group_by(SampleSize, FDR) %>%
-  summarize(MedianNumDiscoveries=median(NumDiscoveries))
+  summarize(MedianNumDiscoveries=median(NumDiscoveries),
+            IQR=IQR(NumDiscoveries),
+            avg=mean(NumDiscoveries, na.rm=T),
+            se=sd(NumDiscoveries, na.rm=T),
+            LQ=quantile(NumDiscoveries, 0.25, na.rm=T),
+            UQ=quantile(NumDiscoveries, 0.75, na.rm=T))
 
 
 TrueNumDiscoveries <- RealResults %>%
@@ -50,10 +83,11 @@ TrueNumDiscoveries <- RealResults %>%
   group_by(FDR) %>%
   summarize(NumDiscoveries=sum(TestResults))
 
+
 ggplot(ToPlot, aes(x=SampleSize, y=NumDiscoveries, group=interaction(SampleSize, FDR), color=FDR)) +
   # geom_boxplot(outlier.shape = NA) +
-  stat_summary(fun.data = f, geom="boxplot", position="dodge2") +
   geom_line(data=ToPlotMed, aes(x=SampleSize, y=MedianNumDiscoveries, group=FDR)) +
+  stat_summary(fun.data = f, geom="boxplot", position="dodge2") +
   geom_hline(data=TrueNumDiscoveries, aes(yintercept=NumDiscoveries, color=FDR), linetype='dashed') +
   scale_x_continuous(limits=c(1,40), breaks=c(2,4,8,12,16,24,32,39)) +
   ylab("Number DE genes") +
@@ -88,7 +122,11 @@ FDR.ToPlot <- Results %>%
 
 FDR.ToPlotMed <- FDR.ToPlot %>%
   group_by(SampleSize, FDR) %>%
-  summarize(MedianFDR=median(FalseDiscoveryRate))
+  summarize(MedianFDR=median(FalseDiscoveryRate),
+            LQ=quantile(FalseDiscoveryRate, 0.25, na.rm=T),
+            UQ=quantile(FalseDiscoveryRate, 0.75, na.rm=T),
+            avg=mean(FalseDiscoveryRate, na.rm=T),
+            se=sd(FalseDiscoveryRate, na.rm=T))
 
 
 ggplot(FDR.ToPlot, aes(x=SampleSize, y=FalseDiscoveryRate, group=interaction(SampleSize, FDR), color=FDR)) +
@@ -104,6 +142,7 @@ ggplot(FDR.ToPlot, aes(x=SampleSize, y=FalseDiscoveryRate, group=interaction(Sam
         legend.background=element_blank(),
         legend.title=element_blank())
 ggsave(paste0("../../output/Final/FigS_Power_FDREstimate_", ReadSubsetName, ".pdf"), width=3, height=3)
+
 
 
 #Plot of distribution of true effect sizes of true positives at different FDR.
@@ -131,6 +170,40 @@ gather(key="FDR", value = "TestResults", -c("gene", "SampleSize")) %>%
         legend.background=element_blank(),
         legend.title=element_blank())
 ggsave(paste0("../../output/Final/FigS_Power_EffectSize_", ReadSubsetName, ".pdf"), width=3, height=3)
+
+
+ReadSubsetName<-"Full"
+
+#Plot median difference in effect size estimates of DE genes estimated using full set versus subset.
+#I expect a larger bias (Winner's curse) in smaller sample sizes
+WinnersCursePlotData <- Results %>%
+  filter(ReadSubset==ReadSubsetName) %>%
+  drop_na() %>%
+  dplyr::select("gene", "log2FC", "P.adjust", "SampleSize", "seed") %>%
+  mutate(FDR.01=P.adjust<0.01,
+         FDR.05=P.adjust<0.05,
+         FDR.10=P.adjust<0.1) %>%
+  gather(key="FDR", value = "TestResults", -c("gene", "SampleSize", "log2FC", "seed", "P.adjust")) %>%
+  filter(TestResults==T) %>%
+  left_join((RealResults %>%
+               dplyr::select(Ensembl_geneID, TrueLog2FC=logFC, True.adj.P.val=adj.P.Val)),
+            by=c("gene"="Ensembl_geneID")) %>%
+  mutate(DifferenceInEffectSizeEstimate=log2FC*sign(TrueLog2FC)-TrueLog2FC*sign(TrueLog2FC)) %>%
+  group_by(SampleSize, FDR, seed) %>%
+  summarize(MedianDifference = median(DifferenceInEffectSizeEstimate, na.rm = T))
+ggplot(WinnersCursePlotData, aes(x=SampleSize, y=MedianDifference, group=interaction(SampleSize, FDR), color=FDR)) +
+  stat_summary(fun.data = f, geom="boxplot", position="dodge2") +
+  ylim(c(0,1)) +
+  ylab("Median magnitude of effect size over-estimates") +
+  theme_bw() +
+  theme(legend.key = element_rect(colour = "transparent", fill = NA),
+        legend.justification = c(1,1), legend.position = c(0.9,0.9),
+        legend.background=element_blank(),
+        legend.title=element_blank())
+ggsave(paste0("../../output/Final/FigS_Power_WinnersCurse_", ReadSubsetName, ".pdf"), width=3, height=3)
+
+
+
 
 
 #ROC curves
