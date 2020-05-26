@@ -196,7 +196,7 @@ WinnersCursePlotData <- Results %>%
 ggplot(WinnersCursePlotData, aes(x=SampleSize, y=MedianDifference, group=interaction(SampleSize, FDR), color=FDR)) +
   stat_summary(fun.data = f, geom="boxplot", position="dodge2") +
   ylim(c(0,1)) +
-  ylab("Median magnitude of effect size over-estimates") +
+  ylab("Median magnitude of\neffect size over-estimates") +
   theme_bw() +
   theme(legend.key = element_rect(colour = "transparent", fill = NA),
         legend.justification = c(1,1), legend.position = c(0.9,0.9),
