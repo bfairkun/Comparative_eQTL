@@ -67,6 +67,9 @@ HumanSamplesToDrop <- c(HumanSamplesToDropOutOfCluster, HumanSamplesToDropLowRea
 
 ChimpSamplesToDrop <- c()
 
+Star.MapSummary <- read.delim("../output/QC/multiqc_star.txt", sep='\t', stringsAsFactors = F) %>%
+  mutate(Samplename=Sample) %>%
+  dplyr::select(Samplename, uniquely_mapped_percent)
 
 #Plot depth per sample
 ToPlot <- CombinedTable %>% colSums() %>% as.data.frame() %>%
@@ -84,7 +87,8 @@ ToPlot <- CombinedTable %>% colSums() %>% as.data.frame() %>%
   )) %>%
   mutate(PassFilter=!SampleNoSpecies %in% c(HumanSamplesToDrop, ChimpSamplesToDrop)) %>%
   arrange(`.`) %>%
-  mutate(Species=substr(Sample, 1,1))
+  mutate(Species=substr(Sample, 1,1)) %>%
+  left_join(Star.MapSummary, by=c("SampleNoSpecies"="Samplename"))
 ToPlot %>%
   mutate(Species = recode(Species, "C"="Chimp", "H"="Human")) %>%
   ggplot(aes(x=reorder(Label,`.`), y=./1000000, fill=Species, color=PassFilter)) +
@@ -99,6 +103,26 @@ ToPlot %>%
         legend.position = "bottom")
 ggsave("../figures/OriginalArt/ReadsPerSample.pdf", width=7, height=7)
 
+ToPlot %>%
+  mutate(Species = recode(Species, "C"="Chimp", "H"="Human")) %>%
+  ggplot(aes(x=reorder(Label,`.`), y=uniquely_mapped_percent, fill=Species, color=PassFilter)) +
+  geom_col() +
+  facet_grid(~Species, scales = "free_x", space = "free_x") +
+  scale_y_continuous(expand = c(0, 0)) +
+  theme_bw() +
+  xlab("Sample") +
+  ylab("Percent mapping rate") +
+  scale_colour_manual(name="Used in DE and dispersion analysis", values=c("gray","black"), labels=c("No","Yes"), ) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size=5, vjust=0.5),
+        legend.position = "bottom")
+
+ggsave("../figures/OriginalArt/MappingRateSample.pdf", width=7, height=7)
+
+```
+
+Heatmap
+
+```{r}
 cols <- setNames(ToPlot$Label, ToPlot$Sample)
 
 cpm <- cpm(CombinedTable, log=TRUE, prior.count=0.5)
@@ -194,6 +218,31 @@ ggplot(PCsToPlot, aes(x=PC3, y=PC4, color=Species, label=Label)) +
   theme_bw()
 
 ```
+
+Heatmap of only included samples
+
+```{r}
+
+SamplesToDrop <- paste0("H.", c(HumanSamplesToDropOutOfCluster, HumanSamplesToDropLowReads) )
+
+d2<- d$counts %>% as.data.frame() %>%
+  dplyr::select(-SamplesToDrop)
+cpm.d2 <- cpm(d2, log=TRUE, prior.count=0.5)
+SpeciesFactorCol2 <- colnames(cpm.d2) %>% substr(1,1) %>% factor() %>% unclass() %>% as.character() %>% recode("1"="#F8766D", "2"="#00BFC4")
+SpeciesFactor <- colnames(cpm.d2) %>% substr(1,1) %>% factor() %>% unclass() %>% as.character()
+
+pdf(file="../figures/OriginalArt/RNASeqHeatmap.OnlyIncludedSamples.pdf")
+cor(cpm.d2) %>%
+heatmap.2(trace="none", ColSideColors=SpeciesFactorCol2, labRow=cols, labCol=cols, dendrogram='column', cexRow=0.35, cexCol=0.35, offsetRow=0, offsetCol=0)
+dev.off()
+
+ 
+
+
+
+```
+
+
 
 Do the power analysis. First get the genes to analyze based on the 39 + 39 samples.
 

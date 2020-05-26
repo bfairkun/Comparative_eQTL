@@ -1,0 +1,162 @@
+---
+title: "Final_MakeSupplementalTables"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+First, load necessary libraries
+```{r}
+library(tidyverse)
+library(qvalue)
+library(stringr)
+library(readxl)
+
+```
+
+### TableS1
+```{r}
+
+ChimpMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx")) %>%
+  mutate(TissueSource=case_when(
+    startsWith(as.character(RNA.Extract_date), "2016") ~ paste(Source, "Library from Pavlovic et al resequenced", sep="; "),
+    TRUE ~ Source
+    ))
+
+
+ReadsMapped <- read.delim("../output/QC/RNASeqMultiQC.stats.tab", sep='\t')
+
+# PavlovicChimps <- as.data.frame(read_excel("../data/PavlovicSamples.xlsx")) %>%
+#   filter(Sample.type=="Heart.tissue" & SP=="C") %>% pull(Line.Individual)
+
+PavlovicMetadata <- as.data.frame(read_excel("../data/PavlovicSamples.xlsx")) %>%
+  filter(Sample.type=="Heart.tissue" & SP=="H") %>%
+  mutate(Post.mortem.time.min=as.numeric(Post.mortem.time.interval)*60,
+         RNA.Extraction.Batch=as.character(Extract_date)) %>%
+  dplyr::select(SP, SX, Sample.ID=Line.Individual,RNA.Extraction.Batch, RIN, Post.mortem.time.min, Age) %>%
+  mutate(Notes=NA,
+         Alternate.ID=NA,
+         TissueSource="Library from Pavlovic et al resequenced",
+         SP="Human")
+
+GTExIndAttributes <- read.delim("../data/GTExAnnotations/GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt", sep='\t')
+
+GTExSampleNames <- read.delim("../data/GTExSampleListForRNASeq.tab", col.names=c("SRA", "GTExName", "GTExSample"), header=F, stringsAsFactors = F, sep="\t") %>%
+  left_join(GTExIndAttributes, by=c("GTExName" = "SUBJID")) %>%
+  mutate(SX=recode(SEX, "1"="M", "2"="F")) %>%
+  dplyr::select(-SEX)
+
+GTExSampleAttributes <- read.delim("../data/GTExAnnotations/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt", sep='\t') %>%
+  dplyr::select(Sample.ID=SAMPID, RNA.Extraction.Batch=SMNABTCH, RIN=SMRIN, Post.mortem.time.min=SMTSISCH) %>% 
+  mutate(SP="H") %>%
+  inner_join(GTExSampleNames, by=c("Sample.ID"="GTExSample")) %>%
+  mutate(Notes=paste0("HardyScale=", DTHHRDY),
+         TissueSource="GTEx_v7") %>%
+  dplyr::rename(Alternate.ID=GTExName, Age=AGE) %>%
+  dplyr::select(-DTHHRDY)
+
+AllHumanSamples <-
+  bind_rows(GTExSampleAttributes, PavlovicMetadata)
+
+AllChimps <- ChimpMetadata %>%
+  transmute(Sample.ID=Individual.ID,
+            Alternate.ID=Label,
+            RNA.Extraction.Batch=as.character(RNA.Extract_date),
+            RIN,
+            SX,
+            Age=as.character(Age),
+            Post.mortem.time.min=as.numeric(Post.mortem.time.interval)*60,
+            TissueSource,
+            Notes=Viral.status,
+            SP="Chimp",
+            SRA=NA
+            )
+
+bind_rows(AllChimps, AllHumanSamples) %>%
+  mutate(tempId=case_when(
+    !is.na(SRA) ~ SRA,
+    TRUE ~ Sample.ID
+  )) %>%
+  left_join(ReadsMapped, by=c("tempId"="Sample")) %>%
+  dplyr::select(-tempId) %>%
+  dplyr::rename(UniquelyMappingReads=STAR_mqc.generalstats.star.uniquely_mapped,
+                PercentUniquelyMappingReads=STAR_mqc.generalstats.star.uniquely_mapped_percent) %>%
+  write_delim(path="../output/Final/TableS1.tab", delim='\t')
+  
+
+
+```
+
+
+### TableS3
+```{r}
+Dispersion <- read.delim('../output/OverdispersionEstimatesFromChimp.txt')
+Dispersion.se <- read.delim('../output/OverdispersionEstimatesFromChimp.txt.SE.tab.gz')
+Dispersion.P <- read.delim('../output/OverdispersionEstimatesFromChimp.txt.Pvals.tab')
+
+GeneNames <- read.delim('../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz')
+
+TableS3 <- Dispersion %>%
+  dplyr::select(gene,
+                Chimp.Mean.Expression,
+                Human.Mean.Expression,
+                Chimp.Overdispersion,
+                Human.Overdispersion,
+                Chimp.Mean.Adjusted.Dispersion=Chimp.Residual,
+                Human.Mean.Adjusted.Dispersion=Human.Residual) %>%
+  left_join(GeneNames, by=c("gene"="Gene.stable.ID")) %>%
+  left_join(Dispersion.se, by="gene") %>%
+  left_join(Dispersion.P, by="gene")
+hist(TableS3$P)
+qobj <- qvalue(p = TableS3$P)
+table(qobj$qvalues < 0.1)
+TableS3 %>%
+  mutate(q.value=qobj$qvalues) %>%
+  dplyr::select(gene, HGNC.symbol, everything()) %>%
+  dplyr::select(-HGNC.ID) %>%
+  write_delim("../output/Final/TableS3.tab", delim='\t')
+
+```
+
+### TableS7
+
+```{r}
+
+GenomeSequencingCoverage <- read.delim("../output/QC/FoldCoverPerSample.tab", col.names = c("Sample", "Coverage")) %>%
+  mutate(Sample=str_remove(Sample, "\\.idxstats")) %>%
+  mutate(Sample=str_remove(Sample, "qc/samtools-idxstats/"))
+
+VariantCallSummary <- read.delim("../output/QC/bcftools.smplstats.tab.ManualEdit.txt", sep='\t') %>%
+  mutate(sample=str_remove(sample, "Pan_troglodytes_ThisStudy-"))
+
+
+GenomeSequencingCoverage %>%
+  left_join(VariantCallSummary, by=c("Sample"="sample")) %>%
+  left_join(AllChimps %>% dplyr::select(Sample.ID, Alternate.ID),
+            by=c("Sample"="Sample.ID")) %>%
+  dplyr::select(Sample, Alternate.ID, everything()) %>%
+  write_delim("../output/Final/TableS7.tab", delim = '\t')
+
+
+```
+
+
+### TableS8
+
+```{r}
+eGenes <- read.delim("../output/ChimpEgenes.eigenMT.txt.gz")
+eGenes %>%
+  dplyr::rename(BestSNP=snps) %>%
+  write_delim(path = "../output/Final/TableS8.tab", delim = '\t')
+```
+
+## Conclusions
+
+

@@ -351,7 +351,6 @@ DEGeneCountPlot(DEGeneCountToPlot)
 
 
 RocCurve(RocCurveDataToPlot)
-
 ggsave("../figures/OriginalArt/PowerAnalysis.FullDepth.ROC.pdf", RocCurve(RocCurveDataToPlot), height=3, width=4)
 ggsave("../figures/OriginalArt/PowerAnalysis.FullDepth.DE.pdf", DEGeneCountPlot(DEGeneCountToPlot), height=3, width=4)
 ggsave("../figures/OriginalArt/PowerAnalysis.FullDepth.EffectSize.pdf", EffectSizesPlot(EffectSizesToPlot), height=3, width=4)

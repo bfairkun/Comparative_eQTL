@@ -30,6 +30,7 @@ library(Seurat)
 library(sctransform)
 library(psych)
 library(corrplot)
+library(qvalue)
 
 source("../code/CustomFunctions.R")
 
@@ -40,21 +41,50 @@ Read in data...
 
 ```{r}
 #read in table of overdispersion, dispersion, mean expresion estimates
-ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp.txt", header=T, sep='\t', stringsAsFactors = F)
+Dispersion.se <- read.delim('../output/OverdispersionEstimatesFromChimp.txt.SE.tab.gz')
+Dispersion.P <- read.delim('../output/OverdispersionEstimatesFromChimp.txt.Pvals.tab')
 
-#Add gene symbols for prettier labels instead of ENSEMBL ID
-human = useMart("ensembl", dataset = "hsapiens_gene_ensembl", ensemblRedirect = FALSE)
-Symbols <- getBM(attributes=c("hgnc_symbol", "ensembl_gene_id"), filters="ensembl_gene_id", values=ChimpOverdispersionTable$gene, mart=human)
+
+```
+
+Add gene symbols for prettier labels instead of ENSEMBL ID
+
+```{r}
+## Sometimes biomart is painstangingly slow. just read from file.
+# human = useMart("ensembl", dataset = "hsapiens_gene_ensembl", ensemblRedirect = FALSE)
+# Symbols <- getBM(attributes=c("hgnc_symbol", "ensembl_gene_id"), filters="ensembl_gene_id", values=ChimpOverdispersionTable$gene, mart=human)
+
+Symbols <- read.delim("../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz") %>% dplyr::select(ensembl_gene_id=Gene.stable.ID, hgnc_symbol=HGNC.symbol)
 
 ChimpOverdispersionTable <- ChimpOverdispersionTable %>%
-  left_join(Symbols, by=c("gene"="ensembl_gene_id"))
+  dplyr::select(gene,
+                Chimp.Mean.Expression,
+                Human.Mean.Expression,
+                Chimp.Mean.Log2RPKM,
+                Human.Mean.Log2RPKM,
+                Chimp.Overdispersion,
+                Human.Overdispersion,
+                Chimp.Residual,
+                Human.Residual) %>%
+  left_join(Symbols, by=c("gene"="ensembl_gene_id")) %>%
+  left_join(Dispersion.se, by="gene") %>%
+  left_join(Dispersion.P, by="gene")
+hist(ChimpOverdispersionTable$P)
+qobj <- qvalue(p = ChimpOverdispersionTable$P)
+table(qobj$qvalues < 0.1)
+ChimpOverdispersionTable <- ChimpOverdispersionTable %>%
+  mutate(Dispersion.qval=qobj$qvalues)
+
+
 
 # Read in eGene data
 EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
 
 # Read in count data
-HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))
-ChimpSamplesToDrop <- c("Little_R")
+HumanSamplesToDrop <- c("SRR613186",  "SRR598509",  "SRR1478149", "SRR603918",  "SRR1507229", "SRR1478900", "SRR1477015", "SRR601986",  "SRR614996",  "SRR1474730") 
+ChimpSamplesToDrop <- c()
+
 OtherMetadata <- as.data.frame(read_excel("../data/Metadata.xlsx"))
 VirusChallengedChimps <- OtherMetadata %>% filter(grepl("V+",Viral.status)) %>% pull(Individual.ID)
 CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
@@ -62,6 +92,49 @@ CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.
 CountTables <- GetCountTables(CountTableChimpFile,
                               CountTableHumanFile,
                               0, ChimpOverdispersionTable$gene, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+DEResults <- read.delim("../output/Final/TableS1.tab")
+
+```
+
+### Differential dispersion vs differential expression
+
+```{r}
+Combined <- ChimpOverdispersionTable %>%
+  left_join(DEResults, by=c("gene"="Ensembl_geneID"))
+ggplot(Combined, aes(x=-log10(P), y=-log10(P.Value))) +
+  geom_point(alpha=0.1) +
+  xlab("-log10(Diff.Dispersion.P") +
+  ylab("-log10(Diff.Expression.P") +
+  theme_bw()
+cor.test(Combined$P.Value, Combined$P, method='spearman')
+
+
+ggplot(Combined, aes(x=logFC, y=Chimp.Mean.Log2RPKM-Human.Mean.Log2RPKM)) +
+  geom_point(alpha=0.1) +
+  theme_bw()
+
+##Check polarization of logFC for DEG
+ggplot(Combined, aes(x=Chimp.Residual-Human.Residual, y=logFC)) +
+  geom_point(alpha=0.1) +
+  xlim(-4,4) +
+  theme_bw()
+```
+
+Higher differential dispersion in chimp associated with higher differential expression in chimp.
+
+#### communicate this correlation and how many DiffDispersion genes are not DE
+
+```{r}
+Combined %>%
+  filter(abs(logFC)<1) %>%
+  filter(Dispersion.qval < 0.1) %>% dim()
+
+Combined %>%
+  # filter(abs(logFC)<1) %>%
+  filter(Dispersion.qval < 0.1) %>% dim()
+
+
 
 ```
 
@@ -83,9 +156,10 @@ LowDispersionGene <- ChimpOverdispersionTable %>%
   filter(Chimp.Mean.Log2RPKM >= 1 & Chimp.Mean.Log2RPKM <= 4 & Human.Mean.Log2RPKM >= 1 & Human.Mean.Log2RPKM <= 4) %>%
   mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %>%
   filter(DifferenceInDispersion < 0.1) %>%
-  top_n(-1, Human.Residual) %>% pull(gene)
+  top_n(-2, Human.Residual) %>% head(1) %>% pull(gene)
 
 BigDifferenceInDispersion <- ChimpOverdispersionTable %>%
+  filter(Dispersion.qval < 0.1) %>%
   filter(Chimp.Mean.Log2RPKM >= 1 & Chimp.Mean.Log2RPKM <= 4 & Human.Mean.Log2RPKM >= 1 & Human.Mean.Log2RPKM <= 4) %>%
   mutate(DifferenceInDispersion = abs(Human.Residual-Chimp.Residual)) %>%
   filter(DifferenceInDispersion > 2 & DifferenceInDispersion < 3) %>%
@@ -93,14 +167,45 @@ BigDifferenceInDispersion <- ChimpOverdispersionTable %>%
 
 GenesToPlot <- c(HighDispersionGene, LowDispersionGene, BigDifferenceInDispersion)
 
+ChimpOverdispersionTable %>%
+  filter(gene %in% GenesToPlot) %>%
+  dplyr::select(hgnc_symbol, Dispersion.qval, Human.Mean.Log2RPKM, Chimp.Mean.Log2RPKM)
+
+
 Colplots <- ChimpOverdispersionTable %>%
   dplyr::select(Chimp.Residual, Human.Residual, hgnc_symbol, gene) %>%
   filter(gene %in% GenesToPlot) %>%
   gather(key="sample", value="residual", -hgnc_symbol, -gene) %>%
   mutate(Species = case_when(sample=="Chimp.Residual" ~ "Chimp",
-                             sample=="Human.Residual" ~ "Human")) %>%
+                             sample=="Human.Residual" ~ "Human"
+                             )) %>%
   ggplot(aes(x=Species, y=residual)) +
     geom_col() +
+    # geom_point() +
+    ylab("Dispersion, a.u.") +
+    facet_grid(.~hgnc_symbol) +
+    theme_bw() +
+    theme(axis.title.x=element_blank(),
+          strip.background = element_blank(),
+          strip.text.x = element_blank(),
+          plot.margin = margin(0, 6, 6, 6))
+
+Colplots <-ChimpOverdispersionTable %>%
+  dplyr::select(Chimp.Residual, Human.Residual, hgnc_symbol, gene, Chimp.SE, Human.SE) %>%
+  filter(gene %in% GenesToPlot) %>%
+  gather(key="sample", value="residual", -hgnc_symbol, -gene, -Human.SE, -Chimp.SE) %>%
+  mutate(Species = case_when(sample=="Chimp.Residual" ~ "Chimp",
+                             sample=="Human.Residual" ~ "Human"
+                             ),
+         Residual.lower = case_when(
+           sample=="Chimp.Residual" ~ residual - Chimp.SE,
+           sample=="Human.Residual" ~ residual - Human.SE),
+         Residual.upper = case_when(
+           sample=="Chimp.Residual" ~ residual + Chimp.SE,
+           sample=="Human.Residual" ~ residual + Human.SE)) %>%
+  ggplot(aes(x=Species, y=residual)) +
+    geom_col() +
+    geom_errorbar(aes(ymin=Residual.lower, ymax=Residual.upper), width=0.1) +
     # geom_point() +
     ylab("Dispersion, a.u.") +
     facet_grid(.~hgnc_symbol) +
@@ -133,6 +238,7 @@ Boxplots <- cbind(CountTables$Chimp$log2RPKM[GenesToPlot,],
 plot_grid(Boxplots, Colplots, align="hv", ncol=1, nrow=2)
 
 ggsave("../figures/OriginalArt/Dispersion.chimp_human_example_genes.pdf", units="mm", height=100, width=90)
+
 ```
 
 ### Illustrative regressing out mean effect
@@ -198,6 +304,8 @@ prow <- plot_grid(
 prow
 
 ggsave("../figures/OriginalArt/Dispersion.regression.pdf", units="mm", height=50, width=120)
+
+
 ```
 
 
@@ -227,6 +335,23 @@ ChimpOverdispersionTable %>%
   theme_bw()
 
 ggsave("../figures/OriginalArt/Dispersion.chimp_human_scatter.pdf", units="mm", height=70, width=70)
+
+ChimpOverdispersionTable %>%
+  filter(!is.na(Dispersion.qval)) %>%
+  ggplot(aes(x=Chimp.Residual, y=Human.Residual, color=Dispersion.qval<0.1)) +
+  geom_point(alpha=0.25, size=0.75) +
+  xlim(c(-3,3)) +
+  ylim(c(-3,3)) +
+  xlab("Chimp dispersion") +
+  ylab("Human dispersion") +
+  coord_fixed() +
+  scale_color_manual(name="Differential\ndispersion", labels=c("FDR>0.1", "FDR<0.1"), values=c("black", "red")) +
+  
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+  theme_bw()
+ggsave("../figures/OriginalArt/Dispersion.chimp_human_scatter2.pdf", units="mm", height=70, width=90)
+
+
 ```
 
 ### highly dispersed genes in tabula muris

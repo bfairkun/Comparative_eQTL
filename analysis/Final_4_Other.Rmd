@@ -254,7 +254,7 @@ Here I will plot the dispersion vs the median squared correlation (from the corr
 ```{r}
 
 #Read overdispersion table to get gene list
-ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp.txt", header=T, sep='\t', stringsAsFactors = F)
 
 # Read in count data
 HumanSamplesToDrop <- c(c("SRR1507229","SRR603918", "SRR1478149", "SRR598509", "SRR613186"), c("SRR1489693", "SRR598148", "59167", "SRR1478900", "SRR1474730", "61317"))

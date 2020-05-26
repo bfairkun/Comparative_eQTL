@@ -34,7 +34,9 @@ ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChi
 
 EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
 
-DE.results <- read.table("../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', header=T)
+# DE.results <- read.table("../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', header=T)
+DE.results <- read.delim("../output/Final/TableS1.tab") %>%
+  dplyr::select(gene=Ensembl_geneID, coefficients=logFC, pval=adj.P.Val)
 
 HumanEgeneCount <- NULL
 HumanEgeneCount <- 495 #Use 495 instead of 500 because of ties in ranks. 495 will get you 500.
@@ -69,7 +71,7 @@ DE.results %>% pull(DE) %>% table()
 Plot.Interpecies.DE.byGroup(EgenesTested.grouped, DE.results)$plot
 Plot.Interpecies.DE.byGroup(EgenesTested.grouped, DE.results)$PvalTable
 
-DE.By.Group <- Plot.Interpecies.DE.byGroup(EgenesTested.grouped, (DE.results %>% filter(DE != 0)))
+DE.By.Group <- Plot.Interpecies.DE.byGroup(EgenesTested.grouped, (DE.results %>% filter(pval < 0.1)))
 
 DE.Fig <- ggdraw(DE.By.Group$plot +                            guides(color=guide_legend(nrow=2,byrow=TRUE))
 ) +
@@ -195,8 +197,9 @@ Not a plot but just make some contingency tables and do some tests to see if eGe
 ```{r}
 pLI.data <- as.data.frame(read_excel("../data/Lek_etal_nature19057-SI Table 13.xlsx", sheet=2))
 
-human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
-Symbols <- getBM(attributes=c("hgnc_symbol", "ensembl_gene_id"), filters="ensembl_gene_id", values=ChimpOverdispersionTable$gene, mart=human)
+# human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+# Symbols <- getBM(attributes=c("hgnc_symbol", "ensembl_gene_id"), filters="ensembl_gene_id", values=ChimpOverdispersionTable$gene, mart=human)
+Symbols <- read.delim("../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz") %>% dplyr::select(ensembl_gene_id=Gene.stable.ID, hgnc_symbol=HGNC.symbol)
 
 LargeContingencyTable <- EgenesTested.grouped %>%
   left_join(Symbols, by=c("H.gene" ="ensembl_gene_id")) %>%

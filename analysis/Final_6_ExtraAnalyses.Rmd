@@ -1,0 +1,382 @@
+---
+title: "Untitled"
+author: "Benjamin Fair"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output:
+  html_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Introduction
+
+
+## Analysis
+
+First, load necessary libraries
+```{r}
+library(tidyverse)
+library(stringr)
+library(latex2exp)
+library(ggExtra)
+library(cowplot)
+library(readxl)
+
+```
+
+Read GTEx eQTLs for TSPs and control SNPs
+```{r}
+eQTLs <- read.delim("../output/TSP.eQTLs.GTEx.AllTissues.txt.gz", sep=' ', col.names = c("Fn", "Ensembl.ID", "snp", "dist_to_tss", "P", "beta"), stringsAsFactors = T) %>%
+  mutate(Fn=str_remove(basename(as.character(Fn)), "txt.gz")) %>%
+  separate(Fn, into=c("Tissue", "SnpFactor"), sep="\\.", extra="drop") %>%
+  mutate(SnpFactor=recode(SnpFactor, TSP="Variants shared with chimp", Control="Matched control variants"))
+
+#Get colors
+GtexColors <- read.delim("../data/GTEx_Analysis_TissueColorCodes.txt", stringsAsFactors = F) %>%
+  mutate(Color.code=paste0("#", Color.code)) %>%
+  mutate(NoSpaces=str_replace_all(Tissue, " - ", "_")) %>%
+  mutate(NoSpaces=str_replace_all(NoSpaces, " \\(", "_")) %>%
+  mutate(NoSpaces=str_replace_all(NoSpaces, "\\)", "")) %>%
+  mutate(NoSpaces=str_replace_all(NoSpaces, " ", "_"))
+ColorKey <- setNames(GtexColors$Color.code, GtexColors$NoSpaces)
+
+#Get best P-vals for each snp across all tissues
+BestCrossTissueEqtls <- eQTLs %>%
+  group_by(snp) %>% 
+  filter(P == min(P)) %>%
+  filter(1:n() == 1) %>%
+  ungroup()
+
+TestResults <- wilcox.test(x=(BestCrossTissueEqtls %>% 
+                 filter(SnpFactor=="Matched control variants") %>%
+                 pull(P)),
+            y=(BestCrossTissueEqtls %>% 
+                 filter(SnpFactor=="Variants shared with chimp") %>%
+                 pull(P)), alternative="greater")
+lb1 = paste0('P==', format.pval(TestResults$p.value, 2))
+
+#Plot as QQ of min
+BestCrossTissueEqtls %>%
+  group_by(SnpFactor) %>%
+  mutate(PercentileP=percent_rank(P)) %>%
+  mutate(ExpectedP=quantile((49*(1-PercentileP)**(49-1)), PercentileP)) %>%
+ggplot(aes(color=SnpFactor, x=-log10(ExpectedP), y=-log10(P))) +
+  xlab(TeX("Theoretical $-log_{10}(min(P))$")) +
+  ylab(TeX("Observed $-log_{10}(min(P))$")) +
+  geom_point() +
+  geom_abline() +
+  scale_color_manual(values=c("red", "blue")) +
+  annotate("text",x=-Inf,y=Inf, label=lb1, hjust=-0.1, vjust=1.2, parse=TRUE) +
+  theme_bw() +
+  theme(legend.position="bottom", legend.title = element_blank(),
+        legend.direction = "vertical")
+ggsave("../figures/OriginalArt/CrossTissueP_QQ.pdf", height=3, width=3)
+
+BestCrossTissueEqtls %>%
+  group_by(SnpFactor) %>%
+  mutate(PercentileP=percent_rank(P)) %>%
+ggplot(aes(color=SnpFactor, x=-log10(PercentileP), y=-log10(P))) +
+  xlab(TeX("Theoretical $-log_{10}(P)$")) +
+  ylab(TeX("Observed $-log_{10}(min(P))$")) +
+  geom_point() +
+  geom_abline() +
+  scale_color_manual(values=c("red", "blue")) +
+  annotate("text",x=-Inf,y=Inf, label=lb1, hjust=-0.1, vjust=1.2, parse=TRUE) +
+  theme_bw() +
+  theme(legend.position="bottom", legend.title = element_blank(),
+        legend.direction = "vertical")
+ggsave("../figures/OriginalArt/CrossTissueP_QQ_Uniform.pdf", height=3, width=3)
+
+
+#Plot as ecdf
+ggplot(BestCrossTissueEqtls, aes(color=SnpFactor, x=-log10(P))) +
+  stat_ecdf(geom = "step") +
+  scale_color_manual(values=c("red", "blue")) +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.2, vjust=-1.2, parse=TRUE) +
+  ylab("ecdf") +
+  xlab(TeX("$-log_{10}(min(P))$")) +
+  theme_bw() +
+  theme(legend.position="bottom", legend.title = element_blank(),
+        legend.direction = "vertical")
+ggsave("../figures/OriginalArt/ecdf_CrossTissueMinP.pdf", height=3,width=3)
+
+#Tissue distribution of best P-values
+ggplot(BestCrossTissueEqtls, aes(x=Tissue, fill=Tissue)) +
+  geom_bar() +
+  facet_wrap(~SnpFactor, nrow = 2) +
+  scale_fill_manual(values=ColorKey) +
+  ylab("Number of SNPs") +
+  xlab("GTEx Tissue with smallest P-value") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5, size=5)) +
+  theme(legend.position = "none")
+ggsave("../figures/OriginalArt/CrossTissueP_TissueDistribution.pdf", height=4, width=4)
+
+
+#QQplot of all tests
+eQTLs %>%
+  group_by(SnpFactor) %>% 
+  mutate(Expected.P=percent_rank(P)) %>%
+  ggplot(aes(color=SnpFactor, x=-log10(Expected.P), y=-log10(P))) +
+  geom_point() +
+  geom_abline() +
+  scale_color_manual(values=c("red", "blue")) +
+  xlab(TeX("Expected $-log_{10}(P)$")) +
+  ylab(TeX("Observed $-log_{10}(P)$")) +
+  theme_bw()
+```
+
+And now plotting effect sizes and such of DE genes, differentially dispersed genes
+
+```{r}
+DiffDisp <- read.delim("../output/Overdispersion_P_SE_Combined.txt.gz")
+
+DE <- read.delim("../output/Final/TableS2.tab")
+
+Merged <- full_join(DiffDisp, DE, by=c("gene"="Ensembl_geneID")) %>%
+    mutate(DiffDisp=Chimp.Mean.Adjusted.Dispersion-Human.Mean.Adjusted.Dispersion) %>%
+  mutate(DiffDispFactor=case_when(
+    q.value<0.1 & DiffDisp > 0 ~ "Dispersed in chimp",
+    q.value<0.1 & DiffDisp < 0 ~ "Dispersed in human",
+    TRUE ~ "Not diff dispersed"
+  )) 
+
+MyPlot <-Merged %>% arrange(desc(DiffDispFactor)) %>%
+  ggplot(aes(y=DiffDisp, x=logFC, color=DiffDispFactor)) +
+  geom_point(size=1, alpha=0.5) +
+  xlim(-4,4) +
+  ylim(-3,3) +
+  # ylab("Difference in dispersion\nmore dispersed\u2194more dispersed\nin human        in chimp") +
+  xlab(TeX("$log_2(\\frac{ChimpMeanExpression}{HumanMeanExpression})$"))+
+  ylab("Difference in dispersion") +
+  scale_color_manual(values=c("#F8766D", "#00BFC4", "#9C9C9C"), labels = c("More dispersed in chimp (FDR<0.1)", "More dispersed in human (FDR<0.1)", "NS")) +
+  theme_bw() +
+  theme(legend.position="bottom", legend.title = element_blank(),
+        legend.direction = "vertical")
+ggMarginal(MyPlot, groupColour = TRUE, groupFill = TRUE)
+ggsave("../figures/OriginalArt/DispersionVsDE.pdf", width=3, height=4)
+
+EffectSizesByFDR <- Merged %>%
+  dplyr::select(P.Value, adj.P.Val,logFC) %>%
+  mutate(FDR_010=adj.P.Val<0.1,
+         FDR_050=adj.P.Val<0.05,
+         FDR_001=adj.P.Val<0.01,
+         AllGenes=adj.P.Val<=1) %>%
+  pivot_longer(cols=c("FDR_001", "FDR_050", "FDR_010", "AllGenes")) %>%
+  filter(value==TRUE) %>%
+  mutate(AbsFC=abs(logFC)) %>%
+  group_by(name,AbsFC) %>%
+  summarise(n = n()) %>%
+  mutate(CumAbsFC = cumsum(n)) %>%
+  arrange(name)
+
+EffectSizePlot <- ggplot(EffectSizesByFDR, aes(x=AbsFC, y=CumAbsFC, color=name)) +
+  geom_line() +
+  ylab("Cumulative number genes") +
+  xlab(expression(atop("Absolute effect size",'|log'[2]*'(FoldChange)|'))) +
+  scale_color_manual(values=c(FDR_001="#F8766D", FDR_050="#00BA38", FDR_010="#619CFF", AllGenes="#9C9C9C"), labels = c(FDR_001="FDR<0.01", FDR_050="FDR<0.05", FDR_010="FDR<0.10", AllGenes="All genes")) +
+  geom_rect(color="red", alpha=0, xmin=0, xmax=2, ymin=0, ymax=10000) +
+  theme_classic() +
+  theme(legend.position="bottom", legend.title = element_blank(), legend.margin=margin())
+
+
+
+Inset<- EffectSizePlot +
+  scale_x_continuous(limits=c(0,2), expand = c(0, 0)) +
+  scale_y_continuous(limits=c(0,10000), expand = c(0, 0)) +
+  theme_bw() +
+  theme(legend.position = "none", axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+
+ggdraw(EffectSizePlot +
+        theme_half_open(12) +
+        theme(legend.position="bottom", legend.title = element_blank())) + 
+  draw_plot(Inset, .35, 0.35, .4, .3)
+
+ggsave("../figures/OriginalArt/EffectSizeDE.pdf", height=4, width=4.6)
+
+library("scales")
+reverselog_trans <- function(base = exp(1)) {
+    trans <- function(x) -log(x, base)
+    inv <- function(x) base^(-x)
+    trans_new(paste0("reverselog-", format(base)), trans, inv, 
+              log_breaks(base = base), 
+              domain = c(1e-100, Inf))
+}
+
+Volcano <- ggplot(Merged, aes(x=logFC, y=adj.P.Val)) +
+  geom_point(alpha=0.05) +
+  ylab("FDR") +
+  xlab(TeX("$log_2(\\frac{ChimpMeanExpression}{HumanMeanExpression})$"))+
+  geom_hline(yintercept=0.1, linetype="dashed", color="#619CFF") +
+  geom_hline(yintercept=0.05, linetype="dashed", color="#00BA38") +
+  geom_hline(yintercept=0.01, linetype="dashed", color="#F8766D") +
+  scale_y_continuous(trans=reverselog_trans(10)) +
+  geom_rect(color="red", alpha=0, xmin=-2, xmax=2, ymin=3, ymax=0) +
+  theme_classic()
+
+VolcanoInset <- Volcano +
+  geom_hline(yintercept=0.1, linetype="dashed", color="#619CFF") +
+  geom_hline(yintercept=0.05, linetype="dashed", color="#00BA38") +
+  geom_hline(yintercept=0.01, linetype="dashed", color="#F8766D") +
+  scale_y_continuous(trans=reverselog_trans(10), limits=c(1,1E-3), expand=c(0,0)) +
+  scale_x_continuous(limits=c(-2,2), expand=c(0,0)) +
+  theme_bw() +
+  theme(legend.position = "none", axis.title.x = element_blank(),
+  axis.title.y = element_blank())
+
+
+ggdraw(Volcano +
+         theme_half_open(12)) +
+  draw_plot(VolcanoInset, .6, 0.6, .4, .4)
+
+ggsave("../figures/OriginalArt/DE_volcano.png", height=4, width=4.6)
+```
+
+### Pn/Ps stuff
+
+```{r}
+ChimpPnPsFile <- "../output/NeutralityIndex/chimp/ChimpsAllTroglodytes/PnPs.txt"
+HumanPnPsFile <- "../output/NeutralityIndex/human/AllGtex/PnPs.txt"
+PnPs.chimp <- read.delim(ChimpPnPsFile)
+PnPs.human <- read.delim(HumanPnPsFile)
+
+GeneConversionTable <- read.delim("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz")
+
+psuedocount = 0.5
+
+#calculation of Pn Ps with pseudocount
+PnPs.Combined.wPseudo <- GeneConversionTable %>%
+  dplyr::select(Gene.stable.ID, Chimpanzee.gene.stable.ID) %>%
+  inner_join(PnPs.chimp, by=c("Chimpanzee.gene.stable.ID"="gene")) %>% 
+  inner_join(PnPs.human, by=c("Gene.stable.ID"="gene"), suffix=c(".chimp", ".human")) %>%
+  distinct(.keep_all = T) %>%
+  mutate(PnPs.chimp=(Pn.chimp+psuedocount)/(Ps.chimp+psuedocount),
+         PnPs.human=(Pn.human+psuedocount)/(Ps.human+psuedocount))
+```
+
+
+Now, Plot Pn/Ps distribution. Note that this is not scaled per synonymous/nonsynonymous site, so we don't necessarily expect Pn/Ps to be smaller than 1 in the case of purifying selection. A more reasonable quick way to confirm purifying selection effect is to check that Pn/Ps correlates with loss of function intolerant.
+
+```{r}
+PnPs.Combined.wPseudo %>%
+  pivot_longer(cols=c("PnPs.chimp", "PnPs.human"), names_to = "species", values_to = "PnPs") %>%
+  ggplot(aes(x=PnPs, color=species)) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(trans="log10") +
+  theme_bw()
+
+ggplot(PnPs.Combined.wPseudo, aes(x=PnPs.chimp, y=PnPs.human)) +
+  geom_point() +
+  scale_x_continuous(trans='log10') +
+  scale_y_continuous(trans='log10') +
+  theme_bw()
+  
+pLI.data <- as.data.frame(read_excel("../data/Lek_etal_nature19057-SI Table 13.xlsx", sheet=2))
+
+
+Symbols <- read.delim("../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz") %>% dplyr::select(ensembl_gene_id=Gene.stable.ID, hgnc_symbol=HGNC.symbol)
+
+ToPlot <- pLI.data %>%
+  left_join(Symbols, by=c("gene"="hgnc_symbol")) %>%
+  left_join(PnPs.Combined.wPseudo, by=c("ensembl_gene_id"="Gene.stable.ID")) %>%
+  mutate(Essentiality=case_when(
+    pLI > 0.9 ~ "Essential; pLI>0.9",
+    pLI < 0.1 ~ "Non-essential; pLI<0.1")) %>%
+  filter(!is.na(Essentiality))
+
+TestResults<-wilcox.test(PnPs.human ~ Essentiality, data=ToPlot)
+lb1 = paste0('P', format.pval(TestResults$p.value, 2))
+
+
+ggplot(ToPlot, aes(x=PnPs.human, color=Essentiality)) +
+  stat_ecdf(geom = "step") +
+  ylab("Cumulative frequency") +
+  theme_bw() +
+  scale_color_discrete(name = "ExAC score", labels = c(">0.9; LoF intolerant", "<0.1; LoF tolerant")) +
+  xlab(TeX('$P_n/P_s$')) +
+  scale_x_continuous(trans="log10") +
+  theme(legend.position = c(.4, .8),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA)) +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.2, vjust=-1.2, parse=TRUE) +
+ggsave("../figures/OriginalArt/PnPsByEssentiality.pdf", units="mm", height=70, width=70)
+
+ggplot(aes(x=PnPs.human, color=Essentiality)) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(trans="log10") +
+  theme_bw()
+
+```
+
+Finally, plot Pn/Ps ratio between species. Expectation that genes that are more dispersed in chimp, will have higher Pn/Ps in chimp than in human.
+
+```{r}
+ToPlot <- DiffDisp %>%
+  filter(q.value<0.1) %>%
+  mutate(DiffDisp=Chimp.Mean.Adjusted.Dispersion-Human.Mean.Adjusted.Dispersion) %>%
+  mutate(DifferentialDispersion=case_when(
+    sign(DiffDisp)==1 ~ "chimp",
+    sign(DiffDisp)==-1 ~ "human")) %>%
+  inner_join(PnPs.Combined.wPseudo, by=c("gene"="Gene.stable.ID")) %>%
+  mutate(Pn.Ps.Ratio=PnPs.chimp/PnPs.human)
+
+TestResults<-wilcox.test(Pn.Ps.Ratio ~ DifferentialDispersion, data=ToPlot)
+lb1 = paste0('P==', format.pval(TestResults$p.value, 2))
+
+PnPs.Index.Ratio <- ggplot(ToPlot, aes(x=Pn.Ps.Ratio, color=DifferentialDispersion)) +
+  stat_ecdf(geom = "step") +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.2, vjust=-1.2, parse=TRUE) +
+  ylab("Cumulative frequency") +
+  xlab(TeX('\\frac{Chimp P_n/P_s}{Human P_n/P_s}$')) +
+  labs(color = "Gene expression\nmore dispersed in") +
+
+  scale_x_continuous(trans="log10") +
+  theme_bw() +
+  theme(legend.position = c(.3, .75),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA))
+PnPs.Index.Ratio
+ggsave("../figures/OriginalArt/DispersionDifference.by.PnPs_index_SignificantDiffDispersedGenesOnly.pdf", PnPs.Index.Ratio, height=3, width=3)
+
+  
+```
+
+For context, make the same plot for cell-specificity (tau) instead of PnPs ratio.
+
+```{r}
+tau <- read.delim("../output/TissueSpecificity/tau.txt", col.names = c("gene", "tau"))
+
+ToPlot <- DiffDisp %>%
+  filter(q.value<0.1) %>%
+  mutate(DiffDisp=Chimp.Mean.Adjusted.Dispersion-Human.Mean.Adjusted.Dispersion) %>%
+  mutate(DifferentialDispersion=case_when(
+    sign(DiffDisp)==1 ~ "chimp",
+    sign(DiffDisp)==-1 ~ "human")) %>%
+  inner_join(tau, by=c("gene"))
+
+TestResults<-wilcox.test(tau ~ DifferentialDispersion, data=ToPlot)
+lb1 = paste0('P==', format.pval(TestResults$p.value, 2))
+
+ggplot(ToPlot, aes(x=tau, color=DifferentialDispersion)) +
+  stat_ecdf(geom = "step") +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.2, vjust=-1.2, parse=TRUE) +
+  ylab("Cumulative frequency") +
+  xlab(TeX('\\frac{Chimp P_n/P_s}{Human P_n/P_s}$')) +
+  labs(color = "Gene expression\nmore dispersed in") +
+  theme_bw() +
+  theme(legend.position = c(.3, .75),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA))
+
+
+```
+
+
+## Conclusions
+
+

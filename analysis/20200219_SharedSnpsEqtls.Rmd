@@ -273,7 +273,7 @@ Last thing I may want to look into, is whether the genes nearest the species sha
 
 LeflerNearestGenes <- read.delim("../data/Lefler_TableS4.txt", sep='\t')
 
-DispersionEstimates <- read.delim("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt")
+DispersionEstimates <- read.delim("../output/OverdispersionEstimatesFromChimp.txt")
 
 ToPlot <- DispersionEstimates %>%
   left_join(LeflerNearestGenes, by=c("gene"="Closest.protein.coding.gene..gencode.v12...Ensembl.name")) %>%

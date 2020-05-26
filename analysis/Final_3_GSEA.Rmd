@@ -32,6 +32,20 @@ read in eGene data
 ```{r}
 EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
 EgenesTested.grouped <- AddGroups(EgenesTested, HumanEgeneCount=495)
+
+Dispersion <- read.delim('../output/OverdispersionEstimatesFromChimp.txt')
+Dispersion.se <- read.delim('../output/OverdispersionEstimatesFromChimp.txt.SE.tab.gz')
+Dispersion.P <- read.delim('../output/OverdispersionEstimatesFromChimp.txt.Pvals.tab')
+Dispersion %>%
+  dplyr::select(gene,
+                Chimp.Mean.Expression,
+                Human.Mean.Expression,
+                Chimp.Overdispersion,
+                Human.Overdispersion,
+                Chimp.Mean.Adjusted.Dispersion=Chimp.Residual,
+                Human.Mean.Adjusted.Dispersion=Human.Residual) %>%
+  left_join(Dispersion.se, by="gene") %>%
+  left_join(Dispersion.P, by="gene") %>% head()
 ```
 
 First define a function to do GSEA on Molecular Function (MF), Cellular Component (CC), and Biological process (BP).
@@ -76,9 +90,7 @@ gsea.full <- function(NamedGeneVector, ...){
 Perform GSEA based on difference in dispersion. What genes are more dispersed in chimp than human, vice-versa
 
 ```{r}
-ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
-
-# ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp.txt", header=T, sep='\t', stringsAsFactors = F)
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp.txt", header=T, sep='\t', stringsAsFactors = F)
 
 DifferenceInDispersion <- ChimpOverdispersionTable %>%
   mutate(DispersionDiff = Chimp.Residual-Human.Residual ) %>%
@@ -92,11 +104,11 @@ gsea.difference.in.disp<-gseGO(gene=DifferenceInDispersion,
             keyType='ENSEMBL',
             nPerm=100000)
 
-
-Full.gsea.simplified <- gsea.full(DifferenceInDispersion)
-
-Full.gsea.simplified$Simplified %>% dim()
-Full.gsea.simplified$Simplified %>% dplyr::select(Description)
+# 
+# Full.gsea.simplified <- gsea.full(DifferenceInDispersion)
+# 
+# Full.gsea.simplified$Simplified %>% dim()
+# Full.gsea.simplified$Simplified %>% dplyr::select(Description)
 
 DispersionContrastPlot <-
   # Full.gsea.simplified$Simplified %>% as.data.frame() %>%
@@ -128,8 +140,11 @@ DispersionContrastPlot
 
 ggsave("../figures/OriginalArt/GSEA.dispersionContrast.eps", DispersionContrastPlot, width=4, height=4)
 
-Full.gsea.simplified$BP %>% as.data.frame() %>% dplyr::select(p.adjust, enrichmentScore, Description) %>%
-filter(grepl("DNA",Description))
+write_delim(as.data.frame(gsea.difference.in.disp) %>% dplyr::select(-core_enrichment), path="../output/Final/TableS5.tab", delim='\t')
+
+
+# Full.gsea.simplified$BP %>% as.data.frame() %>% dplyr::select(p.adjust, enrichmentScore, Description) %>%
+# filter(grepl("DNA",Description))
 
 
 gsea.difference.in.disp %>% as.data.frame() %>%
@@ -144,7 +159,7 @@ gsea.difference.in.disp %>% as.data.frame() %>%
   geom_point() +
   xlim(c(-1,1)) +
   facet_grid(ONTOLOGY~., scales = "free") +
-  scale_colour_gradient(low="red", high="black") +
+  scale_colour_viridis_c(trans="log10", limits=c(0.0001, 0.1), direction=-1, option="D") +
   facet_grid(ONTOLOGY~., scales = "free") +
   xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
   scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 60, simplify = FALSE), paste, collapse="\n")) +
@@ -152,7 +167,66 @@ gsea.difference.in.disp %>% as.data.frame() %>%
   geom_vline(xintercept = 0, linetype="dotted") +
   theme_bw()
 
+
+
 ```
+
+Differential GSEA based on polarized P-value
+
+```{r}
+DifferenceInDispersion <- ChimpOverdispersionTable %>%
+  left_join(Dispersion.P, by="gene") %>%
+  mutate(Polarized.P = -log10(P) * sign(Chimp.Residual-Human.Residual)) %>%
+  filter(gene %in% EgenesTested.grouped$H.gene) %>%
+  dplyr::select(gene, Polarized.P) %>%
+  deframe() %>% sort(decreasing = T)
+
+gsea.difference.in.disp<-gseGO(gene=DifferenceInDispersion,
+            ont = "ALL",
+            OrgDb=org.Hs.eg.db,
+            keyType='ENSEMBL',
+            nPerm=100000)
+
+DispersionContrastPlot <-
+  # Full.gsea.simplified$Simplified %>% as.data.frame() %>%
+  gsea.difference.in.disp %>% as.data.frame() %>%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize) %>%
+  mutate(Polarization=sign(enrichmentScore)) %>%
+  # filter(str_detect(Description, 'DNA')) %>%
+  # group_by(ONTOLOGY, Polarization) %>%
+  group_by(ONTOLOGY, Polarization) %>%
+  top_n(n = 5, wt = abs(enrichmentScore)) %>%
+  ungroup() %>%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `BP` = "Biological Process", `CC` = "Cellular Component", `MF`="Molecular Function")) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_viridis_c(trans="log10", limits=c(0.0001, 0.1), direction=-1, option="D") +
+  # scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  # xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
+  xlab("Enrichment") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+DispersionContrastPlot
+
+ggsave("../figures/OriginalArt/GSEA.dispersionContrast.PolarizedP.eps", DispersionContrastPlot, width=4, height=4)
+```
+
+
+Ok another way to do it is as GO enrichment analysis based on significant interspecies variability changes only.
+
+```{r}
+ChimpOverdispersionTable %>%
+  filter((Chimp.Residual-Human.Residual)>0 ) %>%
+  filter(gene %in% EgenesTested.grouped$H.gene) %>%
+```
+
 
 Now GSEA of dispersed genes based on human.
 
@@ -171,6 +245,104 @@ gsea.ranked.disp<-gseGO(gene=HumanDispersion,
 DispersionHumanPlot <-
   # Full.gsea.simplified$Simplified %>% as.data.frame() %>%
   gsea.ranked.disp %>% as.data.frame() %>%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize, NES) %>%
+  mutate(Polarization=sign(enrichmentScore)) %>%
+  # filter(str_detect(Description, 'DNA')) %>%
+  # group_by(ONTOLOGY, Polarization) %>%
+  group_by(ONTOLOGY, Polarization) %>%
+  top_n(n = 3, wt = abs(enrichmentScore)) %>%
+  
+  # top_n(n = 3, wt = abs(-log10(p.adjust))) %>%
+  # top_n(n = 3, wt = abs(enrichmentScore)) %>%
+
+  ungroup() %>%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `BP` = "Biological Process", `CC` = "Cellular Component", `MF`="Molecular Function")) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_viridis_c(trans="log10", limits=c(0.00001, 0.1), direction=-1, option="D") +
+  # scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  # xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
+  xlab("Enrichment") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+DispersionHumanPlot
+
+ggsave("../figures/OriginalArt/GSEA.dispersionHuman.eps", DispersionHumanPlot, width=4, height=4)
+
+write_delim(as.data.frame(gsea.ranked.disp) %>% dplyr::select(-core_enrichment), path="../output/Final/TableS4.tab", delim='\t')
+
+```
+
+Repeat but excluding viral challanged chimps
+
+```{r}
+ChimpOverdispersionTableNoVirus <- read.table("../output/OverdispersionEstimatesFromChimp_NoVirusChallangedIndividuals.txt", header=T, sep='\t', stringsAsFactors = F)
+
+DifferenceInDispersionNoVirus <- ChimpOverdispersionTableNoVirus %>%
+  mutate(DispersionDiff = Chimp.Residual-Human.Residual ) %>%
+  filter(gene %in% EgenesTested.grouped$H.gene) %>%
+  dplyr::select(gene, DispersionDiff) %>%
+  deframe() %>% sort(decreasing = T)
+
+gsea.difference.in.disp.NoVirus<-gseGO(gene=DifferenceInDispersionNoVirus,
+            ont = "ALL",
+            OrgDb=org.Hs.eg.db,
+            keyType='ENSEMBL',
+            nPerm=100000)
+DispersionContrastPlotNoVirus <-
+  # Full.gsea.simplified$Simplified %>% as.data.frame() %>%
+  gsea.difference.in.disp.NoVirus %>% as.data.frame() %>%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize, NES) %>%
+  mutate(Polarization=sign(enrichmentScore)) %>%
+  # filter(str_detect(Description, 'DNA')) %>%
+  # group_by(ONTOLOGY, Polarization) %>%
+  group_by(ONTOLOGY, Polarization) %>%
+  top_n(n = 3, wt = abs(enrichmentScore)) %>%
+  # top_n(n = 4, wt = abs(-log10(p.adjust))) %>%
+  ungroup() %>%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `BP` = "Biological Process", `CC` = "Cellular Component", `MF`="Molecular Function")) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_viridis_c(trans="log10", limits=c(0.0001, 0.1), direction=-1, option="D") +
+  # scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  # xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
+  xlab("Enrichment") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+DispersionContrastPlotNoVirus
+
+ggsave("../figures/OriginalArt/GSEA.dispersionContrastNoVirus.eps", DispersionContrastPlotNoVirus, width=4, height=4)
+
+write_delim(as.data.frame(gsea.difference.in.disp.NoVirus) %>% dplyr::select(-core_enrichment), path="../output/Final/TableS6.tab", delim='\t')
+
+HumanDispersionNoVirus <- ChimpOverdispersionTableNoVirus %>%
+  filter(gene %in% EgenesTested.grouped$H.gene) %>%
+  dplyr::select(gene, Human.Residual) %>%
+  deframe() %>% sort(decreasing = T)
+
+gsea.ranked.disp.NoVirus<-gseGO(gene=HumanDispersionNoVirus,
+            ont = "ALL",
+            OrgDb=org.Hs.eg.db,
+            keyType='ENSEMBL',
+            nPerm=1000000)
+
+DispersionHumanPlotNoVirus <-
+  # Full.gsea.simplified$Simplified %>% as.data.frame() %>%
+  gsea.ranked.disp.NoVirus %>% as.data.frame() %>%
   dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize) %>%
   mutate(Polarization=sign(enrichmentScore)) %>%
   # filter(str_detect(Description, 'DNA')) %>%
@@ -194,9 +366,7 @@ DispersionHumanPlot <-
   theme_bw() +
   theme(axis.text.y = element_text(size=6)) + 
   ylab(NULL)
-DispersionHumanPlot
-
-ggsave("../figures/OriginalArt/GSEA.dispersionHuman.eps", DispersionHumanPlot, width=4, height=4)
+DispersionHumanPlotNoVirus
 
 ```
 
@@ -296,6 +466,31 @@ ChimpEgeneGO.plot <- ChimpSpecificEgene.GO %>% as.data.frame() %>%
   theme(axis.title.y=element_blank())
 ggsave("../figures/OriginalArt/GO.ChimpSpecificEgenes.eps", ChimpEgeneGO.plot, width=4.5, height=4.5)
 
+GeneSymbols <- read.delim("../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz", stringsAsFactors = F)
+
+p <- function(v) {
+  Reduce(f=paste, x = v)
+ }
+
+ChimpSpecificEgene.GO %>% as.data.frame() %>%
+  separate(GeneRatio, c("FgY", "BgY"), sep="/", convert=TRUE, remove=F) %>%
+  separate(BgRatio, c("FgN", "BgN"), sep="/", convert=TRUE, remove=F) %>%
+  mutate(OddsRatio=(FgY/BgY)/(FgN/BgN)) %>%
+  dplyr::select(-c("FgY", "BgY", "FgN", "BgN", "Count")) %>%
+  separate_rows(geneID, sep="/") %>%
+  left_join(GeneSymbols, by=c("geneID"="Gene.stable.ID")) %>%
+  arrange(HGNC.symbol) %>%
+  group_by(ID) %>%
+  dplyr::summarise(genes=paste(HGNC.symbol, collapse=", "),
+                   genes_ensembl=paste(geneID, collapse=", ")) %>% 
+  left_join(ChimpSpecificEgene.GO %>%
+              as.data.frame() %>%
+              dplyr::select(-geneID),
+            by="ID") %>%
+  mutate(genes=str_remove(genes, "^, ")) %>%
+  dplyr::select(-genes, -genes_ensembl, everything()) %>%
+  write_delim(path = "../output/Final/TableS10.tab", delim = '\t')
+
 
 ```
 
@@ -341,8 +536,26 @@ SharedEgeneGO.plot <- Shared.eGene.GO %>% as.data.frame() %>%
 SharedEgeneGO.plot
 ggsave("../figures/OriginalArt/GO.SharedEgenes.eps", SharedEgeneGO.plot, width=4.5, height=4.5)
 
-```
+Shared.eGene.GO %>% as.data.frame() %>%
+  separate(GeneRatio, c("FgY", "BgY"), sep="/", convert=TRUE, remove=F) %>%
+  separate(BgRatio, c("FgN", "BgN"), sep="/", convert=TRUE, remove=F) %>%
+  mutate(OddsRatio=(FgY/BgY)/(FgN/BgN)) %>%
+  dplyr::select(-c("FgY", "BgY", "FgN", "BgN", "Count")) %>%
+  separate_rows(geneID, sep="/") %>%
+  left_join(GeneSymbols, by=c("geneID"="Gene.stable.ID")) %>%
+  arrange(HGNC.symbol) %>%
+  group_by(ID) %>%
+  dplyr::summarise(genes=paste(HGNC.symbol, collapse=", "),
+                   genes_ensembl=paste(geneID, collapse=", ")) %>% 
+  left_join(Shared.eGene.GO %>%
+              as.data.frame() %>%
+              dplyr::select(-geneID),
+            by="ID") %>%
+  mutate(genes=str_remove(genes, "^, ")) %>%
+  dplyr::select(-genes, -genes_ensembl, everything()) %>%
+  write_delim(path = "../output/Final/TableS9.tab", delim = '\t')
 
+```
 
 ## Conclusions
 
