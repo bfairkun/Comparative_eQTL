@@ -20,6 +20,7 @@ units = pd.read_table(config["units"], dtype=str).set_index(["sample", "unit"], 
 units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])  # enforce str in index
 validate(units, schema="../schemas/units.schema.yaml")
 
+
 # contigs in reference genome
 contigs = pd.read_table(config["ref"]["genome"] + ".fai",
                         header=None, usecols=[0], squeeze=True, dtype=str)
@@ -41,6 +42,15 @@ with open(config["RNASeqFileList"]) as RNASeqFileList_fh:
         samplename, filepath = line.strip('\n').split('\t')
         RNASeqSampleToFastq_dict[samplename].append(filepath)
         RNASeqBasenameToFastq[os.path.basename(filepath)] = filepath
+
+GEORNASeqBasenameToFastq = dict()
+with open("../../data/NovelRNASeqFiles.tsv") as RNASeqFileList_fh:
+    RNASeqFileList_fh.readline()
+    for line in RNASeqFileList_fh:
+        samplename, filepath = line.strip('\n').split('\t')
+        GEORNASeqBasenameToFastq[os.path.basename(filepath)] = filepath
+
+
 
 PowerAnalysisFastqFrame = pd.read_csv(config["PowerAnalysis"]["RNASeqFileList"],sep='\t', index_col=0, comment='#')
 

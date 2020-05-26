@@ -4,6 +4,8 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        "DataForSubmission/GEO/FastqChecksums.txt",
+        "DataForSubmission/GEO/ChimpanzeesQQNorm_eQTL_Mapping.tsv.gz",
         "../../output/TSP.eQTLs.GTEx.AllTissues.txt.gz",
         expand("../../output/Final/FigS_Power_NumDE_{ReadDepthKey}.pdf", ReadDepthKey=config["PowerAnalysis"]["DepthsToTest"]+["Full"]),
         expand("../../output/Overdispersion{DropSampleList}_P_SE_Combined.txt.gz", DropSampleList=list(samples_dispersion["WildcardIdentifier"])),
@@ -131,4 +133,5 @@ include: "rules/vep.smk"
 include: "rules/CalculateSubstitutionsWithGorilla.smk"
 include: "rules/qc.smk"
 include: "rules/MakeSupplementalTables.smk"
+include: "rules/OrganizeDataSubmission.smk"
 #include: "rules/annotation.smk"

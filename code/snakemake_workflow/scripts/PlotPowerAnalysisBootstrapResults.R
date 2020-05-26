@@ -101,11 +101,11 @@ ggsave(paste0("../../output/Final/FigS_Power_NumDE_", ReadSubsetName, ".pdf"), w
 
 # percent false discoveries
 FDR.ToPlot <- Results %>%
-  dplyr::select(-c("log2FC", "P")) %>%
+  dplyr::select(-P) %>%
   filter(ReadSubset==ReadSubsetName) %>%
   left_join(
     (RealResults %>%
-       dplyr::select(Ensembl_geneID, Real.P.adjust=adj.P.Val)),
+       dplyr::select(Ensembl_geneID, Real.P.adjust=adj.P.Val, Real.FC=logFC)),
     suffix=c(".Real", ".Resampled"),
     by=c("gene"="Ensembl_geneID")
   ) %>%
@@ -114,8 +114,10 @@ FDR.ToPlot <- Results %>%
          FDR.10=P.adjust<0.1,
          Real.FDR.01=Real.P.adjust<0.01) %>%
   dplyr::select(-c("Real.P.adjust", "P.adjust", "ReadSubset")) %>%
-  gather(key="FDR", value = "TestResults", -c("gene", "SampleSize", "seed", "Real.FDR.01")) %>%
-  mutate(FalseDiscovery=TestResults & !Real.FDR.01) %>%
+  gather(key="FDR", value = "TestResults", -c("gene", "SampleSize", "seed", "Real.FDR.01", "Real.FC", "log2FC")) %>%
+  #False discoveries include ones where the effect direction are incorrect
+  mutate(FalseDiscovery=(TestResults & !Real.FDR.01) | (TestResults & (sign(Real.FC) != sign(log2FC) ))) %>%
+  # mutate(FalseDiscovery=(TestResults & !Real.FDR.01)) %>%a
   drop_na() %>%
   group_by(FDR, SampleSize, seed) %>%
   summarize(FalseDiscoveryRate=sum(FalseDiscovery)/sum(TestResults))
