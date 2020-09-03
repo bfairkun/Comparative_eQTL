@@ -24,6 +24,14 @@ rule MergeFastqFilesPower:
     shell:
         "cat {input} > {output}"
 
+rule MergeFastqFilesPowerForTony:
+    input:
+        lambda wildcards: PowerAnalysisFastqFrame.at[wildcards.PowerAnalysisSample, "fastq"] 
+    output:
+        "/project2/yangili1/bjf79/FastqForTony/{PowerAnalysisSample}.fastq.gz"
+    shell:
+        "cat {input} > {output}"
+
 def GetFirstItemOnlyIfNecessary(ListOrString):
     """
     Helper function to reformat outout if pandas df.at method which outputs
