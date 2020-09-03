@@ -166,6 +166,21 @@ AdmixtureResults %>% left_join((OtherMetadata %>% dplyr::select(Individual.ID, L
 
 ggsave("../figures/OriginalArt/Other.Admixture.pdf", width=160, height=100, units="mm")
 
+AdmixtureResults %>% left_join((OtherMetadata %>% dplyr::select(Individual.ID, Label)), by=c("Ind"="Individual.ID")) %>%
+  mutate(Ind=case_when(
+    is.na(Label) ~ Ind,
+    !is.na(Label) ~ Label
+  )) %>%
+  dplyr::select(-Label) %>%
+  dplyr::rename(Cluster1Membership=V7,
+                Cluster2Membership=V8,
+                Cluster3Membership=V9,
+                Cluster4Membership=V10,
+                Individual=Ind,
+                Source=Fam) %>%
+  write.table(file="../figures/SourceData/Admixture.tsv", sep='\t', quote=F, row.names = F)
+  
+
 ```
 
 ### Kinship expectation scatter plot
@@ -193,6 +208,7 @@ Merged <- merge(KSort, YSort, by="Teams") %>%
   mutate(label= paste(Label.x, "+",Label.y)) %>%
   filter(!grepl("Unnamed",label))
 Merged$label[Merged$coeff==0] <- ""
+dim(Merged)
 
 Merged %>%
   filter(!ID1==ID2) %>%
@@ -205,6 +221,20 @@ ggplot(aes(x=coeff, y=value*2, label=label)) +
   theme_bw()
 
 ggsave("../figures/OriginalArt/Other.Kinship.pdf", width=100, height=80, units="mm")
+
+
+SampleLabels <- read.table('../output/ForAssociationTesting.temp.fam', stringsAsFactors = F)$V2
+GemmaMatrix <- as.matrix(read.table('../output/GRM.cXX.txt'))
+colnames(GemmaMatrix) <- SampleLabels
+row.names(GemmaMatrix) <- SampleLabels
+
+MeasuredRelatedness <- GemmaMatrix %>% as.data.frame() %>%
+  rownames_to_column("ind1") %>%
+  gather(key="ind2", value="MeasuredRelatedness", -ind1)
+
+bind_rows(MeasuredRelatedness, (YerkesKinship_from_pedigree %>% dplyr::rename(PedigreeExpectedRelatedness=coeff))) %>%
+  write.table("../figures/SourceData/Relatedness.tsv", sep='\t', row.names=F, quote=F)
+
 ```
 
 ### eQTLs top snps around TSS

@@ -1,0 +1,286 @@
+sample_name	library_ID	title	library_strategy	library_source	library_selection	library_layout	platform	instrument_model	design_description	filetype	filename	filename2	filename3	filename4	assembly	fasta_file
+295	295	WGS of captive born chimpanzee Duncan from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG3_S3_R1_001.fastq.gz	YG-LB-PanTro-YG3_S3_R2_001.fastq.gz				
+317	317	WGS of captive born chimpanzee Iyk from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG2_S2_R1_001.fastq.gz	YG-LB-PanTro-YG2_S2_R2_001.fastq.gz				
+338	338	WGS of captive born chimpanzee Maxine from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG1_S1_R1_001.fastq.gz	YG-LB-PanTro-YG1_S1_R2_001.fastq.gz				
+389	389	WGS of captive born chimpanzee Rogger from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG39_S15_R1_001.fastq.gz	YG-LB-SB-PanTro-YG39_S15_R2_001.fastq.gz				
+438	438	WGS of captive born chimpanzee Cheeta from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG22_S22_R1_001.fastq.gz	YG-LB-PanTro-YG22_S22_R2_001.fastq.gz				
+456	456	WGS of captive born chimpanzee Mai from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG23_S23_R1_001.fastq.gz	YG-LB-PanTro-YG23_S23_R2_001.fastq.gz				
+462	462	WGS of captive born chimpanzee Barbara from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG24_S24_R1_001.fastq.gz	YG-LB-PanTro-YG24_S24_R2_001.fastq.gz				
+476	476	WGS of captive born chimpanzee Lulu from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG12_S12_R1_001.fastq.gz	YG-LB-PanTro-YG12_S12_R2_001.fastq.gz				
+495	495	WGS of captive born chimpanzee Amos from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG8_S8_R1_001.fastq.gz	YG-LB-PanTro-YG8_S8_R2_001.fastq.gz				
+503	503	WGS of captive born chimpanzee Carmichael from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG36_S12_R1_001.fastq.gz	YG-LB-SB-PanTro-YG36_S12_R2_001.fastq.gz				
+522	522	WGS of captive born chimpanzee Peony from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG4_S4_R1_001.fastq.gz	YG-LB-PanTro-YG4_S4_R2_001.fastq.gz				
+529	529	WGS of captive born chimpanzee Justin from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG37_S13_R1_001.fastq.gz	YG-LB-SB-PanTro-YG37_S13_R2_001.fastq.gz				
+537	537	WGS of captive born chimpanzee Socrates from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG13_S13_R1_001.fastq.gz	YG-LB-PanTro-YG13_S13_R2_001.fastq.gz				
+549	549	WGS of captive born chimpanzee Jarred from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG17_S17_R1_001.fastq.gz	YG-LB-PanTro-YG17_S17_R2_001.fastq.gz				
+554	554	WGS of captive born chimpanzee Unnamed_female from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG33_S9_R1_001.fastq.gz	YG-LB-SB-PanTro-YG33_S9_R2_001.fastq.gz				
+558	558	WGS of captive born chimpanzee Cynthia from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG7_S7_R1_001.fastq.gz	YG-LB-PanTro-YG7_S7_R2_001.fastq.gz				
+570	570	WGS of captive born chimpanzee Waga from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG6_S6_R1_001.fastq.gz	YG-LB-PanTro-YG6_S6_R2_001.fastq.gz				
+623	623	WGS of captive born chimpanzee Joelson from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG11_S11_R1_001.fastq.gz	YG-LB-PanTro-YG11_S11_R2_001.fastq.gz				
+676	676	WGS of captive born chimpanzee Callie from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG35_S11_R1_001.fastq.gz	YG-LB-SB-PanTro-YG35_S11_R2_001.fastq.gz				
+724	724	WGS of captive born chimpanzee Kerri from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG38_S14_R1_001.fastq.gz	YG-LB-SB-PanTro-YG38_S14_R2_001.fastq.gz				
+4x0025	4x0025	WGS of captive born chimpanzee 4x0025 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG20_S20_R1_001.fastq.gz	YG-LB-PanTro-YG20_S20_R2_001.fastq.gz				
+4x0043	4x0043	WGS of captive born chimpanzee 4x0043 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG21_S21_R1_001.fastq.gz	YG-LB-PanTro-YG21_S21_R2_001.fastq.gz				
+4X0095 	4X0095 	WGS of captive born chimpanzee 4X0095  from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG25_S1_R1_001.fastq.gz	YG-LB-SB-PanTro-YG25_S1_R2_001.fastq.gz				
+4X0212	4X0212	WGS of captive born chimpanzee 4X0212 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG26_S2_R1_001.fastq.gz	YG-LB-SB-PanTro-YG26_S2_R2_001.fastq.gz				
+4X0267	4X0267	WGS of captive born chimpanzee 4X0267 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG27_S3_R1_001.fastq.gz	YG-LB-SB-PanTro-YG27_S3_R2_001.fastq.gz				
+4X0333	4X0333	WGS of captive born chimpanzee 4X0333 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG28_S4_R1_001.fastq.gz	YG-LB-SB-PanTro-YG28_S4_R2_001.fastq.gz				
+4X0339	4X0339	WGS of captive born chimpanzee 4X0339 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG29_S5_R1_001.fastq.gz	YG-LB-SB-PanTro-YG29_S5_R2_001.fastq.gz				
+4X0354	4X0354	WGS of captive born chimpanzee 4X0354 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG30_S6_R1_001.fastq.gz	YG-LB-SB-PanTro-YG30_S6_R2_001.fastq.gz				
+4X0357	4X0357	WGS of captive born chimpanzee 4X0357 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG31_S7_R1_001.fastq.gz	YG-LB-SB-PanTro-YG31_S7_R2_001.fastq.gz				
+4x0430	4x0430	WGS of captive born chimpanzee 4x0430 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG10_S10_R1_001.fastq.gz	YG-LB-PanTro-YG10_S10_R2_001.fastq.gz				
+4x0519	4x0519	WGS of captive born chimpanzee 4x0519 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG5_S5_R1_001.fastq.gz	YG-LB-PanTro-YG5_S5_R2_001.fastq.gz				
+4X0550	4X0550	WGS of captive born chimpanzee 4X0550 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG32_S8_R1_001.fastq.gz	YG-LB-SB-PanTro-YG32_S8_R2_001.fastq.gz				
+4x373	4x373	WGS of captive born chimpanzee Ursula from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG19_S19_R1_001.fastq.gz	YG-LB-PanTro-YG19_S19_R2_001.fastq.gz				
+4x523	4x523	WGS of captive born chimpanzee 4x523 from SNPRC	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG18_S18_R1_001.fastq.gz	YG-LB-PanTro-YG18_S18_R2_001.fastq.gz				
+554_2	554_2	WGS of captive born chimpanzee Anja from Yerkes	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-SB-PanTro-YG34_S10_R1_001.fastq.gz	YG-LB-SB-PanTro-YG34_S10_R2_001.fastq.gz				
+88A020	88A020	WGS of captive born chimpanzee 88A020 from New.Iberia	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG16_S16_R1_001.fastq.gz	YG-LB-PanTro-YG16_S16_R2_001.fastq.gz				
+95A014	95A014	WGS of captive born chimpanzee 95A014 from New.Iberia	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG9_S9_R1_001.fastq.gz	YG-LB-PanTro-YG9_S9_R2_001.fastq.gz				
+Little_R	Little_R	WGS of captive born chimpanzee Little_Rock_chimp from Little.Rock.Zoo	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG15_S15_R1_001.fastq.gz	YG-LB-PanTro-YG15_S15_R2_001.fastq.gz				
+MD_And	MD_And	WGS of captive born chimpanzee MD_And from Md.Anderson	WGS	GENOMIC	RANDOM	paired	ILLUMINA	Illumina NovaSeq 6000	Nextera DNA Flex Library prep kit according to manufacturer's instructions.	fastq	YG-LB-PanTro-YG14_S14_R1_001.fastq.gz	YG-LB-PanTro-YG14_S14_R2_001.fastq.gz				
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																
+																

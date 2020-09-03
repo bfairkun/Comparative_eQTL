@@ -13,8 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 
 ## Introduction
 
-This markdown will be used to generate publication quality figures that I have already made at some point in my exploratory Rmarkdown analyses. This markdown will just make plots that i anticipate for publication that are shown as empricial cdf plots for various unrelated things.
-
+This markdown will be used to some of the figures in the publication.
 
 First, load necessary libraries
 ```{r}
@@ -30,13 +29,16 @@ source("../code/CustomFunctions.R")
 Load eGene data for humans and chimp.
 
 ```{r}
+dir.create(SourceDataDir <- "../figures/SourceData/", recursive=T)
+
 ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp.NoLengthNorm.txt", header=T, sep='\t')
 
 EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
 
 # DE.results <- read.table("../data/DE_genes.NoVirusChallangedInds.txt", sep='\t', header=T)
-DE.results <- read.delim("../output/Final/TableS1.tab") %>%
-  dplyr::select(gene=Ensembl_geneID, coefficients=logFC, pval=adj.P.Val)
+DE.results <- read.delim("../output/Final/TableS2.tab") %>%
+  dplyr::select(gene=Ensembl_geneID, coefficients=logFC, pval=adj.P.Val) %>%
+  mutate(DE=(pval<0.05)*sign(coefficients))
 
 HumanEgeneCount <- NULL
 HumanEgeneCount <- 495 #Use 495 instead of 500 because of ties in ranks. 495 will get you 500.
@@ -167,27 +169,6 @@ Dispersion.Fig
 ggsave(paste0("../figures/OriginalArt/eGeneGroup.", HumanEgeneCount, ".dispersion.pdf"), Dispersion.Fig, height=120, width=120, units="mm")
 ```
 
-### Difference in fdr rank vs difference in dispersion
-
-Another way to look at the same thing. This is important investigate since considered using this difference in ranks as a less arbitrary way of categorizing eGenes vs non eGenes and doing gene overlap analysis.
-
-```{r}
-DifferenceInFDR.vs.DiffInDispersion <- EgenesTested.grouped %>%
-  mutate(H.rank = dense_rank(H.FDR),
-         C.rank = dense_rank(C.FDR)) %>%
-  filter(C.FDR <= 0.1) %>%
-  mutate(RankDiff=C.rank-H.rank) %>%
-  left_join(ChimpOverdispersionTable, by=c("H.gene"="gene")) %>%
-  mutate(DispersionDiff = Chimp.Residual-Human.Residual ) %>%
-  filter(DispersionDiff < 2 & DispersionDiff > -2)
-
-cor.test(x=DifferenceInFDR.vs.DiffInDispersion$RankDiff, y=DifferenceInFDR.vs.DiffInDispersion$DispersionDiff)
-
-ggplot(DifferenceInFDR.vs.DiffInDispersion, aes(x=RankDiff, y=DispersionDiff)) +
-  geom_point()
-```
-
-Ok so maybe the gene categorization makes more sense
 
 ### essentiality by group
 
@@ -372,12 +353,38 @@ PanMammal.dnds %>%
         legend.background = element_rect(fill=NA))
 ggsave("../figures/OriginalArt/DispersionByDnDs.pdf", units="mm", height=70, width=70)
 
+
+Correlation <- PanMammal.dnds %>%
+  left_join(Symbols, by=c("gene"="hgnc_symbol")) %>%
+  inner_join(ChimpOverdispersionTable, by=c("ensembl_gene_id"="gene")) %>%
+  do(tidy(cor.test(.$Chimp.Residual, .$dn.ds, method='spearman')))
+Correlation
+lb1 = paste0('atop(rho==', signif(Correlation$estimate,2), ', P==', format.pval(Correlation$p.value, 2), ')')
+
+PanMammal.dnds %>%
+  left_join(Symbols, by=c("gene"="hgnc_symbol")) %>%
+  inner_join(ChimpOverdispersionTable, by=c("ensembl_gene_id"="gene")) %>%
+  mutate(dn.ds.ntile=ntile(dn.ds,10)) %>%
+  filter(dn.ds.ntile %in% c(1,10)) %>%
+  ggplot(aes(x=Chimp.Residual, color=as.factor(dn.ds.ntile))) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(limits=c(-2.5,2.5)) +
+  ylab("Cumulative frequency") +
+  xlab("Dispersion (Chimpanzee)") +
+  scale_color_discrete(name = "dN/dS decile", labels = c("0-0.1; Low coding divergence", "0.9-1.0; High coding divergence")) +
+  theme_bw() +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+  theme(legend.position = c(.5, .8),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA))
+ggsave("../figures/OriginalArt/DispersionByDnDs_Chimp.pdf", units="mm", height=70, width=70)
+
 ```
 
 Let's make the analogous plot for percent identity, since I have it elsewhere in the manuscript.
 
 ```{r}
-
+##Human first
 Correlation <- EgenesTested.grouped %>%
   inner_join(ChimpOverdispersionTable, by=c("H.gene"="gene")) %>%
   do(tidy(cor.test(.$Human.Residual, .$PercentIdentitiyHumanToChimp, method='spearman')))
@@ -400,6 +407,30 @@ EgenesTested.grouped %>%
         legend.key = element_rect(colour = "transparent", fill = "transparent"),
         legend.background = element_rect(fill=NA))
 ggsave("../figures/OriginalArt/DispersionByPercentIdentity.pdf", units="mm", height=70, width=70)
+
+##And chimp
+Correlation <- EgenesTested.grouped %>%
+  inner_join(ChimpOverdispersionTable, by=c("H.gene"="gene")) %>%
+  do(tidy(cor.test(.$Chimp.Residual, .$PercentIdentitiyHumanToChimp, method='spearman')))
+Correlation
+lb1 = paste0('atop(rho==', signif(Correlation$estimate,2), ', P', format.pval(Correlation$p.value, 2), ')')
+
+EgenesTested.grouped %>%
+  inner_join(ChimpOverdispersionTable, by=c("H.gene"="gene")) %>%
+  mutate(dn.ds.ntile=ntile(PercentIdentitiyHumanToChimp*-1,10)) %>%
+  filter(dn.ds.ntile %in% c(1,10)) %>%
+  ggplot(aes(x=Chimp.Residual, color=as.factor(dn.ds.ntile))) +
+  stat_ecdf(geom = "step") +
+  scale_x_continuous(limits=c(-2.5,2.5)) +
+  ylab("Cumulative frequency") +
+  xlab("Dispersion (Chimpanzee)") +
+  scale_color_discrete(name = "%amino acid identity decile", labels = c("0.9-1.0; Low coding divergence", "0.0-0.1; High coding divergence")) +
+  theme_bw() +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=TRUE) +
+  theme(legend.position = c(.5, .8),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA))
+ggsave("../figures/OriginalArt/DispersionByPercentIdentity_Chimp.pdf", units="mm", height=70, width=70)
 ```
 
 
@@ -459,6 +490,30 @@ ggplot(TATA.disp, aes(x=Human.Residual, color=PromoterType)) +
 
 ggsave("../figures/OriginalArt/DispersionByTATABox.pdf", units="mm", height=70, width=70)
 
+
+##Repeat but with chimp dispersion values
+Test <- wilcox.test(TATA.disp %>%
+                    filter(PromoterType=="TATA box") %>%
+                    pull(Chimp.Residual),
+                    TATA.disp %>%
+                    filter(PromoterType=="No TATA box") %>%
+                    pull(Chimp.Residual))
+lb1 = paste0('P', format.pval(Test$p.value, 2))
+ggplot(TATA.disp, aes(x=Chimp.Residual, color=PromoterType)) +
+  stat_ecdf(geom = "step") +
+  xlim(c(-2.5,2.5)) +
+  ylab("Cumulative frequency") +
+  theme_bw() +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.1, vjust=-0.1, parse=TRUE) +
+  xlab("Dispersion (Chimpanzee)") +
+  scale_color_discrete(name = "Promoter type") +
+  theme(legend.position = c(.3, .8),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA))
+
+ggsave("../figures/OriginalArt/DispersionByTATABox_Chimp.pdf", units="mm", height=70, width=70)
+
+
 ```
 
 
@@ -494,6 +549,28 @@ ggplot(Essentiality, aes(x=Human.Residual, color=Essentiality)) +
   annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.1, vjust=-0.1, parse=TRUE)
 ggsave("../figures/OriginalArt/DispersionByEssentiality.pdf", units="mm", height=70, width=70)
 
+
+##Repeat for chimp
+Test <- wilcox.test(Essentiality %>%
+                    filter(Essentiality=="Essential; pLI>0.9") %>%
+                    pull(Chimp.Residual),
+                    Essentiality %>%
+                    filter(Essentiality=="Non-essential; pLI<0.1") %>%
+                    pull(Chimp.Residual))
+lb1 = paste0('P==', format.pval(Test$p.value, 2))
+
+ggplot(Essentiality, aes(x=Chimp.Residual, color=Essentiality)) +
+  stat_ecdf(geom = "step") +
+  xlim(c(-2.5,2.5)) +
+  ylab("Cumulative frequency") +
+  theme_bw() +
+  scale_color_discrete(name = "ExAC score", labels = c(">0.9; LoF intolerant", "<0.1; LoF tolerant")) +
+  xlab("Dispersion (Chimpanzee)") +
+  theme(legend.position = c(.4, .8),
+        legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        legend.background = element_rect(fill=NA)) +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.1, vjust=-0.1, parse=TRUE)
+ggsave("../figures/OriginalArt/DispersionByEssentiality_Chimp.pdf", units="mm", height=70, width=70)
 ```
 
 ### dN/dS by group plot2

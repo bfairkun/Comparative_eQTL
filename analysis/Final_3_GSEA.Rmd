@@ -280,6 +280,54 @@ write_delim(as.data.frame(gsea.ranked.disp) %>% dplyr::select(-core_enrichment),
 
 ```
 
+```{r}
+ChimpDispersion <- ChimpOverdispersionTable %>%
+  filter(gene %in% EgenesTested.grouped$H.gene) %>%
+  dplyr::select(gene, Chimp.Residual) %>%
+  deframe() %>% sort(decreasing = T)
+
+gsea.ranked.disp<-gseGO(gene=ChimpDispersion,
+            ont = "ALL",
+            OrgDb=org.Hs.eg.db,
+            keyType='ENSEMBL',
+            nPerm=1000000)
+
+DispersionChimpPlot <-
+  # Full.gsea.simplified$Simplified %>% as.data.frame() %>%
+  gsea.ranked.disp %>% as.data.frame() %>%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize, NES) %>%
+  mutate(Polarization=sign(enrichmentScore)) %>%
+  # filter(str_detect(Description, 'DNA')) %>%
+  # group_by(ONTOLOGY, Polarization) %>%
+  group_by(ONTOLOGY, Polarization) %>%
+  top_n(n = 3, wt = abs(enrichmentScore)) %>%
+  
+  # top_n(n = 3, wt = abs(-log10(p.adjust))) %>%
+  # top_n(n = 3, wt = abs(enrichmentScore)) %>%
+
+  ungroup() %>%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `BP` = "Biological Process", `CC` = "Cellular Component", `MF`="Molecular Function")) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_viridis_c(trans="log10", limits=c(0.00001, 0.1), direction=-1, option="D") +
+  # scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  # xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
+  xlab("Enrichment") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+DispersionChimpPlot
+
+ggsave("../figures/OriginalArt/GSEA.dispersionChimp.eps", DispersionChimpPlot, width=4, height=4)
+
+```
+
 Repeat but excluding viral challanged chimps
 
 ```{r}
