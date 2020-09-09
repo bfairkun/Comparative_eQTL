@@ -4,6 +4,10 @@ include: "rules/common.smk"
 
 rule all:
     input:
+        expand("/project2/yangili1/bjf79/FastqForTony/{PowerAnalysisSample}.fastq.gz", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
+        "DataForSubmission/EVA/ToSubmit.vcf.gz",
+        "MiscOutput/ChrConversionKey.tab",
+        "Misc/EnsemblRef/Ref.fa.fai",
         "DataForSubmission/GEO/FastqChecksums.txt",
         "DataForSubmission/GEO/ChimpanzeesQQNorm_eQTL_Mapping.tsv.gz",
         "../../output/TSP.eQTLs.GTEx.AllTissues.txt.gz",

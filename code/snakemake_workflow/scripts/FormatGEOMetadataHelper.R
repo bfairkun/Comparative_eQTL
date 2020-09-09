@@ -1,7 +1,7 @@
 library(tidyverse)
 library(readxl)
 
-md5sums <- read.delim("DataForSubmission/GEO/FastqChecksums.txt", col.names=c("checksum", "blank", "fastq"), sep = " ", stringsAsFactors = F) %>%
+md5sums <- read.delim("DataForSubmission/GEO/FastqChecksums.txt", col.names=c("checksum", "blank", "fastq"), sep = " ", header=F, stringsAsFactors = F) %>%
   mutate(basename=basename(fastq)) %>%
   select(basename, checksum)
 Samples <- read.delim("../../data/NovelRNASeqFiles.tsv", stringsAsFactors = F) %>%
@@ -12,8 +12,8 @@ Samples <- read.delim("../../data/NovelRNASeqFiles.tsv", stringsAsFactors = F) %
   ungroup() %>%
   spread(id, basename)
 
-write_delim(Samples, "DataForSubmission/GEO/MetadataSamples.tsv", delim = '\t')
-write_delim(md5sums, "DataForSubmission/GEO/MetadataChecksums.tsv", delim='\t')
+write_delim(Samples, "./DataForSubmission/GEO/MetadataSamples.tsv", delim = '\t')
+write_delim(md5sums, "./DataForSubmission/GEO/MetadataChecksums.tsv", delim='\t')
 
 Metadata <- read_excel("../../data/Metadata.xlsx")
 Units <- read.delim("units.tsv", stringsAsFactors = F) %>%
