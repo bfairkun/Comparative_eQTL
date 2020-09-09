@@ -26,6 +26,8 @@ Welcome to my research website.
 - [Make phenotype table for testing](20190327_MakeFamPhenotypeFile.html)
 - [Make covariate table for testing](20190327_MakeCovariateFiles.html)
 
+## Exploration
+
 ### Association testing with various models
 - [first iteration](20190412_Check_eQTLs.html): description: lmm with KING-robust GRM thresholded at 0, and 3 genotype PCs
 - [Check residuals after regressing out some covariates](20190421_RegressOutRNASeqPCs.html)
@@ -56,3 +58,12 @@ Welcome to my research website.
 
 ### Shared polymorphic loci
 - [QQ Plot of species shared polymorphisms](20190708_SpeciesSharedPolymorphisms_InitialQQPlot.html) Of all the shared polymorphic loci (putative targets of balancing selection), do they have inflated cis-eQTL P-values compared to a random set of snp-gene tests.
+
+## Final figures
+
+- todo... haven't build these markdowns yet.
+
+## Reviewer comments
+
+- See [reviewer comments](20200907_Response_OriginalComments.html)
+

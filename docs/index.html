@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -85,7 +85,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -234,6 +233,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -245,18 +245,6 @@ $(document).ready(function () {
   display: none;
 }
 </style>
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
 
 <!-- code folding -->
 
@@ -344,7 +332,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-10
+<strong>Last updated:</strong> 2020-09-09
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -354,7 +342,7 @@ div.section {
 </p>
 <p>
 This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
-  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.5.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
 </p>
 <hr>
 </div>
@@ -375,10 +363,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree61ed712461c94c11112198153549019acb456191targetblank61ed712a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/61ed712461c94c11112198153549019acb456191" target="_blank">61ed712</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreee3ed68fb4efbef6a3246106c28d37a2bc8efa328targetblanke3ed68fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/e3ed68fb4efbef6a3246106c28d37a2bc8efa328" target="_blank">e3ed68f</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree61ed712461c94c11112198153549019acb456191targetblank61ed712a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreee3ed68fb4efbef6a3246106c28d37a2bc8efa328targetblanke3ed68fa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -388,15 +376,19 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    WorkingManuscript.zip
+    Ignored:    WorkingManuscript/
     Ignored:    analysis/.DS_Store
-    Ignored:    analysis/20190521_eQTL_CrossSpeciesEnrichment_cache/
+    Ignored:    analysis/.Rhistory
     Ignored:    analysis_temp/.DS_Store
+    Ignored:    big_data/
     Ignored:    code/.DS_Store
     Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    code/snakemake_workflow/.Rhistory
     Ignored:    data/.DS_Store
     Ignored:    data/PastAnalysesDataToKeep/.DS_Store
-    Ignored:    docs/.DS_Store
-    Ignored:    docs/assets/.DS_Store
+    Ignored:    figures/
+    Ignored:    output/.DS_Store
 
 Unstaged changes:
     Modified:   analysis/index.Rmd
@@ -438,6 +430,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/bfa790a7a733489e6b3ae25150aa7487edd2e005/analysis/index.Rmd" target="_blank">bfa790a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-10
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/bfa790a7a733489e6b3ae25150aa7487edd2e005/docs/index.html" target="_blank">bfa790a</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-10-10
+</td>
+<td>
+update site
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -789,7 +815,7 @@ Rmd
 Benjmain Fair
 </td>
 <td>
-2019-04-03
+2019-04-04
 </td>
 <td>
 build site
@@ -806,7 +832,7 @@ html
 Benjmain Fair
 </td>
 <td>
-2019-04-03
+2019-04-04
 </td>
 <td>
 build site
@@ -951,6 +977,9 @@ Start workflowr project.
 <li><a href="20190327_MakeCovariateFiles.html">Make covariate table for testing</a></li>
 </ul>
 </div>
+</div>
+<div id="exploration" class="section level2">
+<h2>Exploration</h2>
 <div id="association-testing-with-various-models" class="section level3">
 <h3>Association testing with various models</h3>
 <ul>
@@ -997,6 +1026,18 @@ Start workflowr project.
 </ul>
 </div>
 </div>
+<div id="final-figures" class="section level2">
+<h2>Final figures</h2>
+<ul>
+<li>todo… haven’t build these markdowns yet.</li>
+</ul>
+</div>
+<div id="reviewer-comments" class="section level2">
+<h2>Reviewer comments</h2>
+<ul>
+<li>See <a href="20200907_Response_OriginalComments.html">reviewer comments</a></li>
+</ul>
+</div>
 
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
@@ -1027,6 +1068,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
