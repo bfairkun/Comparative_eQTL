@@ -1,0 +1,387 @@
+---
+title: "ResponseToReviewer_Point11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Original reviewer point:
+
+
+>Have the authors tried estimating dispersion on top of what is expected based on differences in cell type? There are several strategies that might work for this: There are new strategies for estimating a posterior of cell type specific expression from a bulk sample, conditional on scRNA-seq data as prior information (Chu and Danko, bioRxiv, 2020). These cell type specific expression estimates could then be analyzed for dispersion. Alternatively, it may also work to regress the estimated proportion of each cell type out of the dispersion estimates. While there are certainly a lot of pitfalls with using these strategies, especially in the setting shown here (all of this would work better if there were species matched reference data), they might provide an avenue for depleting the contribution of cell type differences from dispersion estimates. 
+
+Here I will use the Chu and Danko methodology ("TED", or "BayesPrism", see [https://github.com/Danko-Lab/TED](https://github.com/Danko-Lab/TED)) to estimate cell type specific expression estimates for each individual, and then estimate a cell type specific dispersion estimate. As the reviewer notes, there a lot of pitfalls with this strategy. Really, in the absence of scRNA-seq data (and a human scRNA-seq reference), there is only so much we can gain I think. But still worth a try.
+
+
+```{r load_libraries}
+library(TED)
+library(tidyverse)
+library(biomaRt)
+library(Seurat)
+library(gplots)
+source("../code/CustomFunctions.R")
+library(knitr)
+library(scales)
+```
+
+This block references a file that I keep on my local computer, that is not reproducible from the snakemake. This rds file references a seurat object I created from publicaly available mouse scRNA-seq data (Tabula Muris) using [this Rscript]().
+
+```{r read_tab_muris_data}
+Heart.seur = readRDS("../big_data/TabMuris_heart_seurat.rds")
+```
+
+Some other data to read in... This includes the bulk RNA-seq count data from this study (39 human, 39 chimp), and some other necessary data to convert mouse gene names to human, etc.
+
+```{r read_other data}
+#read in table of overdispersion, dispersion, mean expresion estimates
+Dispersion <- read.delim('../output/OverdispersionEstimatesFromChimp.txt')
+
+Dispersion$MeanDispersion <- (Dispersion$Chimp.Residual + Dispersion$Human.Residual)/2
+
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+OutputDE <- '../output/Final/TableS2.tab'
+DropFileName <- '../data/DE_SamplesToDrop.txt'
+
+DropFile <- read.delim(DropFileName, sep='\t', col.names = c("Sample", "Species"), stringsAsFactors = F)
+HumanSamplesToDrop <- DropFile %>% filter(Species=="Human") %>% pull(Sample)
+ChimpSamplesToDrop <- DropFile %>% filter(Species=="Chimp") %>% pull(Sample)
+DE.results <- read.delim(OutputDE, sep='\t', stringsAsFactors = F)
+GeneListForOverdispersionCalculation <- DE.results$Ensembl_geneID
+
+CountTables <- GetCountTables(CountTableChimpFile,
+                              CountTableHumanFile,
+                              0, GeneListForOverdispersionCalculation, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+
+MouseGenes = rownames(Heart.seur)
+genes = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = MouseGenes ,mart = mouse, attributesL = c("ensembl_gene_id", "chromosome_name", "start_position", "mmusculus_homolog_orthology_type"), martL = human, uniqueRows=T)
+
+# Get list of one to one orthologs in both tabula muris and our dataset for further analysis
+one2one_HumanMouseOrthologs <- genes %>%
+  filter(Mouse.homology.type=="ortholog_one2one") %>%
+  filter(Gene.stable.ID %in% Dispersion$gene) %>%
+  dplyr::select(MGI.symbol, Gene.stable.ID) %>%
+  distinct(MGI.symbol, .keep_all = T)
+
+```
+
+Now prepare input data from `run.Ted` function:
+
+```{r}
+CellTypes <- data.frame(Cell.ID=colnames(Heart.seur@assays$RNA), CellType=Heart.seur@meta.data$Cell.ontology.class)
+
+scCountTable.Filtered <- Heart.seur@assays$RNA[one2one_HumanMouseOrthologs$MGI.symbol,] %>%
+  as.matrix() %>%
+  as.data.frame() %>%
+  rownames_to_column() %>%
+  inner_join(one2one_HumanMouseOrthologs, by=c("rowname"="MGI.symbol")) %>%
+  dplyr::select(-rowname) %>%
+  column_to_rownames("Gene.stable.ID") %>% t() %>%
+  as.data.frame() %>%
+  rownames_to_column("Cell.ID") %>%
+  inner_join(CellTypes, by="Cell.ID") %>%
+  filter(!CellType == "unassigned cell type") %>%
+  dplyr::select(-CellType) %>%
+  column_to_rownames("Cell.ID") %>% t()
+  
+scCountTable.Filtered[1:10,1:10] %>% kable()
+
+CellTypeVector <- CellTypes %>%
+  filter(!CellType == "unassigned cell type") %>% pull(CellType) %>% as.character()
+head(CellTypeVector)
+
+Bulk.CountTable <- cbind(CountTables$Chimp$Counts, CountTables$Human$Counts) %>%
+  rownames_to_column() %>%
+  inner_join(one2one_HumanMouseOrthologs, by=c("rowname"="Gene.stable.ID")) %>%
+  dplyr::select(-MGI.symbol) %>%
+  column_to_rownames()
+Bulk.CountTable[1:10,1:10] %>% kable()
+```
+
+Now, use `run.Ted` function to estimate cell type porportions and also per individual expression within each cell type. In this code block, which I have run before knitting the Rmarkdown, I will also save the results to an RDS file that I will read in the next code block, so I don't have to re-run this time consuming function when I want to knit the Rmarkdown.
+
+```{r, eval=F}
+
+Ted.results <- run.Ted(t(scCountTable.Filtered), t(Bulk.CountTable), pheno.labels = CellTypeVector, input.type = "scRNA", n.cores = 1)
+saveRDS(Ted.results, file = "../big_data/TedResults.rds")
+
+```
+
+Now read in the ted results.
+
+```{r}
+Ted.results <- readRDS("../big_data/TedResults.rds")
+Ted.Expression.Per.CellType <- Ted.results$res$first.gibbs.res$Znkg #mean reads in each cell type
+Ted.CellTypePorportions <- Ted.results$res$first.gibbs.res$theta.merged #cell fraction
+```
+
+Ok, now let's compare the cell type porportions to CIBERSORT results...
+
+
+```{r}
+#Ted cell type porportions table
+Ted.CellTypePorportions %>% head() %>% kable()
+
+Ted.CellTypePorportions.df <- Ted.CellTypePorportions %>% as.data.frame() %>%
+  rownames_to_column("Input.Sample") %>%
+  select_all(~gsub("\\s+", ".", .)) %>%
+  arrange(cardiac.muscle.cell) %>%
+  gather(key="cell.type", value="percent", -Input.Sample) %>%
+  mutate(Species = case_when(str_detect(Input.Sample, "C.") ~ "Chimp",
+                   str_detect(Input.Sample, "H.") ~ "Human"))
+
+#Ted cell type porportions as plot
+ggplot(Ted.CellTypePorportions.df, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat="identity") +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_grid(~Species, scales="free_x", space="free_x") +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+#CIBERSORT cell type porportions
+CIBERSORT <- read.table("../data/CIBERSORT.Output_Job2.csv", sep=',', header=T) %>%
+  arrange(cardiac.muscle.cell) %>%
+  gather(key="cell.type", value="percent", -Input.Sample, -P.value, -Pearson.Correlation, -RMSE) %>%
+  mutate(Species = case_when(str_detect(Input.Sample, "C.") ~ "Chimp",
+                   str_detect(Input.Sample, "H.") ~ "Human"))
+
+#As a plot...
+ggplot(CIBERSORT, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat="identity") +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_grid(~Species, scales="free_x", space="free_x") +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+
+#Compare CIBERSORT and TED cell porportions
+inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c("Input.Sample", "cell.type"), suffix=c(".CIBERSORT", ".TED")) %>%
+  ggplot(aes(x=percent.TED, y=percent.CIBERSORT, color=cell.type)) +
+  geom_point(aes(shape=Species.TED)) +
+  theme_bw()
+
+inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c("Input.Sample", "cell.type"), suffix=c(".CIBERSORT", ".TED")) %>%
+  ggplot(aes(x=percent.TED, y=percent.CIBERSORT, color=cell.type)) +
+  geom_point(aes(shape=Species.TED)) +
+  facet_wrap(~cell.type, scales = "free") +
+  theme_bw()
+```
+Ok, some reasonable agreement between the cell type porportions for some cell types, but not for others (particularly the less prevalent cell types).
+
+Ok, now let's explore TED's output for expression per cell type per individual, and consider estimating dispersion in a cell type specific fashion in a way similar to the bulk dispersion estimates.
+
+```{r}
+Ted.Expression.Per.CellType %>% dim()
+dimnames(Ted.Expression.Per.CellType)[[1]] <- rownames(Ted.results$res$first.gibbs.res$theta.merged)
+dimnames(Ted.Expression.Per.CellType)[[2]] <- colnames(Ted.results$res$first.gibbs.res$theta.merged)
+dimnames(Ted.Expression.Per.CellType)[[3]] <- colnames(Ted.results$res$first.gibbs.res$Zkg)
+
+Ted.Expression.Per.CellType.df <- Ted.Expression.Per.CellType %>%
+  as.data.frame() %>% t() %>% as.data.frame() %>%
+  rownames_to_column() %>%
+  separate(rowname, into=c("CellType", "gene"), sep="\\.")
+
+Ted.Expression.Per.CellType.df %>% head() %>% kable()
+```
+
+Are these expression values? Are they on a log scale? I should read some documentation, but let's also just look at a histogram. I expect gene expression across different genes in an individual to appear roughly bell shaped on a log-scale.
+
+
+```{r}
+hist(Ted.Expression.Per.CellType.df$C.4x0519)
+hist(log10(Ted.Expression.Per.CellType.df$C.4x0519))
+```
+
+Yeah, so I think these are un-log transformed expression values. Are they normalized for sequencing depth per individual per cell type? Let's check the median gene expression level for each individual x cell type combination... If the expression values are already normalized, I expect the median gene expression level to be roughly similar (at least, more similar than the >4 fold range in sequencing depth across samples)
+
+```{r}
+Ted.Expression.Per.CellType.df %>%
+  dplyr:: select(CellType, gene, starts_with("C.")) %>%
+  gather("Ind", "Expression", -CellType, -gene) %>%
+  group_by(Ind, CellType) %>%
+  summarise(Med=median(Expression, na.rm=T)) %>%
+  ggplot(aes(y=Med, x=Ind, fill=CellType)) +
+  geom_col() +
+  facet_wrap(~CellType) +
+  theme_bw() +
+  theme(
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
+
+Ok, things may not be normalized across cell types, but if I want to estimate dispersion on a per-cell type basis that may not matter... Let's see if the median counts are related to total sequencing depth...
+
+```{r}
+#Total gene mapping read counts from bulk count table
+TotalBulkCount.df <- data.frame(TotalBulkCount = cbind(CountTables$Chimp$Counts, CountTables$Human$Counts) %>% colSums()) %>%
+  rownames_to_column("Ind")
+Ted.Expression.Per.CellType.df %>%
+  dplyr:: select(CellType, gene, starts_with("C.")) %>%
+  gather("Ind", "Expression", -CellType, -gene) %>%
+  group_by(Ind, CellType) %>%
+  summarise(Med=median(Expression, na.rm=T)) %>%
+  left_join(TotalBulkCount.df, by="Ind") %>%
+  ggplot(aes(x=Med, y=TotalBulkCount, color=CellType)) +
+  geom_point() +
+  facet_wrap(~CellType,  scales = "free") +
+  theme_bw()
+
+```
+
+Ok, since total counts (columnSums) from the bulk matrix strongly correlates with the median gene expression measurements output by TED for most cell types, I conclude that this TED output is estimates of the original count table, (though, obviously not integer counts). So perhaps the most reasonable way to estimate dispersion per cell type from this TED output is to first transform the TED expression matrices to log(CPM), and, similarly to the dispersion estimation procedure in the original manuscript, fit a loess curve to the trend between the population mean expression and log(variance).
+
+Though I have an intuition that $log(variance(logCPM))$ is analogous to the $log(\phi)$ that I used to estimate dispersion, I can't derive mathematically why $log(variance(logCPM))$) is the appropriate metric (as opposed to $sd(logCPM)$ for example). But, I can show empirically show that $log(variance(logCPM))$ is basically equivalent to the $log(\phi)$ parameter I estimated from fitting a negative binomial to the bulk raw count data:
+
+```{r}
+#Compare the overdispersion (phi) estimate to the log(variance(logCPM)).
+
+CountTables$Chimp$Counts %>%
+  rownames_to_column("gene") %>%
+  gather("Ind", "Expression", -gene) %>%
+  left_join(TotalBulkCount.df, by="Ind") %>%
+  mutate(Log.CPM.Expression=log(Expression/TotalBulkCount*1E6)) %>%
+  group_by(gene) %>%
+  summarise(mu=mean(Log.CPM.Expression), log.var.logcpm=log(var(Log.CPM.Expression))) %>%
+  left_join(Dispersion, by="gene") %>%
+  # head() %>%
+  ggplot(aes(x=log.var.logcpm, y=log(Chimp.Overdispersion))) +
+    geom_point()
+
+#in contrast to the sd(logCPM)...
+CountTables$Chimp$Counts %>%
+  rownames_to_column("gene") %>%
+  gather("Ind", "Expression", -gene) %>%
+  left_join(TotalBulkCount.df, by="Ind") %>%
+  mutate(Log.CPM.Expression=log(Expression/TotalBulkCount*1E6)) %>%
+  group_by(gene) %>%
+  summarise(mu=mean(Log.CPM.Expression), sd.logcpm=sd(Log.CPM.Expression)) %>%
+  left_join(Dispersion, by="gene") %>%
+  # head() %>%
+  ggplot(aes(x=sd.logcpm, y=log(Chimp.Overdispersion))) +
+    geom_point()
+
+```
+
+Ok, now let's look at the loess plots and think about estimating dispersion on a per cell type (and per species) basis.
+
+```{r}
+#loess log(var) vs mean for chimp by cell type
+Normalized.Expression.Per.CellType <- Ted.Expression.Per.CellType.df %>%
+  gather("Ind", "Expression", -CellType, -gene) %>%
+  left_join(TotalBulkCount.df, by="Ind") %>%
+  mutate(Log.CPM.Expression=log(Expression/TotalBulkCount*1E6))
+
+#loess fit, just for chimp population
+Normalized.Expression.Per.CellType %>%
+  filter(startsWith(Ind, "C")) %>%
+  group_by(gene, CellType) %>%
+  summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression))) %>%
+  ggplot(aes(x=mu, y=log.var, color=CellType)) +
+  geom_point(alpha=0.05) +
+  geom_smooth(method="loess", method.args=list(degree=1)) +
+  theme_bw()
+
+#...for both chimp and human
+Normalized.Expression.Per.CellType %>%
+  mutate(Species = case_when(str_detect(Ind, "C.") ~ "Chimp",
+                   str_detect(Ind, "H.") ~ "Human")) %>%
+  group_by(gene, CellType, Species) %>%
+  summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression))) %>%
+  ggplot(aes(x=mu, y=log.var, color=CellType)) +
+  geom_point(alpha=0.03) +
+  geom_smooth(method="loess", method.args=list(degree=1), aes(linetype=Species), color="black") +
+  facet_wrap(~CellType) +
+  theme_bw()
+  
+```
+
+It seems most trends are similar between species for different cell types, except leukocytes which I may drop from further analysis. The fact thiat this leukocyte cell type is an outlier may be biologically meaningful, especially given that ~4 of the chimp samples have been challenged with virus. But it might also be technical, I would rather just avoid that cell type.
+
+So now I will calculate the residual from each loess fit as the cell type specific dispersion. Similar to the bulk case, I may use bootstrapping to estimate standard error and perform inference to compare the human vs chimp dispersion estimates.
+
+Let's start first just by getting dispersion estimates, and worry about bootstrapping and inference later.
+
+```{r}
+DataToEstimateCellTypeDispersion <- Normalized.Expression.Per.CellType %>%
+  mutate(Species = case_when(str_detect(Ind, "C.") ~ "Chimp",
+                   str_detect(Ind, "H.") ~ "Human")) %>%
+  group_by(gene, CellType, Species) %>%
+  summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression)))
+
+#Estimate dispersion (residual from the loess fit)
+CellTypeDispersion <- DataToEstimateCellTypeDispersion %>%
+  group_by(Species, CellType) %>% 
+    do(data.frame(., resid = residuals(loess(log.var ~ mu, data=., degree=1, na.action="na.exclude"))))
+
+#Plot kernel density estimate of dispersion... One quick way to verify that I correctly obtained the residual of per-species and per-cell-type loess fits, is to look at the leukoctye in chimp and humans. If I did this correctly, I expect the dispersion estimates for every species x cell type combination to be roughly centered around 0, even the leukocytes.
+CellTypeDispersion %>%
+  ggplot(aes(x=resid, color=Species)) +
+  geom_density() +
+  facet_wrap(~CellType) +
+  theme_bw()
+  
+```
+
+Ok, it seems I have dispersion estimates for each cell type. How to present this in an interpretable way. How about I start by plotting a correlation matrix with hiearchal clustering dendrogram, comparing the dispersion estimates from bulk to those for each cell type, for both species.
+
+```{r}
+
+Dispersion.Cor.Matrix <- Dispersion %>%
+  dplyr::select(gene, Chimp_Bulk=Chimp.Dispersion, Human_Bulk=Human.Dispersion) %>%
+  gather(key="Species.CellType", value="dispersion", -gene) %>%
+  bind_rows(
+    unite(CellTypeDispersion, Species.CellType, Species, CellType) %>%
+      dplyr::select(gene, Species.CellType, dispersion=resid)) %>%
+  dplyr::select(gene, Species.CellType, dispersion) %>%
+  filter(gene %in% one2one_HumanMouseOrthologs$Gene.stable.ID) %>%
+  pivot_wider(names_from=Species.CellType, values_from = dispersion) %>%
+  column_to_rownames("gene") %>%
+  as.matrix() %>%
+  cor(use="pairwise.complete.obs")
+
+SpeciesFactorCol <- colnames(Dispersion.Cor.Matrix) %>% substr(1,1) %>% factor() %>% unclass() %>% as.character() %>% recode("1"="#F8766D", "2"="#00BFC4")
+
+TissueFactorCol <- data.frame(ColNames=colnames(Dispersion.Cor.Matrix)) %>%
+  mutate(Tissue=str_remove(ColNames, "^.+?_"))
+TissueColors.df <- data.frame(colors=c("black", hue_pal()(9)), Tissue=unique(sort(TissueFactorCol$Tissue)))
+TissueFactorCol.vector <- TissueFactorCol %>%
+  left_join(TissueColors.df, by="Tissue") %>% pull(colors) %>% as.character()
+
+        
+  
+heatmap.2(Dispersion.Cor.Matrix, trace="none", ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector)
+
+
+```
+
+
+Let's contrast this with the correlation matrix for cell type expression estimates:
+
+```{r}
+Expression.Matrix <- Dispersion %>%
+  dplyr::select(gene, Chimp_Bulk=Chimp.Mean.Expression, Human_Bulk=Human.Mean.Expression) %>%
+  gather(key="Species.CellType", value="expression", -gene) %>%
+  bind_rows(
+    unite(CellTypeDispersion, Species.CellType, Species, CellType) %>%
+      dplyr::select(gene, Species.CellType, expression=mu)) %>%
+  dplyr::select(gene, Species.CellType, expression) %>%
+  filter(gene %in% one2one_HumanMouseOrthologs$Gene.stable.ID) %>%
+  pivot_wider(names_from=Species.CellType, values_from = expression) %>%
+  column_to_rownames("gene") %>%
+  as.matrix()
+
+Expression.Matrix[mapply(is.infinite, Expression.Matrix)] <- NA
+Expression.Cor.Matrix <- cor(Expression.Matrix, use="pairwise.complete.obs")
+
+heatmap.2(Expression.Cor.Matrix, trace="none", ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector)
+```
+

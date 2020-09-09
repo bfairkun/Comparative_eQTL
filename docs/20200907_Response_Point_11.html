@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>ResponseToReviewer_Point11</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">ResponseToReviewer_Point11</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-09-09
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.5.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree199654fa117f7b418d6774dd7d57af875cd0e7e1targetblank199654fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/199654fa117f7b418d6774dd7d57af875cd0e7e1" target="_blank">199654f</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree199654fa117f7b418d6774dd7d57af875cd0e7e1targetblank199654fa" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    WorkingManuscript.zip
+    Ignored:    WorkingManuscript/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    big_data/
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    code/snakemake_workflow/.Rhistory
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    figures/
+    Ignored:    output/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/20200907_Response_OriginalComments.Rmd
+    Untracked:  analysis/20200907_Response_Point_11.Rmd
+
+Unstaged changes:
+    Modified:   analysis_temp/Ted_vignette.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<p>Original reviewer point:</p>
+<blockquote>
+<p>Have the authors tried estimating dispersion on top of what is expected based on differences in cell type? There are several strategies that might work for this: There are new strategies for estimating a posterior of cell type specific expression from a bulk sample, conditional on scRNA-seq data as prior information (Chu and Danko, bioRxiv, 2020). These cell type specific expression estimates could then be analyzed for dispersion. Alternatively, it may also work to regress the estimated proportion of each cell type out of the dispersion estimates. While there are certainly a lot of pitfalls with using these strategies, especially in the setting shown here (all of this would work better if there were species matched reference data), they might provide an avenue for depleting the contribution of cell type differences from dispersion estimates.</p>
+</blockquote>
+<p>Here I will use the Chu and Danko methodology (“TED”, or “BayesPrism”, see <a href="https://github.com/Danko-Lab/TED">https://github.com/Danko-Lab/TED</a>) to estimate cell type specific expression estimates for each individual, and then estimate a cell type specific dispersion estimate. As the reviewer notes, there a lot of pitfalls with this strategy. Really, in the absence of scRNA-seq data (and a human scRNA-seq reference), there is only so much we can gain I think. But still worth a try.</p>
+<pre class="r"><code>library(TED)
+library(tidyverse)
+library(biomaRt)
+library(Seurat)
+library(gplots)
+source(&quot;../code/CustomFunctions.R&quot;)
+library(knitr)
+library(scales)</code></pre>
+<p>This block references a file that I keep on my local computer, that is not reproducible from the snakemake. This rds file references a seurat object I created from publicaly available mouse scRNA-seq data (Tabula Muris) using <a href="">this Rscript</a>.</p>
+<pre class="r"><code>Heart.seur = readRDS(&quot;../big_data/TabMuris_heart_seurat.rds&quot;)</code></pre>
+<p>Some other data to read in… This includes the bulk RNA-seq count data from this study (39 human, 39 chimp), and some other necessary data to convert mouse gene names to human, etc.</p>
+<pre class="r"><code>#read in table of overdispersion, dispersion, mean expresion estimates
+Dispersion &lt;- read.delim(&#39;../output/OverdispersionEstimatesFromChimp.txt&#39;)
+
+Dispersion$MeanDispersion &lt;- (Dispersion$Chimp.Residual + Dispersion$Human.Residual)/2
+
+CountTableChimpFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz&#39;
+CountTableHumanFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Human.subread.txt.gz&#39;
+OutputDE &lt;- &#39;../output/Final/TableS2.tab&#39;
+DropFileName &lt;- &#39;../data/DE_SamplesToDrop.txt&#39;
+
+DropFile &lt;- read.delim(DropFileName, sep=&#39;\t&#39;, col.names = c(&quot;Sample&quot;, &quot;Species&quot;), stringsAsFactors = F)
+HumanSamplesToDrop &lt;- DropFile %&gt;% filter(Species==&quot;Human&quot;) %&gt;% pull(Sample)
+ChimpSamplesToDrop &lt;- DropFile %&gt;% filter(Species==&quot;Chimp&quot;) %&gt;% pull(Sample)
+DE.results &lt;- read.delim(OutputDE, sep=&#39;\t&#39;, stringsAsFactors = F)
+GeneListForOverdispersionCalculation &lt;- DE.results$Ensembl_geneID
+
+CountTables &lt;- GetCountTables(CountTableChimpFile,
+                              CountTableHumanFile,
+                              0, GeneListForOverdispersionCalculation, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+human = useMart(&quot;ensembl&quot;, dataset = &quot;hsapiens_gene_ensembl&quot;)
+mouse = useMart(&quot;ensembl&quot;, dataset = &quot;mmusculus_gene_ensembl&quot;)
+
+MouseGenes = rownames(Heart.seur)
+genes = getLDS(attributes = c(&quot;mgi_symbol&quot;), filters = &quot;mgi_symbol&quot;, values = MouseGenes ,mart = mouse, attributesL = c(&quot;ensembl_gene_id&quot;, &quot;chromosome_name&quot;, &quot;start_position&quot;, &quot;mmusculus_homolog_orthology_type&quot;), martL = human, uniqueRows=T)
+
+# Get list of one to one orthologs in both tabula muris and our dataset for further analysis
+one2one_HumanMouseOrthologs &lt;- genes %&gt;%
+  filter(Mouse.homology.type==&quot;ortholog_one2one&quot;) %&gt;%
+  filter(Gene.stable.ID %in% Dispersion$gene) %&gt;%
+  dplyr::select(MGI.symbol, Gene.stable.ID) %&gt;%
+  distinct(MGI.symbol, .keep_all = T)</code></pre>
+<p>Now prepare input data from <code>run.Ted</code> function:</p>
+<pre class="r"><code>CellTypes &lt;- data.frame(Cell.ID=colnames(Heart.seur@assays$RNA), CellType=Heart.seur@meta.data$Cell.ontology.class)
+
+scCountTable.Filtered &lt;- Heart.seur@assays$RNA[one2one_HumanMouseOrthologs$MGI.symbol,] %&gt;%
+  as.matrix() %&gt;%
+  as.data.frame() %&gt;%
+  rownames_to_column() %&gt;%
+  inner_join(one2one_HumanMouseOrthologs, by=c(&quot;rowname&quot;=&quot;MGI.symbol&quot;)) %&gt;%
+  dplyr::select(-rowname) %&gt;%
+  column_to_rownames(&quot;Gene.stable.ID&quot;) %&gt;% t() %&gt;%
+  as.data.frame() %&gt;%
+  rownames_to_column(&quot;Cell.ID&quot;) %&gt;%
+  inner_join(CellTypes, by=&quot;Cell.ID&quot;) %&gt;%
+  filter(!CellType == &quot;unassigned cell type&quot;) %&gt;%
+  dplyr::select(-CellType) %&gt;%
+  column_to_rownames(&quot;Cell.ID&quot;) %&gt;% t()
+  
+scCountTable.Filtered[1:10,1:10] %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">A1.B000412.3_56_F.1.1</th>
+<th align="right">A1.B000633.3_56_F.1.1</th>
+<th align="right">A1.B002423.3_39_F.1.1</th>
+<th align="right">A1.B002427.3_39_F.1.1</th>
+<th align="right">A1.B002428.3_38_F.1.1</th>
+<th align="right">A1.MAA000398.3_9_M.1.1</th>
+<th align="right">A1.MAA000400.3_8_M.1.1</th>
+<th align="right">A1.MAA000898.3_11_M.1.1</th>
+<th align="right">A1.MAA000899.3_10_M.1.1</th>
+<th align="right">A1.MAA000903.3_11_M.1.1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ENSG00000265491</td>
+<td align="right">295</td>
+<td align="right">0</td>
+<td align="right">516</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">59</td>
+<td align="right">0</td>
+<td align="right">135</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSG00000265972</td>
+<td align="right">676</td>
+<td align="right">555</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">82</td>
+<td align="right">414</td>
+<td align="right">0</td>
+<td align="right">1068</td>
+<td align="right">299</td>
+<td align="right">467</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000271601</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSG00000272031</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000134250</td>
+<td align="right">0</td>
+<td align="right">48</td>
+<td align="right">181</td>
+<td align="right">1</td>
+<td align="right">36</td>
+<td align="right">12</td>
+<td align="right">269</td>
+<td align="right">583</td>
+<td align="right">12</td>
+<td align="right">828</td>
+</tr>
+<tr class="even">
+<td>ENSG00000131788</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">13</td>
+<td align="right">14</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000186141</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">305</td>
+</tr>
+<tr class="even">
+<td>ENSG00000186364</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000143127</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSG00000198483</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">137</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>CellTypeVector &lt;- CellTypes %&gt;%
+  filter(!CellType == &quot;unassigned cell type&quot;) %&gt;% pull(CellType) %&gt;% as.character()
+head(CellTypeVector)</code></pre>
+<pre><code>[1] &quot;endothelial cell&quot;   &quot;leukocyte&quot;          &quot;fibroblast&quot;        
+[4] &quot;myofibroblast cell&quot; &quot;endocardial cell&quot;   &quot;fibroblast&quot;        </code></pre>
+<pre class="r"><code>Bulk.CountTable &lt;- cbind(CountTables$Chimp$Counts, CountTables$Human$Counts) %&gt;%
+  rownames_to_column() %&gt;%
+  inner_join(one2one_HumanMouseOrthologs, by=c(&quot;rowname&quot;=&quot;Gene.stable.ID&quot;)) %&gt;%
+  dplyr::select(-MGI.symbol) %&gt;%
+  column_to_rownames()
+Bulk.CountTable[1:10,1:10] %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">C.4x0519</th>
+<th align="right">C.4x373</th>
+<th align="right">C.476</th>
+<th align="right">C.4x0025</th>
+<th align="right">C.438</th>
+<th align="right">C.462</th>
+<th align="right">C.4X0354</th>
+<th align="right">C.503</th>
+<th align="right">C.317</th>
+<th align="right">C.623</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ENSG00000186891</td>
+<td align="right">46</td>
+<td align="right">73</td>
+<td align="right">20</td>
+<td align="right">28</td>
+<td align="right">4</td>
+<td align="right">11</td>
+<td align="right">98</td>
+<td align="right">13</td>
+<td align="right">11</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td>ENSG00000186827</td>
+<td align="right">274</td>
+<td align="right">393</td>
+<td align="right">313</td>
+<td align="right">397</td>
+<td align="right">173</td>
+<td align="right">128</td>
+<td align="right">975</td>
+<td align="right">236</td>
+<td align="right">307</td>
+<td align="right">84</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000078808</td>
+<td align="right">5967</td>
+<td align="right">1931</td>
+<td align="right">7637</td>
+<td align="right">3892</td>
+<td align="right">2957</td>
+<td align="right">3745</td>
+<td align="right">1189</td>
+<td align="right">5857</td>
+<td align="right">4306</td>
+<td align="right">3704</td>
+</tr>
+<tr class="even">
+<td>ENSG00000176022</td>
+<td align="right">1097</td>
+<td align="right">402</td>
+<td align="right">1574</td>
+<td align="right">1333</td>
+<td align="right">955</td>
+<td align="right">1235</td>
+<td align="right">416</td>
+<td align="right">1087</td>
+<td align="right">745</td>
+<td align="right">640</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000160087</td>
+<td align="right">761</td>
+<td align="right">283</td>
+<td align="right">1153</td>
+<td align="right">776</td>
+<td align="right">471</td>
+<td align="right">610</td>
+<td align="right">275</td>
+<td align="right">920</td>
+<td align="right">547</td>
+<td align="right">604</td>
+</tr>
+<tr class="even">
+<td>ENSG00000131584</td>
+<td align="right">2587</td>
+<td align="right">1537</td>
+<td align="right">3646</td>
+<td align="right">2546</td>
+<td align="right">1755</td>
+<td align="right">1323</td>
+<td align="right">4585</td>
+<td align="right">2250</td>
+<td align="right">1484</td>
+<td align="right">1872</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000169972</td>
+<td align="right">282</td>
+<td align="right">78</td>
+<td align="right">396</td>
+<td align="right">257</td>
+<td align="right">209</td>
+<td align="right">282</td>
+<td align="right">111</td>
+<td align="right">243</td>
+<td align="right">141</td>
+<td align="right">252</td>
+</tr>
+<tr class="even">
+<td>ENSG00000169962</td>
+<td align="right">320</td>
+<td align="right">111</td>
+<td align="right">366</td>
+<td align="right">80</td>
+<td align="right">178</td>
+<td align="right">145</td>
+<td align="right">269</td>
+<td align="right">416</td>
+<td align="right">237</td>
+<td align="right">107</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000107404</td>
+<td align="right">7019</td>
+<td align="right">3600</td>
+<td align="right">11211</td>
+<td align="right">7397</td>
+<td align="right">5731</td>
+<td align="right">4670</td>
+<td align="right">3942</td>
+<td align="right">9779</td>
+<td align="right">5566</td>
+<td align="right">6768</td>
+</tr>
+<tr class="even">
+<td>ENSG00000162576</td>
+<td align="right">3701</td>
+<td align="right">1059</td>
+<td align="right">1384</td>
+<td align="right">2114</td>
+<td align="right">1426</td>
+<td align="right">2418</td>
+<td align="right">1242</td>
+<td align="right">1360</td>
+<td align="right">2221</td>
+<td align="right">1948</td>
+</tr>
+</tbody>
+</table>
+<p>Now, use <code>run.Ted</code> function to estimate cell type porportions and also per individual expression within each cell type. In this code block, which I have run before knitting the Rmarkdown, I will also save the results to an RDS file that I will read in the next code block, so I don’t have to re-run this time consuming function when I want to knit the Rmarkdown.</p>
+<pre class="r"><code>Ted.results &lt;- run.Ted(t(scCountTable.Filtered), t(Bulk.CountTable), pheno.labels = CellTypeVector, input.type = &quot;scRNA&quot;, n.cores = 1)
+saveRDS(Ted.results, file = &quot;../big_data/TedResults.rds&quot;)</code></pre>
+<p>Now read in the ted results.</p>
+<pre class="r"><code>Ted.results &lt;- readRDS(&quot;../big_data/TedResults.rds&quot;)
+Ted.Expression.Per.CellType &lt;- Ted.results$res$first.gibbs.res$Znkg #mean reads in each cell type
+Ted.CellTypePorportions &lt;- Ted.results$res$first.gibbs.res$theta.merged #cell fraction</code></pre>
+<p>Ok, now let’s compare the cell type porportions to CIBERSORT results…</p>
+<pre class="r"><code>#Ted cell type porportions table
+Ted.CellTypePorportions %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">endothelial cell</th>
+<th align="right">leukocyte</th>
+<th align="right">fibroblast</th>
+<th align="right">myofibroblast cell</th>
+<th align="right">endocardial cell</th>
+<th align="right">cardiac muscle cell</th>
+<th align="right">professional antigen presenting cell</th>
+<th align="right">erythrocyte</th>
+<th align="right">smooth muscle cell</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>C.4x0519</td>
+<td align="right">0.0655604</td>
+<td align="right">0.0015653</td>
+<td align="right">0.0279680</td>
+<td align="right">0.0863701</td>
+<td align="right">0.0335372</td>
+<td align="right">0.5969150</td>
+<td align="right">0.0281230</td>
+<td align="right">0.1059831</td>
+<td align="right">0.0539779</td>
+</tr>
+<tr class="even">
+<td>C.4x373</td>
+<td align="right">0.0729209</td>
+<td align="right">0.0000807</td>
+<td align="right">0.0353951</td>
+<td align="right">0.0581507</td>
+<td align="right">0.0102430</td>
+<td align="right">0.5956729</td>
+<td align="right">0.0252973</td>
+<td align="right">0.0969409</td>
+<td align="right">0.1052985</td>
+</tr>
+<tr class="odd">
+<td>C.476</td>
+<td align="right">0.0443883</td>
+<td align="right">0.0000164</td>
+<td align="right">0.0007314</td>
+<td align="right">0.0427403</td>
+<td align="right">0.0154651</td>
+<td align="right">0.7444661</td>
+<td align="right">0.0230774</td>
+<td align="right">0.0774483</td>
+<td align="right">0.0516668</td>
+</tr>
+<tr class="even">
+<td>C.4x0025</td>
+<td align="right">0.0840676</td>
+<td align="right">0.0002683</td>
+<td align="right">0.0140482</td>
+<td align="right">0.1144108</td>
+<td align="right">0.0322334</td>
+<td align="right">0.5566394</td>
+<td align="right">0.0434807</td>
+<td align="right">0.1087926</td>
+<td align="right">0.0460590</td>
+</tr>
+<tr class="odd">
+<td>C.438</td>
+<td align="right">0.0438903</td>
+<td align="right">0.0000171</td>
+<td align="right">0.0061195</td>
+<td align="right">0.0420949</td>
+<td align="right">0.0162850</td>
+<td align="right">0.7467382</td>
+<td align="right">0.0235200</td>
+<td align="right">0.0658731</td>
+<td align="right">0.0554619</td>
+</tr>
+<tr class="even">
+<td>C.462</td>
+<td align="right">0.0661200</td>
+<td align="right">0.0005401</td>
+<td align="right">0.0194387</td>
+<td align="right">0.0645938</td>
+<td align="right">0.0215091</td>
+<td align="right">0.6691649</td>
+<td align="right">0.0268254</td>
+<td align="right">0.0845318</td>
+<td align="right">0.0472763</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>Ted.CellTypePorportions.df &lt;- Ted.CellTypePorportions %&gt;% as.data.frame() %&gt;%
+  rownames_to_column(&quot;Input.Sample&quot;) %&gt;%
+  select_all(~gsub(&quot;\\s+&quot;, &quot;.&quot;, .)) %&gt;%
+  arrange(cardiac.muscle.cell) %&gt;%
+  gather(key=&quot;cell.type&quot;, value=&quot;percent&quot;, -Input.Sample) %&gt;%
+  mutate(Species = case_when(str_detect(Input.Sample, &quot;C.&quot;) ~ &quot;Chimp&quot;,
+                   str_detect(Input.Sample, &quot;H.&quot;) ~ &quot;Human&quot;))
+
+#Ted cell type porportions as plot
+ggplot(Ted.CellTypePorportions.df, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat=&quot;identity&quot;) +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_grid(~Species, scales=&quot;free_x&quot;, space=&quot;free_x&quot;) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#CIBERSORT cell type porportions
+CIBERSORT &lt;- read.table(&quot;../data/CIBERSORT.Output_Job2.csv&quot;, sep=&#39;,&#39;, header=T) %&gt;%
+  arrange(cardiac.muscle.cell) %&gt;%
+  gather(key=&quot;cell.type&quot;, value=&quot;percent&quot;, -Input.Sample, -P.value, -Pearson.Correlation, -RMSE) %&gt;%
+  mutate(Species = case_when(str_detect(Input.Sample, &quot;C.&quot;) ~ &quot;Chimp&quot;,
+                   str_detect(Input.Sample, &quot;H.&quot;) ~ &quot;Human&quot;))
+
+#As a plot...
+ggplot(CIBERSORT, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat=&quot;identity&quot;) +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_grid(~Species, scales=&quot;free_x&quot;, space=&quot;free_x&quot;) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Compare CIBERSORT and TED cell porportions
+inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c(&quot;Input.Sample&quot;, &quot;cell.type&quot;), suffix=c(&quot;.CIBERSORT&quot;, &quot;.TED&quot;)) %&gt;%
+  ggplot(aes(x=percent.TED, y=percent.CIBERSORT, color=cell.type)) +
+  geom_point(aes(shape=Species.TED)) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c(&quot;Input.Sample&quot;, &quot;cell.type&quot;), suffix=c(&quot;.CIBERSORT&quot;, &quot;.TED&quot;)) %&gt;%
+  ggplot(aes(x=percent.TED, y=percent.CIBERSORT, color=cell.type)) +
+  geom_point(aes(shape=Species.TED)) +
+  facet_wrap(~cell.type, scales = &quot;free&quot;) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /> Ok, some reasonable agreement between the cell type porportions for some cell types, but not for others (particularly the less prevalent cell types).</p>
+<p>Ok, now let’s explore TED’s output for expression per cell type per individual, and consider estimating dispersion in a cell type specific fashion in a way similar to the bulk dispersion estimates.</p>
+<pre class="r"><code>Ted.Expression.Per.CellType %&gt;% dim()</code></pre>
+<pre><code>[1]    79     9 10001</code></pre>
+<pre class="r"><code>dimnames(Ted.Expression.Per.CellType)[[1]] &lt;- rownames(Ted.results$res$first.gibbs.res$theta.merged)
+dimnames(Ted.Expression.Per.CellType)[[2]] &lt;- colnames(Ted.results$res$first.gibbs.res$theta.merged)
+dimnames(Ted.Expression.Per.CellType)[[3]] &lt;- colnames(Ted.results$res$first.gibbs.res$Zkg)
+
+Ted.Expression.Per.CellType.df &lt;- Ted.Expression.Per.CellType %&gt;%
+  as.data.frame() %&gt;% t() %&gt;% as.data.frame() %&gt;%
+  rownames_to_column() %&gt;%
+  separate(rowname, into=c(&quot;CellType&quot;, &quot;gene&quot;), sep=&quot;\\.&quot;)
+
+Ted.Expression.Per.CellType.df %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">CellType</th>
+<th align="left">gene</th>
+<th align="right">C.4x0519</th>
+<th align="right">C.4x373</th>
+<th align="right">C.476</th>
+<th align="right">C.4x0025</th>
+<th align="right">C.438</th>
+<th align="right">C.462</th>
+<th align="right">C.4X0354</th>
+<th align="right">C.503</th>
+<th align="right">C.317</th>
+<th align="right">C.623</th>
+<th align="right">C.554</th>
+<th align="right">C.4X0095</th>
+<th align="right">C.549</th>
+<th align="right">C.4X0267</th>
+<th align="right">C.4X0339</th>
+<th align="right">C.529</th>
+<th align="right">C.495</th>
+<th align="right">C.338</th>
+<th align="right">C.4X0550</th>
+<th align="right">C.558</th>
+<th align="right">C.4x523</th>
+<th align="right">C.389</th>
+<th align="right">C.4x0043</th>
+<th align="right">C.4X0357</th>
+<th align="right">C.88A020</th>
+<th align="right">C.554_2</th>
+<th align="right">C.Little_R</th>
+<th align="right">C.676</th>
+<th align="right">C.456</th>
+<th align="right">C.537</th>
+<th align="right">C.MD_And</th>
+<th align="right">C.724</th>
+<th align="right">C.4x0430</th>
+<th align="right">C.95A014</th>
+<th align="right">C.4X0333</th>
+<th align="right">C.522</th>
+<th align="right">C.295</th>
+<th align="right">C.4X0212</th>
+<th align="right">C.570</th>
+<th align="right">H.SRR1477033</th>
+<th align="right">H.SRR598148</th>
+<th align="right">H.SRR601645</th>
+<th align="right">H.SRR599086</th>
+<th align="right">H.SRR604230</th>
+<th align="right">H.SRR1478189</th>
+<th align="right">H.SRR613186</th>
+<th align="right">H.59263</th>
+<th align="right">H.62905</th>
+<th align="right">H.63060</th>
+<th align="right">H.SRR600852</th>
+<th align="right">H.62606</th>
+<th align="right">H.SRR604174</th>
+<th align="right">H.SRR608096</th>
+<th align="right">H.SRR1489693</th>
+<th align="right">H.62765</th>
+<th align="right">H.61317</th>
+<th align="right">H.59167</th>
+<th align="right">H.SRR602106</th>
+<th align="right">H.SRR601868</th>
+<th align="right">H.SRR612335</th>
+<th align="right">H.SRR598589</th>
+<th align="right">H.SRR600474</th>
+<th align="right">H.SRR603449</th>
+<th align="right">H.SRR606939</th>
+<th align="right">H.SRR1481012</th>
+<th align="right">H.SRR599249</th>
+<th align="right">H.59365</th>
+<th align="right">H.SRR607313</th>
+<th align="right">H.63145</th>
+<th align="right">H.SRR1477569</th>
+<th align="right">H.SRR601239</th>
+<th align="right">H.SRR607252</th>
+<th align="right">H.SRR612875</th>
+<th align="right">H.SRR601613</th>
+<th align="right">H.SRR614683</th>
+<th align="right">H.SRR604122</th>
+<th align="right">H.59511</th>
+<th align="right">H.62850</th>
+<th align="right">H.SRR599380</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">endothelial cell</td>
+<td align="left">ENSG00000271601</td>
+<td align="right">33.62</td>
+<td align="right">14.13</td>
+<td align="right">42.24</td>
+<td align="right">26.24</td>
+<td align="right">13.91</td>
+<td align="right">20.09</td>
+<td align="right">9.18</td>
+<td align="right">20.97</td>
+<td align="right">21.35</td>
+<td align="right">18.85</td>
+<td align="right">19.36</td>
+<td align="right">24.77</td>
+<td align="right">20.95</td>
+<td align="right">26.77</td>
+<td align="right">5.61</td>
+<td align="right">11.77</td>
+<td align="right">27.47</td>
+<td align="right">34.49</td>
+<td align="right">21.10</td>
+<td align="right">12.77</td>
+<td align="right">17.93</td>
+<td align="right">21.59</td>
+<td align="right">16.31</td>
+<td align="right">10.93</td>
+<td align="right">13.42</td>
+<td align="right">20.70</td>
+<td align="right">15.22</td>
+<td align="right">20.33</td>
+<td align="right">13.27</td>
+<td align="right">13.56</td>
+<td align="right">15.65</td>
+<td align="right">37.65</td>
+<td align="right">23.02</td>
+<td align="right">19.14</td>
+<td align="right">31.34</td>
+<td align="right">10.73</td>
+<td align="right">45.42</td>
+<td align="right">22.09</td>
+<td align="right">24.04</td>
+<td align="right">11.76</td>
+<td align="right">19.25</td>
+<td align="right">19.48</td>
+<td align="right">19.62</td>
+<td align="right">47.66</td>
+<td align="right">9.97</td>
+<td align="right">3.02</td>
+<td align="right">31.37</td>
+<td align="right">12.16</td>
+<td align="right">13.86</td>
+<td align="right">10.79</td>
+<td align="right">6.76</td>
+<td align="right">26.20</td>
+<td align="right">12.44</td>
+<td align="right">25.66</td>
+<td align="right">11.75</td>
+<td align="right">7.45</td>
+<td align="right">9.67</td>
+<td align="right">13.84</td>
+<td align="right">12.64</td>
+<td align="right">22.52</td>
+<td align="right">30.10</td>
+<td align="right">13.48</td>
+<td align="right">9.83</td>
+<td align="right">31.99</td>
+<td align="right">13.10</td>
+<td align="right">35.29</td>
+<td align="right">21.13</td>
+<td align="right">30.34</td>
+<td align="right">17.91</td>
+<td align="right">13.35</td>
+<td align="right">18.78</td>
+<td align="right">11.34</td>
+<td align="right">16.69</td>
+<td align="right">16.05</td>
+<td align="right">14.90</td>
+<td align="right">46.83</td>
+<td align="right">10.28</td>
+<td align="right">20.34</td>
+<td align="right">34.97</td>
+</tr>
+<tr class="even">
+<td align="left">leukocyte</td>
+<td align="left">ENSG00000271601</td>
+<td align="right">0.21</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.03</td>
+<td align="right">0.00</td>
+<td align="right">0.07</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.17</td>
+<td align="right">0.00</td>
+<td align="right">0.04</td>
+<td align="right">0.04</td>
+<td align="right">0.02</td>
+<td align="right">0.00</td>
+<td align="right">0.11</td>
+<td align="right">0.24</td>
+<td align="right">1.42</td>
+<td align="right">0.00</td>
+<td align="right">0.02</td>
+<td align="right">0.60</td>
+<td align="right">0.01</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.11</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.09</td>
+<td align="right">0.04</td>
+<td align="right">0.02</td>
+<td align="right">0.01</td>
+<td align="right">0.48</td>
+<td align="right">1.04</td>
+<td align="right">0.01</td>
+<td align="right">0.00</td>
+<td align="right">0.00</td>
+<td align="right">0.01</td>
+<td align="right">0.13</td>
+<td align="right">0.07</td>
+<td align="right">0.07</td>
+<td align="right">0.54</td>
+<td align="right">0.17</td>
+<td align="right">0.12</td>
+<td align="right">1.00</td>
+<td align="right">0.03</td>
+<td align="right">0.00</td>
+<td align="right">1.90</td>
+<td align="right">0.14</td>
+<td align="right">0.16</td>
+<td align="right">0.08</td>
+<td align="right">0.09</td>
+<td align="right">0.19</td>
+<td align="right">0.09</td>
+<td align="right">0.01</td>
+<td align="right">0.20</td>
+<td align="right">0.01</td>
+<td align="right">0.05</td>
+<td align="right">0.04</td>
+<td align="right">0.03</td>
+<td align="right">1.03</td>
+<td align="right">0.66</td>
+<td align="right">0.02</td>
+<td align="right">0.01</td>
+<td align="right">0.25</td>
+<td align="right">0.02</td>
+<td align="right">0.09</td>
+<td align="right">0.17</td>
+<td align="right">0.37</td>
+<td align="right">0.05</td>
+<td align="right">0.00</td>
+<td align="right">0.19</td>
+<td align="right">0.02</td>
+<td align="right">0.11</td>
+<td align="right">0.07</td>
+<td align="right">0.07</td>
+<td align="right">0.78</td>
+<td align="right">0.00</td>
+<td align="right">0.27</td>
+<td align="right">0.24</td>
+</tr>
+<tr class="odd">
+<td align="left">fibroblast</td>
+<td align="left">ENSG00000271601</td>
+<td align="right">50.30</td>
+<td align="right">23.94</td>
+<td align="right">2.19</td>
+<td align="right">16.15</td>
+<td align="right">7.13</td>
+<td align="right">20.59</td>
+<td align="right">0.45</td>
+<td align="right">1.35</td>
+<td align="right">30.27</td>
+<td align="right">15.82</td>
+<td align="right">0.76</td>
+<td align="right">6.19</td>
+<td align="right">78.02</td>
+<td align="right">24.31</td>
+<td align="right">1.84</td>
+<td align="right">24.80</td>
+<td align="right">29.23</td>
+<td align="right">21.01</td>
+<td align="right">12.99</td>
+<td align="right">16.75</td>
+<td align="right">55.92</td>
+<td align="right">17.19</td>
+<td align="right">21.82</td>
+<td align="right">2.27</td>
+<td align="right">3.12</td>
+<td align="right">9.69</td>
+<td align="right">27.92</td>
+<td align="right">6.36</td>
+<td align="right">7.51</td>
+<td align="right">43.36</td>
+<td align="right">5.70</td>
+<td align="right">6.14</td>
+<td align="right">7.56</td>
+<td align="right">6.27</td>
+<td align="right">31.85</td>
+<td align="right">13.02</td>
+<td align="right">23.51</td>
+<td align="right">8.98</td>
+<td align="right">12.03</td>
+<td align="right">4.70</td>
+<td align="right">21.01</td>
+<td align="right">6.99</td>
+<td align="right">10.55</td>
+<td align="right">13.38</td>
+<td align="right">1.20</td>
+<td align="right">6.57</td>
+<td align="right">65.89</td>
+<td align="right">35.78</td>
+<td align="right">16.15</td>
+<td align="right">2.48</td>
+<td align="right">17.04</td>
+<td align="right">35.84</td>
+<td align="right">53.90</td>
+<td align="right">16.39</td>
+<td align="right">4.36</td>
+<td align="right">20.49</td>
+<td align="right">21.04</td>
+<td align="right">4.73</td>
+<td align="right">4.74</td>
+<td align="right">48.90</td>
+<td align="right">13.27</td>
+<td align="right">9.56</td>
+<td align="right">2.13</td>
+<td align="right">4.22</td>
+<td align="right">7.88</td>
+<td align="right">13.63</td>
+<td align="right">41.32</td>
+<td align="right">14.15</td>
+<td align="right">13.29</td>
+<td align="right">6.61</td>
+<td align="right">0.58</td>
+<td align="right">12.23</td>
+<td align="right">23.51</td>
+<td align="right">19.30</td>
+<td align="right">2.60</td>
+<td align="right">14.30</td>
+<td align="right">15.60</td>
+<td align="right">11.97</td>
+<td align="right">2.09</td>
+</tr>
+<tr class="even">
+<td align="left">myofibroblast cell</td>
+<td align="left">ENSG00000271601</td>
+<td align="right">116.55</td>
+<td align="right">30.33</td>
+<td align="right">108.13</td>
+<td align="right">97.52</td>
+<td align="right">36.27</td>
+<td align="right">53.13</td>
+<td align="right">13.36</td>
+<td align="right">50.35</td>
+<td align="right">63.34</td>
+<td align="right">49.61</td>
+<td align="right">53.00</td>
+<td align="right">59.96</td>
+<td align="right">58.25</td>
+<td align="right">64.29</td>
+<td align="right">9.13</td>
+<td align="right">27.65</td>
+<td align="right">52.42</td>
+<td align="right">78.03</td>
+<td align="right">72.87</td>
+<td align="right">24.29</td>
+<td align="right">73.06</td>
+<td align="right">63.32</td>
+<td align="right">43.24</td>
+<td align="right">21.50</td>
+<td align="right">44.20</td>
+<td align="right">55.98</td>
+<td align="right">15.05</td>
+<td align="right">64.04</td>
+<td align="right">45.34</td>
+<td align="right">26.86</td>
+<td align="right">31.00</td>
+<td align="right">76.45</td>
+<td align="right">61.39</td>
+<td align="right">53.24</td>
+<td align="right">91.24</td>
+<td align="right">35.34</td>
+<td align="right">92.34</td>
+<td align="right">47.52</td>
+<td align="right">71.77</td>
+<td align="right">42.96</td>
+<td align="right">51.82</td>
+<td align="right">56.50</td>
+<td align="right">45.18</td>
+<td align="right">165.63</td>
+<td align="right">29.82</td>
+<td align="right">6.36</td>
+<td align="right">146.65</td>
+<td align="right">32.01</td>
+<td align="right">44.51</td>
+<td align="right">36.22</td>
+<td align="right">27.54</td>
+<td align="right">142.43</td>
+<td align="right">67.65</td>
+<td align="right">46.80</td>
+<td align="right">73.26</td>
+<td align="right">21.68</td>
+<td align="right">21.12</td>
+<td align="right">38.41</td>
+<td align="right">41.20</td>
+<td align="right">127.33</td>
+<td align="right">112.89</td>
+<td align="right">43.43</td>
+<td align="right">33.31</td>
+<td align="right">92.20</td>
+<td align="right">62.67</td>
+<td align="right">89.46</td>
+<td align="right">101.15</td>
+<td align="right">82.89</td>
+<td align="right">50.59</td>
+<td align="right">38.47</td>
+<td align="right">55.65</td>
+<td align="right">73.29</td>
+<td align="right">55.28</td>
+<td align="right">65.74</td>
+<td align="right">45.63</td>
+<td align="right">137.46</td>
+<td align="right">26.61</td>
+<td align="right">76.28</td>
+<td align="right">93.03</td>
+</tr>
+<tr class="odd">
+<td align="left">endocardial cell</td>
+<td align="left">ENSG00000271601</td>
+<td align="right">31.16</td>
+<td align="right">3.92</td>
+<td align="right">26.70</td>
+<td align="right">19.68</td>
+<td align="right">9.65</td>
+<td align="right">11.95</td>
+<td align="right">5.28</td>
+<td align="right">12.36</td>
+<td align="right">14.82</td>
+<td align="right">16.35</td>
+<td align="right">13.50</td>
+<td align="right">17.46</td>
+<td align="right">25.39</td>
+<td align="right">12.91</td>
+<td align="right">2.49</td>
+<td align="right">3.31</td>
+<td align="right">15.32</td>
+<td align="right">26.75</td>
+<td align="right">19.81</td>
+<td align="right">6.29</td>
+<td align="right">19.80</td>
+<td align="right">17.07</td>
+<td align="right">17.65</td>
+<td align="right">6.72</td>
+<td align="right">15.93</td>
+<td align="right">10.08</td>
+<td align="right">4.63</td>
+<td align="right">18.06</td>
+<td align="right">16.22</td>
+<td align="right">8.29</td>
+<td align="right">18.26</td>
+<td align="right">26.58</td>
+<td align="right">18.12</td>
+<td align="right">16.24</td>
+<td align="right">18.83</td>
+<td align="right">10.58</td>
+<td align="right">23.71</td>
+<td align="right">18.37</td>
+<td align="right">16.25</td>
+<td align="right">10.09</td>
+<td align="right">12.83</td>
+<td align="right">18.87</td>
+<td align="right">9.55</td>
+<td align="right">39.83</td>
+<td align="right">6.53</td>
+<td align="right">1.55</td>
+<td align="right">34.51</td>
+<td align="right">6.55</td>
+<td align="right">10.47</td>
+<td align="right">6.08</td>
+<td align="right">4.97</td>
+<td align="right">21.64</td>
+<td align="right">6.53</td>
+<td align="right">13.75</td>
+<td align="right">12.44</td>
+<td align="right">5.57</td>
+<td align="right">7.05</td>
+<td align="right">7.91</td>
+<td align="right">9.45</td>
+<td align="right">25.48</td>
+<td align="right">22.62</td>
+<td align="right">9.17</td>
+<td align="right">5.91</td>
+<td align="right">24.50</td>
+<td align="right">12.93</td>
+<td align="right">12.54</td>
+<td align="right">27.18</td>
+<td align="right">23.70</td>
+<td align="right">14.48</td>
+<td align="right">8.45</td>
+<td align="right">15.78</td>
+<td align="right">11.76</td>
+<td align="right">11.34</td>
+<td align="right">14.87</td>
+<td align="right">8.90</td>
+<td align="right">33.58</td>
+<td align="right">7.22</td>
+<td align="right">17.13</td>
+<td align="right">22.41</td>
+</tr>
+<tr class="even">
+<td align="left">cardiac muscle cell</td>
+<td align="left">ENSG00000271601</td>
+<td align="right">87.27</td>
+<td align="right">32.39</td>
+<td align="right">202.95</td>
+<td align="right">51.15</td>
+<td align="right">67.67</td>
+<td align="right">58.45</td>
+<td align="right">6.95</td>
+<td align="right">115.05</td>
+<td align="right">55.18</td>
+<td align="right">58.21</td>
+<td align="right">53.82</td>
+<td align="right">68.82</td>
+<td align="right">58.48</td>
+<td align="right">89.59</td>
+<td align="right">21.19</td>
+<td align="right">10.95</td>
+<td align="right">13.14</td>
+<td align="right">71.15</td>
+<td align="right">88.51</td>
+<td align="right">9.18</td>
+<td align="right">55.66</td>
+<td align="right">111.10</td>
+<td align="right">53.40</td>
+<td align="right">36.71</td>
+<td align="right">70.14</td>
+<td align="right">59.25</td>
+<td align="right">1.78</td>
+<td align="right">43.86</td>
+<td align="right">77.88</td>
+<td align="right">3.11</td>
+<td align="right">51.23</td>
+<td align="right">91.64</td>
+<td align="right">61.93</td>
+<td align="right">52.74</td>
+<td align="right">66.59</td>
+<td align="right">63.03</td>
+<td align="right">157.06</td>
+<td align="right">72.20</td>
+<td align="right">39.53</td>
+<td align="right">53.53</td>
+<td align="right">23.89</td>
+<td align="right">57.67</td>
+<td align="right">29.88</td>
+<td align="right">92.89</td>
+<td align="right">36.59</td>
+<td align="right">1.37</td>
+<td align="right">47.74</td>
+<td align="right">42.10</td>
+<td align="right">40.69</td>
+<td align="right">35.90</td>
+<td align="right">28.13</td>
+<td align="right">66.33</td>
+<td align="right">22.43</td>
+<td align="right">13.40</td>
+<td align="right">59.27</td>
+<td align="right">10.76</td>
+<td align="right">4.75</td>
+<td align="right">26.57</td>
+<td align="right">53.95</td>
+<td align="right">40.19</td>
+<td align="right">83.37</td>
+<td align="right">40.37</td>
+<td align="right">31.79</td>
+<td align="right">96.59</td>
+<td align="right">59.24</td>
+<td align="right">87.82</td>
+<td align="right">58.41</td>
+<td align="right">83.78</td>
+<td align="right">43.75</td>
+<td align="right">41.68</td>
+<td align="right">57.98</td>
+<td align="right">43.50</td>
+<td align="right">37.62</td>
+<td align="right">48.77</td>
+<td align="right">39.06</td>
+<td align="right">79.05</td>
+<td align="right">20.32</td>
+<td align="right">79.57</td>
+<td align="right">84.64</td>
+</tr>
+</tbody>
+</table>
+<p>Are these expression values? Are they on a log scale? I should read some documentation, but let’s also just look at a histogram. I expect gene expression across different genes in an individual to appear roughly bell shaped on a log-scale.</p>
+<pre class="r"><code>hist(Ted.Expression.Per.CellType.df$C.4x0519)</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>hist(log10(Ted.Expression.Per.CellType.df$C.4x0519))</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Yeah, so I think these are un-log transformed expression values. Are they normalized for sequencing depth per individual per cell type? Let’s check the median gene expression level for each individual x cell type combination… If the expression values are already normalized, I expect the median gene expression level to be roughly similar (at least, more similar than the &gt;4 fold range in sequencing depth across samples)</p>
+<pre class="r"><code>Ted.Expression.Per.CellType.df %&gt;%
+  dplyr:: select(CellType, gene, starts_with(&quot;C.&quot;)) %&gt;%
+  gather(&quot;Ind&quot;, &quot;Expression&quot;, -CellType, -gene) %&gt;%
+  group_by(Ind, CellType) %&gt;%
+  summarise(Med=median(Expression, na.rm=T)) %&gt;%
+  ggplot(aes(y=Med, x=Ind, fill=CellType)) +
+  geom_col() +
+  facet_wrap(~CellType) +
+  theme_bw() +
+  theme(
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, things may not be normalized across cell types, but if I want to estimate dispersion on a per-cell type basis that may not matter… Let’s see if the median counts are related to total sequencing depth…</p>
+<pre class="r"><code>#Total gene mapping read counts from bulk count table
+TotalBulkCount.df &lt;- data.frame(TotalBulkCount = cbind(CountTables$Chimp$Counts, CountTables$Human$Counts) %&gt;% colSums()) %&gt;%
+  rownames_to_column(&quot;Ind&quot;)
+Ted.Expression.Per.CellType.df %&gt;%
+  dplyr:: select(CellType, gene, starts_with(&quot;C.&quot;)) %&gt;%
+  gather(&quot;Ind&quot;, &quot;Expression&quot;, -CellType, -gene) %&gt;%
+  group_by(Ind, CellType) %&gt;%
+  summarise(Med=median(Expression, na.rm=T)) %&gt;%
+  left_join(TotalBulkCount.df, by=&quot;Ind&quot;) %&gt;%
+  ggplot(aes(x=Med, y=TotalBulkCount, color=CellType)) +
+  geom_point() +
+  facet_wrap(~CellType,  scales = &quot;free&quot;) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, since total counts (columnSums) from the bulk matrix strongly correlates with the median gene expression measurements output by TED for most cell types, I conclude that this TED output is estimates of the original count table, (though, obviously not integer counts). So perhaps the most reasonable way to estimate dispersion per cell type from this TED output is to first transform the TED expression matrices to log(CPM), and, similarly to the dispersion estimation procedure in the original manuscript, fit a loess curve to the trend between the population mean expression and log(variance).</p>
+<p>Though I have an intuition that <span class="math inline">\(log(variance(logCPM))\)</span> is analogous to the <span class="math inline">\(log(\phi)\)</span> that I used to estimate dispersion, I can’t derive mathematically why <span class="math inline">\(log(variance(logCPM))\)</span>) is the appropriate metric (as opposed to <span class="math inline">\(sd(logCPM)\)</span> for example). But, I can show empirically show that <span class="math inline">\(log(variance(logCPM))\)</span> is basically equivalent to the <span class="math inline">\(log(\phi)\)</span> parameter I estimated from fitting a negative binomial to the bulk raw count data:</p>
+<pre class="r"><code>#Compare the overdispersion (phi) estimate to the log(variance(logCPM)).
+
+CountTables$Chimp$Counts %&gt;%
+  rownames_to_column(&quot;gene&quot;) %&gt;%
+  gather(&quot;Ind&quot;, &quot;Expression&quot;, -gene) %&gt;%
+  left_join(TotalBulkCount.df, by=&quot;Ind&quot;) %&gt;%
+  mutate(Log.CPM.Expression=log(Expression/TotalBulkCount*1E6)) %&gt;%
+  group_by(gene) %&gt;%
+  summarise(mu=mean(Log.CPM.Expression), log.var.logcpm=log(var(Log.CPM.Expression))) %&gt;%
+  left_join(Dispersion, by=&quot;gene&quot;) %&gt;%
+  # head() %&gt;%
+  ggplot(aes(x=log.var.logcpm, y=log(Chimp.Overdispersion))) +
+    geom_point()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#in contrast to the sd(logCPM)...
+CountTables$Chimp$Counts %&gt;%
+  rownames_to_column(&quot;gene&quot;) %&gt;%
+  gather(&quot;Ind&quot;, &quot;Expression&quot;, -gene) %&gt;%
+  left_join(TotalBulkCount.df, by=&quot;Ind&quot;) %&gt;%
+  mutate(Log.CPM.Expression=log(Expression/TotalBulkCount*1E6)) %&gt;%
+  group_by(gene) %&gt;%
+  summarise(mu=mean(Log.CPM.Expression), sd.logcpm=sd(Log.CPM.Expression)) %&gt;%
+  left_join(Dispersion, by=&quot;gene&quot;) %&gt;%
+  # head() %&gt;%
+  ggplot(aes(x=sd.logcpm, y=log(Chimp.Overdispersion))) +
+    geom_point()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, now let’s look at the loess plots and think about estimating dispersion on a per cell type (and per species) basis.</p>
+<pre class="r"><code>#loess log(var) vs mean for chimp by cell type
+Normalized.Expression.Per.CellType &lt;- Ted.Expression.Per.CellType.df %&gt;%
+  gather(&quot;Ind&quot;, &quot;Expression&quot;, -CellType, -gene) %&gt;%
+  left_join(TotalBulkCount.df, by=&quot;Ind&quot;) %&gt;%
+  mutate(Log.CPM.Expression=log(Expression/TotalBulkCount*1E6))
+
+#loess fit, just for chimp population
+Normalized.Expression.Per.CellType %&gt;%
+  filter(startsWith(Ind, &quot;C&quot;)) %&gt;%
+  group_by(gene, CellType) %&gt;%
+  summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression))) %&gt;%
+  ggplot(aes(x=mu, y=log.var, color=CellType)) +
+  geom_point(alpha=0.05) +
+  geom_smooth(method=&quot;loess&quot;, method.args=list(degree=1)) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#...for both chimp and human
+Normalized.Expression.Per.CellType %&gt;%
+  mutate(Species = case_when(str_detect(Ind, &quot;C.&quot;) ~ &quot;Chimp&quot;,
+                   str_detect(Ind, &quot;H.&quot;) ~ &quot;Human&quot;)) %&gt;%
+  group_by(gene, CellType, Species) %&gt;%
+  summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression))) %&gt;%
+  ggplot(aes(x=mu, y=log.var, color=CellType)) +
+  geom_point(alpha=0.03) +
+  geom_smooth(method=&quot;loess&quot;, method.args=list(degree=1), aes(linetype=Species), color=&quot;black&quot;) +
+  facet_wrap(~CellType) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>It seems most trends are similar between species for different cell types, except leukocytes which I may drop from further analysis. The fact thiat this leukocyte cell type is an outlier may be biologically meaningful, especially given that ~4 of the chimp samples have been challenged with virus. But it might also be technical, I would rather just avoid that cell type.</p>
+<p>So now I will calculate the residual from each loess fit as the cell type specific dispersion. Similar to the bulk case, I may use bootstrapping to estimate standard error and perform inference to compare the human vs chimp dispersion estimates.</p>
+<p>Let’s start first just by getting dispersion estimates, and worry about bootstrapping and inference later.</p>
+<pre class="r"><code>DataToEstimateCellTypeDispersion &lt;- Normalized.Expression.Per.CellType %&gt;%
+  mutate(Species = case_when(str_detect(Ind, &quot;C.&quot;) ~ &quot;Chimp&quot;,
+                   str_detect(Ind, &quot;H.&quot;) ~ &quot;Human&quot;)) %&gt;%
+  group_by(gene, CellType, Species) %&gt;%
+  summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression)))
+
+#Estimate dispersion (residual from the loess fit)
+CellTypeDispersion &lt;- DataToEstimateCellTypeDispersion %&gt;%
+  group_by(Species, CellType) %&gt;% 
+    do(data.frame(., resid = residuals(loess(log.var ~ mu, data=., degree=1, na.action=&quot;na.exclude&quot;))))
+
+#Plot kernel density estimate of dispersion... One quick way to verify that I correctly obtained the residual of per-species and per-cell-type loess fits, is to look at the leukoctye in chimp and humans. If I did this correctly, I expect the dispersion estimates for every species x cell type combination to be roughly centered around 0, even the leukocytes.
+CellTypeDispersion %&gt;%
+  ggplot(aes(x=resid, color=Species)) +
+  geom_density() +
+  facet_wrap(~CellType) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, it seems I have dispersion estimates for each cell type. How to present this in an interpretable way. How about I start by plotting a correlation matrix with hiearchal clustering dendrogram, comparing the dispersion estimates from bulk to those for each cell type, for both species.</p>
+<pre class="r"><code>Dispersion.Cor.Matrix &lt;- Dispersion %&gt;%
+  dplyr::select(gene, Chimp_Bulk=Chimp.Dispersion, Human_Bulk=Human.Dispersion) %&gt;%
+  gather(key=&quot;Species.CellType&quot;, value=&quot;dispersion&quot;, -gene) %&gt;%
+  bind_rows(
+    unite(CellTypeDispersion, Species.CellType, Species, CellType) %&gt;%
+      dplyr::select(gene, Species.CellType, dispersion=resid)) %&gt;%
+  dplyr::select(gene, Species.CellType, dispersion) %&gt;%
+  filter(gene %in% one2one_HumanMouseOrthologs$Gene.stable.ID) %&gt;%
+  pivot_wider(names_from=Species.CellType, values_from = dispersion) %&gt;%
+  column_to_rownames(&quot;gene&quot;) %&gt;%
+  as.matrix() %&gt;%
+  cor(use=&quot;pairwise.complete.obs&quot;)
+
+SpeciesFactorCol &lt;- colnames(Dispersion.Cor.Matrix) %&gt;% substr(1,1) %&gt;% factor() %&gt;% unclass() %&gt;% as.character() %&gt;% recode(&quot;1&quot;=&quot;#F8766D&quot;, &quot;2&quot;=&quot;#00BFC4&quot;)
+
+TissueFactorCol &lt;- data.frame(ColNames=colnames(Dispersion.Cor.Matrix)) %&gt;%
+  mutate(Tissue=str_remove(ColNames, &quot;^.+?_&quot;))
+TissueColors.df &lt;- data.frame(colors=c(&quot;black&quot;, hue_pal()(9)), Tissue=unique(sort(TissueFactorCol$Tissue)))
+TissueFactorCol.vector &lt;- TissueFactorCol %&gt;%
+  left_join(TissueColors.df, by=&quot;Tissue&quot;) %&gt;% pull(colors) %&gt;% as.character()
+
+        
+  
+heatmap.2(Dispersion.Cor.Matrix, trace=&quot;none&quot;, ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector)</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Let’s contrast this with the correlation matrix for cell type expression estimates:</p>
+<pre class="r"><code>Expression.Matrix &lt;- Dispersion %&gt;%
+  dplyr::select(gene, Chimp_Bulk=Chimp.Mean.Expression, Human_Bulk=Human.Mean.Expression) %&gt;%
+  gather(key=&quot;Species.CellType&quot;, value=&quot;expression&quot;, -gene) %&gt;%
+  bind_rows(
+    unite(CellTypeDispersion, Species.CellType, Species, CellType) %&gt;%
+      dplyr::select(gene, Species.CellType, expression=mu)) %&gt;%
+  dplyr::select(gene, Species.CellType, expression) %&gt;%
+  filter(gene %in% one2one_HumanMouseOrthologs$Gene.stable.ID) %&gt;%
+  pivot_wider(names_from=Species.CellType, values_from = expression) %&gt;%
+  column_to_rownames(&quot;gene&quot;) %&gt;%
+  as.matrix()
+
+Expression.Matrix[mapply(is.infinite, Expression.Matrix)] &lt;- NA
+Expression.Cor.Matrix &lt;- cor(Expression.Matrix, use=&quot;pairwise.complete.obs&quot;)
+
+heatmap.2(Expression.Cor.Matrix, trace=&quot;none&quot;, ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector)</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.5
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] scales_1.1.0    knitr_1.26      cowplot_1.0.0   gridExtra_2.3  
+ [5] edgeR_3.26.8    limma_3.40.6    MASS_7.3-51.4   gplots_3.0.1.1 
+ [9] Seurat_3.1.1    biomaRt_2.40.5  forcats_0.4.0   stringr_1.4.0  
+[13] dplyr_0.8.3     purrr_0.3.3     readr_1.3.1     tidyr_1.0.0    
+[17] tibble_2.1.3    ggplot2_3.2.1   tidyverse_1.3.0 TED_1.0        
+
+loaded via a namespace (and not attached):
+  [1] reticulate_1.13             R.utils_2.9.0              
+  [3] tidyselect_0.2.5            RSQLite_2.1.4              
+  [5] AnnotationDbi_1.46.1        htmlwidgets_1.5.1          
+  [7] grid_3.6.1                  BiocParallel_1.18.1        
+  [9] Rtsne_0.15                  munsell_0.5.0              
+ [11] mutoss_0.1-12               codetools_0.2-16           
+ [13] ica_1.0-2                   future_1.15.1              
+ [15] withr_2.1.2                 colorspace_1.4-1           
+ [17] Biobase_2.44.0              highr_0.8                  
+ [19] rstudioapi_0.10             stats4_3.6.1               
+ [21] ROCR_1.0-7                  gbRd_0.4-11                
+ [23] listenv_0.8.0               labeling_0.3               
+ [25] Rdpack_0.11-0               git2r_0.26.1               
+ [27] GenomeInfoDbData_1.2.1      mnormt_1.5-5               
+ [29] MCMCpack_1.4-9              farver_2.0.1               
+ [31] bit64_0.9-7                 rprojroot_1.3-2            
+ [33] TH.data_1.0-10              coda_0.19-3                
+ [35] vctrs_0.2.0                 generics_0.0.2             
+ [37] xfun_0.11                   R6_2.4.1                   
+ [39] GenomeInfoDb_1.20.0         rsvd_1.0.2                 
+ [41] locfit_1.5-9.1              bitops_1.0-6               
+ [43] DelayedArray_0.10.0         assertthat_0.2.1           
+ [45] promises_1.1.0              SDMTools_1.1-221.2         
+ [47] multcomp_1.4-11             nnet_7.3-12                
+ [49] gtable_0.3.0                npsurv_0.4-0               
+ [51] globals_0.12.5              conquer_1.0.2              
+ [53] mcmc_0.9-7                  sandwich_2.5-1             
+ [55] workflowr_1.5.0             rlang_0.4.1                
+ [57] MatrixModels_0.4-1          zeallot_0.1.0              
+ [59] genefilter_1.66.0           splines_3.6.1              
+ [61] lazyeval_0.2.2              broom_0.5.2                
+ [63] checkmate_2.0.0             reshape2_1.4.3             
+ [65] yaml_2.2.0                  modelr_0.1.5               
+ [67] backports_1.1.5             httpuv_1.5.2               
+ [69] Hmisc_4.4-1                 tools_3.6.1                
+ [71] ellipsis_0.3.0              RColorBrewer_1.1-2         
+ [73] BiocGenerics_0.30.0         ggridges_0.5.1             
+ [75] TFisher_0.2.0               Rcpp_1.0.5                 
+ [77] plyr_1.8.5                  base64enc_0.1-3            
+ [79] progress_1.2.2              zlibbioc_1.30.0            
+ [81] RCurl_1.95-4.12             prettyunits_1.0.2          
+ [83] rpart_4.1-15                pbapply_1.4-2              
+ [85] S4Vectors_0.22.1            zoo_1.8-6                  
+ [87] SummarizedExperiment_1.14.1 haven_2.2.0                
+ [89] ggrepel_0.8.1               cluster_2.1.0              
+ [91] fs_1.3.1                    magrittr_1.5               
+ [93] data.table_1.12.8           SparseM_1.78               
+ [95] lmtest_0.9-37               reprex_0.3.0               
+ [97] RANN_2.6.1                  mvtnorm_1.0-11             
+ [99] fitdistrplus_1.0-14         matrixStats_0.56.0         
+[101] hms_0.5.2                   lsei_1.2-0                 
+[103] evaluate_0.14               xtable_1.8-4               
+[105] XML_3.98-1.20               jpeg_0.1-8.1               
+[107] readxl_1.3.1                IRanges_2.18.3             
+[109] compiler_3.6.1              KernSmooth_2.23-16         
+[111] crayon_1.3.4                R.oo_1.23.0                
+[113] htmltools_0.4.0             later_1.0.0                
+[115] Formula_1.2-3               geneplotter_1.62.0         
+[117] RcppParallel_4.4.4          lubridate_1.7.4            
+[119] DBI_1.0.0                   dbplyr_1.4.2               
+[121] Matrix_1.2-18               cli_2.0.0                  
+[123] R.methodsS3_1.7.1           gdata_2.18.0               
+[125] parallel_3.6.1              metap_1.2                  
+[127] igraph_1.2.4.2              GenomicRanges_1.36.1       
+[129] pkgconfig_2.0.3             sn_1.5-4                   
+[131] numDeriv_2016.8-1.1         foreign_0.8-72             
+[133] plotly_4.9.1                xml2_1.2.2                 
+[135] annotate_1.62.0             multtest_2.40.0            
+[137] XVector_0.24.0              bibtex_0.4.2               
+[139] rvest_0.3.5                 digest_0.6.23              
+[141] tsne_0.1-3                  sctransform_0.2.0          
+[143] RcppAnnoy_0.0.14            rmarkdown_1.18             
+[145] cellranger_1.1.0            leiden_0.3.1               
+[147] htmlTable_2.0.1             uwot_0.1.5                 
+[149] curl_4.3                    gtools_3.8.1               
+[151] quantreg_5.61               lifecycle_0.1.0            
+[153] nlme_3.1-143                jsonlite_1.6               
+[155] viridisLite_0.3.0           fansi_0.4.0                
+[157] pillar_1.4.2                lattice_0.20-38            
+[159] plotrix_3.7-7               httr_1.4.1                 
+[161] survival_3.1-8              glue_1.3.1                 
+[163] png_0.1-7                   bit_1.1-14                 
+[165] stringi_1.4.3               blob_1.2.0                 
+[167] DESeq2_1.24.0               latticeExtra_0.6-29        
+[169] caTools_1.17.1.3            memoise_1.1.0              
+[171] irlba_2.3.3                 future.apply_1.3.0         
+[173] ape_5.3                    </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
