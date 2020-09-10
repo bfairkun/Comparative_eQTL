@@ -118,6 +118,9 @@ rule all:
         "eQTL_mapping/plink/ForAssociationTesting.bed",
         config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
         "eQTL_mapping/plink/ForAssociationTesting.bim",
+        "AddressReviews/plink/GTEX.v8.bed",
+        "AddressReviews/GWAS/GTEX.v8.cov",
+        "gemma out"
 
 ##### Modules #####
 include: "rules/make_test_data.smk"
@@ -138,4 +141,5 @@ include: "rules/CalculateSubstitutionsWithGorilla.smk"
 include: "rules/qc.smk"
 include: "rules/MakeSupplementalTables.smk"
 include: "rules/OrganizeDataSubmission.smk"
+include: "rules/AddressReviews.smk"
 #include: "rules/annotation.smk"
