@@ -1,0 +1,38 @@
+---
+title: "ResponseToReviewer_Point6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Original reviewer point:
+
+
+>I would like to see more discussion about the inter-relatedness of the chimpanzees in the analysis of gene expression. Is that contributing to the power of the DE analysis, which has really high numbers of DE genes. That may certainly be due to the large samples size, but should be addressed. Related to that, the support that the gene-wise dispersion estimates are well correlated in humans and chimpanzees overall (Fig1C, and S4) seems qualitative. It looks like the chimpanzees might have less dispersion overall? 
+
+I will address the first point (about relatedness in DE analysis) empricially by reporfming DE analysis with subsamples of chimps that have some relatively high degree of inter-relatedness, compared to subsamples that do not have such relatedness.
+
+First load necessary libraries for analysis...
+
+```{r}
+library(tidyverse)
+library(gplots)
+
+```
+
+Load relatedness matrix
+
+```{r}
+SampleLabels <- read.table('../output/ForAssociationTesting.temp.fam', stringsAsFactors = F)$V2
+GemmaMatrix <- as.matrix(read.table('../output/GRM.cXX.txt'))
+colnames(GemmaMatrix) <- SampleLabels
+row.names(GemmaMatrix) <- SampleLabels
+
+diag(GemmaMatrix) <- NA #For plotting purposes, just don't show the diagonol so that the color scale is better for non-diagnol entries
+heatmap.2(GemmaMatrix, trace="none")
+
+```
+
+I may pick out some of those somewhat related sample blocks for DE analysis... First, I should also try to match batches for this analysis.
