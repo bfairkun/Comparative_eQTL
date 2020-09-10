@@ -1,0 +1,279 @@
+---
+title: "ResponseToReviewer_Point9"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Original reviewer point:
+
+
+>Did the authors consider looking for cell-type QTLs? They state several times in the paper the possibility that genetic factors may influence cell types. They have enough data - at least in human - to obtain QTLs for specific cell types, as others have done (Marderstein et. al. Nat Comms 2020; Donovan et. al. Nat Comms 2020). If these cell type QTLs were enriched near genes with a high dispersion, this may bolster the author’s argument that genetic factors underlie dispersion by affecting cell type composition.
+
+Here I will attempt the reviewer's suggestion. [GTEx companion paper](https://pubmed.ncbi.nlm.nih.gov/32075962/) has already published cell type deconvolutions from the bulk heart data (Supplemental table 17). From here I can attempt to map QTLs for cell type, similar to what was performed in [Marderstein et. al. Nat Comms 2020](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7200670/). In this case, they had cell type porportions for various cell types, and performed a GWAS on each cell type porportion phenotype. Since these proportion phenotypes are all inter-related, maybe it will be simpler at first to just do a GWAS on the first PC of the cell porportion matrix. I'll do some exploratory analysis with this idea here, and then implement the GWAS in the snakemake.
+
+
+First load libraries
+```{r}
+library(tidyverse)
+library(knitr)
+library(gplots)
+```
+
+Now, read in the published GTEx cell type deconvolutions (CIBERSORT) for heart left ventricle.
+
+```{r}
+CellTypePorportions <- read.csv("../data/41467_2020_14561_MOESM18_ESM.csv") %>% dplyr::select(-P.value)
+
+head(CellTypePorportions) %>% kable()
+
+CellTypePorportions %>%
+  gather(key="cell.type", value="percent", -Input.Sample) %>%
+  ggplot(aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat="identity") +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+```
+
+I may want to consider removing outlier samples...
+
+For now, let's plot oeruse how the cell porportion phenotypes covary, and plot samples in PC space. I think it makes sense to center but not rescale data... I want the more predominant cell types to matter more, since ultimately I am interested in if cell type QTLs may explain the highly dispersed genes in the sample, and cell types more predominant in the bulk samples should inuitively matter more.
+
+```{r}
+#Covariance Matrix
+CellTypePorportions %>%
+  column_to_rownames("Input.Sample") %>%
+  cov() %>%
+  heatmap.2(trace = "none", cexRow=0.5, cexCol=0.5, col=bluered(75))
+
+#PCA
+PC.results <- CellTypePorportions %>%
+  column_to_rownames("Input.Sample") %>%
+  as.matrix() %>%
+  prcomp(center=T, scale=F)
+
+screeplot(PC.results, type="lines")
+
+PCs <- as.data.frame(PC.results$x[,1:3])
+ggplot(PCs, aes(x=PC1, y=PC2)) +
+  geom_point() +
+  theme_bw()
+
+#Correlate PCs back to original Cell Type Porportions
+Cor.Mat <- cor(PCs, (CellTypePorportions %>% column_to_rownames("Input.Sample")))
+heatmap.2(t(Cor.Mat), trace = "none", cexRow=0.5, col=bluered(75), Colv=FALSE)
+
+
+```
+
+Seems reasonable to just do GWAS on the first two PCs, the first of which mostly represents cardiac muscle cell and fibroblast, the second PC mostly correlates with myofibroblast and endothelial.
+
+Let's write out these first 2 PC phenotype proxies, as well as the original cardiac muscle cell portions, and endothelial cell porportions. I may consider running a GWAS on all of those phenotypes. I will also inverse normalize phenotypes here. This should moderate impact of outliers, so I won't do any outlier filtering.
+
+```{r}
+InverseNormTrans <- function(x){
+  return(qnorm((rank(x,na.last="keep")-0.5)/sum(!is.na(x))))
+}
+
+DataToOutput <- PCs %>%
+  rownames_to_column("Input.Sample") %>%
+  dplyr::select(Input.Sample, PC1, PC2) %>%
+  left_join(
+    (CellTypePorportions %>% dplyr::select(Input.Sample, cardiac_muscle_cell, endothelial_cell)),
+    by="Input.Sample"
+  ) %>%
+  gather(key="phenotype", value="value", -Input.Sample) %>%
+  group_by(phenotype) %>%
+  mutate(NormalizedPhenotype=InverseNormTrans(value)) %>%
+  ungroup() %>%
+  dplyr::select(-value) %>%
+  pivot_wider(id_cols="Input.Sample", names_from="phenotype", values_from = NormalizedPhenotype)
+```
+
+
+But actually, now I realize that a lot of these samples are independent biopsy replicates from the same individual. This is a good oppurtunity to check that the cell type porportions aren't completely technical. I expect that cell type porportion estimates (or their PCs) from the same indivudals should be better correlated than from unrelated individuals.
+
+```{r}
+#How many samples have replicates
+DataToOutput %>%
+  mutate(Ind=str_match(Input.Sample, "^GTEX-\\w+")) %>%
+  count(Ind) %>% pull(n) %>% hist()
+```
+
+Let's read more of the GTEx annotations about these samples, to learn about the difference between replicates..
+
+```{r}
+
+Samples <- read.table("../data/GTExAnnotations/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt", header=T, sep='\t', quote="") %>%
+  filter(SAMPID %in% DataToOutput$Input.Sample) %>%
+  separate(SAMPID, into = c("GTEX", "Ind", "tissueSiteID", "SM", "Aliquot"), remove = F, sep="-",)
+table(Samples$SMTSD)
+
+#How many samples
+dim(Samples)
+
+#How many unique aliquots amongst the 600 samples
+Samples$Aliquot %>% unique() %>% length()
+
+DataToOutput %>%
+  mutate(Ind=str_match(Input.Sample, "^GTEX-\\w+")) %>%
+  add_count(Ind) %>%
+  filter(n==2) %>%
+  left_join(Samples, by=c("Input.Sample"="SAMPID")) %>% pull(SMTSD) %>% table()
+```
+
+Ok, so what seems to be happening is that the replicates are all atrial appendage vs left ventricle. For purposes of GWAS, I should just filter for left-ventricle samples, since I ultimately want to relate this back to the left ventricle samples I calculated dispersion for. But, as for the question of individual reproducibility - that dispersion isn't completely due to technical differences in biopsy sites - it would be interesting to check whether cell composition is more due to individual, or biopsy site. For example, if it is due to individual differences, I expect the cell type composition of different sites (atrial appendage vs left ventricle, picked from matched individuals) to be more correlated than comparing just left ventricle when two samples are picked from random individuals.
+
+```{r}
+#What is correlation between left ventricle and atrial appendage, across individuals
+ScatterData1 <- DataToOutput %>%
+  left_join(Samples, by=c("Input.Sample"="SAMPID")) %>%
+  dplyr::select(PC1, Ind, SMTSD) %>%
+  pivot_wider(id_cols="Ind", names_from="SMTSD", values_from = "PC1") %>%
+  drop_na() %>%
+  column_to_rownames("Ind")
+ggplot(ScatterData1, aes(x=`Heart - Atrial Appendage`, y=`Heart - Left Ventricle`)) +
+  geom_point() +
+  theme_bw()
+cor(ScatterData1)
+
+#What is correlation between randomly selected individuals, within left ventricle individual
+ScatterData2 <- DataToOutput %>%
+  left_join(Samples, by=c("Input.Sample"="SAMPID")) %>%
+  dplyr::select(PC1, Ind, SMTSD) %>%
+  filter(SMTSD=="Heart - Atrial Appendage") %>%
+  mutate(RandomGroupAssignment=sample(2, n(), replace = T)) %>%
+  dplyr::group_by(RandomGroupAssignment) %>% 
+  mutate(row_number = row_number()) %>%
+  ungroup() %>%
+  pivot_wider(id_cols = "row_number", names_from = "RandomGroupAssignment", values_from = "PC1") %>%
+  drop_na() %>%
+  column_to_rownames("row_number")
+ggplot(ScatterData2, aes(x=`1`, y=`2`)) +
+  geom_point() +
+  xlab("Random individual A, left ventricle") +
+  ylab("Random individual B, left ventricle") +
+  theme_bw()
+cor(ScatterData2)
+  
+```
+
+Ok this is good. So it seems that the cell type composition is correlated across individuals. Let's replot the barplots or samples in PC space but separated by left ventricle and atrial appendage.
+
+```{r}
+PCs %>%
+  rownames_to_column("Input.Sample") %>%
+  left_join(Samples, by=c("Input.Sample"="SAMPID")) %>%
+  dplyr::select(PC1, PC2, Ind, SMTSD) %>%
+  ggplot(aes(x=PC1, y=PC2, color=SMTSD)) + 
+  geom_point() +
+  theme_bw()
+
+CellTypePorportions %>%
+  gather(key="cell.type", value="percent", -Input.Sample) %>%
+  left_join(Samples, by=c("Input.Sample"="SAMPID")) %>%
+  ggplot(aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat="identity") +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_wrap(~SMTSD) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+```
+
+Ok, actually, PC2 represents the cell types associated with atrial appendage, but it still seems true that the PC1 (cardiac muscle cell and fibroblast axis) correlates across individuals quite well.
+
+Let's filter for left ventricle samples only, redo the PCA analysis, and write out quantile normalized phenotypes.
+
+```{r}
+#PCA
+PC.results <- CellTypePorportions %>%
+  left_join(
+    (Samples %>% dplyr::select(SAMPID, SMTSD)),
+    by=c("Input.Sample"="SAMPID")) %>%
+  filter(SMTSD=="Heart - Left Ventricle") %>%
+  dplyr::select(-SMTSD) %>%
+  column_to_rownames("Input.Sample") %>%
+  as.matrix() %>%
+  prcomp(center=T, scale=F)
+
+screeplot(PC.results, type="lines")
+
+PCs <- as.data.frame(PC.results$x[,1:3])
+ggplot(PCs, aes(x=PC1, y=PC2)) +
+  geom_point() +
+  theme_bw()
+
+#Correlate PCs back to original Cell Type Porportions
+df.ToCorrelate <- inner_join(
+  PCs %>% rownames_to_column("Input.Sample"),
+  CellTypePorportions,
+  by="Input.Sample") %>% column_to_rownames("Input.Sample")
+Cor.Mat <- cor(df.ToCorrelate[,1:3], df.ToCorrelate[,4:ncol(df.ToCorrelate)])
+heatmap.2(t(Cor.Mat), trace = "none", cexRow=0.5, col=bluered(75), Colv=FALSE)
+```
+
+I think just using the PC1 as the phenotype, which mostly captures the cardiomyocte:fibroblast axis, is reasonable enough...
+
+```{r}
+DataToOutput <- PCs %>%
+  rownames_to_column("Input.Sample") %>%
+  dplyr::select(Input.Sample, PC1) %>%
+  left_join(
+    (CellTypePorportions %>% dplyr::select(Input.Sample, cardiac_muscle_cell, fibroblast)),
+    by="Input.Sample"
+  ) %>%
+  gather(key="phenotype", value="value", -Input.Sample) %>%
+  group_by(phenotype) %>%
+  mutate(NormalizedPhenotype=InverseNormTrans(value)) %>%
+  ungroup() %>%
+  dplyr::select(-value) %>%
+  pivot_wider(id_cols="Input.Sample", names_from="phenotype", values_from = NormalizedPhenotype)
+
+head(DataToOutput) %>% kable()
+```
+
+Actually, I should also inverse normal transform the data before doing GWAS.
+
+```{r}
+
+DataToOutput <- DataToOutput %>%
+  gather(key="phenotype", value="value", -Input.Sample) %>%
+  group_by(phenotype) %>%
+  mutate(quantile.normalized.value = InverseNormTrans(value)) %>%
+  ungroup() %>%
+  dplyr::select(-value) %>%
+  spread(key="phenotype", value="quantile.normalized.value")
+
+##Check quantile normalization...
+#Data looks normally distributed
+qqnorm(DataToOutput$cardiac_muscle_cell)
+#With sd=1, suggesting I didn't accidently aggregate all phenotypes before quantile normalization
+sd(DataToOutput$cardiac_muscle_cell)
+#And normalized data is monotonic increasinging from original data.
+inner_join(
+  DataToOutput,
+  CellTypePorportions,
+  by="Input.Sample",
+  suffix=c(".QQnorm", ".raw")) %>%
+  ggplot(aes(x=cardiac_muscle_cell.QQnorm, y=cardiac_muscle_cell.raw)) +
+  geom_point()
+```
+
+and finally, write out the quantile normalized cell porportion phenotypes
+
+```{r, eval=F}
+DataToOutput %>%
+  mutate(Ind=str_match(Input.Sample, "^GTEX-\\w+")) %>%
+  dplyr::select(Ind, everything(), -Input.Sample) %>%
+write_tsv("../output/CellProportionPhenotypesNormalizedForGWAS.tab")
+```
+

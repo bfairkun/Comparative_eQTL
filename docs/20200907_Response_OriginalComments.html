@@ -432,7 +432,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -499,10 +499,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree199654fa117f7b418d6774dd7d57af875cd0e7e1targetblank199654fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/199654fa117f7b418d6774dd7d57af875cd0e7e1" target="_blank">199654f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree17265416b95d67b707c35da728efb3e30491db9etargetblank1726541a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/17265416b95d67b707c35da728efb3e30491db9e" target="_blank">1726541</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree199654fa117f7b418d6774dd7d57af875cd0e7e1targetblank199654fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree17265416b95d67b707c35da728efb3e30491db9etargetblank1726541a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -527,11 +527,11 @@ Ignored files:
     Ignored:    output/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/20200907_Response_OriginalComments.Rmd
-    Untracked:  analysis/20200907_Response_Point_11.Rmd
+    Untracked:  analysis/20200907_Response_Point_09.Rmd
+    Untracked:  output/CellProportionPhenotypesNormalizedForGWAS.tab
 
 Unstaged changes:
-    Modified:   analysis_temp/Ted_vignette.R
+    Modified:   analysis/20200907_Response_OriginalComments.Rmd
 
 </code></pre>
 <p>
@@ -544,9 +544,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/analysis/20200907_Response_OriginalComments.Rmd" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+<td>
+update site, address reviewers
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/20200907_Response_OriginalComments.html" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+<td>
+update site, address reviewers
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -575,11 +635,16 @@ There are no past versions. Publish this analysis with <code>wflow_publish()</co
 <li>What do the authors think these findings mean for study systems outside of humans and captive chimpanzees? Both on the technical level (e.g. sample size), and for how their approach could be helpful outside of these species. Generalizing this approach would broaden the impact and audience of the paper.</li>
 <li>Did the authors test directly whether eQTLs were enriched in genes with a high dispersion? I could not find this going back through the paper. This seems almost trivially likely to be true. I may have missed this result? Or did the authors worry this is too likely to be confounded with cell type? Either way, this seems like a result that may be useful to show even if the authors did acknowledge that it was likely to be confounded.</li>
 <li>Did the authors consider looking for cell-type QTLs? They state several times in the paper the possibility that genetic factors may influence cell types. They have enough data - at least in human - to obtain QTLs for specific cell types, as others have done (Marderstein et. al. Nat Comms 2020; Donovan et. al. Nat Comms 2020). If these cell type QTLs were enriched near genes with a high dispersion, this may bolster the author’s argument that genetic factors underlie dispersion by affecting cell type composition.</li>
+</ol>
+<ul>
+<li>`<a href="20200907_Response_Point_09.html">Here</a> I provide an analysis doing this suggestion</li>
+</ul>
+<ol start="10" style="list-style-type: decimal">
 <li>The scRNA-seq reference used for estimating cell types in heart tissue was derived from mice. Could this lead the authors to underestimate the degree to which cell types drive dispersion in genes that are variable between human and chimp? Genes that are variable between human/ chimp may also be more likely to be variable between either species and mouse, and perhaps this variability has led to them becoming more/ less of a marker of a specific cell population (and hence their dispersion in primates does not correlate with cell type specificity in mouse).</li>
 <li>Have the authors tried estimating dispersion on top of what is expected based on differences in cell type? There are several strategies that might work for this: There are new strategies for estimating a posterior of cell type specific expression from a bulk sample, conditional on scRNA-seq data as prior information (Chu and Danko, bioRxiv, 2020). These cell type specific expression estimates could then be analyzed for dispersion. Alternatively, it may also work to regress the estimated proportion of each cell type out of the dispersion estimates. While there are certainly a lot of pitfalls with using these strategies, especially in the setting shown here (all of this would work better if there were species matched reference data), they might provide an avenue for depleting the contribution of cell type differences from dispersion estimates.</li>
 </ol>
 <ul>
-<li>/<a href="20200907_Response_Point_11.html">Here</a> I provide an analysis using TED to estimate cell type specific expression and estimate dispersion.</li>
+<li>`<a href="20200907_Response_Point_11.html">Here</a> I provide an analysis using TED to estimate cell type specific expression and estimate dispersion.</li>
 </ul>
 <ol start="12" style="list-style-type: decimal">
 <li>Can the authors add a dotted line to show the shape of the distribution for genes with low dispersion, or where dispersion is shared in both human and chimpanzee, in figure 4b? Is this different from genes that are dispersed in either chimp or human?</li>
@@ -610,9 +675,10 @@ loaded via a namespace (and not attached):
  [1] workflowr_1.5.0 Rcpp_1.0.5      rprojroot_1.3-2 digest_0.6.23  
  [5] later_1.0.0     R6_2.4.1        backports_1.1.5 git2r_0.26.1   
  [9] magrittr_1.5    evaluate_0.14   stringi_1.4.3   rlang_0.4.1    
-[13] fs_1.3.1        promises_1.1.0  rmarkdown_1.18  tools_3.6.1    
-[17] stringr_1.4.0   glue_1.3.1      httpuv_1.5.2    xfun_0.11      
-[21] yaml_2.2.0      compiler_3.6.1  htmltools_0.4.0 knitr_1.26     </code></pre>
+[13] fs_1.3.1        promises_1.1.0  whisker_0.4     rmarkdown_1.18 
+[17] tools_3.6.1     stringr_1.4.0   glue_1.3.1      httpuv_1.5.2   
+[21] xfun_0.11       yaml_2.2.0      compiler_3.6.1  htmltools_0.4.0
+[25] knitr_1.26     </code></pre>
 </div>
 </div>
 </div>

@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>ResponseToReviewer_Point9</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">ResponseToReviewer_Point9</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-09-09
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.5.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree17265416b95d67b707c35da728efb3e30491db9etargetblank1726541a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/17265416b95d67b707c35da728efb3e30491db9e" target="_blank">1726541</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree17265416b95d67b707c35da728efb3e30491db9etargetblank1726541a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    WorkingManuscript.zip
+    Ignored:    WorkingManuscript/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis/figure/
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    big_data/
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    code/snakemake_workflow/.Rhistory
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    figures/
+    Ignored:    output/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/20200907_Response_Point_09.Rmd
+    Untracked:  output/CellProportionPhenotypesNormalizedForGWAS.tab
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<p>Original reviewer point:</p>
+<blockquote>
+<p>Did the authors consider looking for cell-type QTLs? They state several times in the paper the possibility that genetic factors may influence cell types. They have enough data - at least in human - to obtain QTLs for specific cell types, as others have done (Marderstein et. al. Nat Comms 2020; Donovan et. al. Nat Comms 2020). If these cell type QTLs were enriched near genes with a high dispersion, this may bolster the author’s argument that genetic factors underlie dispersion by affecting cell type composition.</p>
+</blockquote>
+<p>Here I will attempt the reviewer’s suggestion. <a href="https://pubmed.ncbi.nlm.nih.gov/32075962/">GTEx companion paper</a> has already published cell type deconvolutions from the bulk heart data (Supplemental table 17). From here I can attempt to map QTLs for cell type, similar to what was performed in <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7200670/">Marderstein et. al. Nat Comms 2020</a>. In this case, they had cell type porportions for various cell types, and performed a GWAS on each cell type porportion phenotype. Since these proportion phenotypes are all inter-related, maybe it will be simpler at first to just do a GWAS on the first PC of the cell porportion matrix. I’ll do some exploratory analysis with this idea here, and then implement the GWAS in the snakemake.</p>
+<p>First load libraries</p>
+<pre class="r"><code>library(tidyverse)
+library(knitr)
+library(gplots)</code></pre>
+<p>Now, read in the published GTEx cell type deconvolutions (CIBERSORT) for heart left ventricle.</p>
+<pre class="r"><code>CellTypePorportions &lt;- read.csv(&quot;../data/41467_2020_14561_MOESM18_ESM.csv&quot;) %&gt;% dplyr::select(-P.value)
+
+head(CellTypePorportions) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Input.Sample</th>
+<th align="right">cardiac_muscle_cell</th>
+<th align="right">cardiac_neuron</th>
+<th align="right">endocardial_cell</th>
+<th align="right">endothelial_cell</th>
+<th align="right">fibroblast</th>
+<th align="right">leukocyte</th>
+<th align="right">myofibroblast_cell</th>
+<th align="right">smooth_muscle_cell</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GTEX-1117F-0726-SM-5GIEN</td>
+<td align="right">0.4141443</td>
+<td align="right">0.0390111</td>
+<td align="right">0.0247209</td>
+<td align="right">0.0173081</td>
+<td align="right">0.2976485</td>
+<td align="right">0.0735854</td>
+<td align="right">0.0539711</td>
+<td align="right">0.0796106</td>
+</tr>
+<tr class="even">
+<td align="left">GTEX-111FC-0626-SM-5N9CU</td>
+<td align="right">0.5934551</td>
+<td align="right">0.0304994</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.2718323</td>
+<td align="right">0.0159834</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0882298</td>
+</tr>
+<tr class="odd">
+<td align="left">GTEX-111FC-0826-SM-5GZWO</td>
+<td align="right">0.6191502</td>
+<td align="right">0.0391776</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0884489</td>
+<td align="right">0.0896640</td>
+<td align="right">0.0193383</td>
+<td align="right">0.0317195</td>
+<td align="right">0.1125015</td>
+</tr>
+<tr class="even">
+<td align="left">GTEX-111VG-0326-SM-5GZX7</td>
+<td align="right">0.4135017</td>
+<td align="right">0.0633654</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0216553</td>
+<td align="right">0.3748008</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0064154</td>
+<td align="right">0.1202614</td>
+</tr>
+<tr class="odd">
+<td align="left">GTEX-111YS-0326-SM-5GZZ3</td>
+<td align="right">0.7092151</td>
+<td align="right">0.0367780</td>
+<td align="right">0.0071714</td>
+<td align="right">0.0568536</td>
+<td align="right">0.0534341</td>
+<td align="right">0.0368498</td>
+<td align="right">0.0273321</td>
+<td align="right">0.0723659</td>
+</tr>
+<tr class="even">
+<td align="left">GTEX-111YS-0426-SM-5987O</td>
+<td align="right">0.6929481</td>
+<td align="right">0.0390429</td>
+<td align="right">0.0000000</td>
+<td align="right">0.1227475</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0729518</td>
+<td align="right">0.0723097</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>CellTypePorportions %&gt;%
+  gather(key=&quot;cell.type&quot;, value=&quot;percent&quot;, -Input.Sample) %&gt;%
+  ggplot(aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat=&quot;identity&quot;) +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>I may want to consider removing outlier samples…</p>
+<p>For now, let’s plot oeruse how the cell porportion phenotypes covary, and plot samples in PC space. I think it makes sense to center but not rescale data… I want the more predominant cell types to matter more, since ultimately I am interested in if cell type QTLs may explain the highly dispersed genes in the sample, and cell types more predominant in the bulk samples should inuitively matter more.</p>
+<pre class="r"><code>#Covariance Matrix
+CellTypePorportions %&gt;%
+  column_to_rownames(&quot;Input.Sample&quot;) %&gt;%
+  cov() %&gt;%
+  heatmap.2(trace = &quot;none&quot;, cexRow=0.5, cexCol=0.5, col=bluered(75))</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#PCA
+PC.results &lt;- CellTypePorportions %&gt;%
+  column_to_rownames(&quot;Input.Sample&quot;) %&gt;%
+  as.matrix() %&gt;%
+  prcomp(center=T, scale=F)
+
+screeplot(PC.results, type=&quot;lines&quot;)</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>PCs &lt;- as.data.frame(PC.results$x[,1:3])
+ggplot(PCs, aes(x=PC1, y=PC2)) +
+  geom_point() +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Correlate PCs back to original Cell Type Porportions
+Cor.Mat &lt;- cor(PCs, (CellTypePorportions %&gt;% column_to_rownames(&quot;Input.Sample&quot;)))
+heatmap.2(t(Cor.Mat), trace = &quot;none&quot;, cexRow=0.5, col=bluered(75), Colv=FALSE)</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Seems reasonable to just do GWAS on the first two PCs, the first of which mostly represents cardiac muscle cell and fibroblast, the second PC mostly correlates with myofibroblast and endothelial.</p>
+<p>Let’s write out these first 2 PC phenotype proxies, as well as the original cardiac muscle cell portions, and endothelial cell porportions. I may consider running a GWAS on all of those phenotypes. I will also inverse normalize phenotypes here. This should moderate impact of outliers, so I won’t do any outlier filtering.</p>
+<pre class="r"><code>InverseNormTrans &lt;- function(x){
+  return(qnorm((rank(x,na.last=&quot;keep&quot;)-0.5)/sum(!is.na(x))))
+}
+
+DataToOutput &lt;- PCs %&gt;%
+  rownames_to_column(&quot;Input.Sample&quot;) %&gt;%
+  dplyr::select(Input.Sample, PC1, PC2) %&gt;%
+  left_join(
+    (CellTypePorportions %&gt;% dplyr::select(Input.Sample, cardiac_muscle_cell, endothelial_cell)),
+    by=&quot;Input.Sample&quot;
+  ) %&gt;%
+  gather(key=&quot;phenotype&quot;, value=&quot;value&quot;, -Input.Sample) %&gt;%
+  group_by(phenotype) %&gt;%
+  mutate(NormalizedPhenotype=InverseNormTrans(value)) %&gt;%
+  ungroup() %&gt;%
+  dplyr::select(-value) %&gt;%
+  pivot_wider(id_cols=&quot;Input.Sample&quot;, names_from=&quot;phenotype&quot;, values_from = NormalizedPhenotype)</code></pre>
+<p>But actually, now I realize that a lot of these samples are independent biopsy replicates from the same individual. This is a good oppurtunity to check that the cell type porportions aren’t completely technical. I expect that cell type porportion estimates (or their PCs) from the same indivudals should be better correlated than from unrelated individuals.</p>
+<pre class="r"><code>#How many samples have replicates
+DataToOutput %&gt;%
+  mutate(Ind=str_match(Input.Sample, &quot;^GTEX-\\w+&quot;)) %&gt;%
+  count(Ind) %&gt;% pull(n) %&gt;% hist()</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Let’s read more of the GTEx annotations about these samples, to learn about the difference between replicates..</p>
+<pre class="r"><code>Samples &lt;- read.table(&quot;../data/GTExAnnotations/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt&quot;, header=T, sep=&#39;\t&#39;, quote=&quot;&quot;) %&gt;%
+  filter(SAMPID %in% DataToOutput$Input.Sample) %&gt;%
+  separate(SAMPID, into = c(&quot;GTEX&quot;, &quot;Ind&quot;, &quot;tissueSiteID&quot;, &quot;SM&quot;, &quot;Aliquot&quot;), remove = F, sep=&quot;-&quot;,)
+table(Samples$SMTSD)</code></pre>
+<pre><code>
+                   Adipose - Subcutaneous 
+                                        0 
+             Adipose - Visceral (Omentum) 
+                                        0 
+                            Adrenal Gland 
+                                        0 
+                           Artery - Aorta 
+                                        0 
+                        Artery - Coronary 
+                                        0 
+                          Artery - Tibial 
+                                        0 
+                                  Bladder 
+                                        0 
+                         Brain - Amygdala 
+                                        0 
+ Brain - Anterior cingulate cortex (BA24) 
+                                        0 
+          Brain - Caudate (basal ganglia) 
+                                        0 
+            Brain - Cerebellar Hemisphere 
+                                        0 
+                       Brain - Cerebellum 
+                                        0 
+                           Brain - Cortex 
+                                        0 
+             Brain - Frontal Cortex (BA9) 
+                                        0 
+                      Brain - Hippocampus 
+                                        0 
+                     Brain - Hypothalamus 
+                                        0 
+Brain - Nucleus accumbens (basal ganglia) 
+                                        0 
+          Brain - Putamen (basal ganglia) 
+                                        0 
+       Brain - Spinal cord (cervical c-1) 
+                                        0 
+                 Brain - Substantia nigra 
+                                        0 
+                  Breast - Mammary Tissue 
+                                        0 
+             Cells - Cultured fibroblasts 
+                                        0 
+      Cells - EBV-transformed lymphocytes 
+                                        0 
+         Cells - Leukemia cell line (CML) 
+                                        0 
+                      Cervix - Ectocervix 
+                                        0 
+                      Cervix - Endocervix 
+                                        0 
+                          Colon - Sigmoid 
+                                        0 
+                       Colon - Transverse 
+                                        0 
+    Esophagus - Gastroesophageal Junction 
+                                        0 
+                       Esophagus - Mucosa 
+                                        0 
+                   Esophagus - Muscularis 
+                                        0 
+                           Fallopian Tube 
+                                        0 
+                 Heart - Atrial Appendage 
+                                      297 
+                   Heart - Left Ventricle 
+                                      303 
+                          Kidney - Cortex 
+                                        0 
+                         Kidney - Medulla 
+                                        0 
+                                    Liver 
+                                        0 
+                                     Lung 
+                                        0 
+                     Minor Salivary Gland 
+                                        0 
+                        Muscle - Skeletal 
+                                        0 
+                           Nerve - Tibial 
+                                        0 
+                                    Ovary 
+                                        0 
+                                 Pancreas 
+                                        0 
+                                Pituitary 
+                                        0 
+                                 Prostate 
+                                        0 
+      Skin - Not Sun Exposed (Suprapubic) 
+                                        0 
+           Skin - Sun Exposed (Lower leg) 
+                                        0 
+         Small Intestine - Terminal Ileum 
+                                        0 
+                                   Spleen 
+                                        0 
+                                  Stomach 
+                                        0 
+                                   Testis 
+                                        0 
+                                  Thyroid 
+                                        0 
+                                   Uterus 
+                                        0 
+                                   Vagina 
+                                        0 
+                              Whole Blood 
+                                        0 </code></pre>
+<pre class="r"><code>#How many samples
+dim(Samples)</code></pre>
+<pre><code>[1] 600  68</code></pre>
+<pre class="r"><code>#How many unique aliquots amongst the 600 samples
+Samples$Aliquot %&gt;% unique() %&gt;% length()</code></pre>
+<pre><code>[1] 600</code></pre>
+<pre class="r"><code>DataToOutput %&gt;%
+  mutate(Ind=str_match(Input.Sample, &quot;^GTEX-\\w+&quot;)) %&gt;%
+  add_count(Ind) %&gt;%
+  filter(n==2) %&gt;%
+  left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;% pull(SMTSD) %&gt;% table()</code></pre>
+<pre><code>.
+                   Adipose - Subcutaneous 
+                                        0 
+             Adipose - Visceral (Omentum) 
+                                        0 
+                            Adrenal Gland 
+                                        0 
+                           Artery - Aorta 
+                                        0 
+                        Artery - Coronary 
+                                        0 
+                          Artery - Tibial 
+                                        0 
+                                  Bladder 
+                                        0 
+                         Brain - Amygdala 
+                                        0 
+ Brain - Anterior cingulate cortex (BA24) 
+                                        0 
+          Brain - Caudate (basal ganglia) 
+                                        0 
+            Brain - Cerebellar Hemisphere 
+                                        0 
+                       Brain - Cerebellum 
+                                        0 
+                           Brain - Cortex 
+                                        0 
+             Brain - Frontal Cortex (BA9) 
+                                        0 
+                      Brain - Hippocampus 
+                                        0 
+                     Brain - Hypothalamus 
+                                        0 
+Brain - Nucleus accumbens (basal ganglia) 
+                                        0 
+          Brain - Putamen (basal ganglia) 
+                                        0 
+       Brain - Spinal cord (cervical c-1) 
+                                        0 
+                 Brain - Substantia nigra 
+                                        0 
+                  Breast - Mammary Tissue 
+                                        0 
+             Cells - Cultured fibroblasts 
+                                        0 
+      Cells - EBV-transformed lymphocytes 
+                                        0 
+         Cells - Leukemia cell line (CML) 
+                                        0 
+                      Cervix - Ectocervix 
+                                        0 
+                      Cervix - Endocervix 
+                                        0 
+                          Colon - Sigmoid 
+                                        0 
+                       Colon - Transverse 
+                                        0 
+    Esophagus - Gastroesophageal Junction 
+                                        0 
+                       Esophagus - Mucosa 
+                                        0 
+                   Esophagus - Muscularis 
+                                        0 
+                           Fallopian Tube 
+                                        0 
+                 Heart - Atrial Appendage 
+                                      201 
+                   Heart - Left Ventricle 
+                                      201 
+                          Kidney - Cortex 
+                                        0 
+                         Kidney - Medulla 
+                                        0 
+                                    Liver 
+                                        0 
+                                     Lung 
+                                        0 
+                     Minor Salivary Gland 
+                                        0 
+                        Muscle - Skeletal 
+                                        0 
+                           Nerve - Tibial 
+                                        0 
+                                    Ovary 
+                                        0 
+                                 Pancreas 
+                                        0 
+                                Pituitary 
+                                        0 
+                                 Prostate 
+                                        0 
+      Skin - Not Sun Exposed (Suprapubic) 
+                                        0 
+           Skin - Sun Exposed (Lower leg) 
+                                        0 
+         Small Intestine - Terminal Ileum 
+                                        0 
+                                   Spleen 
+                                        0 
+                                  Stomach 
+                                        0 
+                                   Testis 
+                                        0 
+                                  Thyroid 
+                                        0 
+                                   Uterus 
+                                        0 
+                                   Vagina 
+                                        0 
+                              Whole Blood 
+                                        0 </code></pre>
+<p>Ok, so what seems to be happening is that the replicates are all atrial appendage vs left ventricle. For purposes of GWAS, I should just filter for left-ventricle samples, since I ultimately want to relate this back to the left ventricle samples I calculated dispersion for. But, as for the question of individual reproducibility - that dispersion isn’t completely due to technical differences in biopsy sites - it would be interesting to check whether cell composition is more due to individual, or biopsy site. For example, if it is due to individual differences, I expect the cell type composition of different sites (atrial appendage vs left ventricle, picked from matched individuals) to be more correlated than comparing just left ventricle when two samples are picked from random individuals.</p>
+<pre class="r"><code>#What is correlation between left ventricle and atrial appendage, across individuals
+ScatterData1 &lt;- DataToOutput %&gt;%
+  left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
+  dplyr::select(PC1, Ind, SMTSD) %&gt;%
+  pivot_wider(id_cols=&quot;Ind&quot;, names_from=&quot;SMTSD&quot;, values_from = &quot;PC1&quot;) %&gt;%
+  drop_na() %&gt;%
+  column_to_rownames(&quot;Ind&quot;)
+ggplot(ScatterData1, aes(x=`Heart - Atrial Appendage`, y=`Heart - Left Ventricle`)) +
+  geom_point() +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cor(ScatterData1)</code></pre>
+<pre><code>                         Heart - Atrial Appendage Heart - Left Ventricle
+Heart - Atrial Appendage                1.0000000              0.5256553
+Heart - Left Ventricle                  0.5256553              1.0000000</code></pre>
+<pre class="r"><code>#What is correlation between randomly selected individuals, within left ventricle individual
+ScatterData2 &lt;- DataToOutput %&gt;%
+  left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
+  dplyr::select(PC1, Ind, SMTSD) %&gt;%
+  filter(SMTSD==&quot;Heart - Atrial Appendage&quot;) %&gt;%
+  mutate(RandomGroupAssignment=sample(2, n(), replace = T)) %&gt;%
+  dplyr::group_by(RandomGroupAssignment) %&gt;% 
+  mutate(row_number = row_number()) %&gt;%
+  ungroup() %&gt;%
+  pivot_wider(id_cols = &quot;row_number&quot;, names_from = &quot;RandomGroupAssignment&quot;, values_from = &quot;PC1&quot;) %&gt;%
+  drop_na() %&gt;%
+  column_to_rownames(&quot;row_number&quot;)
+ggplot(ScatterData2, aes(x=`1`, y=`2`)) +
+  geom_point() +
+  xlab(&quot;Random individual A, left ventricle&quot;) +
+  ylab(&quot;Random individual B, left ventricle&quot;) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>cor(ScatterData2)</code></pre>
+<pre><code>            1           2
+1  1.00000000 -0.02041527
+2 -0.02041527  1.00000000</code></pre>
+<p>Ok this is good. So it seems that the cell type composition is correlated across individuals. Let’s replot the barplots or samples in PC space but separated by left ventricle and atrial appendage.</p>
+<pre class="r"><code>PCs %&gt;%
+  rownames_to_column(&quot;Input.Sample&quot;) %&gt;%
+  left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
+  dplyr::select(PC1, PC2, Ind, SMTSD) %&gt;%
+  ggplot(aes(x=PC1, y=PC2, color=SMTSD)) + 
+  geom_point() +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>CellTypePorportions %&gt;%
+  gather(key=&quot;cell.type&quot;, value=&quot;percent&quot;, -Input.Sample) %&gt;%
+  left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
+  ggplot(aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+  geom_bar(stat=&quot;identity&quot;) +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_wrap(~SMTSD) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok, actually, PC2 represents the cell types associated with atrial appendage, but it still seems true that the PC1 (cardiac muscle cell and fibroblast axis) correlates across individuals quite well.</p>
+<p>Let’s filter for left ventricle samples only, redo the PCA analysis, and write out quantile normalized phenotypes.</p>
+<pre class="r"><code>#PCA
+PC.results &lt;- CellTypePorportions %&gt;%
+  left_join(
+    (Samples %&gt;% dplyr::select(SAMPID, SMTSD)),
+    by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
+  filter(SMTSD==&quot;Heart - Left Ventricle&quot;) %&gt;%
+  dplyr::select(-SMTSD) %&gt;%
+  column_to_rownames(&quot;Input.Sample&quot;) %&gt;%
+  as.matrix() %&gt;%
+  prcomp(center=T, scale=F)
+
+screeplot(PC.results, type=&quot;lines&quot;)</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>PCs &lt;- as.data.frame(PC.results$x[,1:3])
+ggplot(PCs, aes(x=PC1, y=PC2)) +
+  geom_point() +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Correlate PCs back to original Cell Type Porportions
+df.ToCorrelate &lt;- inner_join(
+  PCs %&gt;% rownames_to_column(&quot;Input.Sample&quot;),
+  CellTypePorportions,
+  by=&quot;Input.Sample&quot;) %&gt;% column_to_rownames(&quot;Input.Sample&quot;)
+Cor.Mat &lt;- cor(df.ToCorrelate[,1:3], df.ToCorrelate[,4:ncol(df.ToCorrelate)])
+heatmap.2(t(Cor.Mat), trace = &quot;none&quot;, cexRow=0.5, col=bluered(75), Colv=FALSE)</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>I think just using the PC1 as the phenotype, which mostly captures the cardiomyocte:fibroblast axis, is reasonable enough…</p>
+<pre class="r"><code>DataToOutput &lt;- PCs %&gt;%
+  rownames_to_column(&quot;Input.Sample&quot;) %&gt;%
+  dplyr::select(Input.Sample, PC1) %&gt;%
+  left_join(
+    (CellTypePorportions %&gt;% dplyr::select(Input.Sample, cardiac_muscle_cell, fibroblast)),
+    by=&quot;Input.Sample&quot;
+  ) %&gt;%
+  gather(key=&quot;phenotype&quot;, value=&quot;value&quot;, -Input.Sample) %&gt;%
+  group_by(phenotype) %&gt;%
+  mutate(NormalizedPhenotype=InverseNormTrans(value)) %&gt;%
+  ungroup() %&gt;%
+  dplyr::select(-value) %&gt;%
+  pivot_wider(id_cols=&quot;Input.Sample&quot;, names_from=&quot;phenotype&quot;, values_from = NormalizedPhenotype)
+
+head(DataToOutput) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Input.Sample</th>
+<th align="right">PC1</th>
+<th align="right">cardiac_muscle_cell</th>
+<th align="right">fibroblast</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GTEX-111FC-0826-SM-5GZWO</td>
+<td align="right">0.3371901</td>
+<td align="right">-0.3371901</td>
+<td align="right">0.4812159</td>
+</tr>
+<tr class="even">
+<td align="left">GTEX-111YS-0426-SM-5987O</td>
+<td align="right">0.0082728</td>
+<td align="right">-0.0165462</td>
+<td align="right">-0.9033567</td>
+</tr>
+<tr class="odd">
+<td align="left">GTEX-1122O-0826-SM-5GICV</td>
+<td align="right">-1.1563825</td>
+<td align="right">1.0216836</td>
+<td align="right">-0.9033567</td>
+</tr>
+<tr class="even">
+<td align="left">GTEX-117YW-0326-SM-5N9CY</td>
+<td align="right">1.3993229</td>
+<td align="right">-1.3993229</td>
+<td align="right">1.3565712</td>
+</tr>
+<tr class="odd">
+<td align="left">GTEX-117YX-1126-SM-5H128</td>
+<td align="right">-2.3976272</td>
+<td align="right">2.3976272</td>
+<td align="right">-0.9033567</td>
+</tr>
+<tr class="even">
+<td align="left">GTEX-11DXX-0326-SM-5PNWC</td>
+<td align="right">-0.9674216</td>
+<td align="right">0.8909849</td>
+<td align="right">-0.9033567</td>
+</tr>
+</tbody>
+</table>
+<p>Actually, I should also inverse normal transform the data before doing GWAS.</p>
+<pre class="r"><code>DataToOutput &lt;- DataToOutput %&gt;%
+  gather(key=&quot;phenotype&quot;, value=&quot;value&quot;, -Input.Sample) %&gt;%
+  group_by(phenotype) %&gt;%
+  mutate(quantile.normalized.value = InverseNormTrans(value)) %&gt;%
+  ungroup() %&gt;%
+  dplyr::select(-value) %&gt;%
+  spread(key=&quot;phenotype&quot;, value=&quot;quantile.normalized.value&quot;)
+
+##Check quantile normalization...
+#Data looks normally distributed
+qqnorm(DataToOutput$cardiac_muscle_cell)</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#With sd=1, suggesting I didn&#39;t accidently aggregate all phenotypes before quantile normalization
+sd(DataToOutput$cardiac_muscle_cell)</code></pre>
+<pre><code>[1] 0.9995252</code></pre>
+<pre class="r"><code>#And normalized data is monotonic increasinging from original data.
+inner_join(
+  DataToOutput,
+  CellTypePorportions,
+  by=&quot;Input.Sample&quot;,
+  suffix=c(&quot;.QQnorm&quot;, &quot;.raw&quot;)) %&gt;%
+  ggplot(aes(x=cardiac_muscle_cell.QQnorm, y=cardiac_muscle_cell.raw)) +
+  geom_point()</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>and finally, write out the quantile normalized cell porportion phenotypes</p>
+<pre class="r"><code>DataToOutput %&gt;%
+  mutate(Ind=str_match(Input.Sample, &quot;^GTEX-\\w+&quot;)) %&gt;%
+  dplyr::select(Ind, everything(), -Input.Sample) %&gt;%
+write_tsv(&quot;../output/CellProportionPhenotypesNormalizedForGWAS.tab&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.5
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] gplots_3.0.1.1  knitr_1.26      forcats_0.4.0   stringr_1.4.0  
+ [5] dplyr_0.8.3     purrr_0.3.3     readr_1.3.1     tidyr_1.0.0    
+ [9] tibble_2.1.3    ggplot2_3.2.1   tidyverse_1.3.0
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.5         lubridate_1.7.4    lattice_0.20-38    gtools_3.8.1      
+ [5] assertthat_0.2.1   zeallot_0.1.0      rprojroot_1.3-2    digest_0.6.23     
+ [9] R6_2.4.1           cellranger_1.1.0   backports_1.1.5    reprex_0.3.0      
+[13] evaluate_0.14      httr_1.4.1         highr_0.8          pillar_1.4.2      
+[17] rlang_0.4.1        lazyeval_0.2.2     readxl_1.3.1       rstudioapi_0.10   
+[21] gdata_2.18.0       rmarkdown_1.18     labeling_0.3       munsell_0.5.0     
+[25] broom_0.5.2        compiler_3.6.1     httpuv_1.5.2       modelr_0.1.5      
+[29] xfun_0.11          pkgconfig_2.0.3    htmltools_0.4.0    tidyselect_0.2.5  
+[33] workflowr_1.5.0    fansi_0.4.0        crayon_1.3.4       dbplyr_1.4.2      
+[37] withr_2.1.2        later_1.0.0        bitops_1.0-6       grid_3.6.1        
+[41] nlme_3.1-143       jsonlite_1.6       gtable_0.3.0       lifecycle_0.1.0   
+[45] DBI_1.0.0          git2r_0.26.1       magrittr_1.5       scales_1.1.0      
+[49] KernSmooth_2.23-16 cli_2.0.0          stringi_1.4.3      farver_2.0.1      
+[53] fs_1.3.1           promises_1.1.0     xml2_1.2.2         ellipsis_0.3.0    
+[57] generics_0.0.2     vctrs_0.2.0        tools_3.6.1        glue_1.3.1        
+[61] hms_0.5.2          yaml_2.2.0         colorspace_1.4-1   caTools_1.17.1.3  
+[65] rvest_0.3.5        haven_2.2.0       </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
