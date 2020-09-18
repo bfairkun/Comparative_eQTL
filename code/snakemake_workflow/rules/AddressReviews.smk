@@ -36,22 +36,36 @@ rule MakeCovariatesForGWAS:
         fam = "AddressReviews/GWAS/GTEX.v8.fam",
         bim = "AddressReviews/GWAS/GTEX.v8.bim",
         covariates = "AddressReviews/GWAS/GTEX.v8.cov",
+        covariates_lmm = "AddressReviews/GWAS/GTEX.v8.lmm.cov",
     shell:
         """
         cp {input.bed} {output.bed}
         cp {input.bim} {output.bim}
         /software/R-3.4.3-el7-x86_64/bin/Rscript scripts/CovariatesForCellCompositionGWAS.R
+        awk -F'\\t' '{{print $1, $NF}}' {output.covariates} > {output.covariates_lmm}
         """
+
+rule GemmaForCellTypeGRM:
+    input:
+        bed =  "AddressReviews/GWAS/GTEX.v8.bed",
+        fam = "AddressReviews/GWAS/GTEX.v8.fam",
+        bim = "AddressReviews/GWAS/GTEX.v8.bim",
+    output:
+        "output/result.cXX.txt"
+    shell:
+        "gemma -bfile AddressReviews/GWAS/GTEX.v8 -gk 1"
 
 rule GemmaForCellTypeQTL:
     input:
         bed =  "AddressReviews/GWAS/GTEX.v8.bed",
         fam = "AddressReviews/GWAS/GTEX.v8.fam",
         bim = "AddressReviews/GWAS/GTEX.v8.bim",
-        covariates = "AddressReviews/GWAS/GTEX.v8.cov",
+        covariates = "AddressReviews/GWAS/GTEX.v8.lmm.cov",
+        grm = "output/result.cXX.txt"
     output:
-        "gemma out"
+        "output/result.assoc.txt.gz"
     shell:
         """
-        gemma -lm 1 -bfile AddressReviews/GWAS/GTEX.v8 -c {input.covariates}
+        gemma -lmm 1 -bfile AddressReviews/GWAS/GTEX.v8 -c {input.covariates} -k {input.grm} -km 1 
+        gzip output/result.assoc.txt
         """

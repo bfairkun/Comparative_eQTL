@@ -119,8 +119,8 @@ rule all:
         config['gitinclude_output'] + "ForAssociationTesting.temp.fam",
         "eQTL_mapping/plink/ForAssociationTesting.bim",
         "AddressReviews/plink/GTEX.v8.bed",
-        "AddressReviews/GWAS/GTEX.v8.cov",
-        "gemma out"
+        "AddressReviews/GWAS/GTEX.v8.lmm.cov",
+        "output/result.assoc.txt.gz"
 
 ##### Modules #####
 include: "rules/make_test_data.smk"
