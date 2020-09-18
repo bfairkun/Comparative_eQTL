@@ -1,0 +1,22 @@
+---
+title: "Response_Point_09-2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+## Intro
+
+I performed the cell type QTL analysis, using code in the snakemake. This was a GWAS with all GTEX left-venticle samples, (~300 individuals) using qq-normalized cell type phenotypes (the first PC of the CIBERSORT cell type composition estimates), with the same genotyping related PCs used by GTEX for eQTL mapping as covariates in a simple additive linear model. Here are the results...
+
+![GWAS_Manhattan](assets/CellType.GWAS.Manhattan.png)
+
+Nothing seems to reach genome wide significance. Nonetheless, there may be true signal buried in here that we can answer with directed hypothesis tests. For example, it still seems reasonable to me to check if eQTL SNPs have inflated P-values for this cell type QTL analysis.
+
+I checked if eQTL SNPs (top SNPs for GTEX heart left ventricle eGenes (FDR<0.01) ) have generally smaller P-values than a same sized random sample of non eQTL SNPs, using a QQ-plot:
+
+![GWAS_QQ](assets/CellType.GWAS.QQ.png).
+
+My interpretation of this is that eQTLs generally are not driven by cell type QTLs. Another thing I could ask is if the top cell type QTLs (some which may be false positives), are closer to highly dispersed genes compared to lowly dispersed genes.
