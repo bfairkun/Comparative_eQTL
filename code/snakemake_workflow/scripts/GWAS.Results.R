@@ -19,10 +19,10 @@ ManhattanPlot <- Results %>%
 
 ManhattanPlot
 
-ggsave(ManhattanPlot,filename = "../../output/CellType.GWAS.Manhattan.png", height=2.5, width=8)
+ggsave(ManhattanPlot,filename = "../../docs/assets/CellType.GWAS.Manhattan.png", height=2.5, width=8)
 
 #Compare with eQTL results. Start with QQPlot of GWAS P-values grouped by eQTL vs non-eQTL
-GTEX.eQTLs <- read.delim("../../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", sep="\t")
+GTEX.eQTLs <- read.delim("../../output/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", sep="\t")
 
 EqtlSNPs <- GTEX.eQTLs %>%
   filter(qval<0.01) %>% pull(variant_id)
@@ -46,9 +46,41 @@ QQ.GWAS <-  ggplot(QQ.data, aes(x=-log10(Expected.P), y=-log10(Observed.P), colo
   annotate("text",x=-Inf,y=Inf, label=lb1, hjust=-0.1, vjust=1.2, parse=TRUE) +
   theme_bw()
 QQ.GWAS
-ggsave(QQ.GWAS,filename = "../../output/CellType.GWAS.QQ.png")
+ggsave(QQ.GWAS,filename = "../../docs/assets/CellType.GWAS.QQ.png")
 
 Results$q <- qvalue(Results$p_wald)$qvalues
 
-Results %>%
-  filter(q<0.4) %>% dim()
+SigLoci <- Results %>%
+  filter(q<0.5)
+SigLoci$loci <- SigLoci %>%
+  dplyr::select(ps) %>%
+  dist(method = "euclidean") %>%
+  hclust( method = "complete" ) %>%
+  cutree(h=250000)
+
+ClusterLoci <- function(ps){
+  tryCatch(
+    data.frame(Pos=ps) %>%
+      dist(method = "euclidean") %>%
+      hclust( method = "complete" ) %>%
+      cutree(h=250000) %>%
+      return(),
+    return(rep(NA, length(ps)))
+  )
+}
+
+# SigLoci %>% dplyr::select(chr, ps, loci) %>% head(200)
+
+SigLoci %>%
+  group_by(chr) %>%
+  mutate(Loci=ClusterLoci(ps)) %>% dplyr::select(chr, ps, Loci)
+
+SigLoci %>%
+  group_by(loci) %>%
+  slice(which.min(q)) %>%
+  ungroup() %>%
+  dplyr::select(chr, ps, loci, q) %>%
+  mutate(stop=ps+1, strand=".") %>%
+  dplyr::select(chr, ps, stop, loci, q, strand) %>%
+  write_delim("../../output/CellProportionGWAS.loci.bed",delim = '\t',col_names = F)
+
