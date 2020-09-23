@@ -2,7 +2,7 @@ samples: samples.tsv
 units: units.tsv
 RNASeqFileList: RNASeqFileList.tsv
 
-# Temporary files will be prefixed with path/to/scratch/. Leave as empty string to use default snakemake working directory
+# what i want files will be prefixed with path/to/scratch/. Leave as empty string to use default snakemake working directory
 temp_files_prefix: /scratch/midway2/bjf79/TestResultsScratch/
 
 # Prefix for valuable, small output that is not ignored by git (CountTable for example)

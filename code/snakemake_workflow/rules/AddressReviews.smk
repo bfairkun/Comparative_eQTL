@@ -69,3 +69,36 @@ rule GemmaForCellTypeQTL:
         gemma -lmm 1 -bfile AddressReviews/GWAS/GTEX.v8 -c {input.covariates} -k {input.grm} -km 1 
         gzip output/result.assoc.txt
         """
+
+rule GetGTExGenesAndDispersionGenes_HumanBed:
+    input:
+        GtexGenes = "GTEX_renalysis/data/GTEx_Analysis_v8_eQTL_expression_matrices/Heart_Left_Ventricle.v8.normalized_expression.bed.gz",
+        DispersionGenes = "../../output/OverdispersionEstimatesFromChimp.NoLengthNorm.txt"
+    output:
+        "Misc/GtexDispersionGenes.hg38.bed"
+    shell:
+        """
+        awk -F'\\t' -v OFS='\\t' 'NR>1 {{ print $1}}' {input.DispersionGenes} | grep -f - <(zcat {input.GtexGenes} | awk -F'\\t' -v OFS='\\t' '{{print $1,$2,$3,$4}}') | bedtools sort -i - > {output} 
+        """
+
+rule GetRawCountTableToOutput:
+    input:
+        "RNASeq/STAR/CountTable.txt.gz"
+    output:
+        "../../output/STAR.RawCountTable.txt.gz"
+    shell:
+        "cp {input} {output}"
+
+rule BedtoolsClosestGeneToGWASSNPs:
+    input:
+        Control = "../../output/CellProportionGWAS.RandomControlloci.bed",
+        Test = "../../output/CellProportionGWAS.loci.bed",
+        bed = "Misc/GtexDispersionGenes.hg38.bed"
+    output:
+        Control = "../../output/CellProportionGWAS.RandomControlloci.closestGenes.txt",
+        Test = "../../output/CellProportionGWAS.Testloci.closestGenes.txt"
+    shell:
+        """
+        awk -F'\\t' -v OFS='\\t' '{{print "chr"$1, $2,$3,$4,$5,$6}}' {input.Control} | bedtools sort -i - | bedtools closest -a -  -b {input.bed} -d | awk -F'\\t' '$NF<100000 {{ print $(NF-1), $NF }}' > {output.Control}
+        awk -F'\\t' -v OFS='\\t' '{{print "chr"$1, $2,$3,$4,$5,$6}}' {input.Test} | bedtools sort -i - | bedtools closest -a -  -b {input.bed} -d | awk -F'\\t' '$NF<100000 {{ print $(NF-1), $NF }}' > {output.Test}
+        """

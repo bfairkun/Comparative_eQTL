@@ -84,3 +84,9 @@ SigLoci %>%
   dplyr::select(chr, ps, stop, loci, q, strand) %>%
   write_delim("../../output/CellProportionGWAS.loci.bed",delim = '\t',col_names = F)
 
+Results %>%
+  sample_n(100) %>%
+  dplyr::select(chr, ps, rs, q) %>%
+  mutate(stop=ps+1, strand=".") %>%
+  dplyr::select(chr, ps, stop, rs, q, strand) %>%
+  write_delim("../../output/CellProportionGWAS.RandomControlloci.bed",delim = '\t',col_names = F)

@@ -120,7 +120,11 @@ rule all:
         "eQTL_mapping/plink/ForAssociationTesting.bim",
         "AddressReviews/plink/GTEX.v8.bed",
         "AddressReviews/GWAS/GTEX.v8.lmm.cov",
-        "output/result.assoc.txt.gz"
+        "output/result.assoc.txt.gz",
+        "Misc/GtexDispersionGenes.hg38.bed",
+        "../../output/STAR.RawCountTable.txt.gz",
+        "../../output/CellProportionGWAS.RandomControlloci.closestGenes.txt",
+
 
 ##### Modules #####
 include: "rules/make_test_data.smk"
