@@ -87,7 +87,7 @@ rule GetRawCountTableToOutput:
     output:
         "../../output/STAR.RawCountTable.txt.gz"
     shell:
-        "cp {input} {output}"
+        "zcat {input} | awk -v OFS='\\t' '{{print $0}}' | gzip - > {output}"
 
 rule BedtoolsClosestGeneToGWASSNPs:
     input:
