@@ -214,4 +214,8 @@ def GetCountTablesForDE_Bootstrap(wildcards):
         OutList = ["../../output/PowerAnalysisCountTable.Chimp.{ReadDepthKey}.subread.txt.gz", "../../output/PowerAnalysisCountTable.Human.{ReadDepthKey}.subread.txt.gz"]
     return(OutList)
 
-BootstrapRepOutput = expand("PowerAnalysis/BootstrapReps/{ReadDepthKey}_{seed}.txt.gz", ReadDepthKey=config["PowerAnalysis"]["DepthsToTest"]+["Full"], seed=range(0, int(config["PowerAnalysis"]["BootstrapReps"]))),
+BootstrapRepOutput = expand("PowerAnalysis/BootstrapReps/{ReadDepthKey}_{seed}.txt.gz", ReadDepthKey=config["PowerAnalysis"]["DepthsToTest"]+["Full"], seed=range(0, int(config["PowerAnalysis"]["BootstrapReps"])))
+
+DispersionTEDBootstrapTotalReps = 1000
+DispersionTEDBootstrapChunkSize = 20
+DispersionTEDBootstrapInitialSeeds = [i for i in range(0, DispersionTEDBootstrapTotalReps, DispersionTEDBootstrapChunkSize)]

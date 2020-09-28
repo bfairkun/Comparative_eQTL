@@ -67,7 +67,6 @@ rule all:
         "eQTL_mapping/MatrixEQTL/ConfigCovariateModelResults/Results.txt",
         expand("PowerAnalysis/Subread/{species}.{depth}.subread.txt.gz", species=["Human", "Chimp"], depth=config["PowerAnalysis"]["DepthsToTest"]),
         expand(config["gitinclude_output"] + "PowerAnalysisFullCountTable.{species}.subread.txt.gz", species=["Human", "Chimp"]),
-
         "PowerAnalysis/Multiqc/multiqc_report.html",
         # expand(config["temp_files_prefix"] + "PowerAnalysisBams/{PowerAnalysisSample}/Aligned.sortedByCoord.out.bam", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
         # expand(config["temp_files_prefix"] + "PowerAnalysisFastq/{PowerAnalysisSample}.fastq.gz", PowerAnalysisSample=PowerAnalysisFastqFrame.index),
@@ -124,6 +123,9 @@ rule all:
         "Misc/GtexDispersionGenes.hg38.bed",
         "../../output/STAR.RawCountTable.txt.gz",
         "../../output/CellProportionGWAS.RandomControlloci.closestGenes.txt",
+        "../../output/CellTypeDispersion.SE.tsv.gz"
+
+
 
 
 ##### Modules #####

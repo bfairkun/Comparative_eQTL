@@ -102,3 +102,27 @@ rule BedtoolsClosestGeneToGWASSNPs:
         awk -F'\\t' -v OFS='\\t' '{{print "chr"$1, $2,$3,$4,$5,$6}}' {input.Control} | bedtools sort -i - | bedtools closest -a -  -b {input.bed} -d | awk -F'\\t' '$NF<100000 {{ print $(NF-1), $NF }}' > {output.Control}
         awk -F'\\t' -v OFS='\\t' '{{print "chr"$1, $2,$3,$4,$5,$6}}' {input.Test} | bedtools sort -i - | bedtools closest -a -  -b {input.bed} -d | awk -F'\\t' '$NF<100000 {{ print $(NF-1), $NF }}' > {output.Test}
         """
+
+rule BootstrapErrorForTEDDispersion:
+    input:
+        "MiscOutput/NormalizedExpressionPerCellType.rds"
+    output:
+        "AddressReviews/TED_Bootstraps/{seed}.rds"
+    log:
+        "logs/AddressReviews/BootstrapError.{seed}.log"
+    params:
+        ChunkSize = DispersionTEDBootstrapChunkSize
+    shell:
+        """
+        /software/R-3.5.1-el7-x86_64/bin/Rscript scripts/BootstrapErrorDispersionTED.R {wildcards.seed} {params.ChunkSize}
+        """
+
+rule CombineBootstrapRepsForTEDDispersion:
+    input:
+        expand("AddressReviews/TED_Bootstraps/{seed}.rds", seed=DispersionTEDBootstrapInitialSeeds),
+    output:
+        "../../output/CellTypeDispersion.SE.tsv.gz"
+    shell:
+        """
+        /software/R-3.5.1-el7-x86_64/bin/Rscript scripts/CombineTEDBootstrapReps.R
+        """
