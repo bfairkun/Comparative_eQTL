@@ -12,7 +12,7 @@ Original reviewer point:
 
 >I would like to see more discussion about the inter-relatedness of the chimpanzees in the analysis of gene expression. Is that contributing to the power of the DE analysis, which has really high numbers of DE genes. That may certainly be due to the large samples size, but should be addressed. Related to that, the support that the gene-wise dispersion estimates are well correlated in humans and chimpanzees overall (Fig1C, and S4) seems qualitative. It looks like the chimpanzees might have less dispersion overall? 
 
-I will address the first point (about relatedness in DE analysis) empricially by reporfming DE analysis with subsamples of chimps that have some relatively high degree of inter-relatedness, compared to subsamples that do not have such relatedness.
+I will address the first point (about relatedness in DE analysis) two ways. Firstly, I will use variance partition to argue that the relatedness of some of the chimps probably has little impact on the interspecies DE analysis, given that a relatively much larger fraction of variance will probably be explained species, batch, etc. Then I will empricially address this by reperforming DE analysis with subsamples of chimps that have some relatively high degree of inter-relatedness, compared to subsamples that do not have such relatedness.
 
 First load necessary libraries for analysis...
 
@@ -21,7 +21,14 @@ library(tidyverse)
 library(gplots)
 library(readxl)
 library(scales)
+library(variancePartition)
+library('limma')
+library('edgeR')
+library(pbapply)
+library(knitr)
+library(readxl)
 
+source("../code/CustomFunctions.R")
 ```
 
 Load relatedness matrix and RNA-seq sample batch info
@@ -48,9 +55,554 @@ BatchColor <- data.frame(IndividualID=as.character(colnames(GemmaMatrix))) %>%
   pull(Colors) %>% as.character()
 
 diag(GemmaMatrix) <- NA #For plotting purposes, just don't show the diagonol so that the color scale is better for non-diagnol entries
-heatmap.2(GemmaMatrix, trace="none", RowSideColors = BatchColor, ColSideColors = BatchColor)
+
+hclustfunc <- function(x) hclust(x, method="complete")
+distfunc <- function(x) dist(x,method="euclidean")
+d <- distfunc(GemmaMatrix)
+fit <- hclustfunc(d)
+groups <- cutree(fit, k=7) 
+
+NumbersToColors <- function(NumberVector){
+  N <- length(unique(NumberVector))
+  Key <- setNames(hue_pal()(N), 1:N)
+  return(list(ColorVector=recode(NumberVector, !!!Key), Key=Key))
+}
+
+ClusterGroupColors <- NumbersToColors(groups)
+
+heatmap.2(GemmaMatrix, trace="none", RowSideColors = ClusterGroupColors$ColorVector, ColSideColors = BatchColor)
 
 
 ```
 
-I may pick out some of those somewhat related sample blocks for DE analysis... First, I should also try to match batches for this analysis.
+Column colors are RNA library prep batch, row colors are cluster groups (cutree function). I may pick out some of those somewhat related sample blocks for DE analysis...
+
+```{r}
+Groups.df<-as.data.frame(groups) %>% rownames_to_column("Ind")
+
+GemmaMatrix %>% as.data.frame() %>%
+  rownames_to_column("IndA") %>%
+  gather(key="IndB", value="Kinship", -IndA) %>%
+  left_join(Groups.df, by=c("IndA"="Ind")) %>%
+  left_join(Groups.df, by=c("IndB"="Ind"), suffix=c(".A.group", ".B.group")) %>%
+  filter(groups.A.group==groups.B.group & !IndA==IndB) %>%
+  mutate(uniqueID = paste0(pmax(IndA, IndB), pmin(IndA, IndB))) %>%
+  distinct(uniqueID, .keep_all=T) %>%
+  mutate(groups.A.group=factor(groups.A.group)) %>%
+  ggplot(aes(x=groups.A.group, y=Kinship, color=groups.A.group)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(position=position_jitter(0.2)) +
+  ylab("Pairwise kinship coefficients within cluster") +
+  xlab("Cluster") +
+  scale_colour_manual(name = "ClusterGroup",values = ClusterGroupColors$Key) +
+  theme_bw() +
+  theme(legend.position = "none")
+
+```
+
+Now let's select samples from cluster 1,3,6,7, and perform DE analysis using only 4 samples (4Chimp + 4Human) from each cluster and compare. If relatedness plays a big (meaningful) role, I expect meaningful differences in the the number of DE genes, the fraction of false discoveries, etc. Since clusters 3, and 7 only have 4 or 5 samples, I will use all 4 samples from these clusters. For cluster6, I will exclude the least related sample (smallest average pairwase intra-cluster relatedness). For cluster1, since there are so many samples, most of which have small relatedness coefficients, I exclude the 6 samples with a relatedness coefficient > 0.05, (leaving all unrelated samples) and randomly draw (with replacement) subsamples of 4 for DE analysis, repeating this procedure many times to establish a null distribution to compare clusters 3,6 & 7.
+
+```{r}
+#First, create a dataframe containing only the samples that will be considered for further analysis as described above.
+#Show cluster identities:
+Groups.df %>% head() %>% kable()
+
+#Get the 4 samples to include for cluster3
+Cluster3.Pool <- Groups.df %>% filter(groups==3) %>% pull(Ind)
+
+#Get the 4 samples to include for cluster7
+Cluster7.Pool <- Groups.df %>% filter(groups==7) %>% pull(Ind)
+
+#Get samples to include from cluster6
+#I want to include 4/5 in that cluster, excluding the sample with lowest mean pairwise kinship.
+CLuster6.MeanpairwiseKinship <- GemmaMatrix %>% as.data.frame() %>%
+  rownames_to_column("IndA") %>%
+  gather(key="IndB", value="Kinship", -IndA) %>%
+  left_join(Groups.df, by=c("IndA"="Ind")) %>%
+  left_join(Groups.df, by=c("IndB"="Ind"), suffix=c(".A.group", ".B.group")) %>%
+  distinct(uniqueID, .keep_all=T) %>%
+  filter(groups.A.group==6 & groups.B.group==6 & !IndA==IndB) %>%
+  group_by(IndA) %>%
+  summarize(MeanPairwiseKinship=mean(Kinship))
+kable(CLuster6.MeanpairwiseKinship)
+Cluster6.Pool <- CLuster6.MeanpairwiseKinship %>%
+  filter(MeanPairwiseKinship>min(MeanPairwiseKinship)) %>% pull(IndA)
+
+#Get cluster1 pool. I want to include all samples in cluter1 that do not have any related individuals (kinship coefficients > 0.05)
+CLuster1.MaxpairwiseKinship <- GemmaMatrix %>% as.data.frame() %>%
+  rownames_to_column("IndA") %>%
+  gather(key="IndB", value="Kinship", -IndA) %>%
+  left_join(Groups.df, by=c("IndA"="Ind")) %>%
+  left_join(Groups.df, by=c("IndB"="Ind"), suffix=c(".A.group", ".B.group")) %>%
+  distinct(uniqueID, .keep_all=T) %>%
+  filter(groups.A.group==1 & groups.B.group==1 & !IndA==IndB) %>%
+  group_by(IndA) %>%
+  summarize(MaxPairwiseKinship=max(Kinship))
+kable(CLuster1.MaxpairwiseKinship)
+Cluster1.Pool <- CLuster1.MaxpairwiseKinship %>%
+  filter(MaxPairwiseKinship<0.05) %>% pull(IndA)
+
+SamplesToDrawFrom <- cbind(Cluster1.Pool, Cluster3.Pool, Cluster6.Pool, Cluster7.Pool) %>%
+  as.data.frame() %>%
+  gather(key="Cluster", "Ind") %>%
+  distinct(.keep_all=T)
+
+SamplesToDrawFrom %>% kable()
+```
+
+Ok. So now I have pools of samples to draw from for clusters 1,3,6,7.
+
+I will do one DE analysis for clusters 3,6,7, and many analyses for cluster1 to establish a null distribution of no relatedness. I think for this question it makes sense to make the repeated analysis with random from cluster1 sampling without replacement. So there are $13 nCr 4 = 715$ possible combinations of samples to create this null distribution. That is a small enough number I will just do all of them to establish as rich of a null as possible.
+
+But first, let's choose the human samples to compare to for this DE analysis. I think there is no point in introducing randomness to the human samples drawn. But I think it does make sense to carefully choose them to be as high quality as possible, for example, by controlling for batch/lab. Therefore, I think I should use 4 human sampleschosen from Pavlovic et al in my DE analysis. Let's pick these randomly.
+
+```{r}
+ColColors <- ClusterGroupColors$ColorVector
+ColColors[!(rownames(GemmaMatrix) %in% SamplesToDrawFrom$Ind)] <- NA
+heatmap.2(GemmaMatrix, trace="none", RowSideColors = ClusterGroupColors$ColorVector, ColSideColors = ColColors)
+
+PairwiseKinshipBoxplot <- GemmaMatrix %>% as.data.frame() %>%
+  rownames_to_column("IndA") %>%
+  gather(key="IndB", value="Kinship", -IndA) %>%
+  left_join(Groups.df, by=c("IndA"="Ind")) %>%
+  left_join(Groups.df, by=c("IndB"="Ind"), suffix=c(".A.group", ".B.group")) %>%
+  filter(groups.A.group==groups.B.group & !IndA==IndB) %>%
+  filter(IndA %in% SamplesToDrawFrom$Ind & IndB %in% SamplesToDrawFrom$Ind ) %>%
+  mutate(uniqueID = paste0(pmax(IndA, IndB), pmin(IndA, IndB))) %>%
+  distinct(uniqueID, .keep_all=T) %>%
+  mutate(groups.A.group=factor(groups.A.group)) %>%
+  ggplot(aes(x=groups.A.group, y=Kinship, color=groups.A.group)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(position=position_jitter(0.2)) +
+  ylab("Pairwise kinship coefficients\nwithin cluster") +
+  xlab("Filtered kinship cluster") +
+  scale_colour_manual(name = "ClusterGroup",values = ClusterGroupColors$Key) +
+  theme_bw() +
+  theme(legend.position = "none", axis.text.x=element_blank())
+PairwiseKinshipBoxplot
+
+```
+
+
+Now let's wrap the desired DE analysis into a function for easier repitition:
+```{r}
+###Define function
+DE.analysis <- function(DGE.NormalizedRawCountTable, Log2RPKMCountTable, ChimpSamples, HumanSamples){
+  AllSamplesToSubset <- c(ChimpSamples, HumanSamples)
+  CountTableSampled <- DGE.NormalizedRawCountTable[,AllSamplesToSubset]
+  SpeciesFactor <- colnames(CountTableSampled) %>% substr(1,1) %>% factor() %>% unclass() %>% as.character()
+  mm <- model.matrix(~0 + SpeciesFactor)
+  y <- voom(CountTableSampled, mm, normalize.method="cyclicloess", plot=F)
+  y$E <- Log2RPKMCountTable[,AllSamplesToSubset]
+  
+  fit<- lmFit(y, mm)
+  contr <- makeContrasts(DE=SpeciesFactor1-SpeciesFactor2, levels = mm)
+  tmp <- contrasts.fit(fit, contrasts=contr)
+  efit <- eBayes(tmp)
+  Results <- topTable(efit, sort.by = "none", n=Inf)
+  return(Results)
+}
+
+###Create some of the required arguments
+
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+OutputDE <- '../output/Final/TableS2.tab'
+DropFileName <- '../data/DE_SamplesToDrop.txt'
+
+DropFile <- read.delim(DropFileName, sep='\t', col.names = c("Sample", "Species"), stringsAsFactors = F)
+HumanSamplesToDrop <- DropFile %>% filter(Species=="Human") %>% pull(Sample)
+ChimpSamplesToDrop <- DropFile %>% filter(Species=="Chimp") %>% pull(Sample)
+DE.results <- read.delim(OutputDE, sep='\t', stringsAsFactors = F)
+GeneListForOverdispersionCalculation <- DE.results$Ensembl_geneID
+
+CountTables <- GetCountTables(CountTableChimpFile,
+                              CountTableHumanFile,
+                              0, GeneListForOverdispersionCalculation, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+DGE.NormalizedRawCountTable <- cbind(CountTables$Chimp$Counts, CountTables$Human$Counts )
+  DGEList() %>%
+  calcNormFactors()
+    
+Log2RPKMCountTable <- cbind(CountTables$Chimp$log2RPKM, CountTables$Human$log2RPKM)
+
+set.seed(0)
+HumanSamples <- colnames(CountTables$Human$Counts)[CountTables$Human$Counts %>% colnames() %>% str_detect("SRR", negate = T)] %>%
+  sample(4)
+ChimpSamples <- paste0("C.", Cluster3.Pool)
+
+
+###print the required arguments to illustrate what is going on
+DGE.NormalizedRawCountTable[1:10,1:10] %>% kable()
+Log2RPKMCountTable[1:10,1:10] %>% kable()
+HumanSamples
+ChimpSamples
+
+###Test the function
+Results <- DE.analysis(DGE.NormalizedRawCountTable=DGE.NormalizedRawCountTable, ChimpSamples=ChimpSamples, Log2RPKMCountTable=Log2RPKMCountTable, HumanSamples=HumanSamples)
+Results %>% head() %>% kable()
+```
+
+Ok, so I have a function to do the DE analysis. Let's use it to compare all combinations of the Cluster1.Pool of chimp samples vs 4 human samples, and do a similar analysis but with the cluster3Pool, cluster6Pool, and cluster7Pool.
+
+
+```{r}
+#First get all combinations of samples in cluster1Pool.
+
+Cluster1.Combinations <- combn(Cluster1.Pool, 4, simplify = F)
+Cluster1.Combinations.Pasted <- lapply(Cluster1.Combinations, function(iter) paste0("C.", iter))
+length(Cluster1.Combinations.Pasted)
+Cluster1.Combinations.Pasted[1:10]
+
+```
+
+Note that since this takes a long time to compute the DE results for 715 combinations, I will turn this code block to `eval=F` and write out the results, and read in the results in the next code block... 
+
+```{r, eval=F}
+#iterate over combinations list, and calculate DE results for each
+Cluster1.Combinations.Results <-pbapply::pblapply(Cluster1.Combinations.Pasted, function(iter) DE.analysis(HumanSamples=HumanSamples, Log2RPKMCountTable=Log2RPKMCountTable, DGE.NormalizedRawCountTable=DGE.NormalizedRawCountTable, ChimpSamples = iter))
+
+
+#Write out results
+saveRDS(Cluster1.Combinations.Results, file = "../big_data/Cluster1_DE_Results_AllCombinations.rds")
+
+```
+
+Let's start by plotting the number of DE genes (at a few FDR thresholds) when each of the clusters 3, 6, and 7 were used for the chimp samples, and compare it to the distribution across all 715 combinations from cluster 1.
+
+```{r}
+#Read in results
+Cluster1.Combinations.Results <- readRDS("../big_data/Cluster1_DE_Results_AllCombinations.rds")
+
+Cluster1.Combinations.Results.df <- Cluster1.Combinations.Results %>%
+  lapply(add_rownames, "Ensembl_geneID") %>%
+  bind_rows(.id="CombinationNumber")
+
+#DE analysis for other cluster groups
+OtherClusters.df <- SamplesToDrawFrom %>% filter(!Cluster=="Cluster1.Pool") %>%
+  mutate(Ind=paste0("C.", Ind))
+OtherClusters.list <- split(OtherClusters.df$Ind, OtherClusters.df$Cluster)
+
+OtherClusters.Results <-pbapply::pblapply(OtherClusters.list, function(iter) DE.analysis(HumanSamples=HumanSamples, Log2RPKMCountTable=Log2RPKMCountTable, DGE.NormalizedRawCountTable=DGE.NormalizedRawCountTable, ChimpSamples = iter))
+
+OtherClusters.Results.df <- OtherClusters.Results %>%
+  lapply(add_rownames, "Ensembl_geneID") %>%
+  bind_rows(.id="ClusterNumber") %>%
+  mutate(ClusterNumber=gsub("Cluster(\\d).Pool", "\\1", ClusterNumber))
+  
+
+NumResults <- OtherClusters.Results.df %>%
+  dplyr::select(adj.P.Val, ClusterNumber) %>%
+  mutate(FDR.10 = adj.P.Val < 0.10,
+         FDR.05 = adj.P.Val < 0.05,
+         FDR.01 = adj.P.Val < 0.01,) %>%
+  gather(key="FDR", value="Signif", -adj.P.Val, -ClusterNumber) %>%
+  group_by(ClusterNumber, FDR) %>%
+  summarise(NumSigGenes=sum(Signif))
+
+
+ToPlotNumSig <- Cluster1.Combinations.Results.df %>%
+  dplyr::select(adj.P.Val, CombinationNumber) %>%
+  mutate(FDR.10 = adj.P.Val < 0.10,
+         FDR.05 = adj.P.Val < 0.05,
+         FDR.01 = adj.P.Val < 0.01,) %>%
+  gather(key="FDR", value="Signif", -adj.P.Val, -CombinationNumber) %>%
+  group_by(CombinationNumber, FDR) %>%
+  summarise(NumSigGenes=sum(Signif)) %>%
+  mutate(Cluster1.Combinations="1")
+
+NumDE.Plot <- ggplot(ToPlotNumSig, aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(fill=Cluster1.Combinations)) +
+  geom_vline(data=NumResults, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales="free_y") +
+  ylab("empirical probability density") +
+  xlab("Num DE genes") +
+  scale_colour_manual(name = "Cluster",values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = "All nCr(13,4)=715\ncombinations",values = ClusterGroupColors$Key, labels=NULL) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45))
+
+NumDE.Plot
+
+```
+
+The bimodal distribution is a bit odd, and probably reflects two or three "bad" samples in the group of 13 samples in cluster13 which skew results to less genes when randomly drawn. I suppose odd things are expected when randomly drawing from such a small sample size. In any case, I think we are fundamentally limited towards fully emperically quantifying the relatedness effect reviewers comment. But in any case, it doesn't seem like there is any drastic effect.
+
+Let's make similar plots but plotting the empirical FDR (based on FDR<0.01 genes from the full data set as the *ad hoc* gold standard).
+
+```{r}
+ToPlotFDR <- Cluster1.Combinations.Results.df %>%
+  dplyr::select(adj.P.Val, CombinationNumber, Ensembl_geneID) %>%
+  mutate(FDR.10 = adj.P.Val < 0.10,
+         FDR.05 = adj.P.Val < 0.05,
+         FDR.01 = adj.P.Val < 0.01) %>%
+  dplyr::select(FDR.10:FDR.01, CombinationNumber, Ensembl_geneID) %>%
+  gather(key="FDR", value="Signif", -CombinationNumber, -Ensembl_geneID) %>%
+  left_join(DE.results, by="Ensembl_geneID") %>%
+  mutate(TrueResponse = adj.P.Val < 0.01) %>%
+  mutate(CorrectResponse = (TrueResponse & Signif)) %>%
+  group_by(CombinationNumber, FDR) %>%
+  summarise(NumSigGenes=1-sum(CorrectResponse)/sum(Signif)) %>%
+  mutate(Cluster1.Combinations="1")
+
+
+FDR.Results <- OtherClusters.Results.df %>%
+  dplyr::select(adj.P.Val, ClusterNumber, Ensembl_geneID) %>%
+  mutate(FDR.10 = adj.P.Val < 0.10,
+         FDR.05 = adj.P.Val < 0.05,
+         FDR.01 = adj.P.Val < 0.01) %>%
+  dplyr::select(FDR.10:FDR.01, ClusterNumber, Ensembl_geneID) %>%
+  gather(key="FDR", value="Signif", -ClusterNumber, -Ensembl_geneID) %>%
+  left_join(DE.results, by="Ensembl_geneID") %>%
+  mutate(TrueResponse = adj.P.Val < 0.01) %>%
+  mutate(CorrectResponse = (TrueResponse & Signif)) %>%
+  group_by(ClusterNumber, FDR) %>%
+  summarise(NumSigGenes=1-sum(CorrectResponse)/sum(Signif))
+
+FDR.Plot <- ggplot(ToPlotFDR, aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(fill=Cluster1.Combinations)) +
+  geom_vline(data=FDR.Results, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales="free_y") +
+  ylab("empirical probability density") +
+  xlab("Empirical FDR estimate") +
+  scale_colour_manual(name = "Cluster",values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = "All nCr(13,4)=715\ncombinations",values = ClusterGroupColors$Key, labels=NULL) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45))
+FDR.Plot
+
+```
+
+Now let's try to explain that bimodal shape in the cluster1 combinations... Let's start by looking at a PCA or hiearchal clustering of the cluster1 samples to look for outliers, and see if the inclusion of such outliers in the combinations is causing the bimodal shape.
+
+```{r}
+
+Cluster1.CountTable <- CountTables$Chimp$log2RPKM %>%
+  dplyr::select(one_of(
+    paste0("C.", SamplesToDrawFrom %>% filter(Cluster=="Cluster1.Pool") %>% pull(Ind))
+  ))
+
+PCA <- Cluster1.CountTable %>%
+  t() %>% prcomp()
+
+Metadata <- read.delim("../output/Final/TableS1.tab", stringsAsFactors = F) %>%
+  dplyr::select(IID=Sample.ID, SX, SP, UniquelyMappingReads, RNA.Extraction.Batch, RIN, PercentUniquelyMappingReads) %>%
+  mutate(IID=paste0("C.", IID))
+
+PCA$x %>% as.data.frame() %>% dplyr::select(PC1:PC2) %>%
+  rownames_to_column("IID") %>%
+  left_join(Metadata, by="IID") %>%
+  ggplot(aes(x=PC1, y=PC2, color=PercentUniquelyMappingReads)) +
+  geom_text(aes(label=IID)) +
+  theme_bw()
+
+Cluster1.CountTable %>% cor() %>%
+  heatmap.2()
+
+CountTables$Chimp$log2RPKM %>%
+  dplyr::select(one_of(
+    paste0("C.", SamplesToDrawFrom %>% pull(Ind))
+  )) %>% cor() %>%
+  heatmap.2()
+
+```
+
+There are indeed two outliers. Let's see if those are responsible for the bimodal shape...
+
+```{r}
+ClusterOneCombinationsWithOutliers <- Cluster1.Combinations.Pasted %>%
+  unlist() %>%
+  matrix(byrow=T, nrow=length(Cluster1.Combinations.Pasted)) %>%
+  as.data.frame() %>%
+  mutate(CombinationNumber=1:n(),
+         CombinationPasted=paste(V1,V2,V3,V4)) %>%
+  mutate(ContainsOutliers=str_detect(CombinationPasted, "C.Little_R|C.537")) %>%
+  filter(ContainsOutliers==T) %>%
+  pull(CombinationNumber)
+
+
+ToPlotNumSig %>%
+  mutate(ContainsOutliers=CombinationNumber %in% ClusterOneCombinationsWithOutliers) %>%
+ggplot(aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(fill=Cluster1.Combinations, linetype=ContainsOutliers)) +
+  geom_vline(data=NumResults, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales="free_y") +
+  ylab("empirical probability density") +
+  xlab("Num DE genes") +
+  scale_colour_manual(name = "Cluster",values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = "All nCr(13,4)=715\ncombinations",values = ClusterGroupColors$Key, labels=NULL) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+Ok. I think I want to just remake some of the previous plots, but show how these outliers have a different distribution.
+
+Start with a heatmap of RNA-seq data from all the samples included in this analysis, colored by group, and batch.
+
+I'm going to set this code block to eval=F so that it doesn't take as long to build this html doc.
+
+```{r, eval=F}
+CorMatToPlot <- CountTables$Chimp$log2RPKM %>%
+  dplyr::select(one_of(
+    paste0("C.", SamplesToDrawFrom %>% pull(Ind))
+  )) %>% cor()
+
+MetadataForHeatMap <- data.frame(C.Ind=rownames(CorMatToPlot)) %>%
+  mutate(Ind=str_remove(C.Ind, "^C.")) %>%
+  left_join(SamplesToDrawFrom, by ="Ind") %>%
+  mutate(ClusterNumber=gsub("Cluster(\\d).Pool", "\\1", Cluster)) %>%
+  left_join(data.frame(Color=ClusterGroupColors$Key) %>% rownames_to_column("ClusterNumber"), by="ClusterNumber") %>%
+  left_join(Metadata %>% dplyr::select(RNA.Extraction.Batch, IID), by=c("C.Ind"="IID"))
+
+
+rownames(CorMatToPlot) <- str_remove(rownames(CorMatToPlot), "^C.")
+colnames(CorMatToPlot) <- str_remove(colnames(CorMatToPlot), "^C.")
+
+pdf(file="../figures/OriginalArt/ResponseToReviewers.DE.ExpressionMat.pdf")
+heatmap.2(CorMatToPlot, trace="none", RowSideColors = MetadataForHeatMap$RNA.Extraction.Batch %>% as.factor() %>% as.numeric() %>% as.character(), ColSideColors = MetadataForHeatMap$Color %>% as.character(), dendrogram="row")
+dev.off()
+
+
+pdf(file="../figures/OriginalArt/ResponseToReviewers.DE.KinshipMat.pdf")
+heatmap.2(GemmaMatrix, trace="none", RowSideColors = ClusterGroupColors$ColorVector, ColSideColors = ColColors, dendrogram="row")
+dev.off()
+
+NumDE.Plot <- ToPlotNumSig %>%
+  mutate(ContainsOutliers=CombinationNumber %in% ClusterOneCombinationsWithOutliers) %>%
+ggplot(aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(fill=Cluster1.Combinations, linetype=ContainsOutliers), alpha=0.9) +
+  geom_vline(data=NumResults, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales="free_y") +
+  ylab("empirical density") +
+  xlab("Num DE genes") +
+  scale_colour_manual(name = "Filtered\nkinship clusters", values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = "All nCr(13,4)=715\ncombinations",values = ClusterGroupColors$Key, labels=NULL) +
+  scale_linetype_manual(name="Combinations that contain samples\n'Little_R' or '537'", values=c("solid", "dashed")) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45), legend.position = "bottom") +
+    guides(color = guide_legend(title.position = "top"),
+         linetype = guide_legend(title.position = "top"),
+         fill = guide_legend(title.position = "top"))
+NumDE.Plot
+
+FDR.Plot <- ToPlotFDR %>%
+  mutate(ContainsOutliers=CombinationNumber %in% ClusterOneCombinationsWithOutliers) %>%
+  ggplot(aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(x=NumSigGenes, ..density.., fill=Cluster1.Combinations, linetype=ContainsOutliers), alpha=0.9) +
+  geom_vline(data=FDR.Results, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales="free_y") +
+  ylab("empirical density") +
+  xlab("Empirical FDR estimate") +
+  scale_colour_manual(name = "Filtered\nkinship clusters",values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = "All nCr(13,4)=715\ncombinations",values = ClusterGroupColors$Key, labels=NULL) +
+  scale_linetype_manual(name="Combinations that contain samples\n'Little_R' or '537'", values=c("solid", "dashed")) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45), legend.position = "bottom") +
+  guides(color = guide_legend(title.position = "top"),
+         linetype = guide_legend(title.position = "top"),
+         fill = guide_legend(title.position = "top"))
+FDR.Plot
+
+
+ggsave("../figures/OriginalArt/ResponseToReviewers.DE.PairwiseKinship.pdf", plot=PairwiseKinshipBoxplot, height=3, width=2.5)
+ggsave("../figures/OriginalArt/ResponseToReviewers.DE.NumDE.pdf", plot=NumDE.Plot, height=3, width=6.5)
+ggsave("../figures/OriginalArt/ResponseToReviewers.DE.FDR.pdf", plot=FDR.Plot, height=3, width=6.5)
+
+
+
+
+```
+
+
+
+Also, let's use the variance partition to describe how much gene expression variance (among the chimp samples only) can be explained by factors like sex, batch, RIN, and the kinship cluster groups. Also turning eval=F because variance partition takes a few minutes. But the figures generated will be published in the paper or as part of the public response to reviewers.
+
+```{r, eval=F}
+
+info <- read.delim("../output/Final/TableS1.tab", stringsAsFactors = F) %>%
+  dplyr::select(Alternate.ID, IID=Sample.ID, SX, SP, UniquelyMappingReads, RNA.Extraction.Batch, RIN, PercentUniquelyMappingReads) %>%
+  mutate(SP=recode(SP, Human="H", Chimp="C")) %>%
+  filter(SP=="C") %>%
+  inner_join(Groups.df, by=c("IID"="Ind")) %>%
+  mutate(Individual=paste0("C.", IID))
+
+gExpr <- cbind(CountTables$Chimp$Counts) %>%
+  dplyr::select(one_of(info$Individual)) %>%
+  DGEList() %>%
+  calcNormFactors
+vobjGenes <- voom(gExpr)
+
+info <- info %>%
+  filter(Individual %in% colnames(gExpr)) %>%
+  column_to_rownames("Individual")
+
+
+form <- ~  RIN + SX + RNA.Extraction.Batch + groups
+
+varPart <- fitExtractVarPartModel( vobjGenes, form, info )
+
+# sort variables (i.e. columns) by median fraction # of variance explained
+vp <- sortCols( varPart )
+
+# violin plot of contribution of each variable to total variance
+plotVarPart( vp )
+
+
+
+info <- read_excel("../data/Metadata_SequencedChimps.xlsx") %>%
+  dplyr::select(IID=1, SX, RNA.Extraction.Batch=RNA.Extract_date, RNA.Library.prep.batch, RIN) %>%
+  mutate(RNA.Library.prep.batch=as.factor(RNA.Library.prep.batch)) %>%
+  # inner_join(Groups.df, by=c("IID"="Ind")) %>%
+  inner_join(SamplesToDrawFrom, by=c("IID"="Ind")) %>%
+  dplyr::rename(groups=Cluster) %>%
+  mutate(groups=as.factor(groups)) %>%
+  mutate(Individual=paste0("C.", IID))
+gExpr <- cbind(CountTables$Chimp$Counts) %>%
+  dplyr::select(one_of(info$Individual)) %>%
+  DGEList() %>%
+  calcNormFactors
+vobjGenes <- voom(gExpr)
+
+info <- info %>%
+  filter(Individual %in% colnames(gExpr)) %>%
+  column_to_rownames("Individual")
+
+
+# form <- ~  RIN + (1|SX) + (1|RNA.Extraction.Batch)  + (1|groups)
+# varPart <- fitExtractVarPartModel( vobjGenes, form, info )
+
+form <- ~  (1|SX) + (1|RNA.Extraction.Batch)  + (1|groups)
+varPart <- fitExtractVarPartModel( vobjGenes, form, info )
+
+
+# sort variables (i.e. columns) by median fraction # of variance explained
+vp <- sortCols( varPart )
+
+# violin plot of contribution of each variable to total variance
+VarPartPlot <- plotVarPart( vp ) +
+  scale_x_discrete(labels=c("SX" = "Sex", "groups"="Filtered\nkinship clusters"))
+
+f <- function(x) {
+  r <- quantile(x, probs = c(0.05, 0.25, 0.5, 0.75, 0.95))
+  names(r) <- c("ymin", "lower", "middle", "upper", "ymax")
+  r
+}
+
+VarPartPlot <- vp %>%
+  gather(key="factor", value="Variance explained (%)") %>%
+  ggplot(aes(x=fct_reorder(factor, `Variance explained (%)`), y=`Variance explained (%)`)) +
+  stat_summary(fun.data=f, geom="boxplot") + 
+  scale_x_discrete(labels=c("SX" = "Sex", "groups"="Filtered\nkinship clusters")) +
+  xlab("") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+ggsave("../figures/OriginalArt/ResponseToReviewers.DE.KinshipVarPart.pdf", VarPartPlot, height=3.5, width=2.5)
+
+```

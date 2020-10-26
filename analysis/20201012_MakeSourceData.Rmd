@@ -1,0 +1,187 @@
+---
+title: "MakeSourceDataFiles"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Here I will create all the source data files and supplemental files for the final revised submission.
+
+```{r}
+library(tidyverse)
+library(readxl)
+DirOut <- "../data/FinalSourceData/"
+dir.create(DirOut, showWarnings = F)
+```
+
+
+### Figure 1-A (RNASeqSamples)
+
+```{r}
+RNASeq.Samples <- read_delim("../WorkingManuscript/FullSubmissionTables/TableS1_SourceDataForFigS1A.txt", delim = '\t')
+
+RNASeq.Samples %>% write_delim(paste0(DirOut, "Figure1A_SourceData.txt"), delim = '\t')
+
+```
+
+### Figure 1- S1A (DE results)
+
+```{r}
+DE.results <- read_delim("../WorkingManuscript/FullSubmissionTables/TableS2_SourceDataForSigS2.txt", delim = '\t')
+DE.results %>% write_delim(paste0(DirOut, "Figure1-S1A_SourceData.txt"), delim = '\t')
+
+```
+
+### Figure1-S3A (centered kinship matrix)
+
+```{r}
+SampleLabels <- read.table('../output/ForAssociationTesting.temp.fam', stringsAsFactors = F)$V2
+GemmaMatrix <- as.matrix(read.table('../output/GRM.cXX.txt'))
+colnames(GemmaMatrix) <- SampleLabels
+row.names(GemmaMatrix) <- SampleLabels
+GemmaMatrix %>% as.data.frame() %>%
+  write_delim(paste0(DirOut, "Figure1-S3A_SourceData.txt"), delim = '\t')
+
+```
+
+### Figure2 (Differential dispersion results)
+```{r}
+DiffDispersion.results <- read_delim("../WorkingManuscript/FullSubmissionTables/TableS3_SourceDataForFig1C.txt", delim = '\t') 
+DiffDispersion.results %>%
+  dplyr::rename(Chimp.Mean.Adjusted.Dispersion.SE=Chimp.SE,
+                Human.Mean.Adjusted.Dispersion.SE=Human.SE,
+                InterspeciesDifferential.Mean.Adjusted.Dispersion.P.value=P) %>%
+  write_delim(paste0(DirOut, "Figure2_SourceData.txt"), delim = '\t')
+```
+
+### Figure3E (Human dispersion gsea)
+```{r}
+Human.Dispersion.gsea <- read.delim("../WorkingManuscript/FullSubmissionTables/TableS4_SourceDataForFig2E.txt")
+
+Human.Dispersion.gsea %>% write_delim(paste0(DirOut, "Figure3E_SourceData.txt"), delim = '\t')
+```
+
+### Figure3S1C (dN/dS dispersion test GO)
+```{r}
+dN.dS.dispersion.test <- read.delim("../figures/OriginalArt/ResponseToReviewers.GO.hist.sorce.tsv")
+dN.dS.dispersion.test %>% arrange(p.value) %>%
+  dplyr::rename(Spearman.rho.estimate=estimate, q.value=q) %>%
+  dplyr::select(-statistic, -Sig) %>%
+  write_delim(paste0(DirOut, "Figure3-S1C_SourceData.txt"), delim = '\t')
+
+```
+
+
+### Figure4S1A (Cell type proportions BayesPrism)
+
+```{r}
+read.delim("../figures/OriginalArt/TED.CelltypeProportions.source.tsv") %>%
+  write_delim(paste0(DirOut, "Figure4-S1A_SourceData.txt"), delim = '\t')
+```
+
+### Figure4S1C-E (Bayes prism cell expression estimates, w/ SE)
+```{r}
+read_delim("../figures/CellTypeDispersion.Reorganized.source.data.tsv", delim = '\t') %>%
+  write_delim(paste0(DirOut, "Figure4-S1C-E_SourceData.txt.gz"), delim = '\t')
+
+```
+
+### Figure4S3 (Difference in dispersion GSEA)
+```{r}
+read.delim("../WorkingManuscript/FullSubmissionTables/TableS5_SourceDataForFigS7.txt") %>%
+  write_delim(paste0(DirOut, "Figure4-S3_SourceData.txt"), delim = '\t')
+```
+
+
+### Figure5B (pn/ps human and chimp)
+```{r}
+ChimpPnPsFile <- "../output/NeutralityIndex/chimp/ChimpsAllTroglodytes/PnPs.txt"
+HumanPnPsFile <- "../output/NeutralityIndex/human/AllGtex/PnPs.txt"
+PnPs.chimp <- read.delim(ChimpPnPsFile)
+PnPs.human <- read.delim(HumanPnPsFile)
+
+GeneConversionTable <- read.delim("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz")
+
+psuedocount = 0.5
+
+#calculation of Pn Ps with pseudocount
+PnPs.Combined.wPseudo <- GeneConversionTable %>%
+  dplyr::select(Gene.stable.ID, Chimpanzee.gene.stable.ID) %>%
+  inner_join(PnPs.chimp, by=c("Chimpanzee.gene.stable.ID"="gene")) %>% 
+  inner_join(PnPs.human, by=c("Gene.stable.ID"="gene"), suffix=c(".chimp", ".human")) %>%
+  distinct(.keep_all = T) %>%
+  mutate(PnPs.chimp=(Pn.chimp+psuedocount)/(Ps.chimp+psuedocount),
+         PnPs.human=(Pn.human+psuedocount)/(Ps.human+psuedocount))
+
+read.delim("../output/Overdispersion_P_SE_Combined.txt.gz") %>%
+  dplyr::select(gene, HGNC.symbol, Chimp.Mean.Adjusted.Dispersion, Human.Mean.Adjusted.Dispersion, P, q.value, ) %>%
+  mutate(DiffDisp=Chimp.Mean.Adjusted.Dispersion-Human.Mean.Adjusted.Dispersion) %>%
+  mutate(DifferentialDispersion=case_when(
+    q.value < 0.1 & sign(DiffDisp)==1 ~ "More dispersed in chimp",
+    q.value <0.1 & sign(DiffDisp)==-1 ~ "More dispersed in human",
+    TRUE ~ "Not signficant")) %>%
+  right_join(PnPs.Combined.wPseudo, by=c("gene"="Gene.stable.ID")) %>%
+  dplyr::select(gene, Chimpanzee.gene.stable.ID, everything()) %>%
+  write_delim(paste0(DirOut, "Figure5B_SourceData.txt"), delim = '\t')
+  
+```
+
+
+### Figure6S2C (Admixture)
+
+```{r}
+read_delim("../figures/SourceData/Admixture.tsv", delim = '\t') %>%
+  write_delim(paste0(DirOut, "Figure6-S2C_SourceData.txt"), delim = '\t')
+```
+
+
+### Figure7S1A (GO enrichment for shared eGene)
+```{r}
+read.delim("../WorkingManuscript/FullSubmissionTables/TableS9_SourceDataForFigS10A.txt") %>%
+  write_delim(paste0(DirOut, "Figure7-S1A_SourceData.txt"), delim = '\t')
+```
+
+
+### Figure7S1A (GO enrichment for chimp specific eGenes)
+```{r}
+read.delim("../WorkingManuscript/FullSubmissionTables/TableS10_SourceDataForFigS10B.txt") %>%
+  write_delim(paste0(DirOut, "Figure7-S1B_SourceData.txt"), delim = '\t')
+```
+
+### SupplementalFile1 - differential dispersion gsea without virally challenged chimps
+
+```{r}
+read_delim("../WorkingManuscript/FullSubmissionTables/TableS6.txt", delim='\t') %>%
+  write_delim(paste0(DirOut, "SupplementalDataFile1.txt"), delim = '\t')
+```
+
+
+### SupplementalFile2 - WGS summary
+```{r}
+read_delim("../WorkingManuscript/FullSubmissionTables/TableS7.txt", delim='\t') %>%
+  write_delim(paste0(DirOut, "SupplementalDataFile2.txt"), delim = '\t')
+
+```
+
+### SupplementalFile3 - Chimp eGenes
+```{r}
+read_delim("../WorkingManuscript/FullSubmissionTables/TableS8.txt", delim='\t') %>%
+  write_delim(paste0(DirOut, "SupplementalDataFile3.txt"), delim = '\t')
+```
+
+
+#### Function to get files to build
+```{r}
+
+MakeFilesIntersectGlob <- function(GlobPattern){
+  A <- wflow_build(dry_run = T)
+  return(A$built[grep(GlobPattern, A$built)])
+}
+
+MakeFilesIntersectGlob("20200907_Response*")
+MakeFilesIntersectGlob("Final*")
+
+```
+

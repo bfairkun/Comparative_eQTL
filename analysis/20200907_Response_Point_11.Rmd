@@ -24,6 +24,7 @@ library(gplots)
 source("../code/CustomFunctions.R")
 library(knitr)
 library(scales)
+library(latex2exp)
 ```
 
 This block references a file that I keep on my local computer, that is not reproducible from the snakemake. This rds file references a seurat object I created from publicaly available mouse scRNA-seq data (Tabula Muris) using [this Rscript]().
@@ -136,7 +137,7 @@ Ted.CellTypePorportions.df <- Ted.CellTypePorportions %>% as.data.frame() %>%
                    str_detect(Input.Sample, "H.") ~ "Human"))
 
 #Ted cell type porportions as plot
-ggplot(Ted.CellTypePorportions.df, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+TedProp <- ggplot(Ted.CellTypePorportions.df, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
   geom_bar(stat="identity") +
   scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
   facet_grid(~Species, scales="free_x", space="free_x") +
@@ -144,6 +145,7 @@ ggplot(Ted.CellTypePorportions.df, aes(x=reorder(Input.Sample, percent, FUN=max)
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
+TedProp
 
 #CIBERSORT cell type porportions
 CIBERSORT <- read.table("../data/CIBERSORT.Output_Job2.csv", sep=',', header=T) %>%
@@ -168,6 +170,9 @@ inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c("Input.Sample", "cell.typ
   ggplot(aes(x=percent.TED, y=percent.CIBERSORT, color=cell.type)) +
   geom_point(aes(shape=Species.TED)) +
   theme_bw()
+
+inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c("Input.Sample", "cell.type"), suffix=c(".CIBERSORT", ".TED")) %>% dplyr::select(percent.CIBERSORT, percent.TED) %>% cor()
+
 
 inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c("Input.Sample", "cell.type"), suffix=c(".CIBERSORT", ".TED")) %>%
   ggplot(aes(x=percent.TED, y=percent.CIBERSORT, color=cell.type)) +
@@ -204,6 +209,7 @@ hist(log10(Ted.Expression.Per.CellType.df$C.4x0519))
 Yeah, so I think these are un-log transformed expression values. Are they normalized for sequencing depth per individual per cell type? Let's check the median gene expression level for each individual x cell type combination... If the expression values are already normalized, I expect the median gene expression level to be roughly similar (at least, more similar than the >4 fold range in sequencing depth across samples)
 
 ```{r}
+#What is the median gene's expression level across each sample across each cell type
 Ted.Expression.Per.CellType.df %>%
   dplyr:: select(CellType, gene, starts_with("C.")) %>%
   gather("Ind", "Expression", -CellType, -gene) %>%
@@ -224,6 +230,8 @@ Ok, things may not be normalized across cell types, but if I want to estimate di
 #Total gene mapping read counts from bulk count table
 TotalBulkCount.df <- data.frame(TotalBulkCount = cbind(CountTables$Chimp$Counts, CountTables$Human$Counts) %>% colSums()) %>%
   rownames_to_column("Ind")
+
+#Plot median gene expression versus bulk library size (colSums)
 Ted.Expression.Per.CellType.df %>%
   dplyr:: select(CellType, gene, starts_with("C.")) %>%
   gather("Ind", "Expression", -CellType, -gene) %>%
@@ -237,9 +245,68 @@ Ted.Expression.Per.CellType.df %>%
 
 ```
 
-Ok, since total counts (columnSums) from the bulk matrix strongly correlates with the median gene expression measurements output by TED for most cell types, I conclude that this TED output is estimates of the original count table, (though, obviously not integer counts). So perhaps the most reasonable way to estimate dispersion per cell type from this TED output is to first transform the TED expression matrices to log(CPM), and, similarly to the dispersion estimation procedure in the original manuscript, fit a loess curve to the trend between the population mean expression and log(variance).
+Ok, since total counts (columnSums) from the bulk matrix strongly correlates with the median gene expression measurements output by TED for most cell types, I conclude that this TED output is estimates of the original count table, (though, obviously not integer counts). 
+
+First, let's quickly write out the TED results and write out some other things for response to review.
+
+```{r, eval=F}
+write_delim(Ted.Expression.Per.CellType.df, "../figures/OriginalArt/TED.expressionPerCelltype.tsv.gz", delim = '\t')
+write_delim(Ted.CellTypePorportions.df, "../figures/OriginalArt/TED.CelltypeProportions.source.tsv", delim='\t')
+ggsave(TedProp, filename = "../figures/OriginalArt/TED.CelltypeProportions.pdf", height=3, width=6)
+
+#And do PCA with TED cell proportions and establish a correlation with first few PCs
+library(psych)
+
+GeneExpMatrix<-read.table("../output/log10TPM.StandardizedAndNormalized.txt", header=T, check.names = F) %>% column_to_rownames("IID")
+
+PCA.results <- prcomp(t(GeneExpMatrix))
+PCs <- PCA.results$x %>% as.data.frame() %>%
+  dplyr::select(PC1:PC4) %>%
+  rownames_to_column() %>%
+  arrange(rowname) %>%
+  column_to_rownames()
+CellProportions.wide <- Ted.CellTypePorportions.df %>%
+  mutate(Input.Sample = str_remove(Input.Sample, "^C.")) %>%
+  filter(Input.Sample %in% rownames(PCs)) %>%
+  dplyr::select(-Species) %>%
+  spread(key="cell.type", value="percent") %>%
+  arrange(Input.Sample) %>%
+  column_to_rownames("Input.Sample") %>%
+  as.matrix() %>% scale(scale = F)
+MyCorMatrix <- corr.test(x=PCs,
+                         y=CellProportions.wide,
+                         method="pearson",
+                         adjust="BH")
+
+
+inner_join(
+  MyCorMatrix$r %>% as.data.frame() %>% rownames_to_column() %>% gather(key="celltype", value="R", -rowname),
+  MyCorMatrix$p %>% as.data.frame() %>% rownames_to_column() %>% gather(key="celltype", value="P.adjust", -rowname),
+  by=c("rowname", "celltype")) %>%
+  mutate(Ptext=signif(P.adjust, 2)) %>%
+  ggplot(aes(x=rowname, y=celltype)) +
+  scale_fill_gradient2() +
+  scale_color_viridis_c(trans="log10", direction=-1, limits=c(1E-9, 1)) +
+  geom_tile(aes(fill=R)) +
+  # geom_point(aes(color=P.adjust), size=3) +
+  geom_text(angle=45, aes(label=Ptext)) +
+  coord_flip() +
+  ylab("") +
+  xlab("") +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45,hjust = 1))
+  # theme(legend.position = "bottom")
+ggsave("../figures/OriginalArt/TED.CelltypeProportions.vs.PCs.pdf", height=5, width=6)
+
+
+
+```
+
+Perhaps the most reasonable way to estimate dispersion per cell type from this TED output is to first transform the TED expression matrices to log(CPM), and, similarly to the dispersion estimation procedure in the original manuscript, fit a loess curve to the trend between the population mean expression and log(variance).
 
 Though I have an intuition that $log(variance(logCPM))$ is analogous to the $log(\phi)$ that I used to estimate dispersion, I can't derive mathematically why $log(variance(logCPM))$) is the appropriate metric (as opposed to $sd(logCPM)$ for example). But, I can show empirically show that $log(variance(logCPM))$ is basically equivalent to the $log(\phi)$ parameter I estimated from fitting a negative binomial to the bulk raw count data:
+
+
 
 ```{r}
 #Compare the overdispersion (phi) estimate to the log(variance(logCPM)).
@@ -291,17 +358,48 @@ Normalized.Expression.Per.CellType %>%
   theme_bw()
 
 #...for both chimp and human
-Normalized.Expression.Per.CellType %>%
+LoessFits <- Normalized.Expression.Per.CellType %>%
   mutate(Species = case_when(str_detect(Ind, "C.") ~ "Chimp",
                    str_detect(Ind, "H.") ~ "Human")) %>%
   group_by(gene, CellType, Species) %>%
   summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression))) %>%
   ggplot(aes(x=mu, y=log.var, color=CellType)) +
   geom_point(alpha=0.03) +
+  xlab(TeX("Mean Expression, $\\hat{\\mu}$")) +
+  ylab(TeX("Overdispersion, log($\\hat{\\phi})$")) +
   geom_smooth(method="loess", method.args=list(degree=1), aes(linetype=Species), color="black") +
-  facet_wrap(~CellType) +
+  facet_wrap(~CellType, labeller = labeller(CellType = label_wrap_gen(width = 25))) +
+  guides(color = guide_legend(override.aes = list(alpha = 1) ) ) +
   theme_bw()
-  
+LoessFits
+
+```
+
+Save this plot. also write code chunk for an alternate visualization of the same thing...
+
+```{r, eval=F}
+ggsave("../figures/OriginalArt/ResponseToReviewers.CellType.loess.png", LoessFits, height=6,width=8)
+
+Normalized.Expression.Per.CellType %>%
+  mutate(Species = case_when(str_detect(Ind, "C.") ~ "Chimp",
+                   str_detect(Ind, "H.") ~ "Human")) %>%
+  group_by(gene, CellType, Species) %>%
+  summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression))) %>%
+  ggplot(aes(x=mu, y=log.var)) +
+  stat_binhex(bins=100) +
+  scale_fill_viridis_c(option="C") +
+  xlab(TeX("Mean Expression, $\\hat{\\mu}$")) +
+  ylab(TeX("Overdispersion, log($\\hat{\\phi})$")) +
+  geom_smooth(method="loess", method.args=list(degree=1), aes(linetype=Species), color="black") +
+  facet_wrap(~CellType+Species) +
+  guides(color = guide_legend(override.aes = list(alpha = 1) ) ) +
+  theme_bw()
+
+Normalized.Expression.Per.CellType %>%
+  mutate(Species = case_when(str_detect(Ind, "C.") ~ "Chimp",
+                   str_detect(Ind, "H.") ~ "Human")) %>%
+  saveRDS(file = "../big_data/NormalizedExpressionPerCellType.rds")
+
 ```
 
 It seems most trends are similar between species for different cell types, except leukocytes which I may drop from further analysis. The fact thiat this leukocyte cell type is an outlier may be biologically meaningful, especially given that ~4 of the chimp samples have been challenged with virus. But it might also be technical, I would rather just avoid that cell type.
@@ -331,11 +429,11 @@ CellTypeDispersion %>%
   
 ```
 
-Ok, it seems I have dispersion estimates for each cell type. How to present this in an interpretable way. How about I start by plotting a correlation matrix with hiearchal clustering dendrogram, comparing the dispersion estimates from bulk to those for each cell type, for both species.
+Ok, it seems I have dispersion estimates for each cell type. How to present this in an interpretable way. How about I start by plotting a correlation matrix with hiearchal clustering dendrogram, comparing the dispersion estimates from bulk to those for each cell type, for both species. As an alternative visualization, plot celltype:species pairs in PC space.
 
 ```{r}
 
-Dispersion.Cor.Matrix <- Dispersion %>%
+Dispersion.Matrix <- Dispersion %>%
   dplyr::select(gene, Chimp_Bulk=Chimp.Dispersion, Human_Bulk=Human.Dispersion) %>%
   gather(key="Species.CellType", value="dispersion", -gene) %>%
   bind_rows(
@@ -345,23 +443,37 @@ Dispersion.Cor.Matrix <- Dispersion %>%
   filter(gene %in% one2one_HumanMouseOrthologs$Gene.stable.ID) %>%
   pivot_wider(names_from=Species.CellType, values_from = dispersion) %>%
   column_to_rownames("gene") %>%
-  as.matrix() %>%
+  as.matrix()
+Dispersion.Cor.Matrix <- Dispersion.Matrix %>% as.data.frame() %>%
+  # dplyr::select(-Chimp_leukocyte, -Human_leukocyte) %>%
   cor(use="pairwise.complete.obs")
 
 SpeciesFactorCol <- colnames(Dispersion.Cor.Matrix) %>% substr(1,1) %>% factor() %>% unclass() %>% as.character() %>% recode("1"="#F8766D", "2"="#00BFC4")
 
 TissueFactorCol <- data.frame(ColNames=colnames(Dispersion.Cor.Matrix)) %>%
   mutate(Tissue=str_remove(ColNames, "^.+?_"))
-TissueColors.df <- data.frame(colors=c("black", hue_pal()(9)), Tissue=unique(sort(TissueFactorCol$Tissue)))
+TissueColors.df <- data.frame(colors=c("black", hue_pal()(nrow(Dispersion.Cor.Matrix)/2-1)), Tissue=unique(sort(TissueFactorCol$Tissue)))
 TissueFactorCol.vector <- TissueFactorCol %>%
   left_join(TissueColors.df, by="Tissue") %>% pull(colors) %>% as.character()
 
-        
-  
 heatmap.2(Dispersion.Cor.Matrix, trace="none", ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector)
 
 
+Dispersion.PCA <- Dispersion.Matrix %>% as.data.frame() %>% dplyr::select(-Chimp_leukocyte, -Human_leukocyte) %>%
+  drop_na() %>%
+  t() %>%
+  prcomp()
+Dispersion.PCA$x %>% as.data.frame() %>%
+  rownames_to_column() %>%
+  separate(rowname, into=c("Species", "CellType"), sep = "_") %>%
+  ggplot(aes(x=PC1, y=PC2, color=CellType)) +
+  # geom_point(aes(fill=Species), pch=21, size=5, stroke=3) +
+  geom_point(aes(shape=Species)) +
+  theme_bw()
+
+
 ```
+
 
 
 Let's contrast this with the correlation matrix for cell type expression estimates:
@@ -383,5 +495,30 @@ Expression.Matrix[mapply(is.infinite, Expression.Matrix)] <- NA
 Expression.Cor.Matrix <- cor(Expression.Matrix, use="pairwise.complete.obs")
 
 heatmap.2(Expression.Cor.Matrix, trace="none", ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector)
+
+Expression.PCA <- Expression.Matrix %>% as.data.frame() %>% dplyr::select(-Chimp_leukocyte, -Human_leukocyte) %>%
+  drop_na() %>%
+  t() %>%
+  prcomp()
+Expression.PCA$x %>% as.data.frame() %>%
+  rownames_to_column() %>%
+  separate(rowname, into=c("Species", "CellType"), sep = "_") %>%
+  ggplot(aes(x=PC1, y=PC2, color=CellType)) +
+  # geom_point(aes(fill=Species), pch=21, size=5, stroke=3) +
+  geom_point(aes(shape=Species)) +
+  theme_bw()
+```
+
+
+Save plots...
+```{r, eval=F}
+pdf("../figures/OriginalArt/ResponseToReviewers.CorMatPlot.Dispersion.pdf")
+heatmap.2(Dispersion.Cor.Matrix, trace="none", ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector, offsetRow=0, offsetCol=0, cexRow = 0.5, cexCol = 0.5, margins=c(10,10))
+dev.off()
+
+pdf("../figures/OriginalArt/ResponseToReviewers.CorMatPlot.Expression.pdf")
+heatmap.2(Expression.Cor.Matrix, trace="none", ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector, offsetRow=0, offsetCol=0, cexRow = 0.5, cexCol = 0.5, margins=c(10,10))
+dev.off()
+
 ```
 

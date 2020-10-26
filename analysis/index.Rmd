@@ -6,36 +6,50 @@ output:
     toc: false
 ---
 
-Welcome to my research website.
+This site contains exploratory analysis notebook and R code to make most of the figures for [DOI: 10.7554/eLife.59929](https://elifesciences.org/articles/59929). This site only contains R code (Rmarkdowns), including code to make most all of the figures from the paper. Many of these Rmarkdowns read data included in the [associated repository](https://github.com/bfairkun/Comparative_eQTL) in the `data` and `output` directories. To run through R code on this site, clone the repository, and run Rmarkdowns from the `analysis` directory. Besides the figure source data and supplemental tables in the publication, other processed or semi-processed data (eg count tables) is available in the associated repository. Reproducible code for other aspects of this project is in a snakemake pipeline in `code`. See the `code/snakemake_workflow/README` for more info on how to run that.
 
-## QC
+## Abstract
+
+Inter-individual variation in gene expression has been shown to be heritable and is often associated with differences in disease susceptibility between individuals. Many studies focused on mapping associations between genetic and gene regulatory variation, yet much less attention has been paid to the evolutionary processes that shape the observed differences in gene regulation between individuals in humans or any other primate. To begin addressing this gap, we performed a comparative analysis of gene expression variability and expression quantitative trait loci (eQTLs) in humans and chimpanzees, using gene expression data from primary heart samples. We found that expression variability in both species is often determined by non-genetic sources, such as cell-type heterogeneity. However, we also provide evidence that inter-individual variation in gene regulation can be genetically controlled, and that the degree of such variability is generally conserved in humans and chimpanzees. In particular, we found a significant overlap of orthologous genes associated with eQTLs in both species. We conclude that gene expression variability in humans and chimpanzees often evolves under similar evolutionary pressures.
+
+## Raw data
+
+Raw data for this project includes post mortem heart-tissues:
+
+- RNA-seq of 10 human and 10 chimp samples [Pavlovic et al](https://www.nature.com/articles/s41598-018-33478-9) ([GEO accession GSE110471](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE110471))
+- RNA-seq of ~39 human samples (GTEx v7, Heart left ventricle, see Fig1 source data in paper for exact samples, requires dbGaP to access raw data)
+- RNA-seq of 29 new chimp samples ([GEO accession GSE151397](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE151397)). This GEO entry also contains a count table for all RNA-seq samples analyzed in this project
+- Whole genome sequencing of 39 chimp samples (Raw reads at [SRA accession PRJNA635393](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA635393/), genotype calls vcf at [EVA accession PRJEB39475](https://www.ebi.ac.uk/eva/?eva-study=PRJEB39475)).
+
+### Code for QC
 - [fastqc](../output/multiqc.html)
 
-### Genotype data
+#### Genotype data
 - [Genotype call rates]()
 - [kinship](20190321_Check-Kinship-And-PopulationStructure.html)
 - [PCA](20190326_PCA.html)
 - [Admixture](20190326_Admixture.html)
 
-### Expression data
+#### Expression data
 - [Check that RNA-seq data segregates by biological sample over sequencing flow cell](20190325_MergingRNASeqLanes.html)
 - [Checking RNA-seq data for covariates](20190320_Check-RNAseq-PCs.html)
 - [STAR Aligner vs kallisto pseudoaligner for gene quantification](20190429_RNASeqSTAR_quantifications.html)
 
-### Prepare data for eQTL testing
+#### Prepare data for eQTL testing
 - [Make phenotype table for testing](20190327_MakeFamPhenotypeFile.html)
 - [Make covariate table for testing](20190327_MakeCovariateFiles.html)
 
-## Exploration
+### Code for results and exploration
 
-### Association testing with various models
+#### Association testing with various models
 - [first iteration](20190412_Check_eQTLs.html): description: lmm with KING-robust GRM thresholded at 0, and 3 genotype PCs
 - [Check residuals after regressing out some covariates](20190421_RegressOutRNASeqPCs.html)
 - [second iteration](20190424_Check_eQTLs.html): description: lm with 5 genotype PCs (PCs 4 and 5 takes into account some first hand relatedness) and more stringent genotype filtering. Also, outlier sample MD_And dropped from analysis
 - [Third iteration](20190428_Check_eQTLs.html)
 - [fourth iteration](20190502_Check_eQTLs.html): description, lmm with 4 PCs and 3 Genotype PCs, used STAR RNA-seq CPM for less outliers. Fixed big bug that was permuting samples, resulting in no true hits in previous iterations. Here I used standardization and qqnorm.
+- Final iteration: see paper for methods details. In short, I used lmm with kinship matrix (implented in MatrixEQTL) with 10 expression PCs as covariates. QQ-plots of permutation control and real samples indicates some eQTLs and well calibrated P-values.
 
-### Conservation and GO/GSEA analysis
+#### Conservation and GO/GSEA analysis
 - [GO analysis, FDR=0.1](20190521_eQTL_CrossSpeciesEnrichment.html) overlap enrichment analysis of eGenes across humans and chumps, and gene ontology analysis of eGenes based on eGene classification defined at FDR=0.1 threshold. Also, a set of similar analyses using GSEA methodology, which is based on relative ranking of eGenes between species.
 - [Conservation analysis, FDR=0.1](20190606_eGene_Conservation.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1
 - [Conservation analysis, HumanTop600_eGenes](20190606_eGene_Conservation_TopN.html) analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1 for chimp and top600 qvalue genes for human.
@@ -46,24 +60,24 @@ Welcome to my research website.
 - [Different model of gene variance character](20190930_OverdispersionEstimates_HBV_excluded.html) using advice from Abhishek. But this time leaving out the virus challenged chimps
 
 
-### Power analysis for inter-species differential expression
+#### Power analysis for inter-species differential expression
 - [PowerAnalysisFromOrinalDataset](20190613_PowerAnalysis.html) DE gene analysis based on subsampling ~39 chimp samples & 50 human samples (mostly GTEx)... Note that there are some outlier samples that I want to purge in later iterations of this analysis.
 
-### Differential contacts
+#### Differential contacts
 - Do differential DNA contacts between species explain differences in eGene character between species.
 - [First crude analysis](20190627_DiffContactsEgenes.html) In this analysis I asked whether the there is a correlation between the rank difference in eGenes between species, and the difference in the sum of contacts in each species' cis-window for each gene
 - There was a slight but significant correlation, but I worry about a potential bias introduced by the fact that eGene significance for humans was based on cis-eQTL calling with a 1MB window and chimp was a 250kB window. I should control for this.
 - [Check that human lead snps in 250kB window are reasonable](20190808_HumanLeadSnps.html) As expected, the p-value for lead snps within 250kb is well correlated for the eGene p-value, with the exception that there are many genes with much lower eGene pvalues probably because there is a better SNP >250kb away
 - [After controlling for cis-window-size](20190708_DiffContactsEgenes_CisWindowControlled.html)
 
-### Shared polymorphic loci
+#### Shared polymorphic loci
 - [QQ Plot of species shared polymorphisms](20190708_SpeciesSharedPolymorphisms_InitialQQPlot.html) Of all the shared polymorphic loci (putative targets of balancing selection), do they have inflated cis-eQTL P-values compared to a random set of snp-gene tests.
 
-## Final figures
+### Code for final figures and analysis
 
 - todo... haven't build these markdowns yet.
 
 ## Reviewer comments
 
-- See [reviewer comments](20200907_Response_OriginalComments.html)
+- See [reviewer comments](20200907_Response_OriginalComments.html) and associated analyses to address.
 

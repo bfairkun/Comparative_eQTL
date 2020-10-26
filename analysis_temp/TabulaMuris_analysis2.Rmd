@@ -63,6 +63,9 @@ CellNonZeroCounts <- data.frame(
 
 Umaps
 ```{r, eval=F}
+
+OverdispersedGeneList <- ChimpOverdispersionTable
+
 Top9Dispersed <- OverdispersedGeneList %>%
         left_join(genes, by=c("gene"="Gene.stable.ID")) %>%
         filter(!is.na(MGI.symbol)) %>% 

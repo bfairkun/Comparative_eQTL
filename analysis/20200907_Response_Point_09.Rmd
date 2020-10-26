@@ -7,6 +7,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 ```
 
+### Overview
+
 Original reviewer point:
 
 
@@ -15,11 +17,16 @@ Original reviewer point:
 Here I will attempt the reviewer's suggestion. [GTEx companion paper](https://pubmed.ncbi.nlm.nih.gov/32075962/) has already published cell type deconvolutions from the bulk heart data (Supplemental table 17). From here I can attempt to map QTLs for cell type, similar to what was performed in [Marderstein et. al. Nat Comms 2020](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7200670/). In this case, they had cell type porportions for various cell types, and performed a GWAS on each cell type porportion phenotype. Since these proportion phenotypes are all inter-related, maybe it will be simpler at first to just do a GWAS on the first PC of the cell porportion matrix. I'll do some exploratory analysis with this idea here, and then implement the GWAS in the snakemake.
 
 
+### Analysis
+
 First load libraries
 ```{r}
 library(tidyverse)
 library(knitr)
 library(gplots)
+library(variancePartition)
+library(latex2exp)
+
 ```
 
 Now, read in the published GTEx cell type deconvolutions (CIBERSORT) for heart left ventricle.
@@ -275,5 +282,165 @@ DataToOutput %>%
   mutate(Ind=str_match(Input.Sample, "^GTEX-\\w+")) %>%
   dplyr::select(Ind, everything(), -Input.Sample) %>%
 write_tsv("../output/CellProportionPhenotypesNormalizedForGWAS.tab")
+```
+
+Next, I want another way to communicate the idea that there is a strong individual component to cell type proportions in heart samples, perhaps stronger than the tissue type (left ventricle vs atrial appendage) component. I will use variance partition package to evaluate this.
+
+Let's go back to the original CIBERSORT estimates for GTEx samples, and before using those as phenotypes (instead of gene expression traits) for variancePartition package, let's quantile normalize those phenotypes to better fit the assumptions of the models used in variancePartition.
+
+```{r}
+
+NormalizedPorportions <- CellTypePorportions %>%
+  gather(key="cell.type", value="percent", -Input.Sample) %>%
+  mutate(percent=jitter(percent)) %>% #add jitter to break ties before qqnorm
+  group_by(cell.type) %>%
+  mutate(NormalizedPhenotype=InverseNormTrans(percent)) %>%
+  ungroup() %>%
+  pivot_wider(id_cols = Input.Sample, names_from = cell.type, values_from =percent) %>%
+  column_to_rownames("Input.Sample") %>% t()
+
+NormalizedPorportions[,1:10] %>% kable()
+
+info <- Samples %>%
+  dplyr::select(SAMPID, Ind, SMTSD) %>%
+  filter(SAMPID %in% colnames(NormalizedPorportions)) %>%
+  column_to_rownames("SAMPID")
+head(info) %>% kable()
+
+# form <- ~ SMTSD + Ind
+form <- ~ (1|SMTSD) + (1|Ind)
+
+
+varPart <- fitExtractVarPartModel( NormalizedPorportions, form, info )
+
+vp <- sortCols( varPart ) %>%
+  dplyr::rename("Tissue\n(Atrial appendage vs\nLeft ventricle)"=SMTSD, Individual=Ind)
+plot.vp.Bars <- plotPercentBars( vp)
+
+kable(vp)
+  
+plotVarPart( vp )
+
+```
+
+
+### Conclusions and final figures
+
+Tissue biopsies from left ventricle vs atrial appendage from the same donor correlate better than biopsies from left ventricle from random donors. This is consistent with cell type heterogeneity being due to individual level factors, and not purely technical issues regarding dissecting anatomically similar heart regions. For this analysis we don't speculate as to how much of the individual level factors are environmental (including age, lifestyle, etc) versus genetic, though, throughout the paper we obviously recognize both play a factor.
+
+Now I will create and/or save the final figures from this analysis worth presenting to the paper or response to reviewers:
+
+```{r, eval=F}
+
+
+#Pvariance partition bars plot
+ggsave("../figures/OriginalArt/ResponseToReviewers.CellType.Vp.bars.pdf", plot.vp.Bars, height=3, width=5)
+
+#What is correlation between left ventricle and atrial appendage, across individuals
+ScatterData1 <- CellTypePorportions %>%
+  left_join(Samples, by=c("Input.Sample"="SAMPID")) %>%
+  dplyr::select(cardiac_muscle_cell, Ind, SMTSD) %>%
+  pivot_wider(id_cols="Ind", names_from="SMTSD", values_from = "cardiac_muscle_cell") %>%
+  drop_na() %>%
+  column_to_rownames("Ind")
+A.cor<-signif(cor(ScatterData1, method = "spearman")[1,2], 2)
+lb1 <- bquote(rho == .(A.cor))
+
+ggplot(ScatterData1, aes(x=`Heart - Atrial Appendage`, y=`Heart - Left Ventricle`)) +
+  geom_point() +
+  xlab("Proportion cardiac muscle cell\nHeart - left ventricle") +
+  ylab("Proportion cardiac muscle cell\nHeart - Atrial appendage") +
+  # ggtitle("Matched individuals,\ncorrelation of tissue samples") +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=F) +
+  theme_bw()
+ggsave("../figures/OriginalArt/ResponseToReviewers.CellType.ScatterA.pdf", height=3, width=3)
+
+#What is correlation between randomly selected individuals, within left ventricle individual
+set.seed(0)
+ScatterData2 <- CellTypePorportions %>%
+  left_join(Samples, by=c("Input.Sample"="SAMPID")) %>%
+  dplyr::select(cardiac_muscle_cell, Ind, SMTSD) %>%
+  filter(SMTSD=="Heart - Atrial Appendage") %>%
+  mutate(RandomGroupAssignment=sample(2, n(), replace = T)) %>%
+  dplyr::group_by(RandomGroupAssignment) %>% 
+  mutate(row_number = row_number()) %>%
+  ungroup() %>%
+  pivot_wider(id_cols = "row_number", names_from = "RandomGroupAssignment", values_from = "cardiac_muscle_cell") %>%
+  drop_na() %>%
+  column_to_rownames("row_number")
+B.cor <- signif(cor(ScatterData2, method = "spearman")[1,2],2)
+lb1 <- bquote(rho == .(B.cor))
+
+ggplot(ScatterData2, aes(x=`1`, y=`2`)) +
+  geom_point() +
+  xlab("Proportion cardiac muscle cell\nRandom individual A") +
+  ylab("Proportion cardiac muscle cell\nRandom individual B") +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=F) +
+  # ggtitle("Matched tissue (Left venticle),\ncorrelation of random individuals") +
+  theme_bw()
+ggsave("../figures/OriginalArt/ResponseToReviewers.CellType.ScatterB.pdf", height=3, width=3)
+
+#Admix plot
+AdmixPlotData <- CellTypePorportions %>%
+  separate(Input.Sample, into = c("GTEX", "Ind", "tissueSiteID", "SM", "Aliquot"), remove = F, sep="-",)  %>%
+  add_count(Ind) %>%
+  filter(n==2) %>%
+  dplyr::select(-c("GTEX", "Ind", "tissueSiteID", "SM", "Aliquot", "n")) %>%
+  gather(key="cell.type", value="percent", -Input.Sample) %>%
+  left_join(Samples, by=c("Input.Sample"="SAMPID")) %>%
+  dplyr::select(cell.type:Ind, SMTSD, -GTEX) %>%
+  pivot_wider(names_from =c("SMTSD", "cell.type"), values_from="percent", names_sep=".") %>%
+  mutate(CardiacMuscleCellPercentile=percent_rank(`Heart - Left Ventricle.cardiac_muscle_cell`)) %>% 
+  dplyr::select("Heart - Left Ventricle.cardiac_muscle_cell", everything()) %>%
+  arrange(CardiacMuscleCellPercentile) %>%
+  gather(key="Tissue.celltype", value="percent", -c("Ind", "CardiacMuscleCellPercentile")) %>%
+  separate(Tissue.celltype, into=c("Tissue", "cell.type"), sep = "\\.")
+ggplot(AdmixPlotData, aes(x=reorder(Ind, percent, FUN=max))) +
+# ggplot(AdmixPlotData, aes(x=CardiacMuscleCellPercentile)) +
+  geom_bar(stat="identity", aes(fill=cell.type, y=percent)) +
+  geom_rug(aes(color=CardiacMuscleCellPercentile), show_guide = T) +
+  scale_color_gradientn(colours = rainbow(5), name="Individual; colored by rank proportion\ncardiac muscle cells in left ventricle") +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_wrap(~Tissue) +
+  ylab("cell type fraction") +
+  guides(
+         color = guide_colourbar(title.position="top",ticks=F, direction = "horizontal",  barwidth=12, raster=T, label=F),
+         fill = guide_legend(title.position = "top", direction = "vertical", nrow=3)) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  theme(legend.position="bottom")
+ggsave("../figures/OriginalArt/ResponseToReviewers.CellType.GTEXadmix.bars.pdf", height=4,width=8)
+
+#PCA
+PC.results <- CellTypePorportions %>%
+  separate(Input.Sample, into = c("GTEX", "Ind", "tissueSiteID", "SM", "Aliquot"), remove = F, sep="-",)  %>%
+  add_count(Ind) %>%
+  filter(n==2) %>%
+  dplyr::select(-c("GTEX", "tissueSiteID", "Ind", "SM", "Aliquot", "n")) %>%
+  column_to_rownames("Input.Sample") %>%
+  as.matrix() %>%
+  prcomp(center=T, scale=F)
+
+screeplot(PC.results, type="lines")
+
+PCs <- as.data.frame(PC.results$x[,1:3])
+PCs %>%
+  rownames_to_column("Input.Sample") %>%
+  left_join(Samples, by=c("Input.Sample"="SAMPID")) %>%
+  dplyr::select(PC1:PC3, Input.Sample, SMTSD) %>%
+  separate(Input.Sample, into = c("GTEX", "Ind", "tissueSiteID", "SM", "Aliquot"), remove = F, sep="-")  %>%
+  left_join(
+    AdmixPlotData %>% distinct(Ind, "Heart - Left Ventricle", .keep_all=T) %>% dplyr::select(Ind, CardiacMuscleCellPercentile),
+    by="Ind"
+    ) %>%
+ggplot(aes(x=PC1, y=PC2, color=CardiacMuscleCellPercentile)) +
+  geom_point(aes(shape=SMTSD)) +
+  scale_color_gradientn(colours = rainbow(5)) +
+  theme_bw()
+
+write_delim(vp %>% rownames_to_column("Cell type"), "../figures/OriginalArt/ResponseToReviewers.CellType.Vp.bars.source.tsv", delim='\t')
+
 ```
 

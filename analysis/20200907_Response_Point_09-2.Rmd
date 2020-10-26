@@ -20,3 +20,45 @@ I checked if eQTL SNPs (top SNPs for GTEX heart left ventricle eGenes (FDR<0.01)
 ![GWAS_QQ](assets/CellType.GWAS.QQ.png).
 
 My interpretation of this is that eQTLs generally are not driven by cell type QTLs. Another thing I could ask is if the top cell type QTLs (some which may be false positives), are closer to highly dispersed genes compared to lowly dispersed genes.
+
+Despite no SNPs exceeding standard GWAS significance (P<5E-8) I have taken the 98 most significant loci (lumped by clustering into the best SNP within 250000 of any locus than contains a SNP with FDR (Storey's Q) less than 0.5) and found the closest gene for which I estimated dispersion (SNPs further than 100kb from any of these genes were discarded). I have done the same for a set of random test SNPs for comparison.
+
+Let's plot the dispersion for these closest gene SNPs, with the closest genes to the random control SNPs as a comparison.
+
+```{r}
+library(tidyverse)
+
+GWAS.Snps <- read.table("../output/CellProportionGWAS.RandomControlloci.closestGenes.txt", sep = ' ', col.names = c("gene", "dist"))
+Control.Snps <- read.table("../output/CellProportionGWAS.Testloci.closestGenes.txt", sep = ' ', col.names = c("gene", "dist"))
+
+AllClosestGenes <- dplyr::bind_rows(list(CellTypeAssociatedSNPs=GWAS.Snps, RandomTestSNPs=Control.Snps), .id = 'source') %>%
+  mutate(gene=str_remove(gene, "\\.\\d+$"))
+head(AllClosestGenes)
+
+Dispersion <- read.delim('../output/OverdispersionEstimatesFromChimp.txt')
+
+TestResults <-AllClosestGenes %>%
+  left_join(Dispersion, by="gene") %>%
+  wilcox.test(Human.Residual~source, data=., alternative="greater")
+TestResults
+lb1 = paste0('P==', format.pval(TestResults$p.value, 2))
+
+AllClosestGenes %>%
+  left_join(Dispersion, by="gene") %>%
+  ggplot(aes(x=Human.Residual, color=source)) +
+  stat_ecdf() +
+  xlab("Dispersion (Human)") +
+  ylab("ecdf") +
+  annotate("text",x=Inf,y=-Inf, label=lb1, hjust=1.5, vjust=-0.5, parse=TRUE) +
+  scale_color_manual(name=NULL, values=c("red", "blue"), labels=c("Closest genes to loci\nassociated with cell type\n(FDR<0.5, n=40)", "Closest genes to\nrandom test SNPs")) +
+  theme_bw() +
+  theme(legend.position="bottom")
+
+```
+
+And write out the plot...
+
+```{r, eval=F}
+ggsave("../figures/OriginalArt/ResponseToReviewers.GWAS.ClosestGenes.pdf", height=3, width=3.65)
+```
+

@@ -408,7 +408,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-09-09
+<strong>Last updated:</strong> 2020-09-23
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -432,7 +432,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -499,10 +499,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree17265416b95d67b707c35da728efb3e30491db9etargetblank1726541a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/17265416b95d67b707c35da728efb3e30491db9e" target="_blank">1726541</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree52f85bbbd3f47b3f687d35fbfff41f8b53035e5btargetblank52f85bba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/52f85bbbd3f47b3f687d35fbfff41f8b53035e5b" target="_blank">52f85bb</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree17265416b95d67b707c35da728efb3e30491db9etargetblank1726541a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree52f85bbbd3f47b3f687d35fbfff41f8b53035e5btargetblank52f85bba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -510,6 +510,7 @@ Great! You are using Git for version control. Tracking code development and conn
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    WorkingManuscript.zip
@@ -528,8 +529,20 @@ Ignored files:
     Ignored:    output/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/20200907_Response_Point_09.Rmd
-    Untracked:  output/CellProportionPhenotypesNormalizedForGWAS.tab
+    Untracked:  analysis/20200907_Response_Point_02.Rmd
+    Untracked:  analysis/20200907_Response_Point_04.Rmd
+    Untracked:  data/c5.all.v7.1.symbols.gmt
+    Untracked:  data/c5.all.v7.1.symbols.gmt.categories.tsv.gz
+    Untracked:  data/h.all.v7.1.symbols.gmt
+
+Unstaged changes:
+    Modified:   analysis/20200907_Response_OriginalComments.Rmd
+    Modified:   analysis/20200907_Response_Point_06.Rmd
+    Modified:   analysis/20200907_Response_Point_09-2.Rmd
+    Modified:   analysis/20200907_Response_Point_09.Rmd
+    Modified:   analysis/20200907_Response_Point_11.Rmd
+    Modified:   analysis/Final_2_DispersionPlots.Rmd
+    Modified:   analysis_temp/TabulaMuris_analysis2.Rmd
 
 </code></pre>
 <p>
@@ -542,22 +555,89 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/analysis/20200907_Response_Point_09.Rmd" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+<td>
+update site, address reviewers
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/20200907_Response_Point_09.html" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+<td>
+update site, address reviewers
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
 </div>
+<div id="overview" class="section level3">
+<h3>Overview</h3>
 <p>Original reviewer point:</p>
 <blockquote>
 <p>Did the authors consider looking for cell-type QTLs? They state several times in the paper the possibility that genetic factors may influence cell types. They have enough data - at least in human - to obtain QTLs for specific cell types, as others have done (Marderstein et. al. Nat Comms 2020; Donovan et. al. Nat Comms 2020). If these cell type QTLs were enriched near genes with a high dispersion, this may bolster the author’s argument that genetic factors underlie dispersion by affecting cell type composition.</p>
 </blockquote>
 <p>Here I will attempt the reviewer’s suggestion. <a href="https://pubmed.ncbi.nlm.nih.gov/32075962/">GTEx companion paper</a> has already published cell type deconvolutions from the bulk heart data (Supplemental table 17). From here I can attempt to map QTLs for cell type, similar to what was performed in <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7200670/">Marderstein et. al. Nat Comms 2020</a>. In this case, they had cell type porportions for various cell types, and performed a GWAS on each cell type porportion phenotype. Since these proportion phenotypes are all inter-related, maybe it will be simpler at first to just do a GWAS on the first PC of the cell porportion matrix. I’ll do some exploratory analysis with this idea here, and then implement the GWAS in the snakemake.</p>
+</div>
+<div id="analysis" class="section level3">
+<h3>Analysis</h3>
 <p>First load libraries</p>
 <pre class="r"><code>library(tidyverse)
 library(knitr)
-library(gplots)</code></pre>
+library(gplots)
+library(variancePartition)
+library(latex2exp)</code></pre>
 <p>Now, read in the published GTEx cell type deconvolutions (CIBERSORT) for heart left ventricle.</p>
 <pre class="r"><code>CellTypePorportions &lt;- read.csv(&quot;../data/41467_2020_14561_MOESM18_ESM.csv&quot;) %&gt;% dplyr::select(-P.value)
 
@@ -655,6 +735,43 @@ head(CellTypePorportions) %&gt;% kable()</code></pre>
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-2-1.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>I may want to consider removing outlier samples…</p>
 <p>For now, let’s plot oeruse how the cell porportion phenotypes covary, and plot samples in PC space. I think it makes sense to center but not rescale data… I want the more predominant cell types to matter more, since ultimately I am interested in if cell type QTLs may explain the highly dispersed genes in the sample, and cell types more predominant in the bulk samples should inuitively matter more.</p>
 <pre class="r"><code>#Covariance Matrix
@@ -663,6 +780,43 @@ CellTypePorportions %&gt;%
   cov() %&gt;%
   heatmap.2(trace = &quot;none&quot;, cexRow=0.5, cexCol=0.5, col=bluered(75))</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-1.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#PCA
 PC.results &lt;- CellTypePorportions %&gt;%
   column_to_rownames(&quot;Input.Sample&quot;) %&gt;%
@@ -671,15 +825,126 @@ PC.results &lt;- CellTypePorportions %&gt;%
 
 screeplot(PC.results, type=&quot;lines&quot;)</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-2">
+Past versions of unnamed-chunk-3-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-2.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>PCs &lt;- as.data.frame(PC.results$x[,1:3])
 ggplot(PCs, aes(x=PC1, y=PC2)) +
   geom_point() +
   theme_bw()</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-3">
+Past versions of unnamed-chunk-3-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-3.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#Correlate PCs back to original Cell Type Porportions
 Cor.Mat &lt;- cor(PCs, (CellTypePorportions %&gt;% column_to_rownames(&quot;Input.Sample&quot;)))
 heatmap.2(t(Cor.Mat), trace = &quot;none&quot;, cexRow=0.5, col=bluered(75), Colv=FALSE)</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-4">
+Past versions of unnamed-chunk-3-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-3-4.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Seems reasonable to just do GWAS on the first two PCs, the first of which mostly represents cardiac muscle cell and fibroblast, the second PC mostly correlates with myofibroblast and endothelial.</p>
 <p>Let’s write out these first 2 PC phenotype proxies, as well as the original cardiac muscle cell portions, and endothelial cell porportions. I may consider running a GWAS on all of those phenotypes. I will also inverse normalize phenotypes here. This should moderate impact of outliers, so I won’t do any outlier filtering.</p>
 <pre class="r"><code>InverseNormTrans &lt;- function(x){
@@ -705,6 +970,43 @@ DataToOutput %&gt;%
   mutate(Ind=str_match(Input.Sample, &quot;^GTEX-\\w+&quot;)) %&gt;%
   count(Ind) %&gt;% pull(n) %&gt;% hist()</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-5-1.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Let’s read more of the GTEx annotations about these samples, to learn about the difference between replicates..</p>
 <pre class="r"><code>Samples &lt;- read.table(&quot;../data/GTExAnnotations/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt&quot;, header=T, sep=&#39;\t&#39;, quote=&quot;&quot;) %&gt;%
   filter(SAMPID %in% DataToOutput$Input.Sample) %&gt;%
@@ -955,6 +1257,43 @@ ggplot(ScatterData1, aes(x=`Heart - Atrial Appendage`, y=`Heart - Left Ventricle
   geom_point() +
   theme_bw()</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-7-1.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cor(ScatterData1)</code></pre>
 <pre><code>                         Heart - Atrial Appendage Heart - Left Ventricle
 Heart - Atrial Appendage                1.0000000              0.5256553
@@ -977,6 +1316,43 @@ ggplot(ScatterData2, aes(x=`1`, y=`2`)) +
   ylab(&quot;Random individual B, left ventricle&quot;) +
   theme_bw()</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-2">
+Past versions of unnamed-chunk-7-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-7-2.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>cor(ScatterData2)</code></pre>
 <pre><code>            1           2
 1  1.00000000 -0.02041527
@@ -990,6 +1366,43 @@ ggplot(ScatterData2, aes(x=`1`, y=`2`)) +
   geom_point() +
   theme_bw()</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-8-1.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>CellTypePorportions %&gt;%
   gather(key=&quot;cell.type&quot;, value=&quot;percent&quot;, -Input.Sample) %&gt;%
   left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
@@ -1002,6 +1415,43 @@ ggplot(ScatterData2, aes(x=`1`, y=`2`)) +
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-2">
+Past versions of unnamed-chunk-8-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-8-2.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Ok, actually, PC2 represents the cell types associated with atrial appendage, but it still seems true that the PC1 (cardiac muscle cell and fibroblast axis) correlates across individuals quite well.</p>
 <p>Let’s filter for left ventricle samples only, redo the PCA analysis, and write out quantile normalized phenotypes.</p>
 <pre class="r"><code>#PCA
@@ -1017,11 +1467,85 @@ PC.results &lt;- CellTypePorportions %&gt;%
 
 screeplot(PC.results, type=&quot;lines&quot;)</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-9-1.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>PCs &lt;- as.data.frame(PC.results$x[,1:3])
 ggplot(PCs, aes(x=PC1, y=PC2)) +
   geom_point() +
   theme_bw()</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-2">
+Past versions of unnamed-chunk-9-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-9-2.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#Correlate PCs back to original Cell Type Porportions
 df.ToCorrelate &lt;- inner_join(
   PCs %&gt;% rownames_to_column(&quot;Input.Sample&quot;),
@@ -1030,6 +1554,43 @@ df.ToCorrelate &lt;- inner_join(
 Cor.Mat &lt;- cor(df.ToCorrelate[,1:3], df.ToCorrelate[,4:ncol(df.ToCorrelate)])
 heatmap.2(t(Cor.Mat), trace = &quot;none&quot;, cexRow=0.5, col=bluered(75), Colv=FALSE)</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-3">
+Past versions of unnamed-chunk-9-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-9-3.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>I think just using the PC1 as the phenotype, which mostly captures the cardiomyocte:fibroblast axis, is reasonable enough…</p>
 <pre class="r"><code>DataToOutput &lt;- PCs %&gt;%
   rownames_to_column(&quot;Input.Sample&quot;) %&gt;%
@@ -1107,6 +1668,43 @@ head(DataToOutput) %&gt;% kable()</code></pre>
 #Data looks normally distributed
 qqnorm(DataToOutput$cardiac_muscle_cell)</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-11-1.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#With sd=1, suggesting I didn&#39;t accidently aggregate all phenotypes before quantile normalization
 sd(DataToOutput$cardiac_muscle_cell)</code></pre>
 <pre><code>[1] 0.9995252</code></pre>
@@ -1119,11 +1717,359 @@ inner_join(
   ggplot(aes(x=cardiac_muscle_cell.QQnorm, y=cardiac_muscle_cell.raw)) +
   geom_point()</code></pre>
 <p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-2">
+Past versions of unnamed-chunk-11-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/0e88516ab4c686414d9dba3262875170cd45b1e5/docs/figure/20200907_Response_Point_09.Rmd/unnamed-chunk-11-2.png" target="_blank">0e88516</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>and finally, write out the quantile normalized cell porportion phenotypes</p>
 <pre class="r"><code>DataToOutput %&gt;%
   mutate(Ind=str_match(Input.Sample, &quot;^GTEX-\\w+&quot;)) %&gt;%
   dplyr::select(Ind, everything(), -Input.Sample) %&gt;%
 write_tsv(&quot;../output/CellProportionPhenotypesNormalizedForGWAS.tab&quot;)</code></pre>
+<p>Next, I want another way to communicate the idea that there is a strong individual component to cell type proportions in heart samples, perhaps stronger than the tissue type (left ventricle vs atrial appendage) component. I will use variance partition package to evaluate this.</p>
+<p>Let’s go back to the original CIBERSORT estimates for GTEx samples, and before using those as phenotypes (instead of gene expression traits) for variancePartition package, let’s quantile normalize those phenotypes to better fit the assumptions of the models used in variancePartition.</p>
+<pre class="r"><code>NormalizedPorportions &lt;- CellTypePorportions %&gt;%
+  gather(key=&quot;cell.type&quot;, value=&quot;percent&quot;, -Input.Sample) %&gt;%
+  mutate(percent=jitter(percent)) %&gt;% #add jitter to break ties before qqnorm
+  group_by(cell.type) %&gt;%
+  mutate(NormalizedPhenotype=InverseNormTrans(percent)) %&gt;%
+  ungroup() %&gt;%
+  pivot_wider(id_cols = Input.Sample, names_from = cell.type, values_from =percent) %&gt;%
+  column_to_rownames(&quot;Input.Sample&quot;) %&gt;% t()
+
+NormalizedPorportions[,1:10] %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">G</th>
+<th>TEX-1117F-0726-SM-5GIEN G</th>
+<th>TEX-111FC-0626-SM-5N9CU G</th>
+<th>TEX-111FC-0826-SM-5GZWO G</th>
+<th>TEX-111VG-0326-SM-5GZX7 G</th>
+<th>TEX-111YS-0326-SM-5GZZ3 G</th>
+<th>TEX-111YS-0426-SM-5987O G</th>
+<th>TEX-1122O-0626-SM-5N9B9 G</th>
+<th>TEX-1122O-0826-SM-5GICV G</th>
+<th>TEX-117XS-0726-SM-5H131 G</th>
+<th align="left">TEX-117YW-0326-SM-5N9CY</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">cardiac_muscle_cell</td>
+<td>0.4141356</td>
+<td>0.5934666</td>
+<td>0.6191653</td>
+<td>0.4135015</td>
+<td>0.7092296</td>
+<td>0.6929498</td>
+<td>0.6811521</td>
+<td>0.7749831</td>
+<td>0.5346833</td>
+<td align="left">0.3191788</td>
+</tr>
+<tr class="even">
+<td align="right">cardiac_neuron</td>
+<td>0.0390136</td>
+<td>0.0304842</td>
+<td>0.0391785</td>
+<td>0.0633567</td>
+<td>0.0367920</td>
+<td>0.0390338</td>
+<td>0.0419828</td>
+<td>0.0271575</td>
+<td>0.0313309</td>
+<td align="left">-0.0000032</td>
+</tr>
+<tr class="odd">
+<td align="right">endocardial_cell</td>
+<td>0.0247089</td>
+<td>-0.0000009</td>
+<td>-0.0000061</td>
+<td>0.0000182</td>
+<td>0.0071781</td>
+<td>0.0000031</td>
+<td>-0.0000116</td>
+<td>0.0000135</td>
+<td>0.0040322</td>
+<td align="left">-0.0000083</td>
+</tr>
+<tr class="even">
+<td align="right">endothelial_cell</td>
+<td>0.0173226</td>
+<td>0.0000130</td>
+<td>0.0884472</td>
+<td>0.0216611</td>
+<td>0.0568733</td>
+<td>0.1227622</td>
+<td>0.0576320</td>
+<td>0.0587050</td>
+<td>0.0372841</td>
+<td align="left">0.2523361</td>
+</tr>
+<tr class="odd">
+<td align="right">fibroblast</td>
+<td>0.2976619</td>
+<td>0.2718415</td>
+<td>0.0896680</td>
+<td>0.3747867</td>
+<td>0.0534478</td>
+<td>-0.0000125</td>
+<td>0.0693122</td>
+<td>-0.0000076</td>
+<td>0.2654345</td>
+<td align="left">0.2224203</td>
+</tr>
+<tr class="even">
+<td align="right">leukocyte</td>
+<td>0.0735981</td>
+<td>0.0159788</td>
+<td>0.0193535</td>
+<td>0.0000094</td>
+<td>0.0368364</td>
+<td>-0.0000083</td>
+<td>0.0489582</td>
+<td>0.0378909</td>
+<td>0.0149666</td>
+<td align="left">-0.0000063</td>
+</tr>
+<tr class="odd">
+<td align="right">myofibroblast_cell</td>
+<td>0.0539597</td>
+<td>0.0000108</td>
+<td>0.0317200</td>
+<td>0.0063956</td>
+<td>0.0273143</td>
+<td>0.0729573</td>
+<td>0.0378072</td>
+<td>0.0490657</td>
+<td>0.0026425</td>
+<td align="left">0.0799423</td>
+</tr>
+<tr class="even">
+<td align="right">smooth_muscle_cell</td>
+<td>0.0796298</td>
+<td>0.0882192</td>
+<td>0.1125175</td>
+<td>0.1202596</td>
+<td>0.0723462</td>
+<td>0.0723279</td>
+<td>0.0631420</td>
+<td>0.0521713</td>
+<td>0.1095611</td>
+<td align="left">0.1261548</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>info &lt;- Samples %&gt;%
+  dplyr::select(SAMPID, Ind, SMTSD) %&gt;%
+  filter(SAMPID %in% colnames(NormalizedPorportions)) %&gt;%
+  column_to_rownames(&quot;SAMPID&quot;)
+head(info) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">In</th>
+<th>d SM</th>
+<th align="left">TSD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">GTEX-1117F-0726-SM-5GIEN</td>
+<td>1117F</td>
+<td align="left">Heart - Atrial Appendage</td>
+</tr>
+<tr class="even">
+<td align="right">GTEX-111FC-0626-SM-5N9CU</td>
+<td>111FC</td>
+<td align="left">Heart - Atrial Appendage</td>
+</tr>
+<tr class="odd">
+<td align="right">GTEX-111FC-0826-SM-5GZWO</td>
+<td>111FC</td>
+<td align="left">Heart - Left Ventricle</td>
+</tr>
+<tr class="even">
+<td align="right">GTEX-111VG-0326-SM-5GZX7</td>
+<td>111VG</td>
+<td align="left">Heart - Atrial Appendage</td>
+</tr>
+<tr class="odd">
+<td align="right">GTEX-111YS-0326-SM-5GZZ3</td>
+<td>111YS</td>
+<td align="left">Heart - Atrial Appendage</td>
+</tr>
+<tr class="even">
+<td align="right">GTEX-111YS-0426-SM-5987O</td>
+<td>111YS</td>
+<td align="left">Heart - Left Ventricle</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># form &lt;- ~ SMTSD + Ind
+form &lt;- ~ (1|SMTSD) + (1|Ind)
+
+
+varPart &lt;- fitExtractVarPartModel( NormalizedPorportions, form, info )</code></pre>
+<pre><code>Dividing work into 8 chunks...
+
+Total: 1 s</code></pre>
+<pre class="r"><code>vp &lt;- sortCols( varPart ) %&gt;%
+  dplyr::rename(&quot;Tissue\n(Atrial appendage vs\nLeft ventricle)&quot;=SMTSD, Individual=Ind)
+plot.vp.Bars &lt;- plotPercentBars( vp)
+
+kable(vp)</code></pre>
+<pre><code>                 Individual   Tissue</code></pre>
+<p>(Atrial appendage vs Left ventricle) Residuals ——————– ———– ——————————————– ———- cardiac_muscle_cell 0.4197858 0.0297513 0.5504629 cardiac_neuron 0.0000000 0.1431259 0.8568741 endocardial_cell 0.1844964 0.0612018 0.7543017 endothelial_cell 0.0153511 0.3435168 0.6411320 fibroblast 0.3971254 0.3240560 0.2788186 leukocyte 0.1018766 0.0431625 0.8549609 myofibroblast_cell 0.0980631 0.4811283 0.4208086 smooth_muscle_cell 0.3869839 0.0467099 0.5663061</p>
+<pre class="r"><code>plotVarPart( vp )</code></pre>
+<p><img src="figure/20200907_Response_Point_09.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="conclusions-and-final-figures" class="section level3">
+<h3>Conclusions and final figures</h3>
+<p>Tissue biopsies from left ventricle vs atrial appendage from the same donor correlate better than biopsies from left ventricle from random donors. This is consistent with cell type heterogeneity being due to individual level factors, and not purely technical issues regarding dissecting anatomically similar heart regions. For this analysis we don’t speculate as to how much of the individual level factors are environmental (including age, lifestyle, etc) versus genetic, though, throughout the paper we obviously recognize both play a factor.</p>
+<p>Now I will create and/or save the final figures from this analysis worth presenting to the paper or response to reviewers:</p>
+<pre class="r"><code>#Pvariance partition bars plot
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.CellType.Vp.bars.pdf&quot;, plot.vp.Bars, height=3, width=5)
+
+#What is correlation between left ventricle and atrial appendage, across individuals
+ScatterData1 &lt;- CellTypePorportions %&gt;%
+  left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
+  dplyr::select(cardiac_muscle_cell, Ind, SMTSD) %&gt;%
+  pivot_wider(id_cols=&quot;Ind&quot;, names_from=&quot;SMTSD&quot;, values_from = &quot;cardiac_muscle_cell&quot;) %&gt;%
+  drop_na() %&gt;%
+  column_to_rownames(&quot;Ind&quot;)
+A.cor&lt;-signif(cor(ScatterData1, method = &quot;spearman&quot;)[1,2], 2)
+lb1 &lt;- bquote(rho == .(A.cor))
+
+ggplot(ScatterData1, aes(x=`Heart - Atrial Appendage`, y=`Heart - Left Ventricle`)) +
+  geom_point() +
+  xlab(&quot;Proportion cardiac muscle cell\nHeart - left ventricle&quot;) +
+  ylab(&quot;Proportion cardiac muscle cell\nHeart - Atrial appendage&quot;) +
+  # ggtitle(&quot;Matched individuals,\ncorrelation of tissue samples&quot;) +
+  annotate(&quot;text&quot;,x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=F) +
+  theme_bw()
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.CellType.ScatterA.pdf&quot;, height=3, width=3)
+
+#What is correlation between randomly selected individuals, within left ventricle individual
+set.seed(0)
+ScatterData2 &lt;- CellTypePorportions %&gt;%
+  left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
+  dplyr::select(cardiac_muscle_cell, Ind, SMTSD) %&gt;%
+  filter(SMTSD==&quot;Heart - Atrial Appendage&quot;) %&gt;%
+  mutate(RandomGroupAssignment=sample(2, n(), replace = T)) %&gt;%
+  dplyr::group_by(RandomGroupAssignment) %&gt;% 
+  mutate(row_number = row_number()) %&gt;%
+  ungroup() %&gt;%
+  pivot_wider(id_cols = &quot;row_number&quot;, names_from = &quot;RandomGroupAssignment&quot;, values_from = &quot;cardiac_muscle_cell&quot;) %&gt;%
+  drop_na() %&gt;%
+  column_to_rownames(&quot;row_number&quot;)
+B.cor &lt;- signif(cor(ScatterData2, method = &quot;spearman&quot;)[1,2],2)
+lb1 &lt;- bquote(rho == .(B.cor))
+
+ggplot(ScatterData2, aes(x=`1`, y=`2`)) +
+  geom_point() +
+  xlab(&quot;Proportion cardiac muscle cell\nRandom individual A&quot;) +
+  ylab(&quot;Proportion cardiac muscle cell\nRandom individual B&quot;) +
+  annotate(&quot;text&quot;,x=Inf,y=-Inf, label=lb1, hjust=1, vjust=-0.1, parse=F) +
+  # ggtitle(&quot;Matched tissue (Left venticle),\ncorrelation of random individuals&quot;) +
+  theme_bw()
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.CellType.ScatterB.pdf&quot;, height=3, width=3)
+
+#Admix plot
+AdmixPlotData &lt;- CellTypePorportions %&gt;%
+  separate(Input.Sample, into = c(&quot;GTEX&quot;, &quot;Ind&quot;, &quot;tissueSiteID&quot;, &quot;SM&quot;, &quot;Aliquot&quot;), remove = F, sep=&quot;-&quot;,)  %&gt;%
+  add_count(Ind) %&gt;%
+  filter(n==2) %&gt;%
+  dplyr::select(-c(&quot;GTEX&quot;, &quot;Ind&quot;, &quot;tissueSiteID&quot;, &quot;SM&quot;, &quot;Aliquot&quot;, &quot;n&quot;)) %&gt;%
+  gather(key=&quot;cell.type&quot;, value=&quot;percent&quot;, -Input.Sample) %&gt;%
+  left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
+  dplyr::select(cell.type:Ind, SMTSD, -GTEX) %&gt;%
+  pivot_wider(names_from =c(&quot;SMTSD&quot;, &quot;cell.type&quot;), values_from=&quot;percent&quot;, names_sep=&quot;.&quot;) %&gt;%
+  mutate(CardiacMuscleCellPercentile=percent_rank(`Heart - Left Ventricle.cardiac_muscle_cell`)) %&gt;% 
+  dplyr::select(&quot;Heart - Left Ventricle.cardiac_muscle_cell&quot;, everything()) %&gt;%
+  arrange(CardiacMuscleCellPercentile) %&gt;%
+  gather(key=&quot;Tissue.celltype&quot;, value=&quot;percent&quot;, -c(&quot;Ind&quot;, &quot;CardiacMuscleCellPercentile&quot;)) %&gt;%
+  separate(Tissue.celltype, into=c(&quot;Tissue&quot;, &quot;cell.type&quot;), sep = &quot;\\.&quot;)
+ggplot(AdmixPlotData, aes(x=reorder(Ind, percent, FUN=max))) +
+# ggplot(AdmixPlotData, aes(x=CardiacMuscleCellPercentile)) +
+  geom_bar(stat=&quot;identity&quot;, aes(fill=cell.type, y=percent)) +
+  geom_rug(aes(color=CardiacMuscleCellPercentile), show_guide = T) +
+  scale_color_gradientn(colours = rainbow(5), name=&quot;Individual; colored by rank proportion\ncardiac muscle cells in left ventricle&quot;) +
+  scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
+  facet_wrap(~Tissue) +
+  ylab(&quot;cell type fraction&quot;) +
+  guides(
+         color = guide_colourbar(title.position=&quot;top&quot;,ticks=F, direction = &quot;horizontal&quot;,  barwidth=12, raster=T, label=F),
+         fill = guide_legend(title.position = &quot;top&quot;, direction = &quot;vertical&quot;, nrow=3)) +
+  theme_bw() +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  theme(legend.position=&quot;bottom&quot;)
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.CellType.GTEXadmix.bars.pdf&quot;, height=4,width=8)
+
+#PCA
+PC.results &lt;- CellTypePorportions %&gt;%
+  separate(Input.Sample, into = c(&quot;GTEX&quot;, &quot;Ind&quot;, &quot;tissueSiteID&quot;, &quot;SM&quot;, &quot;Aliquot&quot;), remove = F, sep=&quot;-&quot;,)  %&gt;%
+  add_count(Ind) %&gt;%
+  filter(n==2) %&gt;%
+  dplyr::select(-c(&quot;GTEX&quot;, &quot;tissueSiteID&quot;, &quot;Ind&quot;, &quot;SM&quot;, &quot;Aliquot&quot;, &quot;n&quot;)) %&gt;%
+  column_to_rownames(&quot;Input.Sample&quot;) %&gt;%
+  as.matrix() %&gt;%
+  prcomp(center=T, scale=F)
+
+screeplot(PC.results, type=&quot;lines&quot;)
+
+PCs &lt;- as.data.frame(PC.results$x[,1:3])
+PCs %&gt;%
+  rownames_to_column(&quot;Input.Sample&quot;) %&gt;%
+  left_join(Samples, by=c(&quot;Input.Sample&quot;=&quot;SAMPID&quot;)) %&gt;%
+  dplyr::select(PC1:PC3, Input.Sample, SMTSD) %&gt;%
+  separate(Input.Sample, into = c(&quot;GTEX&quot;, &quot;Ind&quot;, &quot;tissueSiteID&quot;, &quot;SM&quot;, &quot;Aliquot&quot;), remove = F, sep=&quot;-&quot;)  %&gt;%
+  left_join(
+    AdmixPlotData %&gt;% distinct(Ind, &quot;Heart - Left Ventricle&quot;, .keep_all=T) %&gt;% dplyr::select(Ind, CardiacMuscleCellPercentile),
+    by=&quot;Ind&quot;
+    ) %&gt;%
+ggplot(aes(x=PC1, y=PC2, color=CardiacMuscleCellPercentile)) +
+  geom_point(aes(shape=SMTSD)) +
+  scale_color_gradientn(colours = rainbow(5)) +
+  theme_bw()
+
+write_delim(vp %&gt;% rownames_to_column(&quot;Cell type&quot;), &quot;../figures/OriginalArt/ResponseToReviewers.CellType.Vp.bars.source.tsv&quot;, delim=&#39;\t&#39;)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1144,31 +2090,47 @@ locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
+[1] parallel  stats     graphics  grDevices utils     datasets  methods  
+[8] base     
 
 other attached packages:
- [1] gplots_3.0.1.1  knitr_1.26      forcats_0.4.0   stringr_1.4.0  
- [5] dplyr_0.8.3     purrr_0.3.3     readr_1.3.1     tidyr_1.0.0    
- [9] tibble_2.1.3    ggplot2_3.2.1   tidyverse_1.3.0
+ [1] latex2exp_0.4.0          variancePartition_1.14.1 Biobase_2.44.0          
+ [4] BiocGenerics_0.30.0      scales_1.1.0             foreach_1.4.7           
+ [7] limma_3.40.6             gplots_3.0.1.1           knitr_1.26              
+[10] forcats_0.4.0            stringr_1.4.0            dplyr_0.8.3             
+[13] purrr_0.3.3              readr_1.3.1              tidyr_1.0.0             
+[16] tibble_2.1.3             ggplot2_3.2.1            tidyverse_1.3.0         
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.5         lubridate_1.7.4    lattice_0.20-38    gtools_3.8.1      
- [5] assertthat_0.2.1   zeallot_0.1.0      rprojroot_1.3-2    digest_0.6.23     
- [9] R6_2.4.1           cellranger_1.1.0   backports_1.1.5    reprex_0.3.0      
-[13] evaluate_0.14      httr_1.4.1         highr_0.8          pillar_1.4.2      
-[17] rlang_0.4.1        lazyeval_0.2.2     readxl_1.3.1       rstudioapi_0.10   
-[21] gdata_2.18.0       rmarkdown_1.18     labeling_0.3       munsell_0.5.0     
-[25] broom_0.5.2        compiler_3.6.1     httpuv_1.5.2       modelr_0.1.5      
-[29] xfun_0.11          pkgconfig_2.0.3    htmltools_0.4.0    tidyselect_0.2.5  
-[33] workflowr_1.5.0    fansi_0.4.0        crayon_1.3.4       dbplyr_1.4.2      
-[37] withr_2.1.2        later_1.0.0        bitops_1.0-6       grid_3.6.1        
-[41] nlme_3.1-143       jsonlite_1.6       gtable_0.3.0       lifecycle_0.1.0   
-[45] DBI_1.0.0          git2r_0.26.1       magrittr_1.5       scales_1.1.0      
-[49] KernSmooth_2.23-16 cli_2.0.0          stringi_1.4.3      farver_2.0.1      
-[53] fs_1.3.1           promises_1.1.0     xml2_1.2.2         ellipsis_0.3.0    
-[57] generics_0.0.2     vctrs_0.2.0        tools_3.6.1        glue_1.3.1        
-[61] hms_0.5.2          yaml_2.2.0         colorspace_1.4-1   caTools_1.17.1.3  
-[65] rvest_0.3.5        haven_2.2.0       </code></pre>
+ [1] nlme_3.1-143        bitops_1.0-6        fs_1.3.1           
+ [4] pbkrtest_0.4-8.6    lubridate_1.7.4     doParallel_1.0.15  
+ [7] progress_1.2.2      httr_1.4.1          rprojroot_1.3-2    
+[10] tools_3.6.1         backports_1.1.5     R6_2.4.1           
+[13] KernSmooth_2.23-16  DBI_1.0.0           lazyeval_0.2.2     
+[16] colorspace_1.4-1    withr_2.1.2         prettyunits_1.0.2  
+[19] tidyselect_0.2.5    compiler_3.6.1      git2r_0.26.1       
+[22] cli_2.0.0           rvest_0.3.5         xml2_1.2.2         
+[25] labeling_0.3        caTools_1.17.1.3    digest_0.6.23      
+[28] minqa_1.2.4         rmarkdown_1.18      colorRamps_2.3     
+[31] pkgconfig_2.0.3     htmltools_0.4.0     lme4_1.1-23        
+[34] highr_0.8           dbplyr_1.4.2        rlang_0.4.1        
+[37] readxl_1.3.1        rstudioapi_0.10     farver_2.0.1       
+[40] generics_0.0.2      jsonlite_1.6        BiocParallel_1.18.1
+[43] gtools_3.8.1        magrittr_1.5        Matrix_1.2-18      
+[46] Rcpp_1.0.5          munsell_0.5.0       fansi_0.4.0        
+[49] lifecycle_0.1.0     stringi_1.4.3       whisker_0.4        
+[52] yaml_2.2.0          MASS_7.3-51.4       plyr_1.8.5         
+[55] grid_3.6.1          gdata_2.18.0        promises_1.1.0     
+[58] crayon_1.3.4        lattice_0.20-38     haven_2.2.0        
+[61] splines_3.6.1       hms_0.5.2           zeallot_0.1.0      
+[64] pillar_1.4.2        boot_1.3-23         reshape2_1.4.3     
+[67] codetools_0.2-16    reprex_0.3.0        glue_1.3.1         
+[70] evaluate_0.14       modelr_0.1.5        vctrs_0.2.0        
+[73] nloptr_1.2.2.2      httpuv_1.5.2        cellranger_1.1.0   
+[76] gtable_0.3.0        assertthat_0.2.1    xfun_0.11          
+[79] broom_0.5.2         later_1.0.0         iterators_1.0.12   
+[82] workflowr_1.5.0     statmod_1.4.34      ellipsis_0.3.0     </code></pre>
+</div>
 </div>
 
 

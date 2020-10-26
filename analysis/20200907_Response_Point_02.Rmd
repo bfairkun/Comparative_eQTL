@@ -1,0 +1,344 @@
+---
+title: "ResponseToReviewer_Point6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+### Overview
+
+Original reviewer point:
+
+
+>The second test is to correlate the higher coding sequence conservation with lower dispersion. Again, the positive result is not unexpected. There are many indirect and/or confounding factors that may explain the effect. This reviewer, however, understands it is impossible to control them all (also authors have attempted to address some of them in the next few tests). However, here it is better to add exploratory analyses for genes in different functional groups and also give examples of outlier genes that do not follow the rule. 
+
+This proposed analysis was difficult for me to come up with a way to enact. One idea is to pick each a set of gene annotation groups (which are often overlapping, complicating the matter), and then perform the dn/ds vs dispersion correlation test for each gene group. The most appropriate gene set annotations I found to use for this purpose is the [MSigDB Hallmark gene collection](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4707969/), which contains 50 gene sets, each with mostly non-overlapping sets of genes no greater than 200 per set.
+
+Another approach, which I will also enact below, is to perform a standard GSEA analysis using the residual of the genome-wide dn/ds vs dispersion trend. In other words, what gene sets have higher dispersion than you would expect given its dn/ds.
+
+
+### Analysis
+
+First, load necessary libraries... and read in data
+```{r}
+library(tidyverse)
+library(knitr)
+library(stats)
+library("clusterProfiler")
+library("org.Hs.eg.db")
+library(broom)
+library(qvalue)
+library(data.table)
+library(Cairo)
+library(MASS)
+
+#read in table of overdispersion, dispersion, mean expresion estimates
+Dispersion <- read.delim('../output/OverdispersionEstimatesFromChimp.txt')
+
+Dispersion$MeanDispersion <- (Dispersion$Chimp.Residual + Dispersion$Human.Residual)/2
+
+#Read in table of dn/ds estimates
+PanMammal.dnds <- read.delim("../data/Overall_dN_dS.bed", col.names = c("chrom", 'start', "stop", "gene", "score", "strand", "blockstart", "blockstop", "color", "ensemblprotein", "dn.ds"))
+
+#Gene name symbols
+Symbols <- read.delim("../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz", stringsAsFactors = F) %>% dplyr::select(ensembl_gene_id=Gene.stable.ID, hgnc_symbol=HGNC.symbol)
+
+MergedTable <- left_join(Dispersion, Symbols, by=c("gene"="ensembl_gene_id")) %>% 
+  left_join(PanMammal.dnds, by=c("hgnc_symbol"="gene")) %>%
+  dplyr::select(gene, Chimp.Residual, Human.Residual, MeanDispersion, dn.ds) %>%
+  drop_na() %>%
+  filter(dn.ds>0) #drop things that will cause error when taking log.
+
+head(MergedTable) %>% kable()
+
+GmtFile <- "/Users/benfair/Downloads/c5.all.v7.1.symbols.gmt"
+
+NumFields <- max(count.fields(GmtFile, sep = '\t'))
+HallmarkGeneSets <- read.table(GmtFile, header = FALSE, sep = "\t", 
+  col.names = c("GeneSetName", "link", paste0("V",seq_len(NumFields-2))), fill = TRUE, stringsAsFactors = F, na.strings = "") %>%
+  dplyr::select(-link) %>%
+  gather(key="NumGeneInSet", value="gene", -GeneSetName) %>%
+  drop_na() %>%
+  arrange(GeneSetName, NumGeneInSet) %>%
+  dplyr::select(-NumGeneInSet) %>%
+  inner_join(Symbols, by=c("gene"="hgnc_symbol"))
+
+head(HallmarkGeneSets) %>% kable()
+
+```
+
+Now I will get the dn/ds vs dispersion correlation coefficient and p value for each gene set.
+
+```{r}
+Cor.twosidedtest <- HallmarkGeneSets %>%
+  left_join(MergedTable, by=c("ensembl_gene_id"="gene")) %>%
+  drop_na() %>%
+  add_count(GeneSetName) %>%
+  filter(n>=5) %>%
+  group_by(GeneSetName) %>%
+  do(tidy(cor.test(.$dn.ds, .$MeanDispersion, method = "spearman", exact = T))) %>%
+  filter(p.value>0) #filter out buggy cases because of ties in spearman cor test
+
+Cor.twosidedtest %>% head() %>% kable()
+
+hist(Cor.twosidedtest$estimate)
+hist(Cor.twosidedtest$p.value)
+
+```
+
+Given how a lot of these tests are not independent (due to overlapping gene sets), I wasn't sure what to expect in terms of well calibrated P-values. This histogram is a bit comforting. Let's identify genes at some FDR threshold with Storey's q-value method, and see what the strongest gene categories that drive this correlation are.
+
+```{r}
+Cor.twosidedtest$q <- qvalue(Cor.twosidedtest$p.value)$qvalues
+
+#How many sets FDR<0.1
+(Cor.twosidedtest$q < 0.1 ) %>% table()
+
+#Are these significant sets basically just the really big sets with lots of power?
+Cor.twosidedtest <- Cor.twosidedtest %>%
+  mutate(Sig=q<0.1) %>%
+  left_join(
+    HallmarkGeneSets %>% left_join(MergedTable, by=c("ensembl_gene_id"="gene")) %>%
+      drop_na() %>%
+      count(GeneSetName) %>%
+      filter(n>=5),
+    by="GeneSetName"
+  )
+ggplot(Cor.twosidedtest, aes(x=n, color=Sig)) +
+  geom_histogram() +
+  theme_bw()
+
+```
+
+Ok that looks good. Let's make a plot in a similar format to my other GO analyses, separated by BP, MF, or CC. To do this I need to read in different files to map which GO terms belong to which of those categories.
+
+```{r}
+
+GO.categories <- read.table("../data/c5.all.v7.1.symbols.gmt.categories.tsv.gz", col.names = c("GeneSetName", "Category"), sep='\t') %>%
+  mutate(Category=gsub("/Users/benfair/Downloads/c5.(.+?).v7.1.symbols.gmt",replacement = "\\1",Category
+  ))
+
+
+GO.Summary.plot <- Cor.twosidedtest %>% 
+  left_join(GO.categories, by="GeneSetName") %>%
+  dplyr::select(GeneSetName, SpearmansRho=estimate, p.value, p.adjust=q, setSize=n, ONTOLOGY=Category) %>%
+  mutate(Polarization=sign(SpearmansRho)) %>%
+  filter(!Polarization==0) %>%
+  # filter(str_detect(Description, 'DNA')) %>%
+  # group_by(ONTOLOGY, Polarization) %>%
+  group_by(ONTOLOGY, Polarization) %>%
+  arrange(p.adjust) %>%
+  mutate(rowN=row_number()) %>%
+  # top_n(n = 3, wt = -log(p.adjust)) %>%
+  ungroup() %>%
+  filter(rowN<=3) %>%
+  filter(p.adjust<0.1) %>%
+  mutate(GeneSetName=str_remove(GeneSetName, "^GO_")) %>%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `bp` = "Biological Process", `cc` = "Cellular Component", `mf`="Molecular Function")) %>%
+  ggplot(aes(x=SpearmansRho, y=GeneSetName, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_viridis_c(trans="log10", direction=-1, option="D", limits=c(1E-16, 0.1)) +
+  # scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  # xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
+  xlab("Spearman's \u03C1") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+GO.Summary.plot
+
+```
+
+I am skeptical of the negative associations. Consistent with the story I have been building, the strongest associations between dn.ds and dispersion are in immune related genes.
+
+Let's plot that correlation as a scatter plot, along with some randomly chosen category of similar size for comparison
+
+```{r}
+#Find gene categories similar in size as comparison
+Cor.twosidedtest %>% 
+  filter(GeneSetName=="GO_REGULATION_OF_IMMUNE_SYSTEM_PROCESS") %>% kable()
+Cor.twosidedtest %>% 
+  filter(n>579 & n< 649) %>% kable()
+
+#Check out top hits ranked by spearman estimate
+Cor.twosidedtest %>%
+  filter(q<0.1) %>%
+  filter(n>=10) %>%
+  arrange(desc(estimate)) %>% head(30) %>% kable()
+
+#grep for MHC
+Cor.twosidedtest %>%
+  # filter(q<0.1) %>%
+  filter(str_detect(GeneSetName, "MHC")) %>% kable()
+
+```
+
+Ok, let's plot GO_REGULATION_OF_IMMUNE_SYSTEM_PROCESS and GO_ENDOPLASMIC_RETICULUM as illustrative examples.
+
+```{r}
+GeneSetsToPlot <- c("GO_REGULATION_OF_IMMUNE_SYSTEM_PROCESS", "GO_ORGANIC_ACID_METABOLIC_PROCESS", "GO_ANTIGEN_PROCESSING_AND_PRESENTATION_OF_EXOGENOUS_PEPTIDE_ANTIGEN_VIA_MHC_CLASS_I")
+
+Labels <- Cor.twosidedtest %>%
+  filter(GeneSetName %in% GeneSetsToPlot) %>%
+  mutate(label=paste0(
+    "Spearman's \u03C1 = ", signif(estimate,2), "\n",
+    "n = ", n, "\n",
+    "p = ", format.pval(p.value,2))) %>%
+  dplyr::select(GeneSetName, label) %>%
+  mutate(GeneSetNameMod=str_replace_all(str_replace(GeneSetName, "^GO", ""), pattern = "_", " "))
+  
+CorScatterPlots <- HallmarkGeneSets %>%
+  left_join(MergedTable, by=c("ensembl_gene_id"="gene")) %>%
+  filter(GeneSetName %in% GeneSetsToPlot) %>%
+  drop_na() %>%
+  mutate(GeneSetNameMod=str_replace_all(str_replace(GeneSetName, "^GO", ""), pattern = "_", " ")) %>%
+ggplot(aes(x=dn.ds, y=MeanDispersion)) +
+  geom_point(alpha=0.25) +
+  scale_x_continuous(trans="log10", limits=c(.001,2)) +
+  scale_y_continuous(limits=c(-3,3)) +
+  facet_grid(~GeneSetNameMod, labeller = labeller(GeneSetNameMod = label_wrap_gen(width = 25))) +
+  xlab("dN/dS") +
+  ylab("Dispersion") +
+  geom_text(
+  data    = Labels,
+  mapping = aes(x = 0.001, y = Inf, label = label),
+  hjust   = 0,
+  vjust   = 1.1) +
+  theme_bw()
+CorScatterPlots
+ggsave("../figures/OriginalArt/ResponseToReviewers.dnds.GO.pdf", plot = CorScatterPlots, device=cairo_pdf, height=3, width=7)
+  
+```
+
+Ok, now save the relevant plots...
+```{r, eval=F}
+ggsave("../figures/OriginalArt/ResponseToReviewers.dnds.GO.pdf", plot = CorScatterPlots, device=cairo_pdf, height=3, width=7)
+ggsave("../figures/OriginalArt/ResponseToReviewers.GO.summary.pdf", plot = GO.Summary.plot, device=cairo_pdf, height=4, width=5.5)
+
+GO.test.histogram <- ggplot(Cor.twosidedtest, aes(x=p.value)) +
+  geom_histogram(bins=20) +
+  theme_bw() +
+  ylab("Number GO categories") +
+  xlab("Spearman test P values")
+ggsave("../figures/OriginalArt/ResponseToReviewers.GO.hist.pdf", plot = GO.test.histogram, height=3, width=3)
+write_delim(Cor.twosidedtest, "../figures/OriginalArt/ResponseToReviewers.GO.hist.sorce.tsv", delim = '\t')
+
+```
+
+
+Ok, I think I've done enough for this approach.
+
+
+Now let's try the second idea: plot a regression fit of MeanDispersion (mean dispersion estimate between human and chimp) vs the log(dn/ds) (log transformation since dn/ds is more normally distributed on a log scale, which seems more natural). Here I am using the robust regression to not be thrown off so much for outlier points. The idea is to ask if certain gene categories have more dispersion than you would expect given their coding conservation.
+
+EDIT: later I realized this approach isn't as interesting as I thought, I'm going to make eval=F to build the site quicker, rather than have R evaluate these code blocks and make the plot results for this next section.
+
+```{r, eval=F}
+
+ggplot(MergedTable, aes(y=MeanDispersion, x=log(dn.ds))) +
+  geom_point() +
+  geom_smooth(method="rlm") +
+  theme_bw()
+
+
+fit <- rlm(MeanDispersion~log(dn.ds), data=MergedTable )
+plot(fit)
+
+MergedTable$fitResid <-  resid(fit)
+
+ResidualsFromFit <- MergedTable %>%
+  dplyr::select(gene, fitResid) %>%
+  deframe() %>% sort(decreasing = T)
+
+head(ResidualsFromFit)
+
+gsea.resid<-gseGO(gene=ResidualsFromFit,
+            ont = "ALL",
+            OrgDb=org.Hs.eg.db,
+            keyType='ENSEMBL',
+            nPerm=100000)
+
+
+ResidDispersionContrastPlot <-
+  gsea.resid %>% as.data.frame() %>%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize, NES) %>%
+  mutate(Polarization=sign(enrichmentScore)) %>%
+  # filter(str_detect(Description, 'DNA')) %>%
+  # group_by(ONTOLOGY, Polarization) %>%
+  group_by(ONTOLOGY, Polarization) %>%
+  top_n(n = 3, wt = abs(NES)) %>%
+  ungroup() %>%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `BP` = "Biological Process", `CC` = "Cellular Component", `MF`="Molecular Function")) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_viridis_c(trans="log10", limits=c(0.0001, 0.1), direction=-1, option="D") +
+  # scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  # xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
+  xlab("Enrichment") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+ResidDispersionContrastPlot
+
+
+```
+
+To contrast, let's do the same thing on the original dispersion estimates
+
+```{r, eval=F}
+MeanDispersion <- MergedTable %>%
+  dplyr::select(gene, MeanDispersion) %>%
+  deframe() %>% sort(decreasing = T)
+
+gsea.meanDispersion<-gseGO(gene=MeanDispersion,
+            ont = "ALL",
+            OrgDb=org.Hs.eg.db,
+            keyType='ENSEMBL',
+            nPerm=100000)
+
+MeanDispersionContrastPlot <-
+  gsea.meanDispersion %>% as.data.frame() %>%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize, NES) %>%
+  mutate(Polarization=sign(enrichmentScore)) %>%
+  # filter(str_detect(Description, 'DNA')) %>%
+  # group_by(ONTOLOGY, Polarization) %>%
+  group_by(ONTOLOGY, Polarization) %>%
+  top_n(n = 3, wt = abs(NES)) %>%
+  ungroup() %>%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `BP` = "Biological Process", `CC` = "Cellular Component", `MF`="Molecular Function")) %>%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  scale_colour_viridis_c(trans="log10", limits=c(0.0001, 0.1), direction=-1, option="D") +
+  # scale_colour_gradient(low="red", high="black") +
+  facet_grid(ONTOLOGY~., scales = "free") +
+  # xlab("Enrichment\nOverdispersedInHuman<-->OverdispersedInChimp") +
+  xlab("Enrichment") +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse="\n")) +
+  labs(color = "Adjusted P-value") +
+  geom_vline(xintercept = 0, linetype="dotted") +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+MeanDispersionContrastPlot
+
+
+```
+
+
+I see ontology terms related with things that I think of as housekeeping functions (tRNA processing, ribosome, mitochondria complex, RNA processing) as associated with negative residuals (less dispersion than expected, after regressing out dn/ds effect). I still see more cell type specific terms (angiogenesis, leukocyte migration) associated with higher residuals. This is consistent with dispersion partly being related to cell type heterogeneity (genes with housekeeping functions expressed in all cell types being less dispersed), as an effect independent from the negative selection forces that might keep genetically driven dispersion low.
+

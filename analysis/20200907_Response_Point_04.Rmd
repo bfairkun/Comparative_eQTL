@@ -1,0 +1,157 @@
+---
+title: "ResponseToReviewer_Point6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Original reviewer point:
+
+
+>The fourth test authors conducted is to show that dn/ds and pn/ps ratios of genes are correlated with gene expression variability (variance). However, because of the existence of heterogeneity of cell-type composition in samples, any correlation observed may be utterly biased by this single uncontrollable confounding factor. Furthermore, heart tissues contain an over-abundant expression of genes encoded in the mitochondrial genome. The expression level of these mt-genes may vary substantially between samples and reflect the health status of primary sample donors. PEER normalization may have to take this into account as a covariant. 
+
+- dn/ds and pn/ps are dna based measurements and should be totally orthogonal to gene expression variability, cell type heterogeneity between samples and such. 
+- To address the reviewers second point, I will here investigate the extent to which PCA (since I use PCs as covariates in eQTL calling instead of PEER factors) is affected by the inclusion of mitochondrial genes which I originally excluded from analysis. To do this, I will compare the PCA results of the gene expression matrix with imputed MT gene expression values (imputed to the sample-wide median for each gene), and compare it to the results if I use actual expression values.
+
+First load necessary libraries for analysis...
+
+```{r}
+library(tidyverse)
+library(data.table)
+library(knitr)
+library(edgeR)
+library(gplots)
+source("../code/CustomFunctions.R")
+```
+
+Now load the some input files...
+
+First the count table as used in the original manusript...
+
+```{r}
+
+#Get expression values for the 
+CountTableChimpFile <- '../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz'
+CountTableHumanFile <- '../output/PowerAnalysisFullCountTable.Human.subread.txt.gz'
+OutputDE <- '../output/Final/TableS2.tab'
+DropFileName <- '../data/DE_SamplesToDrop.txt'
+
+DropFile <- read.delim(DropFileName, sep='\t', col.names = c("Sample", "Species"), stringsAsFactors = F)
+HumanSamplesToDrop <- DropFile %>% filter(Species=="Human") %>% pull(Sample)
+ChimpSamplesToDrop <- DropFile %>% filter(Species=="Chimp") %>% pull(Sample)
+DE.results <- read.delim(OutputDE, sep='\t', stringsAsFactors = F)
+GeneListForOverdispersionCalculation <- DE.results$Ensembl_geneID
+
+CountTables <- GetCountTables(CountTableChimpFile,
+                              CountTableHumanFile,
+                              0, GeneListForOverdispersionCalculation, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+```
+
+
+Now a fuller count table so we can find expression values from MT genes.
+
+```{r}
+FullTable <- fread("../output/STAR.RawCountTable.txt.gz")
+
+FullTable <- FullTable %>%
+  separate(2, into=paste0("C.", strsplit(colnames(FullTable)[2], ' ')[[1]])) %>%
+  dplyr::select(-2) %>%
+  mutate_at(-1, as.integer)
+
+GeneNames <- read.delim("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz")
+
+
+MT.Genes <- GeneNames %>%
+  filter(str_detect(Chimpanzee.gene.name,pattern="^MT-")) %>%
+  dplyr::select(Chimpanzee.gene.name, Chimpanzee.gene.stable.ID)
+
+#Count table of MT genes
+MT.CountTable <- FullTable %>%
+  filter(GENE %in% MT.Genes$Chimpanzee.gene.stable.ID) %>%
+  column_to_rownames("GENE")
+MT.CountTable %>% kable()
+
+#Add MT genes to count table, and convert to logCPM
+Log.Cpm <- bind_rows(
+  FullTable %>%
+  filter(GENE %in% MT.Genes$Chimpanzee.gene.stable.ID),
+  CountTables$Chimp$Counts %>% rownames_to_column("GENE")
+) %>%
+  column_to_rownames("GENE") %>%
+  dplyr::select(-C.4X0095) %>% 
+  DGEList() %>%
+  calcNormFactors() %>% cpm(log=T) %>% as.data.frame()
+
+#Get median expression of all genes
+Median.Log.Cpm <- apply(Log.Cpm, 1, median)
+
+#Plot median expression of all genes, and MT genes
+data.frame(Med=Median.Log.Cpm) %>%
+  rownames_to_column("GENE") %>%
+  mutate(Is.MT.gene = GENE %in% MT.Genes$Chimpanzee.gene.stable.ID) %>%
+  ggplot(aes(x=Med, color=Is.MT.gene)) +
+  geom_histogram() +
+  facet_wrap(~Is.MT.gene, scales="free_y")
+
+#Make "imputed" count table of MT genes based on median expression of those genes across all samples
+MT.Med.Log.Cpm.df <- data.frame(Med=Median.Log.Cpm) %>%
+  rownames_to_column("GENE") %>%
+  filter(GENE %in% MT.Genes$Chimpanzee.gene.stable.ID) %>%
+  pull(Med) %>%
+  matrix(nrow = nrow(MT.CountTable),ncol = ncol(MT.CountTable)) %>%
+  as.data.frame(row.names = rownames(MT.CountTable))
+colnames(MT.Med.Log.Cpm.df) <- colnames(Log.Cpm)
+
+#Make count table with the MT expression from the imputed values
+Log.Cpm.MT.Genes.Imputed.To.Med <- Log.Cpm %>%
+  as.data.frame() %>%
+  rownames_to_column("GENE") %>%
+  filter(!GENE %in% MT.Genes$Chimpanzee.gene.stable.ID) %>%
+  bind_rows(MT.Med.Log.Cpm.df %>% rownames_to_column("GENE")) %>%
+  column_to_rownames("GENE")
+
+Log.Cpm.MT.Genes.Imputed.To.Med <- bind_rows(
+  MT.Med.Log.Cpm.df %>% rownames_to_column("GENE"),
+  Log.Cpm %>%
+  as.data.frame() %>%
+  rownames_to_column("GENE") %>%
+  filter(!GENE %in% MT.Genes$Chimpanzee.gene.stable.ID)
+) %>%
+  column_to_rownames("GENE")
+  
+qplot(Log.Cpm.MT.Genes.Imputed.To.Med$C.4X0212, Log.Cpm$C.4X0212)
+
+#PCA for both count tables
+PCA.real <- Log.Cpm %>% t() %>% prcomp()
+PCA.imputed <- Log.Cpm.MT.Genes.Imputed.To.Med %>% t() %>% prcomp()
+
+
+summary(PCA.real)
+summary(PCA.imputed)
+
+```
+
+So the fraction of total variance explained by the first 10 PCs in both cases in virtually the same. I will use this to argue that the PC covariates we have already used are similarly effective at capturing cellular state. Let's make a screeplot to show this visually.
+
+```{r}
+bind_rows(
+  summary(PCA.real)$importance %>% t() %>% data.frame() %>% mutate(GeneExpressionMatrix="With MT genes") %>% rownames_to_column("PC"),
+  summary(PCA.imputed)$importance %>% t() %>% data.frame() %>% mutate(GeneExpressionMatrix="Without MT genes") %>% rownames_to_column("PC")) %>% 
+  mutate(PC=as.numeric(PC)) %>%
+  ggplot(aes(x=PC, y=Cumulative.Proportion, color=GeneExpressionMatrix)) +
+  geom_line() +
+  ylab("Cumulative fraction\nvariance explained") +
+  scale_x_continuous(breaks=1:13, limits = c(1,13)) +
+  scale_color_discrete(guide = guide_legend(title.position = "top", nrow = 2)) +
+  theme_bw() +
+  theme(panel.grid.minor = element_blank(), legend.position = "bottom")
+```
+
+And write out the plot...
+```{r, eval=F}
+ggsave("../figures/OriginalArt/ResponseToReviewers.MT.PCA.pdf", height=3, width=3)
+```
+

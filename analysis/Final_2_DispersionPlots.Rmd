@@ -412,10 +412,10 @@ DoHeatmap(Heart.seur, features = ., group.by="Cell.ontology.class", disp.min=0, 
          scale_fill_gradientn(colours = hcl.colors(10, "YlOrRd"))
 
 HighlyDispersed.data <- ggplot_build(HighlyDispersed.p)
-# HighlyDispersed.data$layout$panel_params[[1]]$y.labels
+HighlyDispersed.genes <- HighlyDispersed.data$layout$panel_params[[1]]$y.labels
 
 LowlyDispersed.data <- ggplot_build(LowlyDispersed.p)
-# LowlyDispersed.data$layout$panel_params[[1]]$y.labels
+LowlyDispersed.genes <- LowlyDispersed.data$layout$panel_params[[1]]$y.labels
 
 HighlyDisp.tau.p <- data.frame(genes=HighlyDispersed.data$layout$panel_params[[1]]$y.labels) %>% left_join(CombinedTable, by=c("genes"="MGI.symbol")) %>%
   ggplot(aes(y=1:length(genes), x=1, fill=tau)) +
@@ -431,6 +431,8 @@ HighlyDisp.tau.p <- data.frame(genes=HighlyDispersed.data$layout$panel_params[[1
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank())
 
+LowlyDispersed.data <- ggplot_build(LowlyDispersed.p)
+
 prow <- plot_grid(
   HighlyDispersed.p + theme(legend.position="none"),
   HighlyDisp.tau.p + theme(legend.position="none", plot.margin = margin(t=6)),
@@ -443,6 +445,50 @@ prow <- plot_grid(
 )
 
 ggsave("../figures/OriginalArt/Dispersion.tabmuris.high.png", plot=prow)
+
+#Make a plot to display dispersion distribution of the genes plotted on these heatmaps are in both human and chimp
+ToPlotForReviewer <- ChimpOverdispersionTable %>%
+        left_join(one2one_HumanMouseOrthologs, by=c("gene"="Gene.stable.ID")) %>%
+        filter(!is.na(MGI.symbol)) %>% 
+        left_join(CellNonZeroCounts, by="MGI.symbol") %>%
+  mutate(LowlyDispersed=MGI.symbol %in% LowlyDispersed.genes) %>%
+  mutate(HighlyDispersed=MGI.symbol %in% HighlyDispersed.genes)
+ggplot(ToPlotForReviewer %>% arrange(LowlyDispersed), aes(x=Chimp.Residual, y=Human.Residual, color=LowlyDispersed)) +
+  geom_point(size=0.25) +
+  ylim(c(-3,3)) +
+  xlim(c(-3,3)) +
+  scale_color_manual(values=c("gray", "red")) +
+  coord_fixed() +
+  theme_classic() +
+  geom_hline(yintercept=0, color="#505050", linetype="dotted") +
+  geom_vline(xintercept=0, color="#505050", linetype="dotted") +
+  xlab("Chimp Dispersion") +
+  ylab("Human Dispersion") +
+  theme(legend.position = "none") +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+ggsave("../figures/OriginalArt/ResponseToReviewers.TabMurisPlot.Addition.low.png", height=1.5, width=1.5)
+
+ggplot(ToPlotForReviewer %>% arrange(HighlyDispersed), aes(x=Chimp.Residual, y=Human.Residual, color=HighlyDispersed)) +
+  geom_point(size=0.25) +
+  ylim(c(-3,3)) +
+  xlim(c(-3,3)) +
+  scale_color_manual(values=c("gray", "red")) +
+  coord_fixed() +
+  theme_classic() +
+  geom_hline(yintercept=0, color="#505050", linetype="dotted") +
+  geom_vline(xintercept=0, color="#505050", linetype="dotted") +
+  xlab("Chimp Dispersion") +
+  ylab("Human Dispersion") +
+  theme(legend.position = "none") +
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank())
+ggsave("../figures/OriginalArt/ResponseToReviewers.TabMurisPlot.Addition.high.png", height=1.5, width=1.5)
+
 ```
 
 ### lowly dispersed genes in tab muris

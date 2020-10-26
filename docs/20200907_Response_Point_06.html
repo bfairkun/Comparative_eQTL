@@ -408,7 +408,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-09-10
+<strong>Last updated:</strong> 2020-09-23
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -499,10 +499,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree5f95cbc38ccc25bd80d302da4f64290c16b317b6targetblank5f95cbca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/5f95cbc38ccc25bd80d302da4f64290c16b317b6" target="_blank">5f95cbc</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree52f85bbbd3f47b3f687d35fbfff41f8b53035e5btargetblank52f85bba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/52f85bbbd3f47b3f687d35fbfff41f8b53035e5b" target="_blank">52f85bb</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree5f95cbc38ccc25bd80d302da4f64290c16b317b6targetblank5f95cbca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree52f85bbbd3f47b3f687d35fbfff41f8b53035e5btargetblank52f85bba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -510,6 +510,7 @@ Great! You are using Git for version control. Tracking code development and conn
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    WorkingManuscript.zip
@@ -526,8 +527,21 @@ Ignored files:
     Ignored:    figures/
     Ignored:    output/.DS_Store
 
+Untracked files:
+    Untracked:  analysis/20200907_Response_Point_02.Rmd
+    Untracked:  analysis/20200907_Response_Point_04.Rmd
+    Untracked:  data/c5.all.v7.1.symbols.gmt
+    Untracked:  data/c5.all.v7.1.symbols.gmt.categories.tsv.gz
+    Untracked:  data/h.all.v7.1.symbols.gmt
+
 Unstaged changes:
+    Modified:   analysis/20200907_Response_OriginalComments.Rmd
     Modified:   analysis/20200907_Response_Point_06.Rmd
+    Modified:   analysis/20200907_Response_Point_09-2.Rmd
+    Modified:   analysis/20200907_Response_Point_09.Rmd
+    Modified:   analysis/20200907_Response_Point_11.Rmd
+    Modified:   analysis/Final_2_DispersionPlots.Rmd
+    Modified:   analysis_temp/TabulaMuris_analysis2.Rmd
 
 </code></pre>
 <p>
@@ -566,6 +580,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/25874ad35c0d0fcc1004f9d1e124654849982a77/analysis/20200907_Response_Point_06.Rmd" target="_blank">25874ad</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/25874ad35c0d0fcc1004f9d1e124654849982a77/docs/20200907_Response_Point_06.html" target="_blank">25874ad</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+<td>
+update site
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -611,12 +659,20 @@ update site
 <blockquote>
 <p>I would like to see more discussion about the inter-relatedness of the chimpanzees in the analysis of gene expression. Is that contributing to the power of the DE analysis, which has really high numbers of DE genes. That may certainly be due to the large samples size, but should be addressed. Related to that, the support that the gene-wise dispersion estimates are well correlated in humans and chimpanzees overall (Fig1C, and S4) seems qualitative. It looks like the chimpanzees might have less dispersion overall?</p>
 </blockquote>
-<p>I will address the first point (about relatedness in DE analysis) empricially by reporfming DE analysis with subsamples of chimps that have some relatively high degree of inter-relatedness, compared to subsamples that do not have such relatedness.</p>
+<p>I will address the first point (about relatedness in DE analysis) two ways. Firstly, I will use variance partition to argue that the relatedness of some of the chimps probably has little impact on the interspecies DE analysis, given that a relatively much larger fraction of variance will probably be explained species, batch, etc. Then I will empricially address this by reperforming DE analysis with subsamples of chimps that have some relatively high degree of inter-relatedness, compared to subsamples that do not have such relatedness.</p>
 <p>First load necessary libraries for analysis…</p>
 <pre class="r"><code>library(tidyverse)
 library(gplots)
 library(readxl)
-library(scales)</code></pre>
+library(scales)
+library(variancePartition)
+library(&#39;limma&#39;)
+library(&#39;edgeR&#39;)
+library(pbapply)
+library(knitr)
+library(readxl)
+
+source(&quot;../code/CustomFunctions.R&quot;)</code></pre>
 <p>Load relatedness matrix and RNA-seq sample batch info</p>
 <pre class="r"><code>#Relatedness matrix
 SampleLabels &lt;- read.table(&#39;../output/ForAssociationTesting.temp.fam&#39;, stringsAsFactors = F)$V2
@@ -639,7 +695,22 @@ BatchColor &lt;- data.frame(IndividualID=as.character(colnames(GemmaMatrix))) %&
   pull(Colors) %&gt;% as.character()
 
 diag(GemmaMatrix) &lt;- NA #For plotting purposes, just don&#39;t show the diagonol so that the color scale is better for non-diagnol entries
-heatmap.2(GemmaMatrix, trace=&quot;none&quot;, RowSideColors = BatchColor, ColSideColors = BatchColor)</code></pre>
+
+hclustfunc &lt;- function(x) hclust(x, method=&quot;complete&quot;)
+distfunc &lt;- function(x) dist(x,method=&quot;euclidean&quot;)
+d &lt;- distfunc(GemmaMatrix)
+fit &lt;- hclustfunc(d)
+groups &lt;- cutree(fit, k=7) 
+
+NumbersToColors &lt;- function(NumberVector){
+  N &lt;- length(unique(NumberVector))
+  Key &lt;- setNames(hue_pal()(N), 1:N)
+  return(list(ColorVector=recode(NumberVector, !!!Key), Key=Key))
+}
+
+ClusterGroupColors &lt;- NumbersToColors(groups)
+
+heatmap.2(GemmaMatrix, trace=&quot;none&quot;, RowSideColors = ClusterGroupColors$ColorVector, ColSideColors = BatchColor)</code></pre>
 <p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
@@ -665,6 +736,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/25874ad35c0d0fcc1004f9d1e124654849982a77/docs/figure/20200907_Response_Point_06.Rmd/unnamed-chunk-2-1.png" target="_blank">25874ad</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/bfairkun/Comparative_eQTL/blob/5f95cbc38ccc25bd80d302da4f64290c16b317b6/docs/figure/20200907_Response_Point_06.Rmd/unnamed-chunk-2-1.png" target="_blank">5f95cbc</a>
 </td>
 <td>
@@ -678,7 +760,1137 @@ Benjmain Fair
 </table>
 </div>
 </div>
-<p>I may pick out some of those somewhat related sample blocks for DE analysis… First, I should also try to match batches for this analysis.</p>
+<p>Column colors are RNA library prep batch, row colors are cluster groups (cutree function). I may pick out some of those somewhat related sample blocks for DE analysis…</p>
+<pre class="r"><code>Groups.df&lt;-as.data.frame(groups) %&gt;% rownames_to_column(&quot;Ind&quot;)
+
+GemmaMatrix %&gt;% as.data.frame() %&gt;%
+  rownames_to_column(&quot;IndA&quot;) %&gt;%
+  gather(key=&quot;IndB&quot;, value=&quot;Kinship&quot;, -IndA) %&gt;%
+  left_join(Groups.df, by=c(&quot;IndA&quot;=&quot;Ind&quot;)) %&gt;%
+  left_join(Groups.df, by=c(&quot;IndB&quot;=&quot;Ind&quot;), suffix=c(&quot;.A.group&quot;, &quot;.B.group&quot;)) %&gt;%
+  filter(groups.A.group==groups.B.group &amp; !IndA==IndB) %&gt;%
+  mutate(uniqueID = paste0(pmax(IndA, IndB), pmin(IndA, IndB))) %&gt;%
+  distinct(uniqueID, .keep_all=T) %&gt;%
+  mutate(groups.A.group=factor(groups.A.group)) %&gt;%
+  ggplot(aes(x=groups.A.group, y=Kinship, color=groups.A.group)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(position=position_jitter(0.2)) +
+  ylab(&quot;Pairwise kinship coefficients within cluster&quot;) +
+  xlab(&quot;Cluster&quot;) +
+  scale_colour_manual(name = &quot;ClusterGroup&quot;,values = ClusterGroupColors$Key) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now let’s select samples from cluster 1,3,6,7, and perform DE analysis using only 4 samples (4Chimp + 4Human) from each cluster and compare. If relatedness plays a big (meaningful) role, I expect meaningful differences in the the number of DE genes, the fraction of false discoveries, etc. Since clusters 3, and 7 only have 4 or 5 samples, I will use all 4 samples from these clusters. For cluster6, I will exclude the least related sample (smallest average pairwase intra-cluster relatedness). For cluster1, since there are so many samples, most of which have small relatedness coefficients, I exclude the 6 samples with a relatedness coefficient &gt; 0.05, (leaving all unrelated samples) and randomly draw (with replacement) subsamples of 4 for DE analysis, repeating this procedure many times to establish a null distribution to compare clusters 3,6 &amp; 7.</p>
+<pre class="r"><code>#First, create a dataframe containing only the samples that will be considered for further analysis as described above.
+#Show cluster identities:
+Groups.df %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Ind</th>
+<th align="right">groups</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">549</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">570</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">389</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">456</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">623</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">438</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#Get the 4 samples to include for cluster3
+Cluster3.Pool &lt;- Groups.df %&gt;% filter(groups==3) %&gt;% pull(Ind)
+
+#Get the 4 samples to include for cluster7
+Cluster7.Pool &lt;- Groups.df %&gt;% filter(groups==7) %&gt;% pull(Ind)
+
+#Get samples to include from cluster6
+#I want to include 4/5 in that cluster, excluding the sample with lowest mean pairwise kinship.
+CLuster6.MeanpairwiseKinship &lt;- GemmaMatrix %&gt;% as.data.frame() %&gt;%
+  rownames_to_column(&quot;IndA&quot;) %&gt;%
+  gather(key=&quot;IndB&quot;, value=&quot;Kinship&quot;, -IndA) %&gt;%
+  left_join(Groups.df, by=c(&quot;IndA&quot;=&quot;Ind&quot;)) %&gt;%
+  left_join(Groups.df, by=c(&quot;IndB&quot;=&quot;Ind&quot;), suffix=c(&quot;.A.group&quot;, &quot;.B.group&quot;)) %&gt;%
+  distinct(uniqueID, .keep_all=T) %&gt;%
+  filter(groups.A.group==6 &amp; groups.B.group==6 &amp; !IndA==IndB) %&gt;%
+  group_by(IndA) %&gt;%
+  summarize(MeanPairwiseKinship=mean(Kinship))
+kable(CLuster6.MeanpairwiseKinship)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">IndA</th>
+<th align="right">MeanPairwiseKinship</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">295</td>
+<td align="right">0.0338598</td>
+</tr>
+<tr class="even">
+<td align="left">4x0430</td>
+<td align="right">-0.0009190</td>
+</tr>
+<tr class="odd">
+<td align="left">4x0519</td>
+<td align="right">0.0017661</td>
+</tr>
+<tr class="even">
+<td align="left">529</td>
+<td align="right">0.0310048</td>
+</tr>
+<tr class="odd">
+<td align="left">554</td>
+<td align="right">0.0106422</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>Cluster6.Pool &lt;- CLuster6.MeanpairwiseKinship %&gt;%
+  filter(MeanPairwiseKinship&gt;min(MeanPairwiseKinship)) %&gt;% pull(IndA)
+
+#Get cluster1 pool. I want to include all samples in cluter1 that do not have any related individuals (kinship coefficients &gt; 0.05)
+CLuster1.MaxpairwiseKinship &lt;- GemmaMatrix %&gt;% as.data.frame() %&gt;%
+  rownames_to_column(&quot;IndA&quot;) %&gt;%
+  gather(key=&quot;IndB&quot;, value=&quot;Kinship&quot;, -IndA) %&gt;%
+  left_join(Groups.df, by=c(&quot;IndA&quot;=&quot;Ind&quot;)) %&gt;%
+  left_join(Groups.df, by=c(&quot;IndB&quot;=&quot;Ind&quot;), suffix=c(&quot;.A.group&quot;, &quot;.B.group&quot;)) %&gt;%
+  distinct(uniqueID, .keep_all=T) %&gt;%
+  filter(groups.A.group==1 &amp; groups.B.group==1 &amp; !IndA==IndB) %&gt;%
+  group_by(IndA) %&gt;%
+  summarize(MaxPairwiseKinship=max(Kinship))
+kable(CLuster1.MaxpairwiseKinship)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">IndA</th>
+<th align="right">MaxPairwiseKinship</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">317</td>
+<td align="right">0.1244824</td>
+</tr>
+<tr class="even">
+<td align="left">338</td>
+<td align="right">0.0068539</td>
+</tr>
+<tr class="odd">
+<td align="left">438</td>
+<td align="right">0.0080694</td>
+</tr>
+<tr class="even">
+<td align="left">456</td>
+<td align="right">0.0095653</td>
+</tr>
+<tr class="odd">
+<td align="left">476</td>
+<td align="right">0.0072819</td>
+</tr>
+<tr class="even">
+<td align="left">4x0025</td>
+<td align="right">0.0072819</td>
+</tr>
+<tr class="odd">
+<td align="left">4x0043</td>
+<td align="right">0.0095653</td>
+</tr>
+<tr class="even">
+<td align="left">4X0095</td>
+<td align="right">0.0150108</td>
+</tr>
+<tr class="odd">
+<td align="left">4X0212</td>
+<td align="right">0.0617353</td>
+</tr>
+<tr class="even">
+<td align="left">4X0267</td>
+<td align="right">0.0617353</td>
+</tr>
+<tr class="odd">
+<td align="left">4X0550</td>
+<td align="right">0.0150108</td>
+</tr>
+<tr class="even">
+<td align="left">522</td>
+<td align="right">0.0180964</td>
+</tr>
+<tr class="odd">
+<td align="left">537</td>
+<td align="right">0.0052832</td>
+</tr>
+<tr class="even">
+<td align="left">549</td>
+<td align="right">0.0638122</td>
+</tr>
+<tr class="odd">
+<td align="left">554_2</td>
+<td align="right">0.0638122</td>
+</tr>
+<tr class="even">
+<td align="left">558</td>
+<td align="right">0.1244824</td>
+</tr>
+<tr class="odd">
+<td align="left">88A020</td>
+<td align="right">0.0026078</td>
+</tr>
+<tr class="even">
+<td align="left">95A014</td>
+<td align="right">0.0049990</td>
+</tr>
+<tr class="odd">
+<td align="left">Little_R</td>
+<td align="right">0.0180964</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>Cluster1.Pool &lt;- CLuster1.MaxpairwiseKinship %&gt;%
+  filter(MaxPairwiseKinship&lt;0.05) %&gt;% pull(IndA)
+
+SamplesToDrawFrom &lt;- cbind(Cluster1.Pool, Cluster3.Pool, Cluster6.Pool, Cluster7.Pool) %&gt;%
+  as.data.frame() %&gt;%
+  gather(key=&quot;Cluster&quot;, &quot;Ind&quot;) %&gt;%
+  distinct(.keep_all=T)
+
+SamplesToDrawFrom %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Cluster</th>
+<th align="left">Ind</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Cluster1.Pool</td>
+<td align="left">338</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster1.Pool</td>
+<td align="left">438</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster1.Pool</td>
+<td align="left">456</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster1.Pool</td>
+<td align="left">476</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster1.Pool</td>
+<td align="left">4x0025</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster1.Pool</td>
+<td align="left">4x0043</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster1.Pool</td>
+<td align="left">4X0095</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster1.Pool</td>
+<td align="left">4X0550</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster1.Pool</td>
+<td align="left">522</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster1.Pool</td>
+<td align="left">537</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster1.Pool</td>
+<td align="left">88A020</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster1.Pool</td>
+<td align="left">95A014</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster1.Pool</td>
+<td align="left">Little_R</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster3.Pool</td>
+<td align="left">389</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster3.Pool</td>
+<td align="left">623</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster3.Pool</td>
+<td align="left">503</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster3.Pool</td>
+<td align="left">4x523</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster6.Pool</td>
+<td align="left">295</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster6.Pool</td>
+<td align="left">4x0519</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster6.Pool</td>
+<td align="left">529</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster6.Pool</td>
+<td align="left">554</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster7.Pool</td>
+<td align="left">4x373</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster7.Pool</td>
+<td align="left">4X0333</td>
+</tr>
+<tr class="even">
+<td align="left">Cluster7.Pool</td>
+<td align="left">4X0357</td>
+</tr>
+<tr class="odd">
+<td align="left">Cluster7.Pool</td>
+<td align="left">4X0339</td>
+</tr>
+</tbody>
+</table>
+<p>Ok. So now I have pools of samples to draw from for clusters 1,3,6,7.</p>
+<p>I will do one DE analysis for clusters 3,6,7, and many analyses for cluster1 to establish a null distribution of no relatedness. I think for this question it makes sense to make the repeated analysis with random from cluster1 sampling without replacement. So there are <span class="math inline">\(13 nCr 4 = 715\)</span> possible combinations of samples to create this null distribution. That is a small enough number I will just do all of them to establish as rich of a null as possible.</p>
+<p>But first, let’s choose the human samples to compare to for this DE analysis. I think there is no point in introducing randomness to the human samples drawn. But I think it does make sense to carefully choose them to be as high quality as possible, for example, by controlling for batch/lab. Therefore, I think I should use 4 human sampleschosen from Pavlovic et al in my DE analysis. Let’s pick these randomly.</p>
+<pre class="r"><code>ColColors &lt;- ClusterGroupColors$ColorVector
+ColColors[!(rownames(GemmaMatrix) %in% SamplesToDrawFrom$Ind)] &lt;- NA
+heatmap.2(GemmaMatrix, trace=&quot;none&quot;, RowSideColors = ClusterGroupColors$ColorVector, ColSideColors = ColColors)</code></pre>
+<p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>PairwiseKinshipBoxplot &lt;- GemmaMatrix %&gt;% as.data.frame() %&gt;%
+  rownames_to_column(&quot;IndA&quot;) %&gt;%
+  gather(key=&quot;IndB&quot;, value=&quot;Kinship&quot;, -IndA) %&gt;%
+  left_join(Groups.df, by=c(&quot;IndA&quot;=&quot;Ind&quot;)) %&gt;%
+  left_join(Groups.df, by=c(&quot;IndB&quot;=&quot;Ind&quot;), suffix=c(&quot;.A.group&quot;, &quot;.B.group&quot;)) %&gt;%
+  filter(groups.A.group==groups.B.group &amp; !IndA==IndB) %&gt;%
+  filter(IndA %in% SamplesToDrawFrom$Ind &amp; IndB %in% SamplesToDrawFrom$Ind ) %&gt;%
+  mutate(uniqueID = paste0(pmax(IndA, IndB), pmin(IndA, IndB))) %&gt;%
+  distinct(uniqueID, .keep_all=T) %&gt;%
+  mutate(groups.A.group=factor(groups.A.group)) %&gt;%
+  ggplot(aes(x=groups.A.group, y=Kinship, color=groups.A.group)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(position=position_jitter(0.2)) +
+  ylab(&quot;Pairwise kinship coefficients\nwithin cluster&quot;) +
+  xlab(&quot;Filtered kinship cluster&quot;) +
+  scale_colour_manual(name = &quot;ClusterGroup&quot;,values = ClusterGroupColors$Key) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;, axis.text.x=element_blank())
+PairwiseKinshipBoxplot</code></pre>
+<p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now let’s wrap the desired DE analysis into a function for easier repitition:</p>
+<pre class="r"><code>###Define function
+DE.analysis &lt;- function(DGE.NormalizedRawCountTable, Log2RPKMCountTable, ChimpSamples, HumanSamples){
+  AllSamplesToSubset &lt;- c(ChimpSamples, HumanSamples)
+  CountTableSampled &lt;- DGE.NormalizedRawCountTable[,AllSamplesToSubset]
+  SpeciesFactor &lt;- colnames(CountTableSampled) %&gt;% substr(1,1) %&gt;% factor() %&gt;% unclass() %&gt;% as.character()
+  mm &lt;- model.matrix(~0 + SpeciesFactor)
+  y &lt;- voom(CountTableSampled, mm, normalize.method=&quot;cyclicloess&quot;, plot=F)
+  y$E &lt;- Log2RPKMCountTable[,AllSamplesToSubset]
+  
+  fit&lt;- lmFit(y, mm)
+  contr &lt;- makeContrasts(DE=SpeciesFactor1-SpeciesFactor2, levels = mm)
+  tmp &lt;- contrasts.fit(fit, contrasts=contr)
+  efit &lt;- eBayes(tmp)
+  Results &lt;- topTable(efit, sort.by = &quot;none&quot;, n=Inf)
+  return(Results)
+}
+
+###Create some of the required arguments
+
+CountTableChimpFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Chimp.subread.txt.gz&#39;
+CountTableHumanFile &lt;- &#39;../output/PowerAnalysisFullCountTable.Human.subread.txt.gz&#39;
+OutputDE &lt;- &#39;../output/Final/TableS2.tab&#39;
+DropFileName &lt;- &#39;../data/DE_SamplesToDrop.txt&#39;
+
+DropFile &lt;- read.delim(DropFileName, sep=&#39;\t&#39;, col.names = c(&quot;Sample&quot;, &quot;Species&quot;), stringsAsFactors = F)
+HumanSamplesToDrop &lt;- DropFile %&gt;% filter(Species==&quot;Human&quot;) %&gt;% pull(Sample)
+ChimpSamplesToDrop &lt;- DropFile %&gt;% filter(Species==&quot;Chimp&quot;) %&gt;% pull(Sample)
+DE.results &lt;- read.delim(OutputDE, sep=&#39;\t&#39;, stringsAsFactors = F)
+GeneListForOverdispersionCalculation &lt;- DE.results$Ensembl_geneID
+
+CountTables &lt;- GetCountTables(CountTableChimpFile,
+                              CountTableHumanFile,
+                              0, GeneListForOverdispersionCalculation, ChimpSampleDrop=ChimpSamplesToDrop, HumanSampleDrop = HumanSamplesToDrop)
+
+DGE.NormalizedRawCountTable &lt;- cbind(CountTables$Chimp$Counts, CountTables$Human$Counts )
+  DGEList() %&gt;%
+  calcNormFactors()</code></pre>
+<pre><code>An object of class &quot;DGEList&quot;
+$counts
+&lt;0 x 0 matrix&gt;
+
+$samples
+[1] group        lib.size     norm.factors
+&lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<pre class="r"><code>Log2RPKMCountTable &lt;- cbind(CountTables$Chimp$log2RPKM, CountTables$Human$log2RPKM)
+
+set.seed(0)
+HumanSamples &lt;- colnames(CountTables$Human$Counts)[CountTables$Human$Counts %&gt;% colnames() %&gt;% str_detect(&quot;SRR&quot;, negate = T)] %&gt;%
+  sample(4)
+ChimpSamples &lt;- paste0(&quot;C.&quot;, Cluster3.Pool)
+
+
+###print the required arguments to illustrate what is going on
+DGE.NormalizedRawCountTable[1:10,1:10] %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">C</th>
+<th>.4x0519 C</th>
+<th>.4x373 C</th>
+<th>.476 C</th>
+<th>.4x0025 C</th>
+<th>.438 C</th>
+<th>.462 C</th>
+<th>.4X0354 C</th>
+<th>.503 C</th>
+<th>.317 C</th>
+<th align="left">.623</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">ENSG00000186891</td>
+<td>46</td>
+<td>73</td>
+<td>20</td>
+<td>28</td>
+<td>4</td>
+<td>11</td>
+<td>98</td>
+<td>13</td>
+<td>11</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="right">ENSG00000186827</td>
+<td>274</td>
+<td>393</td>
+<td>313</td>
+<td>397</td>
+<td>173</td>
+<td>128</td>
+<td>975</td>
+<td>236</td>
+<td>307</td>
+<td align="left">84</td>
+</tr>
+<tr class="odd">
+<td align="right">ENSG00000078808</td>
+<td>5967</td>
+<td>1931</td>
+<td>7637</td>
+<td>3892</td>
+<td>2957</td>
+<td>3745</td>
+<td>1189</td>
+<td>5857</td>
+<td>4306</td>
+<td align="left">3704</td>
+</tr>
+<tr class="even">
+<td align="right">ENSG00000176022</td>
+<td>1097</td>
+<td>402</td>
+<td>1574</td>
+<td>1333</td>
+<td>955</td>
+<td>1235</td>
+<td>416</td>
+<td>1087</td>
+<td>745</td>
+<td align="left">640</td>
+</tr>
+<tr class="odd">
+<td align="right">ENSG00000184163</td>
+<td>7</td>
+<td>49</td>
+<td>113</td>
+<td>62</td>
+<td>62</td>
+<td>29</td>
+<td>111</td>
+<td>82</td>
+<td>24</td>
+<td align="left">18</td>
+</tr>
+<tr class="even">
+<td align="right">ENSG00000160087</td>
+<td>761</td>
+<td>283</td>
+<td>1153</td>
+<td>776</td>
+<td>471</td>
+<td>610</td>
+<td>275</td>
+<td>920</td>
+<td>547</td>
+<td align="left">604</td>
+</tr>
+<tr class="odd">
+<td align="right">ENSG00000162572</td>
+<td>7</td>
+<td>4</td>
+<td>17</td>
+<td>2</td>
+<td>5</td>
+<td>16</td>
+<td>12</td>
+<td>11</td>
+<td>9</td>
+<td align="left">10</td>
+</tr>
+<tr class="even">
+<td align="right">ENSG00000131584</td>
+<td>2587</td>
+<td>1537</td>
+<td>3646</td>
+<td>2546</td>
+<td>1755</td>
+<td>1323</td>
+<td>4585</td>
+<td>2250</td>
+<td>1484</td>
+<td align="left">1872</td>
+</tr>
+<tr class="odd">
+<td align="right">ENSG00000169972</td>
+<td>282</td>
+<td>78</td>
+<td>396</td>
+<td>257</td>
+<td>209</td>
+<td>282</td>
+<td>111</td>
+<td>243</td>
+<td>141</td>
+<td align="left">252</td>
+</tr>
+<tr class="even">
+<td align="right">ENSG00000127054</td>
+<td>3009</td>
+<td>2009</td>
+<td>7404</td>
+<td>3300</td>
+<td>3600</td>
+<td>2092</td>
+<td>3147</td>
+<td>4403</td>
+<td>2740</td>
+<td align="left">3116</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>Log2RPKMCountTable[1:10,1:10] %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">C.4x0519</th>
+<th align="center">C.4x373</th>
+<th align="center">C.476</th>
+<th align="center">C.4x0025</th>
+<th align="center">C.438</th>
+<th align="center">C.462</th>
+<th align="left">C.4X0354</th>
+<th align="center">C.503</th>
+<th align="center">C.317</th>
+<th align="center">C.623</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ENSG00000186891</td>
+<td align="center">-0.4631141</td>
+<td align="center">1.5452701</td>
+<td align="center">-1.7906428</td>
+<td align="center">-0.7436310</td>
+<td align="center">-2.7486168</td>
+<td align="center">-2.037643</td>
+<td align="left">1.502654</td>
+<td align="center">-1.8335368</td>
+<td align="center">-1.867155</td>
+<td align="center">-3.0690602</td>
+</tr>
+<tr class="even">
+<td>ENSG00000186827</td>
+<td align="center">1.8312433</td>
+<td align="center">3.7552296</td>
+<td align="center">1.7373802</td>
+<td align="center">2.7719656</td>
+<td align="center">1.9481646</td>
+<td align="center">1.020653</td>
+<td align="left">4.595932</td>
+<td align="center">1.8981157</td>
+<td align="center">2.472714</td>
+<td align="center">0.8400153</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000078808</td>
+<td align="center">4.9992002</td>
+<td align="center">4.7877280</td>
+<td align="center">5.0681744</td>
+<td align="center">4.7966794</td>
+<td align="center">4.7681080</td>
+<td align="center">4.602012</td>
+<td align="left">3.621035</td>
+<td align="center">5.2552587</td>
+<td align="center">5.012015</td>
+<td align="center">5.0089176</td>
+</tr>
+<tr class="even">
+<td>ENSG00000176022</td>
+<td align="center">3.0009070</td>
+<td align="center">2.9687688</td>
+<td align="center">3.2341574</td>
+<td align="center">3.6942616</td>
+<td align="center">3.5811589</td>
+<td align="center">3.445338</td>
+<td align="left">2.551394</td>
+<td align="center">3.2700042</td>
+<td align="center">2.926360</td>
+<td align="center">2.9213715</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000184163</td>
+<td align="center">-3.1250345</td>
+<td align="center">0.5876174</td>
+<td align="center">0.1042405</td>
+<td align="center">-0.0550313</td>
+<td align="center">0.3005269</td>
+<td align="center">-1.218992</td>
+<td align="left">1.285548</td>
+<td align="center">0.2081517</td>
+<td align="center">-1.277634</td>
+<td align="center">-1.4597615</td>
+</tr>
+<tr class="even">
+<td>ENSG00000160087</td>
+<td align="center">2.3164984</td>
+<td align="center">2.3055132</td>
+<td align="center">2.6277490</td>
+<td align="center">2.7569100</td>
+<td align="center">2.4056076</td>
+<td align="center">2.272207</td>
+<td align="left">1.798519</td>
+<td align="center">2.8713177</td>
+<td align="center">2.323592</td>
+<td align="center">2.6794380</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000162572</td>
+<td align="center">-4.2857112</td>
+<td align="center">-3.8425882</td>
+<td align="center">-3.5385672</td>
+<td align="center">-5.0822034</td>
+<td align="center">-4.0764170</td>
+<td align="center">-3.142342</td>
+<td align="left">-2.918254</td>
+<td align="center">-3.5855126</td>
+<td align="center">-3.656867</td>
+<td align="center">-3.3581316</td>
+</tr>
+<tr class="even">
+<td>ENSG00000131584</td>
+<td align="center">3.2105543</td>
+<td align="center">3.8747917</td>
+<td align="center">3.4183582</td>
+<td align="center">3.6009371</td>
+<td align="center">3.4321338</td>
+<td align="center">2.518798</td>
+<td align="left">4.982773</td>
+<td align="center">3.2921295</td>
+<td align="center">2.892687</td>
+<td align="center">3.4412337</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000169972</td>
+<td align="center">2.2566182</td>
+<td align="center">1.8242974</td>
+<td align="center">2.4572966</td>
+<td align="center">2.5336727</td>
+<td align="center">2.6025630</td>
+<td align="center">2.528399</td>
+<td align="left">1.864482</td>
+<td align="center">2.3241553</td>
+<td align="center">1.747091</td>
+<td align="center">2.7869341</td>
+</tr>
+<tr class="even">
+<td>ENSG00000127054</td>
+<td align="center">4.0532149</td>
+<td align="center">4.8857942</td>
+<td align="center">5.0644684</td>
+<td align="center">4.5997661</td>
+<td align="center">5.0927794</td>
+<td align="center">3.803711</td>
+<td align="left">5.064977</td>
+<td align="center">4.8847706</td>
+<td align="center">4.401255</td>
+<td align="center">4.8006463</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>HumanSamples</code></pre>
+<pre><code>[1] &quot;H.63145&quot; &quot;H.62606&quot; &quot;H.59167&quot; &quot;H.59263&quot;</code></pre>
+<pre class="r"><code>ChimpSamples</code></pre>
+<pre><code>[1] &quot;C.389&quot;   &quot;C.623&quot;   &quot;C.503&quot;   &quot;C.4x523&quot;</code></pre>
+<pre class="r"><code>###Test the function
+Results &lt;- DE.analysis(DGE.NormalizedRawCountTable=DGE.NormalizedRawCountTable, ChimpSamples=ChimpSamples, Log2RPKMCountTable=Log2RPKMCountTable, HumanSamples=HumanSamples)
+Results %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">logFC</th>
+<th align="center">AveExpr</th>
+<th align="center">t</th>
+<th align="right">P.Value a</th>
+<th align="left">dj.P.Val</th>
+<th align="center">B</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>ENSG00000186891</td>
+<td align="center">1.1813874</td>
+<td align="center">-1.6752344</td>
+<td align="center">1.130220</td>
+<td align="right">0.2869894</td>
+<td align="left">0.4529246</td>
+<td align="center">-5.551883</td>
+</tr>
+<tr class="even">
+<td>ENSG00000186827</td>
+<td align="center">-1.2248842</td>
+<td align="center">2.5200273</td>
+<td align="center">-2.274735</td>
+<td align="right">0.0483767</td>
+<td align="left">0.1449773</td>
+<td align="center">-4.895913</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000078808</td>
+<td align="center">0.2885241</td>
+<td align="center">5.0609380</td>
+<td align="center">1.559132</td>
+<td align="right">0.1526664</td>
+<td align="left">0.3005444</td>
+<td align="center">-6.245397</td>
+</tr>
+<tr class="even">
+<td>ENSG00000176022</td>
+<td align="center">0.1927662</td>
+<td align="center">3.0497948</td>
+<td align="center">1.255078</td>
+<td align="right">0.2403959</td>
+<td align="left">0.4041648</td>
+<td align="center">-6.572526</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000184163</td>
+<td align="center">-0.7863931</td>
+<td align="center">0.0711966</td>
+<td align="center">-1.606493</td>
+<td align="right">0.1418966</td>
+<td align="left">0.2868254</td>
+<td align="center">-5.390743</td>
+</tr>
+<tr class="even">
+<td>ENSG00000160087</td>
+<td align="center">0.3136660</td>
+<td align="center">2.5227387</td>
+<td align="center">1.724462</td>
+<td align="right">0.1179827</td>
+<td align="left">0.2542184</td>
+<td align="center">-5.893499</td>
+</tr>
+</tbody>
+</table>
+<p>Ok, so I have a function to do the DE analysis. Let’s use it to compare all combinations of the Cluster1.Pool of chimp samples vs 4 human samples, and do a similar analysis but with the cluster3Pool, cluster6Pool, and cluster7Pool.</p>
+<pre class="r"><code>#First get all combinations of samples in cluster1Pool.
+
+Cluster1.Combinations &lt;- combn(Cluster1.Pool, 4, simplify = F)
+Cluster1.Combinations.Pasted &lt;- lapply(Cluster1.Combinations, function(iter) paste0(&quot;C.&quot;, iter))
+length(Cluster1.Combinations.Pasted)</code></pre>
+<pre><code>[1] 715</code></pre>
+<pre class="r"><code>Cluster1.Combinations.Pasted[1:10]</code></pre>
+<pre><code>[[1]]
+[1] &quot;C.338&quot; &quot;C.438&quot; &quot;C.456&quot; &quot;C.476&quot;
+
+[[2]]
+[1] &quot;C.338&quot;    &quot;C.438&quot;    &quot;C.456&quot;    &quot;C.4x0025&quot;
+
+[[3]]
+[1] &quot;C.338&quot;    &quot;C.438&quot;    &quot;C.456&quot;    &quot;C.4x0043&quot;
+
+[[4]]
+[1] &quot;C.338&quot;    &quot;C.438&quot;    &quot;C.456&quot;    &quot;C.4X0095&quot;
+
+[[5]]
+[1] &quot;C.338&quot;    &quot;C.438&quot;    &quot;C.456&quot;    &quot;C.4X0550&quot;
+
+[[6]]
+[1] &quot;C.338&quot; &quot;C.438&quot; &quot;C.456&quot; &quot;C.522&quot;
+
+[[7]]
+[1] &quot;C.338&quot; &quot;C.438&quot; &quot;C.456&quot; &quot;C.537&quot;
+
+[[8]]
+[1] &quot;C.338&quot;    &quot;C.438&quot;    &quot;C.456&quot;    &quot;C.88A020&quot;
+
+[[9]]
+[1] &quot;C.338&quot;    &quot;C.438&quot;    &quot;C.456&quot;    &quot;C.95A014&quot;
+
+[[10]]
+[1] &quot;C.338&quot;      &quot;C.438&quot;      &quot;C.456&quot;      &quot;C.Little_R&quot;</code></pre>
+<p>Note that since this takes a long time to compute the DE results for 715 combinations, I will turn this code block to <code>eval=F</code> and write out the results, and read in the results in the next code block…</p>
+<pre class="r"><code>#iterate over combinations list, and calculate DE results for each
+Cluster1.Combinations.Results &lt;-pbapply::pblapply(Cluster1.Combinations.Pasted, function(iter) DE.analysis(HumanSamples=HumanSamples, Log2RPKMCountTable=Log2RPKMCountTable, DGE.NormalizedRawCountTable=DGE.NormalizedRawCountTable, ChimpSamples = iter))
+
+
+#Write out results
+saveRDS(Cluster1.Combinations.Results, file = &quot;../big_data/Cluster1_DE_Results_AllCombinations.rds&quot;)</code></pre>
+<p>Let’s start by plotting the number of DE genes (at a few FDR thresholds) when each of the clusters 3, 6, and 7 were used for the chimp samples, and compare it to the distribution across all 715 combinations from cluster 1.</p>
+<pre class="r"><code>#Read in results
+Cluster1.Combinations.Results &lt;- readRDS(&quot;../big_data/Cluster1_DE_Results_AllCombinations.rds&quot;)
+
+Cluster1.Combinations.Results.df &lt;- Cluster1.Combinations.Results %&gt;%
+  lapply(add_rownames, &quot;Ensembl_geneID&quot;) %&gt;%
+  bind_rows(.id=&quot;CombinationNumber&quot;)
+
+#DE analysis for other cluster groups
+OtherClusters.df &lt;- SamplesToDrawFrom %&gt;% filter(!Cluster==&quot;Cluster1.Pool&quot;) %&gt;%
+  mutate(Ind=paste0(&quot;C.&quot;, Ind))
+OtherClusters.list &lt;- split(OtherClusters.df$Ind, OtherClusters.df$Cluster)
+
+OtherClusters.Results &lt;-pbapply::pblapply(OtherClusters.list, function(iter) DE.analysis(HumanSamples=HumanSamples, Log2RPKMCountTable=Log2RPKMCountTable, DGE.NormalizedRawCountTable=DGE.NormalizedRawCountTable, ChimpSamples = iter))
+
+OtherClusters.Results.df &lt;- OtherClusters.Results %&gt;%
+  lapply(add_rownames, &quot;Ensembl_geneID&quot;) %&gt;%
+  bind_rows(.id=&quot;ClusterNumber&quot;) %&gt;%
+  mutate(ClusterNumber=gsub(&quot;Cluster(\\d).Pool&quot;, &quot;\\1&quot;, ClusterNumber))
+  
+
+NumResults &lt;- OtherClusters.Results.df %&gt;%
+  dplyr::select(adj.P.Val, ClusterNumber) %&gt;%
+  mutate(FDR.10 = adj.P.Val &lt; 0.10,
+         FDR.05 = adj.P.Val &lt; 0.05,
+         FDR.01 = adj.P.Val &lt; 0.01,) %&gt;%
+  gather(key=&quot;FDR&quot;, value=&quot;Signif&quot;, -adj.P.Val, -ClusterNumber) %&gt;%
+  group_by(ClusterNumber, FDR) %&gt;%
+  summarise(NumSigGenes=sum(Signif))
+
+
+ToPlotNumSig &lt;- Cluster1.Combinations.Results.df %&gt;%
+  dplyr::select(adj.P.Val, CombinationNumber) %&gt;%
+  mutate(FDR.10 = adj.P.Val &lt; 0.10,
+         FDR.05 = adj.P.Val &lt; 0.05,
+         FDR.01 = adj.P.Val &lt; 0.01,) %&gt;%
+  gather(key=&quot;FDR&quot;, value=&quot;Signif&quot;, -adj.P.Val, -CombinationNumber) %&gt;%
+  group_by(CombinationNumber, FDR) %&gt;%
+  summarise(NumSigGenes=sum(Signif)) %&gt;%
+  mutate(Cluster1.Combinations=&quot;1&quot;)
+
+NumDE.Plot &lt;- ggplot(ToPlotNumSig, aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(fill=Cluster1.Combinations)) +
+  geom_vline(data=NumResults, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales=&quot;free_y&quot;) +
+  ylab(&quot;empirical probability density&quot;) +
+  xlab(&quot;Num DE genes&quot;) +
+  scale_colour_manual(name = &quot;Cluster&quot;,values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = &quot;All nCr(13,4)=715\ncombinations&quot;,values = ClusterGroupColors$Key, labels=NULL) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45))
+
+NumDE.Plot</code></pre>
+<p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The bimodal distribution is a bit odd, and probably reflects two or three “bad” samples in the group of 13 samples in cluster13 which skew results to less genes when randomly drawn. I suppose odd things are expected when randomly drawing from such a small sample size. In any case, I think we are fundamentally limited towards fully emperically quantifying the relatedness effect reviewers comment. But in any case, it doesn’t seem like there is any drastic effect.</p>
+<p>Let’s make similar plots but plotting the empirical FDR (based on FDR&lt;0.01 genes from the full data set as the <em>ad hoc</em> gold standard).</p>
+<pre class="r"><code>ToPlotFDR &lt;- Cluster1.Combinations.Results.df %&gt;%
+  dplyr::select(adj.P.Val, CombinationNumber, Ensembl_geneID) %&gt;%
+  mutate(FDR.10 = adj.P.Val &lt; 0.10,
+         FDR.05 = adj.P.Val &lt; 0.05,
+         FDR.01 = adj.P.Val &lt; 0.01) %&gt;%
+  dplyr::select(FDR.10:FDR.01, CombinationNumber, Ensembl_geneID) %&gt;%
+  gather(key=&quot;FDR&quot;, value=&quot;Signif&quot;, -CombinationNumber, -Ensembl_geneID) %&gt;%
+  left_join(DE.results, by=&quot;Ensembl_geneID&quot;) %&gt;%
+  mutate(TrueResponse = adj.P.Val &lt; 0.01) %&gt;%
+  mutate(CorrectResponse = (TrueResponse &amp; Signif)) %&gt;%
+  group_by(CombinationNumber, FDR) %&gt;%
+  summarise(NumSigGenes=1-sum(CorrectResponse)/sum(Signif)) %&gt;%
+  mutate(Cluster1.Combinations=&quot;1&quot;)
+
+
+FDR.Results &lt;- OtherClusters.Results.df %&gt;%
+  dplyr::select(adj.P.Val, ClusterNumber, Ensembl_geneID) %&gt;%
+  mutate(FDR.10 = adj.P.Val &lt; 0.10,
+         FDR.05 = adj.P.Val &lt; 0.05,
+         FDR.01 = adj.P.Val &lt; 0.01) %&gt;%
+  dplyr::select(FDR.10:FDR.01, ClusterNumber, Ensembl_geneID) %&gt;%
+  gather(key=&quot;FDR&quot;, value=&quot;Signif&quot;, -ClusterNumber, -Ensembl_geneID) %&gt;%
+  left_join(DE.results, by=&quot;Ensembl_geneID&quot;) %&gt;%
+  mutate(TrueResponse = adj.P.Val &lt; 0.01) %&gt;%
+  mutate(CorrectResponse = (TrueResponse &amp; Signif)) %&gt;%
+  group_by(ClusterNumber, FDR) %&gt;%
+  summarise(NumSigGenes=1-sum(CorrectResponse)/sum(Signif))
+
+FDR.Plot &lt;- ggplot(ToPlotFDR, aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(fill=Cluster1.Combinations)) +
+  geom_vline(data=FDR.Results, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales=&quot;free_y&quot;) +
+  ylab(&quot;empirical probability density&quot;) +
+  xlab(&quot;Empirical FDR estimate&quot;) +
+  scale_colour_manual(name = &quot;Cluster&quot;,values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = &quot;All nCr(13,4)=715\ncombinations&quot;,values = ClusterGroupColors$Key, labels=NULL) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45))
+FDR.Plot</code></pre>
+<p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Now let’s try to explain that bimodal shape in the cluster1 combinations… Let’s start by looking at a PCA or hiearchal clustering of the cluster1 samples to look for outliers, and see if the inclusion of such outliers in the combinations is causing the bimodal shape.</p>
+<pre class="r"><code>Cluster1.CountTable &lt;- CountTables$Chimp$log2RPKM %&gt;%
+  dplyr::select(one_of(
+    paste0(&quot;C.&quot;, SamplesToDrawFrom %&gt;% filter(Cluster==&quot;Cluster1.Pool&quot;) %&gt;% pull(Ind))
+  ))
+
+PCA &lt;- Cluster1.CountTable %&gt;%
+  t() %&gt;% prcomp()
+
+Metadata &lt;- read.delim(&quot;../output/Final/TableS1.tab&quot;, stringsAsFactors = F) %&gt;%
+  dplyr::select(IID=Sample.ID, SX, SP, UniquelyMappingReads, RNA.Extraction.Batch, RIN, PercentUniquelyMappingReads) %&gt;%
+  mutate(IID=paste0(&quot;C.&quot;, IID))
+
+PCA$x %&gt;% as.data.frame() %&gt;% dplyr::select(PC1:PC2) %&gt;%
+  rownames_to_column(&quot;IID&quot;) %&gt;%
+  left_join(Metadata, by=&quot;IID&quot;) %&gt;%
+  ggplot(aes(x=PC1, y=PC2, color=PercentUniquelyMappingReads)) +
+  geom_text(aes(label=IID)) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Cluster1.CountTable %&gt;% cor() %&gt;%
+  heatmap.2()</code></pre>
+<p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>CountTables$Chimp$log2RPKM %&gt;%
+  dplyr::select(one_of(
+    paste0(&quot;C.&quot;, SamplesToDrawFrom %&gt;% pull(Ind))
+  )) %&gt;% cor() %&gt;%
+  heatmap.2()</code></pre>
+<p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-11-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>There are indeed two outliers. Let’s see if those are responsible for the bimodal shape…</p>
+<pre class="r"><code>ClusterOneCombinationsWithOutliers &lt;- Cluster1.Combinations.Pasted %&gt;%
+  unlist() %&gt;%
+  matrix(byrow=T, nrow=length(Cluster1.Combinations.Pasted)) %&gt;%
+  as.data.frame() %&gt;%
+  mutate(CombinationNumber=1:n(),
+         CombinationPasted=paste(V1,V2,V3,V4)) %&gt;%
+  mutate(ContainsOutliers=str_detect(CombinationPasted, &quot;C.Little_R|C.537&quot;)) %&gt;%
+  filter(ContainsOutliers==T) %&gt;%
+  pull(CombinationNumber)
+
+
+ToPlotNumSig %&gt;%
+  mutate(ContainsOutliers=CombinationNumber %in% ClusterOneCombinationsWithOutliers) %&gt;%
+ggplot(aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(fill=Cluster1.Combinations, linetype=ContainsOutliers)) +
+  geom_vline(data=NumResults, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales=&quot;free_y&quot;) +
+  ylab(&quot;empirical probability density&quot;) +
+  xlab(&quot;Num DE genes&quot;) +
+  scale_colour_manual(name = &quot;Cluster&quot;,values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = &quot;All nCr(13,4)=715\ncombinations&quot;,values = ClusterGroupColors$Key, labels=NULL) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45))</code></pre>
+<p><img src="figure/20200907_Response_Point_06.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok. I think I want to just remake some of the previous plots, but show how these outliers have a different distribution.</p>
+<p>Start with a heatmap of RNA-seq data from all the samples included in this analysis, colored by group, and batch.</p>
+<p>I’m going to set this code block to eval=F so that it doesn’t take as long to build this html doc.</p>
+<pre class="r"><code>CorMatToPlot &lt;- CountTables$Chimp$log2RPKM %&gt;%
+  dplyr::select(one_of(
+    paste0(&quot;C.&quot;, SamplesToDrawFrom %&gt;% pull(Ind))
+  )) %&gt;% cor()
+
+MetadataForHeatMap &lt;- data.frame(C.Ind=rownames(CorMatToPlot)) %&gt;%
+  mutate(Ind=str_remove(C.Ind, &quot;^C.&quot;)) %&gt;%
+  left_join(SamplesToDrawFrom, by =&quot;Ind&quot;) %&gt;%
+  mutate(ClusterNumber=gsub(&quot;Cluster(\\d).Pool&quot;, &quot;\\1&quot;, Cluster)) %&gt;%
+  left_join(data.frame(Color=ClusterGroupColors$Key) %&gt;% rownames_to_column(&quot;ClusterNumber&quot;), by=&quot;ClusterNumber&quot;) %&gt;%
+  left_join(Metadata %&gt;% dplyr::select(RNA.Extraction.Batch, IID), by=c(&quot;C.Ind&quot;=&quot;IID&quot;))
+
+
+rownames(CorMatToPlot) &lt;- str_remove(rownames(CorMatToPlot), &quot;^C.&quot;)
+colnames(CorMatToPlot) &lt;- str_remove(colnames(CorMatToPlot), &quot;^C.&quot;)
+
+pdf(file=&quot;../figures/OriginalArt/ResponseToReviewers.DE.ExpressionMat.pdf&quot;)
+heatmap.2(CorMatToPlot, trace=&quot;none&quot;, RowSideColors = MetadataForHeatMap$RNA.Extraction.Batch %&gt;% as.factor() %&gt;% as.numeric() %&gt;% as.character(), ColSideColors = MetadataForHeatMap$Color %&gt;% as.character(), dendrogram=&quot;row&quot;)
+dev.off()
+
+
+pdf(file=&quot;../figures/OriginalArt/ResponseToReviewers.DE.KinshipMat.pdf&quot;)
+heatmap.2(GemmaMatrix, trace=&quot;none&quot;, RowSideColors = ClusterGroupColors$ColorVector, ColSideColors = ColColors, dendrogram=&quot;row&quot;)
+dev.off()
+
+NumDE.Plot &lt;- ToPlotNumSig %&gt;%
+  mutate(ContainsOutliers=CombinationNumber %in% ClusterOneCombinationsWithOutliers) %&gt;%
+ggplot(aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(fill=Cluster1.Combinations, linetype=ContainsOutliers), alpha=0.9) +
+  geom_vline(data=NumResults, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales=&quot;free_y&quot;) +
+  ylab(&quot;empirical density&quot;) +
+  xlab(&quot;Num DE genes&quot;) +
+  scale_colour_manual(name = &quot;Filtered\nkinship clusters&quot;, values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = &quot;All nCr(13,4)=715\ncombinations&quot;,values = ClusterGroupColors$Key, labels=NULL) +
+  scale_linetype_manual(name=&quot;Combinations that contain samples\n&#39;Little_R&#39; or &#39;537&#39;&quot;, values=c(&quot;solid&quot;, &quot;dashed&quot;)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45), legend.position = &quot;bottom&quot;) +
+    guides(color = guide_legend(title.position = &quot;top&quot;),
+         linetype = guide_legend(title.position = &quot;top&quot;),
+         fill = guide_legend(title.position = &quot;top&quot;))
+NumDE.Plot
+
+FDR.Plot &lt;- ToPlotFDR %&gt;%
+  mutate(ContainsOutliers=CombinationNumber %in% ClusterOneCombinationsWithOutliers) %&gt;%
+  ggplot(aes(x=NumSigGenes)) +
+  # stat_ecdf(color=ClusterGroupColors$Key[1]) +
+  geom_density(aes(x=NumSigGenes, ..density.., fill=Cluster1.Combinations, linetype=ContainsOutliers), alpha=0.9) +
+  geom_vline(data=FDR.Results, size=1, aes(xintercept=NumSigGenes, color=ClusterNumber)) +
+  facet_wrap(~FDR, scales=&quot;free_y&quot;) +
+  ylab(&quot;empirical density&quot;) +
+  xlab(&quot;Empirical FDR estimate&quot;) +
+  scale_colour_manual(name = &quot;Filtered\nkinship clusters&quot;,values = ClusterGroupColors$Key, labels=NULL) +
+  scale_fill_manual(name = &quot;All nCr(13,4)=715\ncombinations&quot;,values = ClusterGroupColors$Key, labels=NULL) +
+  scale_linetype_manual(name=&quot;Combinations that contain samples\n&#39;Little_R&#39; or &#39;537&#39;&quot;, values=c(&quot;solid&quot;, &quot;dashed&quot;)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45), legend.position = &quot;bottom&quot;) +
+  guides(color = guide_legend(title.position = &quot;top&quot;),
+         linetype = guide_legend(title.position = &quot;top&quot;),
+         fill = guide_legend(title.position = &quot;top&quot;))
+FDR.Plot
+
+
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.DE.PairwiseKinship.pdf&quot;, plot=PairwiseKinshipBoxplot, height=3, width=2.5)
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.DE.NumDE.pdf&quot;, plot=NumDE.Plot, height=3, width=6.5)
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.DE.FDR.pdf&quot;, plot=FDR.Plot, height=3, width=6.5)</code></pre>
+<p>Also, let’s use the variance partition to describe how much gene expression variance (among the chimp samples only) can be explained by factors like sex, batch, RIN, and the kinship cluster groups. Also turning eval=F because variance partition takes a few minutes. But the figures generated will be published in the paper or as part of the public response to reviewers.</p>
+<pre class="r"><code>info &lt;- read.delim(&quot;../output/Final/TableS1.tab&quot;, stringsAsFactors = F) %&gt;%
+  dplyr::select(Alternate.ID, IID=Sample.ID, SX, SP, UniquelyMappingReads, RNA.Extraction.Batch, RIN, PercentUniquelyMappingReads) %&gt;%
+  mutate(SP=recode(SP, Human=&quot;H&quot;, Chimp=&quot;C&quot;)) %&gt;%
+  filter(SP==&quot;C&quot;) %&gt;%
+  inner_join(Groups.df, by=c(&quot;IID&quot;=&quot;Ind&quot;)) %&gt;%
+  mutate(Individual=paste0(&quot;C.&quot;, IID))
+
+gExpr &lt;- cbind(CountTables$Chimp$Counts) %&gt;%
+  dplyr::select(one_of(info$Individual)) %&gt;%
+  DGEList() %&gt;%
+  calcNormFactors
+vobjGenes &lt;- voom(gExpr)
+
+info &lt;- info %&gt;%
+  filter(Individual %in% colnames(gExpr)) %&gt;%
+  column_to_rownames(&quot;Individual&quot;)
+
+
+form &lt;- ~  RIN + SX + RNA.Extraction.Batch + groups
+
+varPart &lt;- fitExtractVarPartModel( vobjGenes, form, info )
+
+# sort variables (i.e. columns) by median fraction # of variance explained
+vp &lt;- sortCols( varPart )
+
+# violin plot of contribution of each variable to total variance
+plotVarPart( vp )
+
+
+
+info &lt;- read_excel(&quot;../data/Metadata_SequencedChimps.xlsx&quot;) %&gt;%
+  dplyr::select(IID=1, SX, RNA.Extraction.Batch=RNA.Extract_date, RNA.Library.prep.batch, RIN) %&gt;%
+  mutate(RNA.Library.prep.batch=as.factor(RNA.Library.prep.batch)) %&gt;%
+  # inner_join(Groups.df, by=c(&quot;IID&quot;=&quot;Ind&quot;)) %&gt;%
+  inner_join(SamplesToDrawFrom, by=c(&quot;IID&quot;=&quot;Ind&quot;)) %&gt;%
+  dplyr::rename(groups=Cluster) %&gt;%
+  mutate(groups=as.factor(groups)) %&gt;%
+  mutate(Individual=paste0(&quot;C.&quot;, IID))
+gExpr &lt;- cbind(CountTables$Chimp$Counts) %&gt;%
+  dplyr::select(one_of(info$Individual)) %&gt;%
+  DGEList() %&gt;%
+  calcNormFactors
+vobjGenes &lt;- voom(gExpr)
+
+info &lt;- info %&gt;%
+  filter(Individual %in% colnames(gExpr)) %&gt;%
+  column_to_rownames(&quot;Individual&quot;)
+
+
+# form &lt;- ~  RIN + (1|SX) + (1|RNA.Extraction.Batch)  + (1|groups)
+# varPart &lt;- fitExtractVarPartModel( vobjGenes, form, info )
+
+form &lt;- ~  (1|SX) + (1|RNA.Extraction.Batch)  + (1|groups)
+varPart &lt;- fitExtractVarPartModel( vobjGenes, form, info )
+
+
+# sort variables (i.e. columns) by median fraction # of variance explained
+vp &lt;- sortCols( varPart )
+
+# violin plot of contribution of each variable to total variance
+VarPartPlot &lt;- plotVarPart( vp ) +
+  scale_x_discrete(labels=c(&quot;SX&quot; = &quot;Sex&quot;, &quot;groups&quot;=&quot;Filtered\nkinship clusters&quot;))
+
+f &lt;- function(x) {
+  r &lt;- quantile(x, probs = c(0.05, 0.25, 0.5, 0.75, 0.95))
+  names(r) &lt;- c(&quot;ymin&quot;, &quot;lower&quot;, &quot;middle&quot;, &quot;upper&quot;, &quot;ymax&quot;)
+  r
+}
+
+VarPartPlot &lt;- vp %&gt;%
+  gather(key=&quot;factor&quot;, value=&quot;Variance explained (%)&quot;) %&gt;%
+  ggplot(aes(x=fct_reorder(factor, `Variance explained (%)`), y=`Variance explained (%)`)) +
+  stat_summary(fun.data=f, geom=&quot;boxplot&quot;) + 
+  scale_x_discrete(labels=c(&quot;SX&quot; = &quot;Sex&quot;, &quot;groups&quot;=&quot;Filtered\nkinship clusters&quot;)) +
+  xlab(&quot;&quot;) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.DE.KinshipVarPart.pdf&quot;, VarPartPlot, height=3.5, width=2.5)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -699,30 +1911,48 @@ locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
+[1] parallel  stats     graphics  grDevices utils     datasets  methods  
+[8] base     
 
 other attached packages:
- [1] scales_1.1.0    readxl_1.3.1    gplots_3.0.1.1  forcats_0.4.0  
- [5] stringr_1.4.0   dplyr_0.8.3     purrr_0.3.3     readr_1.3.1    
- [9] tidyr_1.0.0     tibble_2.1.3    ggplot2_3.2.1   tidyverse_1.3.0
+ [1] cowplot_1.0.0            gridExtra_2.3            MASS_7.3-51.4           
+ [4] knitr_1.26               pbapply_1.4-3            edgeR_3.26.8            
+ [7] variancePartition_1.14.1 Biobase_2.44.0           BiocGenerics_0.30.0     
+[10] foreach_1.4.7            limma_3.40.6             scales_1.1.0            
+[13] readxl_1.3.1             gplots_3.0.1.1           forcats_0.4.0           
+[16] stringr_1.4.0            dplyr_0.8.3              purrr_0.3.3             
+[19] readr_1.3.1              tidyr_1.0.0              tibble_2.1.3            
+[22] ggplot2_3.2.1            tidyverse_1.3.0         
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.5         lubridate_1.7.4    lattice_0.20-38    gtools_3.8.1      
- [5] assertthat_0.2.1   zeallot_0.1.0      rprojroot_1.3-2    digest_0.6.23     
- [9] R6_2.4.1           cellranger_1.1.0   backports_1.1.5    reprex_0.3.0      
-[13] evaluate_0.14      httr_1.4.1         pillar_1.4.2       rlang_0.4.1       
-[17] lazyeval_0.2.2     rstudioapi_0.10    gdata_2.18.0       whisker_0.4       
-[21] rmarkdown_1.18     munsell_0.5.0      broom_0.5.2        compiler_3.6.1    
-[25] httpuv_1.5.2       modelr_0.1.5       xfun_0.11          pkgconfig_2.0.3   
-[29] htmltools_0.4.0    tidyselect_0.2.5   workflowr_1.5.0    fansi_0.4.0       
-[33] crayon_1.3.4       dbplyr_1.4.2       withr_2.1.2        later_1.0.0       
-[37] bitops_1.0-6       grid_3.6.1         nlme_3.1-143       jsonlite_1.6      
-[41] gtable_0.3.0       lifecycle_0.1.0    DBI_1.0.0          git2r_0.26.1      
-[45] magrittr_1.5       KernSmooth_2.23-16 cli_2.0.0          stringi_1.4.3     
-[49] farver_2.0.1       fs_1.3.1           promises_1.1.0     xml2_1.2.2        
-[53] generics_0.0.2     vctrs_0.2.0        tools_3.6.1        glue_1.3.1        
-[57] hms_0.5.2          yaml_2.2.0         colorspace_1.4-1   caTools_1.17.1.3  
-[61] rvest_0.3.5        knitr_1.26         haven_2.2.0       </code></pre>
+ [1] nlme_3.1-143        bitops_1.0-6        fs_1.3.1           
+ [4] pbkrtest_0.4-8.6    lubridate_1.7.4     doParallel_1.0.15  
+ [7] progress_1.2.2      httr_1.4.1          rprojroot_1.3-2    
+[10] tools_3.6.1         backports_1.1.5     R6_2.4.1           
+[13] KernSmooth_2.23-16  DBI_1.0.0           lazyeval_0.2.2     
+[16] colorspace_1.4-1    withr_2.1.2         prettyunits_1.0.2  
+[19] tidyselect_0.2.5    compiler_3.6.1      git2r_0.26.1       
+[22] cli_2.0.0           rvest_0.3.5         xml2_1.2.2         
+[25] labeling_0.3        caTools_1.17.1.3    digest_0.6.23      
+[28] minqa_1.2.4         rmarkdown_1.18      colorRamps_2.3     
+[31] pkgconfig_2.0.3     htmltools_0.4.0     lme4_1.1-23        
+[34] highr_0.8           dbplyr_1.4.2        rlang_0.4.1        
+[37] rstudioapi_0.10     farver_2.0.1        generics_0.0.2     
+[40] jsonlite_1.6        BiocParallel_1.18.1 gtools_3.8.1       
+[43] magrittr_1.5        Matrix_1.2-18       Rcpp_1.0.5         
+[46] munsell_0.5.0       fansi_0.4.0         lifecycle_0.1.0    
+[49] stringi_1.4.3       whisker_0.4         yaml_2.2.0         
+[52] plyr_1.8.5          grid_3.6.1          gdata_2.18.0       
+[55] promises_1.1.0      crayon_1.3.4        lattice_0.20-38    
+[58] haven_2.2.0         splines_3.6.1       hms_0.5.2          
+[61] locfit_1.5-9.1      zeallot_0.1.0       pillar_1.4.2       
+[64] boot_1.3-23         reshape2_1.4.3      codetools_0.2-16   
+[67] reprex_0.3.0        glue_1.3.1          evaluate_0.14      
+[70] modelr_0.1.5        vctrs_0.2.0         nloptr_1.2.2.2     
+[73] httpuv_1.5.2        cellranger_1.1.0    gtable_0.3.0       
+[76] assertthat_0.2.1    xfun_0.11           broom_0.5.2        
+[79] later_1.0.0         iterators_1.0.12    workflowr_1.5.0    
+[82] statmod_1.4.34      ellipsis_0.3.0     </code></pre>
 </div>
 
 

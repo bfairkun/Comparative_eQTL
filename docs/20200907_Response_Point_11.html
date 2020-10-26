@@ -408,7 +408,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-09-09
+<strong>Last updated:</strong> 2020-10-25
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -432,7 +432,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -499,10 +499,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree199654fa117f7b418d6774dd7d57af875cd0e7e1targetblank199654fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/199654fa117f7b418d6774dd7d57af875cd0e7e1" target="_blank">199654f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9ea713978506fb284367d2d422c39f04f29d2519targetblank9ea7139a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/9ea713978506fb284367d2d422c39f04f29d2519" target="_blank">9ea7139</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree199654fa117f7b418d6774dd7d57af875cd0e7e1targetblank199654fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree9ea713978506fb284367d2d422c39f04f29d2519targetblank9ea7139a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -510,6 +510,7 @@ Great! You are using Git for version control. Tracking code development and conn
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    WorkingManuscript.zip
@@ -527,11 +528,29 @@ Ignored files:
     Ignored:    output/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/20200907_Response_OriginalComments.Rmd
-    Untracked:  analysis/20200907_Response_Point_11.Rmd
+    Untracked:  analysis/.index.Rmd.swp
+    Untracked:  analysis/20200907_Response_Point_02.Rmd
+    Untracked:  analysis/20200907_Response_Point_04.Rmd
+    Untracked:  analysis/20200907_Response_Point_07.Rmd
+    Untracked:  analysis/20200907_Response_Point_08.Rmd
+    Untracked:  analysis/20200907_Response_Point_11_2.Rmd
+    Untracked:  analysis/20201012_MakeSourceData.Rmd
+    Untracked:  data/FinalSourceData/
+    Untracked:  data/c5.all.v7.1.symbols.gmt
+    Untracked:  data/c5.all.v7.1.symbols.gmt.categories.tsv.gz
+    Untracked:  data/h.all.v7.1.symbols.gmt
 
 Unstaged changes:
-    Modified:   analysis_temp/Ted_vignette.R
+    Modified:   README.md
+    Modified:   analysis/20200907_Response_OriginalComments.Rmd
+    Modified:   analysis/20200907_Response_Point_06.Rmd
+    Modified:   analysis/20200907_Response_Point_09-2.Rmd
+    Modified:   analysis/20200907_Response_Point_09.Rmd
+    Modified:   analysis/20200907_Response_Point_11.Rmd
+    Modified:   analysis/Final_2_DispersionPlots.Rmd
+    Modified:   analysis/about.Rmd
+    Modified:   analysis/index.Rmd
+    Modified:   analysis_temp/TabulaMuris_analysis2.Rmd
 
 </code></pre>
 <p>
@@ -544,9 +563,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/analysis/20200907_Response_Point_11.Rmd" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+<td>
+update site, address reviewers
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/20200907_Response_Point_11.html" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+<td>
+update site, address reviewers
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -563,7 +642,8 @@ library(Seurat)
 library(gplots)
 source(&quot;../code/CustomFunctions.R&quot;)
 library(knitr)
-library(scales)</code></pre>
+library(scales)
+library(latex2exp)</code></pre>
 <p>This block references a file that I keep on my local computer, that is not reproducible from the snakemake. This rds file references a seurat object I created from publicaly available mouse scRNA-seq data (Tabula Muris) using <a href="">this Rscript</a>.</p>
 <pre class="r"><code>Heart.seur = readRDS(&quot;../big_data/TabMuris_heart_seurat.rds&quot;)</code></pre>
 <p>Some other data to read in… This includes the bulk RNA-seq count data from this study (39 human, 39 chimp), and some other necessary data to convert mouse gene names to human, etc.</p>
@@ -635,33 +715,9 @@ scCountTable.Filtered[1:10,1:10] %&gt;% kable()</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td>ENSG00000265491</td>
-<td align="right">295</td>
+<td>ENSG00000131779</td>
 <td align="right">0</td>
-<td align="right">516</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">59</td>
-<td align="right">0</td>
-<td align="right">135</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td>ENSG00000265972</td>
-<td align="right">676</td>
-<td align="right">555</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">82</td>
-<td align="right">414</td>
-<td align="right">0</td>
-<td align="right">1068</td>
-<td align="right">299</td>
-<td align="right">467</td>
-</tr>
-<tr class="odd">
-<td>ENSG00000271601</td>
+<td align="right">156</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
@@ -670,34 +726,6 @@ scCountTable.Filtered[1:10,1:10] %&gt;% kable()</code></pre>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td>ENSG00000272031</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td>ENSG00000134250</td>
-<td align="right">0</td>
-<td align="right">48</td>
-<td align="right">181</td>
-<td align="right">1</td>
-<td align="right">36</td>
-<td align="right">12</td>
-<td align="right">269</td>
-<td align="right">583</td>
-<td align="right">12</td>
-<td align="right">828</td>
 </tr>
 <tr class="even">
 <td>ENSG00000131788</td>
@@ -713,6 +741,19 @@ scCountTable.Filtered[1:10,1:10] %&gt;% kable()</code></pre>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
+<td>ENSG00000265491</td>
+<td align="right">295</td>
+<td align="right">0</td>
+<td align="right">516</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">59</td>
+<td align="right">0</td>
+<td align="right">135</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
 <td>ENSG00000186141</td>
 <td align="right">0</td>
 <td align="right">0</td>
@@ -725,21 +766,8 @@ scCountTable.Filtered[1:10,1:10] %&gt;% kable()</code></pre>
 <td align="right">0</td>
 <td align="right">305</td>
 </tr>
-<tr class="even">
-<td>ENSG00000186364</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
 <tr class="odd">
-<td>ENSG00000143127</td>
+<td>ENSG00000186364</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
@@ -761,6 +789,58 @@ scCountTable.Filtered[1:10,1:10] %&gt;% kable()</code></pre>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">137</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000265972</td>
+<td align="right">676</td>
+<td align="right">555</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">82</td>
+<td align="right">414</td>
+<td align="right">0</td>
+<td align="right">1068</td>
+<td align="right">299</td>
+<td align="right">467</td>
+</tr>
+<tr class="even">
+<td>ENSG00000134250</td>
+<td align="right">0</td>
+<td align="right">48</td>
+<td align="right">181</td>
+<td align="right">1</td>
+<td align="right">36</td>
+<td align="right">12</td>
+<td align="right">269</td>
+<td align="right">583</td>
+<td align="right">12</td>
+<td align="right">828</td>
+</tr>
+<tr class="odd">
+<td>ENSG00000271601</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>ENSG00000143127</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
 </tr>
@@ -1035,15 +1115,53 @@ Ted.CellTypePorportions %&gt;% head() %&gt;% kable()</code></pre>
                    str_detect(Input.Sample, &quot;H.&quot;) ~ &quot;Human&quot;))
 
 #Ted cell type porportions as plot
-ggplot(Ted.CellTypePorportions.df, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
+TedProp &lt;- ggplot(Ted.CellTypePorportions.df, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill=cell.type)) +
   geom_bar(stat=&quot;identity&quot;) +
   scale_y_continuous(limits = c(-0.001,1.001), expand = c(0, 0)) +
   facet_grid(~Species, scales=&quot;free_x&quot;, space=&quot;free_x&quot;) +
   theme_bw() +
   theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())</code></pre>
+        axis.ticks.x=element_blank())
+TedProp</code></pre>
 <p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-1.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#CIBERSORT cell type porportions
 CIBERSORT &lt;- read.table(&quot;../data/CIBERSORT.Output_Job2.csv&quot;, sep=&#39;,&#39;, header=T) %&gt;%
   arrange(cardiac.muscle.cell) %&gt;%
@@ -1061,18 +1179,134 @@ ggplot(CIBERSORT, aes(x=reorder(Input.Sample, percent, FUN=max), y=percent, fill
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())</code></pre>
 <p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-2">
+Past versions of unnamed-chunk-4-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-2.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#Compare CIBERSORT and TED cell porportions
 inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c(&quot;Input.Sample&quot;, &quot;cell.type&quot;), suffix=c(&quot;.CIBERSORT&quot;, &quot;.TED&quot;)) %&gt;%
   ggplot(aes(x=percent.TED, y=percent.CIBERSORT, color=cell.type)) +
   geom_point(aes(shape=Species.TED)) +
   theme_bw()</code></pre>
 <p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-3">
+Past versions of unnamed-chunk-4-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-3.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c(&quot;Input.Sample&quot;, &quot;cell.type&quot;), suffix=c(&quot;.CIBERSORT&quot;, &quot;.TED&quot;)) %&gt;% dplyr::select(percent.CIBERSORT, percent.TED) %&gt;% cor()</code></pre>
+<pre><code>                  percent.CIBERSORT percent.TED
+percent.CIBERSORT          1.000000    0.936489
+percent.TED                0.936489    1.000000</code></pre>
 <pre class="r"><code>inner_join(CIBERSORT, Ted.CellTypePorportions.df, by=c(&quot;Input.Sample&quot;, &quot;cell.type&quot;), suffix=c(&quot;.CIBERSORT&quot;, &quot;.TED&quot;)) %&gt;%
   ggplot(aes(x=percent.TED, y=percent.CIBERSORT, color=cell.type)) +
   geom_point(aes(shape=Species.TED)) +
   facet_wrap(~cell.type, scales = &quot;free&quot;) +
   theme_bw()</code></pre>
-<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /> Ok, some reasonable agreement between the cell type porportions for some cell types, but not for others (particularly the less prevalent cell types).</p>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-4">
+Past versions of unnamed-chunk-4-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-4-4.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ok, some reasonable agreement between the cell type porportions for some cell types, but not for others (particularly the less prevalent cell types).</p>
 <p>Ok, now let’s explore TED’s output for expression per cell type per individual, and consider estimating dispersion in a cell type specific fashion in a way similar to the bulk dispersion estimates.</p>
 <pre class="r"><code>Ted.Expression.Per.CellType %&gt;% dim()</code></pre>
 <pre><code>[1]    79     9 10001</code></pre>
@@ -1676,10 +1910,85 @@ Ted.Expression.Per.CellType.df %&gt;% head() %&gt;% kable()</code></pre>
 <p>Are these expression values? Are they on a log scale? I should read some documentation, but let’s also just look at a histogram. I expect gene expression across different genes in an individual to appear roughly bell shaped on a log-scale.</p>
 <pre class="r"><code>hist(Ted.Expression.Per.CellType.df$C.4x0519)</code></pre>
 <p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-6-1.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>hist(log10(Ted.Expression.Per.CellType.df$C.4x0519))</code></pre>
 <p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-2">
+Past versions of unnamed-chunk-6-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-6-2.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Yeah, so I think these are un-log transformed expression values. Are they normalized for sequencing depth per individual per cell type? Let’s check the median gene expression level for each individual x cell type combination… If the expression values are already normalized, I expect the median gene expression level to be roughly similar (at least, more similar than the &gt;4 fold range in sequencing depth across samples)</p>
-<pre class="r"><code>Ted.Expression.Per.CellType.df %&gt;%
+<pre class="r"><code>#What is the median gene&#39;s expression level across each sample across each cell type
+Ted.Expression.Per.CellType.df %&gt;%
   dplyr:: select(CellType, gene, starts_with(&quot;C.&quot;)) %&gt;%
   gather(&quot;Ind&quot;, &quot;Expression&quot;, -CellType, -gene) %&gt;%
   group_by(Ind, CellType) %&gt;%
@@ -1692,10 +2001,49 @@ Ted.Expression.Per.CellType.df %&gt;% head() %&gt;% kable()</code></pre>
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())</code></pre>
 <p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-7-1.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Ok, things may not be normalized across cell types, but if I want to estimate dispersion on a per-cell type basis that may not matter… Let’s see if the median counts are related to total sequencing depth…</p>
 <pre class="r"><code>#Total gene mapping read counts from bulk count table
 TotalBulkCount.df &lt;- data.frame(TotalBulkCount = cbind(CountTables$Chimp$Counts, CountTables$Human$Counts) %&gt;% colSums()) %&gt;%
   rownames_to_column(&quot;Ind&quot;)
+
+#Plot median gene expression versus bulk library size (colSums)
 Ted.Expression.Per.CellType.df %&gt;%
   dplyr:: select(CellType, gene, starts_with(&quot;C.&quot;)) %&gt;%
   gather(&quot;Ind&quot;, &quot;Expression&quot;, -CellType, -gene) %&gt;%
@@ -1707,7 +2055,93 @@ Ted.Expression.Per.CellType.df %&gt;%
   facet_wrap(~CellType,  scales = &quot;free&quot;) +
   theme_bw()</code></pre>
 <p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Ok, since total counts (columnSums) from the bulk matrix strongly correlates with the median gene expression measurements output by TED for most cell types, I conclude that this TED output is estimates of the original count table, (though, obviously not integer counts). So perhaps the most reasonable way to estimate dispersion per cell type from this TED output is to first transform the TED expression matrices to log(CPM), and, similarly to the dispersion estimation procedure in the original manuscript, fit a loess curve to the trend between the population mean expression and log(variance).</p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-8-1.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ok, since total counts (columnSums) from the bulk matrix strongly correlates with the median gene expression measurements output by TED for most cell types, I conclude that this TED output is estimates of the original count table, (though, obviously not integer counts).</p>
+<p>First, let’s quickly write out the TED results and write out some other things for response to review.</p>
+<pre class="r"><code>write_delim(Ted.Expression.Per.CellType.df, &quot;../figures/OriginalArt/TED.expressionPerCelltype.tsv.gz&quot;, delim = &#39;\t&#39;)
+write_delim(Ted.CellTypePorportions.df, &quot;../figures/OriginalArt/TED.CelltypeProportions.source.tsv&quot;, delim=&#39;\t&#39;)
+ggsave(TedProp, filename = &quot;../figures/OriginalArt/TED.CelltypeProportions.pdf&quot;, height=3, width=6)
+
+#And do PCA with TED cell proportions and establish a correlation with first few PCs
+library(psych)
+
+GeneExpMatrix&lt;-read.table(&quot;../output/log10TPM.StandardizedAndNormalized.txt&quot;, header=T, check.names = F) %&gt;% column_to_rownames(&quot;IID&quot;)
+
+PCA.results &lt;- prcomp(t(GeneExpMatrix))
+PCs &lt;- PCA.results$x %&gt;% as.data.frame() %&gt;%
+  dplyr::select(PC1:PC4) %&gt;%
+  rownames_to_column() %&gt;%
+  arrange(rowname) %&gt;%
+  column_to_rownames()
+CellProportions.wide &lt;- Ted.CellTypePorportions.df %&gt;%
+  mutate(Input.Sample = str_remove(Input.Sample, &quot;^C.&quot;)) %&gt;%
+  filter(Input.Sample %in% rownames(PCs)) %&gt;%
+  dplyr::select(-Species) %&gt;%
+  spread(key=&quot;cell.type&quot;, value=&quot;percent&quot;) %&gt;%
+  arrange(Input.Sample) %&gt;%
+  column_to_rownames(&quot;Input.Sample&quot;) %&gt;%
+  as.matrix() %&gt;% scale(scale = F)
+MyCorMatrix &lt;- corr.test(x=PCs,
+                         y=CellProportions.wide,
+                         method=&quot;pearson&quot;,
+                         adjust=&quot;BH&quot;)
+
+
+inner_join(
+  MyCorMatrix$r %&gt;% as.data.frame() %&gt;% rownames_to_column() %&gt;% gather(key=&quot;celltype&quot;, value=&quot;R&quot;, -rowname),
+  MyCorMatrix$p %&gt;% as.data.frame() %&gt;% rownames_to_column() %&gt;% gather(key=&quot;celltype&quot;, value=&quot;P.adjust&quot;, -rowname),
+  by=c(&quot;rowname&quot;, &quot;celltype&quot;)) %&gt;%
+  mutate(Ptext=signif(P.adjust, 2)) %&gt;%
+  ggplot(aes(x=rowname, y=celltype)) +
+  scale_fill_gradient2() +
+  scale_color_viridis_c(trans=&quot;log10&quot;, direction=-1, limits=c(1E-9, 1)) +
+  geom_tile(aes(fill=R)) +
+  # geom_point(aes(color=P.adjust), size=3) +
+  geom_text(angle=45, aes(label=Ptext)) +
+  coord_flip() +
+  ylab(&quot;&quot;) +
+  xlab(&quot;&quot;) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45,hjust = 1))
+  # theme(legend.position = &quot;bottom&quot;)
+ggsave(&quot;../figures/OriginalArt/TED.CelltypeProportions.vs.PCs.pdf&quot;, height=5, width=6)</code></pre>
+<p>Perhaps the most reasonable way to estimate dispersion per cell type from this TED output is to first transform the TED expression matrices to log(CPM), and, similarly to the dispersion estimation procedure in the original manuscript, fit a loess curve to the trend between the population mean expression and log(variance).</p>
 <p>Though I have an intuition that <span class="math inline">\(log(variance(logCPM))\)</span> is analogous to the <span class="math inline">\(log(\phi)\)</span> that I used to estimate dispersion, I can’t derive mathematically why <span class="math inline">\(log(variance(logCPM))\)</span>) is the appropriate metric (as opposed to <span class="math inline">\(sd(logCPM)\)</span> for example). But, I can show empirically show that <span class="math inline">\(log(variance(logCPM))\)</span> is basically equivalent to the <span class="math inline">\(log(\phi)\)</span> parameter I estimated from fitting a negative binomial to the bulk raw count data:</p>
 <pre class="r"><code>#Compare the overdispersion (phi) estimate to the log(variance(logCPM)).
 
@@ -1722,7 +2156,44 @@ CountTables$Chimp$Counts %&gt;%
   # head() %&gt;%
   ggplot(aes(x=log.var.logcpm, y=log(Chimp.Overdispersion))) +
     geom_point()</code></pre>
-<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-10-1.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#in contrast to the sd(logCPM)...
 CountTables$Chimp$Counts %&gt;%
   rownames_to_column(&quot;gene&quot;) %&gt;%
@@ -1735,7 +2206,44 @@ CountTables$Chimp$Counts %&gt;%
   # head() %&gt;%
   ggplot(aes(x=sd.logcpm, y=log(Chimp.Overdispersion))) +
     geom_point()</code></pre>
-<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-2">
+Past versions of unnamed-chunk-10-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-10-2.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Ok, now let’s look at the loess plots and think about estimating dispersion on a per cell type (and per species) basis.</p>
 <pre class="r"><code>#loess log(var) vs mean for chimp by cell type
 Normalized.Expression.Per.CellType &lt;- Ted.Expression.Per.CellType.df %&gt;%
@@ -1752,19 +2260,82 @@ Normalized.Expression.Per.CellType %&gt;%
   geom_point(alpha=0.05) +
   geom_smooth(method=&quot;loess&quot;, method.args=list(degree=1)) +
   theme_bw()</code></pre>
-<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-11-1.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#...for both chimp and human
-Normalized.Expression.Per.CellType %&gt;%
+LoessFits &lt;- Normalized.Expression.Per.CellType %&gt;%
   mutate(Species = case_when(str_detect(Ind, &quot;C.&quot;) ~ &quot;Chimp&quot;,
                    str_detect(Ind, &quot;H.&quot;) ~ &quot;Human&quot;)) %&gt;%
   group_by(gene, CellType, Species) %&gt;%
   summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression))) %&gt;%
   ggplot(aes(x=mu, y=log.var, color=CellType)) +
   geom_point(alpha=0.03) +
+  xlab(TeX(&quot;Mean Expression, $\\hat{\\mu}$&quot;)) +
+  ylab(TeX(&quot;Overdispersion, log($\\hat{\\phi})$&quot;)) +
   geom_smooth(method=&quot;loess&quot;, method.args=list(degree=1), aes(linetype=Species), color=&quot;black&quot;) +
-  facet_wrap(~CellType) +
-  theme_bw()</code></pre>
-<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+  facet_wrap(~CellType, labeller = labeller(CellType = label_wrap_gen(width = 25))) +
+  guides(color = guide_legend(override.aes = list(alpha = 1) ) ) +
+  theme_bw()
+LoessFits</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Save this plot. also write code chunk for an alternate visualization of the same thing…</p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.CellType.loess.png&quot;, LoessFits, height=6,width=8)
+
+Normalized.Expression.Per.CellType %&gt;%
+  mutate(Species = case_when(str_detect(Ind, &quot;C.&quot;) ~ &quot;Chimp&quot;,
+                   str_detect(Ind, &quot;H.&quot;) ~ &quot;Human&quot;)) %&gt;%
+  group_by(gene, CellType, Species) %&gt;%
+  summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression))) %&gt;%
+  ggplot(aes(x=mu, y=log.var)) +
+  stat_binhex(bins=100) +
+  scale_fill_viridis_c(option=&quot;C&quot;) +
+  xlab(TeX(&quot;Mean Expression, $\\hat{\\mu}$&quot;)) +
+  ylab(TeX(&quot;Overdispersion, log($\\hat{\\phi})$&quot;)) +
+  geom_smooth(method=&quot;loess&quot;, method.args=list(degree=1), aes(linetype=Species), color=&quot;black&quot;) +
+  facet_wrap(~CellType+Species) +
+  guides(color = guide_legend(override.aes = list(alpha = 1) ) ) +
+  theme_bw()
+
+Normalized.Expression.Per.CellType %&gt;%
+  mutate(Species = case_when(str_detect(Ind, &quot;C.&quot;) ~ &quot;Chimp&quot;,
+                   str_detect(Ind, &quot;H.&quot;) ~ &quot;Human&quot;)) %&gt;%
+  saveRDS(file = &quot;../big_data/NormalizedExpressionPerCellType.rds&quot;)</code></pre>
 <p>It seems most trends are similar between species for different cell types, except leukocytes which I may drop from further analysis. The fact thiat this leukocyte cell type is an outlier may be biologically meaningful, especially given that ~4 of the chimp samples have been challenged with virus. But it might also be technical, I would rather just avoid that cell type.</p>
 <p>So now I will calculate the residual from each loess fit as the cell type specific dispersion. Similar to the bulk case, I may use bootstrapping to estimate standard error and perform inference to compare the human vs chimp dispersion estimates.</p>
 <p>Let’s start first just by getting dispersion estimates, and worry about bootstrapping and inference later.</p>
@@ -1785,9 +2356,46 @@ CellTypeDispersion %&gt;%
   geom_density() +
   facet_wrap(~CellType) +
   theme_bw()</code></pre>
-<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>Ok, it seems I have dispersion estimates for each cell type. How to present this in an interpretable way. How about I start by plotting a correlation matrix with hiearchal clustering dendrogram, comparing the dispersion estimates from bulk to those for each cell type, for both species.</p>
-<pre class="r"><code>Dispersion.Cor.Matrix &lt;- Dispersion %&gt;%
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/e3ed68fb4efbef6a3246106c28d37a2bc8efa328/docs/figure/20200907_Response_Point_11.Rmd/unnamed-chunk-13-1.png" target="_blank">e3ed68f</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Ok, it seems I have dispersion estimates for each cell type. How to present this in an interpretable way. How about I start by plotting a correlation matrix with hiearchal clustering dendrogram, comparing the dispersion estimates from bulk to those for each cell type, for both species. As an alternative visualization, plot celltype:species pairs in PC space.</p>
+<pre class="r"><code>Dispersion.Matrix &lt;- Dispersion %&gt;%
   dplyr::select(gene, Chimp_Bulk=Chimp.Dispersion, Human_Bulk=Human.Dispersion) %&gt;%
   gather(key=&quot;Species.CellType&quot;, value=&quot;dispersion&quot;, -gene) %&gt;%
   bind_rows(
@@ -1797,21 +2405,33 @@ CellTypeDispersion %&gt;%
   filter(gene %in% one2one_HumanMouseOrthologs$Gene.stable.ID) %&gt;%
   pivot_wider(names_from=Species.CellType, values_from = dispersion) %&gt;%
   column_to_rownames(&quot;gene&quot;) %&gt;%
-  as.matrix() %&gt;%
+  as.matrix()
+Dispersion.Cor.Matrix &lt;- Dispersion.Matrix %&gt;% as.data.frame() %&gt;%
+  # dplyr::select(-Chimp_leukocyte, -Human_leukocyte) %&gt;%
   cor(use=&quot;pairwise.complete.obs&quot;)
 
 SpeciesFactorCol &lt;- colnames(Dispersion.Cor.Matrix) %&gt;% substr(1,1) %&gt;% factor() %&gt;% unclass() %&gt;% as.character() %&gt;% recode(&quot;1&quot;=&quot;#F8766D&quot;, &quot;2&quot;=&quot;#00BFC4&quot;)
 
 TissueFactorCol &lt;- data.frame(ColNames=colnames(Dispersion.Cor.Matrix)) %&gt;%
   mutate(Tissue=str_remove(ColNames, &quot;^.+?_&quot;))
-TissueColors.df &lt;- data.frame(colors=c(&quot;black&quot;, hue_pal()(9)), Tissue=unique(sort(TissueFactorCol$Tissue)))
+TissueColors.df &lt;- data.frame(colors=c(&quot;black&quot;, hue_pal()(nrow(Dispersion.Cor.Matrix)/2-1)), Tissue=unique(sort(TissueFactorCol$Tissue)))
 TissueFactorCol.vector &lt;- TissueFactorCol %&gt;%
   left_join(TissueColors.df, by=&quot;Tissue&quot;) %&gt;% pull(colors) %&gt;% as.character()
 
-        
-  
 heatmap.2(Dispersion.Cor.Matrix, trace=&quot;none&quot;, ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector)</code></pre>
-<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Dispersion.PCA &lt;- Dispersion.Matrix %&gt;% as.data.frame() %&gt;% dplyr::select(-Chimp_leukocyte, -Human_leukocyte) %&gt;%
+  drop_na() %&gt;%
+  t() %&gt;%
+  prcomp()
+Dispersion.PCA$x %&gt;% as.data.frame() %&gt;%
+  rownames_to_column() %&gt;%
+  separate(rowname, into=c(&quot;Species&quot;, &quot;CellType&quot;), sep = &quot;_&quot;) %&gt;%
+  ggplot(aes(x=PC1, y=PC2, color=CellType)) +
+  # geom_point(aes(fill=Species), pch=21, size=5, stroke=3) +
+  geom_point(aes(shape=Species)) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-14-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Let’s contrast this with the correlation matrix for cell type expression estimates:</p>
 <pre class="r"><code>Expression.Matrix &lt;- Dispersion %&gt;%
   dplyr::select(gene, Chimp_Bulk=Chimp.Mean.Expression, Human_Bulk=Human.Mean.Expression) %&gt;%
@@ -1829,7 +2449,27 @@ Expression.Matrix[mapply(is.infinite, Expression.Matrix)] &lt;- NA
 Expression.Cor.Matrix &lt;- cor(Expression.Matrix, use=&quot;pairwise.complete.obs&quot;)
 
 heatmap.2(Expression.Cor.Matrix, trace=&quot;none&quot;, ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector)</code></pre>
-<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-13-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>Expression.PCA &lt;- Expression.Matrix %&gt;% as.data.frame() %&gt;% dplyr::select(-Chimp_leukocyte, -Human_leukocyte) %&gt;%
+  drop_na() %&gt;%
+  t() %&gt;%
+  prcomp()
+Expression.PCA$x %&gt;% as.data.frame() %&gt;%
+  rownames_to_column() %&gt;%
+  separate(rowname, into=c(&quot;Species&quot;, &quot;CellType&quot;), sep = &quot;_&quot;) %&gt;%
+  ggplot(aes(x=PC1, y=PC2, color=CellType)) +
+  # geom_point(aes(fill=Species), pch=21, size=5, stroke=3) +
+  geom_point(aes(shape=Species)) +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_11.Rmd/unnamed-chunk-15-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Save plots…</p>
+<pre class="r"><code>pdf(&quot;../figures/OriginalArt/ResponseToReviewers.CorMatPlot.Dispersion.pdf&quot;)
+heatmap.2(Dispersion.Cor.Matrix, trace=&quot;none&quot;, ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector, offsetRow=0, offsetCol=0, cexRow = 0.5, cexCol = 0.5, margins=c(10,10))
+dev.off()
+
+pdf(&quot;../figures/OriginalArt/ResponseToReviewers.CorMatPlot.Expression.pdf&quot;)
+heatmap.2(Expression.Cor.Matrix, trace=&quot;none&quot;, ColSideColors=SpeciesFactorCol, RowSideColors = TissueFactorCol.vector, offsetRow=0, offsetCol=0, cexRow = 0.5, cexCol = 0.5, margins=c(10,10))
+dev.off()</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1853,19 +2493,20 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] scales_1.1.0    knitr_1.26      cowplot_1.0.0   gridExtra_2.3  
- [5] edgeR_3.26.8    limma_3.40.6    MASS_7.3-51.4   gplots_3.0.1.1 
- [9] Seurat_3.1.1    biomaRt_2.40.5  forcats_0.4.0   stringr_1.4.0  
-[13] dplyr_0.8.3     purrr_0.3.3     readr_1.3.1     tidyr_1.0.0    
-[17] tibble_2.1.3    ggplot2_3.2.1   tidyverse_1.3.0 TED_1.0        
+ [1] latex2exp_0.4.0 scales_1.1.1    knitr_1.26      cowplot_1.0.0  
+ [5] gridExtra_2.3   edgeR_3.26.8    limma_3.40.6    MASS_7.3-53    
+ [9] gplots_3.0.1.1  Seurat_3.1.1    biomaRt_2.40.5  forcats_0.4.0  
+[13] stringr_1.4.0   dplyr_1.0.2     purrr_0.3.3     readr_1.3.1    
+[17] tidyr_1.0.0     tibble_3.0.3    ggplot2_3.3.2   tidyverse_1.3.0
+[21] TED_1.0        
 
 loaded via a namespace (and not attached):
   [1] reticulate_1.13             R.utils_2.9.0              
-  [3] tidyselect_0.2.5            RSQLite_2.1.4              
+  [3] tidyselect_1.1.0            RSQLite_2.1.4              
   [5] AnnotationDbi_1.46.1        htmlwidgets_1.5.1          
   [7] grid_3.6.1                  BiocParallel_1.18.1        
   [9] Rtsne_0.15                  munsell_0.5.0              
- [11] mutoss_0.1-12               codetools_0.2-16           
+ [11] codetools_0.2-16            mutoss_0.1-12              
  [13] ica_1.0-2                   future_1.15.1              
  [15] withr_2.1.2                 colorspace_1.4-1           
  [17] Biobase_2.44.0              highr_0.8                  
@@ -1874,10 +2515,10 @@ loaded via a namespace (and not attached):
  [23] listenv_0.8.0               labeling_0.3               
  [25] Rdpack_0.11-0               git2r_0.26.1               
  [27] GenomeInfoDbData_1.2.1      mnormt_1.5-5               
- [29] MCMCpack_1.4-9              farver_2.0.1               
+ [29] MCMCpack_1.4-9              farver_2.0.3               
  [31] bit64_0.9-7                 rprojroot_1.3-2            
  [33] TH.data_1.0-10              coda_0.19-3                
- [35] vctrs_0.2.0                 generics_0.0.2             
+ [35] vctrs_0.3.4                 generics_0.0.2             
  [37] xfun_0.11                   R6_2.4.1                   
  [39] GenomeInfoDb_1.20.0         rsvd_1.0.2                 
  [41] locfit_1.5-9.1              bitops_1.0-6               
@@ -1887,28 +2528,28 @@ loaded via a namespace (and not attached):
  [49] gtable_0.3.0                npsurv_0.4-0               
  [51] globals_0.12.5              conquer_1.0.2              
  [53] mcmc_0.9-7                  sandwich_2.5-1             
- [55] workflowr_1.5.0             rlang_0.4.1                
- [57] MatrixModels_0.4-1          zeallot_0.1.0              
- [59] genefilter_1.66.0           splines_3.6.1              
- [61] lazyeval_0.2.2              broom_0.5.2                
- [63] checkmate_2.0.0             reshape2_1.4.3             
- [65] yaml_2.2.0                  modelr_0.1.5               
- [67] backports_1.1.5             httpuv_1.5.2               
- [69] Hmisc_4.4-1                 tools_3.6.1                
- [71] ellipsis_0.3.0              RColorBrewer_1.1-2         
- [73] BiocGenerics_0.30.0         ggridges_0.5.1             
- [75] TFisher_0.2.0               Rcpp_1.0.5                 
- [77] plyr_1.8.5                  base64enc_0.1-3            
- [79] progress_1.2.2              zlibbioc_1.30.0            
- [81] RCurl_1.95-4.12             prettyunits_1.0.2          
- [83] rpart_4.1-15                pbapply_1.4-2              
- [85] S4Vectors_0.22.1            zoo_1.8-6                  
- [87] SummarizedExperiment_1.14.1 haven_2.2.0                
- [89] ggrepel_0.8.1               cluster_2.1.0              
- [91] fs_1.3.1                    magrittr_1.5               
- [93] data.table_1.12.8           SparseM_1.78               
- [95] lmtest_0.9-37               reprex_0.3.0               
- [97] RANN_2.6.1                  mvtnorm_1.0-11             
+ [55] workflowr_1.5.0             rlang_0.4.7                
+ [57] MatrixModels_0.4-1          genefilter_1.66.0          
+ [59] splines_3.6.1               lazyeval_0.2.2             
+ [61] broom_0.7.0                 checkmate_2.0.0            
+ [63] reshape2_1.4.3              yaml_2.2.0                 
+ [65] modelr_0.1.5                backports_1.1.5            
+ [67] httpuv_1.5.2                Hmisc_4.4-1                
+ [69] tools_3.6.1                 ellipsis_0.3.0             
+ [71] RColorBrewer_1.1-2          BiocGenerics_0.30.0        
+ [73] ggridges_0.5.1              TFisher_0.2.0              
+ [75] Rcpp_1.0.5                  plyr_1.8.6                 
+ [77] base64enc_0.1-3             progress_1.2.2             
+ [79] zlibbioc_1.30.0             RCurl_1.95-4.12            
+ [81] prettyunits_1.0.2           rpart_4.1-15               
+ [83] pbapply_1.4-3               S4Vectors_0.22.1           
+ [85] zoo_1.8-8                   SummarizedExperiment_1.14.1
+ [87] haven_2.2.0                 ggrepel_0.8.1              
+ [89] cluster_2.1.0               fs_1.3.1                   
+ [91] magrittr_1.5                data.table_1.12.8          
+ [93] SparseM_1.78                lmtest_0.9-37              
+ [95] reprex_0.3.0                RANN_2.6.1                 
+ [97] mvtnorm_1.0-11              whisker_0.4                
  [99] fitdistrplus_1.0-14         matrixStats_0.56.0         
 [101] hms_0.5.2                   lsei_1.2-0                 
 [103] evaluate_0.14               xtable_1.8-4               
@@ -1916,37 +2557,37 @@ loaded via a namespace (and not attached):
 [107] readxl_1.3.1                IRanges_2.18.3             
 [109] compiler_3.6.1              KernSmooth_2.23-16         
 [111] crayon_1.3.4                R.oo_1.23.0                
-[113] htmltools_0.4.0             later_1.0.0                
-[115] Formula_1.2-3               geneplotter_1.62.0         
-[117] RcppParallel_4.4.4          lubridate_1.7.4            
-[119] DBI_1.0.0                   dbplyr_1.4.2               
-[121] Matrix_1.2-18               cli_2.0.0                  
-[123] R.methodsS3_1.7.1           gdata_2.18.0               
-[125] parallel_3.6.1              metap_1.2                  
-[127] igraph_1.2.4.2              GenomicRanges_1.36.1       
-[129] pkgconfig_2.0.3             sn_1.5-4                   
-[131] numDeriv_2016.8-1.1         foreign_0.8-72             
-[133] plotly_4.9.1                xml2_1.2.2                 
-[135] annotate_1.62.0             multtest_2.40.0            
-[137] XVector_0.24.0              bibtex_0.4.2               
-[139] rvest_0.3.5                 digest_0.6.23              
-[141] tsne_0.1-3                  sctransform_0.2.0          
-[143] RcppAnnoy_0.0.14            rmarkdown_1.18             
-[145] cellranger_1.1.0            leiden_0.3.1               
-[147] htmlTable_2.0.1             uwot_0.1.5                 
-[149] curl_4.3                    gtools_3.8.1               
-[151] quantreg_5.61               lifecycle_0.1.0            
-[153] nlme_3.1-143                jsonlite_1.6               
-[155] viridisLite_0.3.0           fansi_0.4.0                
-[157] pillar_1.4.2                lattice_0.20-38            
-[159] plotrix_3.7-7               httr_1.4.1                 
-[161] survival_3.1-8              glue_1.3.1                 
-[163] png_0.1-7                   bit_1.1-14                 
-[165] stringi_1.4.3               blob_1.2.0                 
-[167] DESeq2_1.24.0               latticeExtra_0.6-29        
-[169] caTools_1.17.1.3            memoise_1.1.0              
-[171] irlba_2.3.3                 future.apply_1.3.0         
-[173] ape_5.3                    </code></pre>
+[113] htmltools_0.4.0             mgcv_1.8-31                
+[115] later_1.0.0                 Formula_1.2-3              
+[117] geneplotter_1.62.0          RcppParallel_4.4.4         
+[119] lubridate_1.7.9             DBI_1.0.0                  
+[121] dbplyr_1.4.2                Matrix_1.2-18              
+[123] cli_2.0.0                   R.methodsS3_1.7.1          
+[125] gdata_2.18.0                parallel_3.6.1             
+[127] metap_1.2                   igraph_1.2.4.2             
+[129] GenomicRanges_1.36.1        pkgconfig_2.0.3            
+[131] sn_1.5-4                    numDeriv_2016.8-1.1        
+[133] foreign_0.8-72              plotly_4.9.1               
+[135] xml2_1.2.2                  annotate_1.62.0            
+[137] multtest_2.40.0             XVector_0.24.0             
+[139] bibtex_0.4.2                rvest_0.3.5                
+[141] digest_0.6.23               tsne_0.1-3                 
+[143] sctransform_0.2.0           RcppAnnoy_0.0.14           
+[145] rmarkdown_1.18              cellranger_1.1.0           
+[147] leiden_0.3.1                htmlTable_2.0.1            
+[149] uwot_0.1.5                  curl_4.3                   
+[151] gtools_3.8.1                quantreg_5.61              
+[153] lifecycle_0.2.0             nlme_3.1-143               
+[155] jsonlite_1.6                viridisLite_0.3.0          
+[157] fansi_0.4.0                 pillar_1.4.6               
+[159] lattice_0.20-38             plotrix_3.7-7              
+[161] httr_1.4.1                  survival_3.1-8             
+[163] glue_1.4.2                  png_0.1-7                  
+[165] bit_1.1-14                  stringi_1.4.3              
+[167] blob_1.2.0                  DESeq2_1.24.0              
+[169] latticeExtra_0.6-29         caTools_1.17.1.3           
+[171] memoise_1.1.0               irlba_2.3.3                
+[173] future.apply_1.3.0          ape_5.3                    </code></pre>
 </div>
 
 

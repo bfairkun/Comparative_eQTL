@@ -1,0 +1,109 @@
+Source	Individual	Cluster1Membership	Cluster2Membership	Cluster3Membership	Cluster4Membership
+This Study	Jarred	1e-5	1e-5	0.99997	1e-5
+This Study	Waga	1.3e-5	0.059266	0.940711	1e-5
+This Study	Rogger	1e-5	1e-5	0.99997	1e-5
+This Study	Mai	1.1e-5	1e-5	0.999969	1e-5
+This Study	Joelson	1e-5	1e-5	0.99997	1e-5
+This Study	Cheeta	1e-5	1e-5	0.99997	1e-5
+This Study	Kerri	1e-5	0.344779	0.655201	1e-5
+This Study	Peony	1e-5	1e-5	0.99997	1e-5
+This Study	MD_And	1.2e-5	1.7e-5	0.999961	1e-5
+This Study	Maxine	1e-5	1e-5	0.99997	1e-5
+This Study	Lulu	1.9e-5	1e-5	0.999961	1e-5
+This Study	Amos	1e-5	0.561417	0.438563	1e-5
+This Study	Cynthia	1.1e-5	1e-5	0.999969	1e-5
+This Study	Carmichael	1.1e-5	1e-5	0.999969	1e-5
+This Study	4x0430	1e-5	0.282423	0.685917	0.031651
+This Study	Iyk	1.1e-5	1e-5	0.999969	1e-5
+This Study	Callie	1.9e-5	1.6e-5	0.999955	1e-5
+This Study	Ursula	1.1e-5	1e-5	0.999969	1e-5
+This Study	4X0333	1e-5	1e-5	0.99997	1e-5
+This Study	4X0095	1.1e-5	1e-5	0.999969	1e-5
+This Study	Unnamed_female	0.177156	0.142341	0.679433	0.00107
+This Study	4x523	1.78e-4	0.230881	0.738454	0.030487
+This Study	88A020	1.4e-5	1e-5	0.999966	1e-5
+This Study	95A014	1e-5	1e-5	0.99997	1e-5
+This Study	4x0043	1.1e-5	1e-5	0.999969	1e-5
+This Study	Justin	0.190411	0.027603	0.781977	1e-5
+This Study	4X0550	1e-5	1e-5	0.99997	1e-5
+This Study	4X0267	1.1e-5	1e-5	0.999969	1e-5
+This Study	4X0357	1e-5	1e-5	0.99997	1e-5
+This Study	Barbara	0.330492	0.533304	0.136194	1e-5
+This Study	Anja	1.9e-5	1e-5	0.999961	1e-5
+This Study	4X0212	1e-5	1e-5	0.99997	1e-5
+This Study	4x0025	1.1e-5	1e-5	0.999969	1e-5
+This Study	4x0519	1.3e-5	0.203053	0.796924	1e-5
+This Study	Duncan	0.184097	1e-5	0.815883	1e-5
+This Study	Little_Rock_chimp	1e-5	1e-5	0.99997	1e-5
+This Study	Socrates	1e-5	1e-5	0.99997	1e-5
+This Study	4X0339	1e-5	1e-5	0.99997	1e-5
+This Study	4X0354	1e-5	0.435208	1e-5	0.564772
+Eastern	A996_Diana	1e-5	1e-5	1e-5	0.99997
+Eastern	B010_Ikuru	1.1e-5	1e-5	1e-5	0.999969
+Eastern	N018_Trixie	1.1e-5	1e-5	1e-5	0.999969
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Akwaya_Jean	0.99997	1e-5	1e-5	1e-5
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Banyo	0.99997	1e-5	1e-5	1e-5
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Basho	0.99997	1e-5	1e-5	1e-5
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Damian	0.99997	1e-5	1e-5	1e-5
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Julie	0.857688	0.142292	1e-5	1e-5
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Kopongo	0.999969	1e-5	1.1e-5	1e-5
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Koto	0.999969	1.1e-5	1e-5	1e-5
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Paquita	0.999969	1.1e-5	1e-5	1e-5
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Taweh	0.99997	1e-5	1e-5	1e-5
+Nigeria	NA	NA	NA	NA	NA
+Cameroon	Tobi	0.859694	0.140286	1e-5	1e-5
+Eastern	100037_Vincent	1e-5	1e-5	1e-5	0.99997
+Eastern	100040_Andromeda	1e-5	1e-5	1e-5	0.99997
+Eastern	9729_Harriet	1e-5	1.2e-5	1e-5	0.999968
+Eastern	A910_Bwambale	1e-5	1e-5	1e-5	0.99997
+Eastern	A911_Kidongo	1e-5	1e-5	1e-5	0.99997
+Eastern	A912_Nakuu	1e-5	1e-5	1e-5	0.99997
+Eastern	B002_Padda	1.1e-5	1e-5	1e-5	0.999969
+Eastern	B007_Cindy	1e-5	1.2e-5	1e-5	0.999968
+Eastern	B011_Frederike	1e-5	1e-5	1e-5	0.99997
+Eastern	B012_Washu	1e-5	1.3e-5	1e-5	0.999967
+Eastern	B013_Athanga	1e-5	1e-5	1e-5	0.99997
+Eastern	B014_Coco	1e-5	1e-5	1e-5	0.99997
+Eastern	N013_Tongo	1.1e-5	1e-5	1e-5	0.999969
+Eastern	N015_Cleo	1e-5	1e-5	1e-5	0.99997
+Eastern	N017_Bihati	1e-5	1e-5	1e-5	0.99997
+Eastern	N019_Maya	1e-5	1e-5	1e-5	0.99997
+Central	10964_Cindy	1e-5	0.99997	1e-5	1e-5
+Central	11352_Mirinda	1e-5	0.99997	1e-5	1e-5
+Central	11528_Alfred	1e-5	0.99997	1e-5	1e-5
+Central	12311_Ula	1e-5	0.99997	1e-5	1e-5
+Central	12320_Lara	1e-5	0.99997	1e-5	1e-5
+Central	12348_Luky	1e-5	0.99997	1e-5	1e-5
+Central	12420_Gamin	1e-5	0.99997	1e-5	1e-5
+Central	13656_Brigitte	1.5e-5	0.999965	1e-5	1e-5
+Central	A957_Vaillant	1e-5	0.99997	1e-5	1e-5
+Central	A958_Doris	1e-5	0.927326	1e-5	0.072654
+Central	A959_Julie	1e-5	0.99997	1e-5	1e-5
+Central	A960_Clara	1e-5	0.99997	1e-5	1e-5
+Central	A990_Noemie	1.7e-5	0.999963	1e-5	1e-5
+Central	B021_Yogui	1e-5	0.99997	1e-5	1e-5
+Central	B022_Tibe	1e-5	0.99997	1e-5	1e-5
+Central	B023_Blanquita	1e-5	0.99997	1e-5	1e-5
+Central	B024_Negrita	1e-5	0.99997	1e-5	1e-5
+Central	B025_Marlin	1e-5	0.939779	1e-5	0.060201
+Western	9668_Bosco	1e-5	1e-5	0.99997	1e-5
+Western	9730_Donald	1e-5	0.205443	0.794537	1e-5
+Western	A956_Jimmie	1e-5	1e-5	0.99997	1e-5
+Western	A991_Berta	1e-5	1e-5	0.99997	1e-5
+Western	A992_Annie	1e-5	1e-5	0.99997	1e-5
+Western	A993_Mike	1.1e-5	1e-5	0.999969	1e-5
+Western	B005_SeppToni	1e-5	1e-5	0.99997	1e-5
+Western	B006_Linda	1e-5	1e-5	0.99997	1e-5
+Western	Clint	1e-5	1e-5	0.99997	1e-5
+Western	N014_Cindy	2e-5	1e-5	0.99996	1e-5
+Western	N016_Alice	1e-5	1e-5	0.99997	1e-5
+Western	X00100_Koby	1e-5	1e-5	0.99997	1e-5

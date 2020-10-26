@@ -1,0 +1,245 @@
+---
+title: "ResponseToReviewer_Point6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+Original reviewer point:
+
+
+>What do the authors think these findings mean for study systems outside of humans and captive chimpanzees? Both on the technical level (e.g. sample size), and for how their approach could be helpful outside of these species. Generalizing this approach would broaden the impact and audience of the paper. 
+
+- Referring to our analysis of DE power, this is an excellent question, but empirically answering this question is outside the scope of this paper so we can only speculate. Though, we reason that our findings may depend on the species comparison (species which have diverged more may have greater differences, and thus a similarly sized study may identify more differences), and the tissue type (tissues with high inter-individual variability due to technical or environmental factors may have less power). We have added a discussion of this in the revised manuscript. 
+- Further, here we provide an analysis of GTEx tissues which quantifies the variability (gene-wide overdispersion parameter estimate measured from a negative binomial) across GTEx samples for different tissues. We note that this correlates with the number of eGenes detected in GTEx, and may be serve as a reference as to which tissues may have more power in DE analysis or eQTL analysis due to the degree of inter-individual variability. 
+
+First load necessary libraries for analysis...
+
+```{r}
+library(tidyverse)
+library(CorShrink)
+library(gplots)
+library(readxl)
+library("org.Hs.eg.db")
+library(ggrepel)
+library(ggpmisc)
+
+
+source("../code/CustomFunctions.R")
+```
+
+Now, read in data and do analysis... In the `code` section of this repository, the snakemake has already used the same negative binomial fit model used to calculate overdispersion as described in the mansucript, but for all GTEx tissues using all GTEx v8 samples.
+
+First, let's read in the data of mean expression estimates and overdispersion estimates from that model fit across all genes across all GTEx tissues and also calculate residual overdispersion
+
+
+```{r}
+GTEx.Overdispersion.Estimates.fn <- "../output/GtexTissueMatrix.overdispersion.AllModeExtractionSamples.txt.gz"
+GTEx.Expression.Estimates.fn <- "../output/GtexTissueMatrix.mu.AllModeExtractionSamples.txt.gz"
+
+
+
+MuTable <- read.table(GTEx.Expression.Estimates.fn, header=T, sep='\t', check.names = F, row.names = 1) %>%
+  rownames_to_column("X") %>%
+  mutate(gene = gsub("\\.\\d+", "", X, perl=T)) %>% dplyr::select(-X)
+
+OverdispersionTable <- read.table(GTEx.Overdispersion.Estimates.fn, header=T, sep='\t', check.names = F, row.names = 1) %>%
+  rownames_to_column("X")  %>% 
+  mutate(gene = gsub("\\.\\d+", "", X, perl=T)) %>% dplyr::select(-X)
+
+ChimpOverdispersionTable <- read.table("../output/OverdispersionEstimatesFromChimp.txt", header=T, sep='\t')
+
+OverdispersionCombined <- ChimpOverdispersionTable %>%
+  dplyr::select(ThisStudy_ChimpHeart=Chimp.Overdispersion,
+         ThisStudy_HumanHeart=Human.Overdispersion,
+         gene) %>%
+  left_join(OverdispersionTable, by="gene") %>%
+  select_if(~sum(!is.na(.)) > 0) %>% tibble::column_to_rownames("gene")
+
+MuCombined <- ChimpOverdispersionTable %>%
+  dplyr::select(ThisStudy_ChimpHeart=Chimp.Mean.Expression,
+         ThisStudy_HumanHeart=Human.Mean.Expression,
+         gene) %>%
+  left_join(MuTable, by="gene") %>%
+  select_if(~sum(!is.na(.)) > 0) %>% tibble::column_to_rownames("gene")
+
+
+GtexColors <- read.table("../data/GTEx_Analysis_TissueColorCodes.txt", sep='\t', header=T, stringsAsFactors = F) %>% mutate(HEX=paste0("#",Color.code))
+GtexColors[nrow(GtexColors) + 1,] = c("ThisStudy_ChimpHeart","black", "#000000")
+GtexColors[nrow(GtexColors) + 1,] = c("ThisStudy_HumanHeart","black", "#000000")
+
+TissueColorVector <- GtexColors$HEX
+names(TissueColorVector)<-GtexColors$Tissue
+
+```
+
+Do tissues generally differ in their levels of overdispersion
+
+```{r}
+#Box whisker plot of overdispersion estimates across all genes for all GTEx tissues
+Boxplot <- OverdispersionCombined %>%
+  gather() %>% mutate(TissueColor=TissueColorVector[key]) %>%
+  ggplot(aes(x=key, y=log(value))) +
+    geom_boxplot(outlier.shape = NA, aes(fill = key)) +
+    ylab("overdispersion") +
+    ylim(c(-6,2)) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust=0.5)) +
+    theme(legend.position="none", axis.title.x=element_blank()) +
+    scale_fill_manual(values=TissueColorVector) +
+    guides(color=guide_legend(nrow=2,byrow=TRUE))
+Boxplot
+
+
+```
+
+Ok, we can see whole blood is the most overdispersed. This could be consistent with the idea that whole blood is a hetergeneous mix of cell types that is different person to person.
+
+Do these different levels of overdispersion relate to power in eQTL studies?
+
+Here, let's read in the number of egenes per Gtex tissue from the GTEx website
+
+```{r}
+# Do these different levels of overdispersion relate to power in eQTL studies
+# First plot the number eGenes for each tissue, versus number of samples
+GtexEgeneCounts <- read_excel("../data/NumberEgenesPerGtexTissue.xlsx") %>%
+  filter(!Percent.eGenes.Over.Total.expressed==0)
+Lm.Plot1 <- GtexEgeneCounts %>%
+  ggplot(aes(x=`# RNASeq and Genotyped samples`, y=as.numeric(Percent.eGenes.Over.Total.expressed), label=Tissue)) +
+  geom_point(aes(color=Tissue)) +
+  geom_smooth(method="lm", formula=y~x, color="red", size=0.5) +
+  scale_color_manual(values=TissueColorVector) +
+  geom_text_repel(size=1, aes(color=Tissue)) +
+  ylab("Fraction eGenes\n(# eGenes / # genes expressed)") +
+    stat_fit_glance(method = 'lm',
+                       method.args = list(formula = formula),
+                       geom = 'text',
+                       aes(label = paste("P-value = ", signif(..p.value.., digits = 3), sep = "")),
+                  label.x.npc = "right", label.x= "middle", size = 3, label.y="top") +
+    stat_poly_eq(
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "*plain(\",\")~")), 
+               label.x.npc = "middle", label.y="top", label.x="right",
+               formula = formula, parse = TRUE, size = 3) +
+
+  theme_bw() +
+  theme(legend.position = "none")
+Lm.Plot1
+
+```
+
+Well it sort of looks like whole blood and testis and some cerebellum and spleen are outliers in number of eGenes, and in directions that are concordant with the idea that more overdispersed tissues have less eQTL power. Let's test this more explicitly with a linear model using sampleCount and MedianOverdispersion as predictors of eGene count
+
+```{r}
+MedianOverdispersion <- apply(log(OverdispersionCombined), 2, FUN = median, na.rm=T)
+
+DataForLm <- as.data.frame(MedianOverdispersion) %>%
+  rownames_to_column("Tissue") %>%
+  right_join(GtexEgeneCounts, by="Tissue") %>%
+  drop_na()
+
+My.lm <- lm(Percent.eGenes.Over.Total.expressed ~ `# RNASeq and Genotyped samples` + MedianOverdispersion, DataForLm)
+summary(My.lm)
+
+plot(My.lm)
+```
+
+Ok that model says MedianOverdispersion is a significant predictor for eGene count, wherein more overdispersed tissues have less eGenes. The diagnostic plots for the model fit look reasonable. Let's also try regressing out the sampleCount effect and fitting the MedianOverdispersion to the residuals.
+
+```{r}
+#Fit model using just sample count as predictor
+My.simpler.lm <- lm(Percent.eGenes.Over.Total.expressed ~ `# RNASeq and Genotyped samples`, DataForLm)
+
+#Save residuals
+DataForLm$ResidualAfterRegressingOutSampleCount <- My.simpler.lm$residuals
+
+#Fit MedianOverdispersion to the residuals 
+LmOnResidual <- lm(ResidualAfterRegressingOutSampleCount ~ MedianOverdispersion, DataForLm)
+
+summary(LmOnResidual)
+
+plot(LmOnResidual)
+
+Lm.Plot2 <- DataForLm %>%
+  ggplot(aes(x=MedianOverdispersion, y=ResidualAfterRegressingOutSampleCount)) +
+  geom_point(aes(color=Tissue)) +
+  scale_color_manual(values=TissueColorVector) +
+  geom_text_repel(size=1, aes(label=Tissue, color=Tissue)) +
+  stat_smooth(method = "lm", col = "red", size=0.5) +
+  ylab("Residuals") +
+    stat_poly_eq(
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "*plain(\",\")~")), 
+               label.x.npc = "middle", label.y="top", label.x="right",
+               formula = formula, parse = TRUE, size = 3) +
+  stat_fit_glance(method = 'lm',
+                       method.args = list(formula = formula),
+                       geom = 'text',
+                       aes(label = paste("\n\nP-value = ", signif(..p.value.., digits = 3), sep = "")),
+                  label.x.npc = "right", label.x= "middle", size = 3, label.y="top") +
+  theme_bw() +
+  theme(legend.position = "none")
+Lm.Plot2
+
+```
+
+Ok, yeah, same result. The trend is significant, and the diagnostic plots point to one outlier, (testis) which clearly isn't the sole driver of the trend.
+
+So dispersion is a predictor of eQTL mapping power. Let's also see how it is a predictor of DE analysis power. Let's compare dispersion estimates 
+
+```{r}
+HumanEgenes <- read.delim("../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz") %>%
+  mutate(gene=str_remove(gene_id, "\\.\\d+$"))
+
+OutputDE <- '../output/Final/TableS2.tab'
+DE.results <- read.delim(OutputDE, sep='\t', stringsAsFactors = F)
+
+
+ChimpOverdispersionTable %>%
+  mutate(Mean=Human.Residual+Chimp.Residual) %>%
+  left_join(HumanEgenes) %>%
+  dplyr::select(Mean,Human.Residual, gene, qval) %>%
+  ggplot(aes(x=Mean, y=-log10(qval))) +
+  geom_point(alpha=0.05) +
+  # geom_hex(bins=100) +
+  scale_fill_viridis_c() +
+  theme_bw()
+
+formula <- y ~ x  
+DispersionVsDE <- ChimpOverdispersionTable %>%
+  mutate(Mean=Human.Residual+Chimp.Residual) %>%
+  # mutate(Mean=log(Human.Overdispersion) + log(Chimp.Overdispersion)) %>%
+  left_join(DE.results, by=c("gene"="Ensembl_geneID")) %>%
+  dplyr::select(Mean, Chimp.Residual, gene, adj.P.Val) %>%
+  ggplot(aes(y=Mean, x=-log10(adj.P.Val))) +
+  geom_point(alpha=0.05) +
+  # geom_hex(bins=100) +
+  geom_smooth(method='rlm', formula=formula) +
+  ylim(c(-6,6)) +
+  ylab("Genewise dispersion") +
+  xlab("Interspecies DE -log10(P)") +
+      stat_poly_eq(
+               aes(label = paste(..eq.label.., ..rr.label.., sep = "*plain(\",\")~")), 
+               label.x.npc = "middle", label.y="top", label.x="right",
+               formula = formula, parse = TRUE, size = 3) +
+  stat_fit_glance(method = 'lm',
+                       method.args = list(formula = formula),
+                       geom = 'text',
+                       aes(label = paste("\n\nP-value = ", signif(..p.value.., digits = 3), sep = "")),
+                  label.x.npc = "right", label.x= "middle", size = 3, label.y="top") +
+  theme_bw()
+
+DispersionVsDE
+```
+
+Make plots 
+
+```{r, eval=F}
+ggsave("../figures/OriginalArt/ResponseToReviewers.Overdispersion.boxplots.pdf", Boxplot, height=4, width=8)
+ggsave("../figures/OriginalArt/ResponseToReviewers.Overdispersion.lm.2.pdf", Lm.Plot2, height=3, width=4)
+ggsave("../figures/OriginalArt/ResponseToReviewers.Overdispersion.lm.1.pdf", Lm.Plot1, height=3, width=4)
+
+```
+
+
+

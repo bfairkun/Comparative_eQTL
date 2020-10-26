@@ -1,0 +1,75 @@
+---
+title: "ResponseToReviewer_Point11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+See [here](20200907_Response_Point_09.html) for a more description.
+
+Here, I will take the cell type specific dispersion point estimates described in the link above, and examine the bootstrapped standard errors (1000 replicates, resampled at the stage of different individuals after TED expression estimation) that were produced a part of the snakemake in the `code` section of this repo.
+
+
+First, load libraries and data
+
+```{r load_libraries}
+library(tidyverse)
+library(knitr)
+
+Bootstrapped.SE.estimates <- read.delim("../output/CellTypeDispersion.SE.tsv.gz")
+DispersionPointEstimates <- readRDS("../big_data/NormalizedExpressionPerCellType.rds") %>%
+  group_by(gene, CellType, Species) %>%
+  summarise(mu=mean(Log.CPM.Expression), log.var=log(var(Log.CPM.Expression))) %>%
+  group_by(Species, CellType) %>% 
+    do(data.frame(., resid = residuals(loess(log.var ~ mu, data=., degree=1, na.action="na.exclude"))))
+
+CellTypeDispersion.df <- inner_join(Bootstrapped.SE.estimates, DispersionPointEstimates, by=c("CellType", "Species", "gene"))
+
+head(CellTypeDispersion.df) %>% kable()
+
+Dispersion <- read.delim('../output/Final/TableS3.tab')
+head(Dispersion) %>% kable()
+```
+
+Let's plot some things to explore... Is the distribution of gene expression and standard errors obviously different in different cell types?
+
+```{r}
+
+CellTypeDispersion.df %>%
+  ggplot(aes(x=mu, color=CellType)) +
+  geom_density(aes(linetype=Species)) +
+  facet_wrap(~CellType) +
+  theme_bw()
+
+CellTypeDispersion.df %>%
+  ggplot(aes(x=mu.SE, color=CellType)) +
+  geom_density(aes(linetype=Species)) +
+  facet_wrap(~CellType) +
+  theme_bw()
+
+CellTypeDispersion.df %>%
+  ggplot(aes(x=resid, color=CellType)) +
+  geom_density(aes(linetype=Species)) +
+  facet_wrap(~CellType) +
+  theme_bw()
+
+CellTypeDispersion.df %>%
+  ggplot(aes(x=resid.SE, color=CellType)) +
+  geom_density(aes(linetype=Species)) +
+  facet_wrap(~CellType) +
+  theme_bw()
+
+```
+
+Ok, write out the results
+
+```{r, eval=F}
+CellTypeDispersion.df %>%
+  dplyr::select(Species, CellType, gene, MeanExpression=mu, MeanExpression.StandardError=mu.SE, Overdispersion=log.var, Mean.Adjusted.Dispersion=resid, Mean.Adjusted.Dispersion.StandardError=resid.SE) %>%
+  write_delim("../figures/CellTypeDispersion.Reorganized.source.data.tsv", delim='\t')
+  
+```
+
+

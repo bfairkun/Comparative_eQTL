@@ -1,0 +1,146 @@
+---
+title: "ResponseToReviewer_Point8"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+### Overview
+
+Original reviewer point:
+
+
+>Did the authors test directly whether eQTLs were enriched in genes with a high dispersion? I could not find this going back through the paper. This seems almost trivially likely to be true. I may have missed this result? Or did the authors worry this is too likely to be confounded with cell type? Either way, this seems like a result that may be useful to show even if the authors did acknowledge that it was likely to be confounded. 
+
+What we have shown already, is that chimp specific eGenes have more dispersion in chimp than in human (vice versa). But the reviewer is asking something slightly different. Let's look into it...
+
+
+### Analysis
+
+First, load necessary libraries... and read in data
+```{r}
+library(tidyverse)
+library(knitr)
+source("../code/CustomFunctions.R")
+
+
+Overdispersion <- read.delim("../output/Final/TableS3.tab")
+Chimp.eGenes <- read.delim("../output/Final/TableS8.tab")
+Human.eGenes <- read.delim("../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz")
+GeneNames <- read.delim("../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz") %>%
+  distinct(Gene.stable.ID, .keep_all = T) %>%
+  filter(Chimpanzee.homology.type=="ortholog_one2one")
+
+head(Overdispersion) %>% kable()
+head(Chimp.eGenes) %>% kable()
+head(Human.eGenes) %>% kable()
+head(GeneNames) %>% kable()
+
+```
+
+
+Plot dispersion of chimp eGenes vs non eGenes
+
+```{r}
+Chimp.Data.To.Plot <- Chimp.eGenes %>%
+  inner_join(GeneNames, by=c("gene"="Chimpanzee.gene.stable.ID")) %>%
+  inner_join(Overdispersion, by=c("Gene.stable.ID"="gene")) %>%
+  dplyr::select(Chimp.Mean.Adjusted.Dispersion, q.value=FDR, Gene.stable.ID) %>%
+  mutate(eGene=q.value<0.1)
+
+wilcox.test(Chimp.Mean.Adjusted.Dispersion~eGene, data=Chimp.Data.To.Plot)
+
+ggplot(Chimp.Data.To.Plot, aes(x=Chimp.Mean.Adjusted.Dispersion, color=eGene)) +
+  stat_ecdf() +
+  theme_bw()
+
+``` 
+
+Same for human eGenes vs non eGenes
+```{r}
+Human.Data.To.Plot <- Human.eGenes %>%
+  mutate(gene=str_remove(gene_id, "\\.\\d+$")) %>%
+  inner_join(Overdispersion, by=c("gene")) %>%
+  dplyr::select(Human.Mean.Adjusted.Dispersion, q.value=qval, Gene.stable.ID=gene) %>%
+  mutate(eGene=q.value<0.1)
+
+wilcox.test(Human.Mean.Adjusted.Dispersion~eGene, data=Human.Data.To.Plot)
+
+ggplot(Human.Data.To.Plot, aes(x=Human.Mean.Adjusted.Dispersion, color=eGene)) +
+  stat_ecdf() +
+  theme_bw()
+```
+
+Hmm, this is again an example of assymetrical results may be a result of analyzing eGenes with vastly different power. Let's use the same approach I used in the manuscript, and just consider the top 500 human eGenes...
+
+```{r}
+EgenesTested <- TsvToCombinedEgenes(Chimp.tsv = "../output/ChimpEgenes.eigenMT.txt.gz", Human.tsv = "../data/GTEX_v8_eGenes/Heart_Left_Ventricle.v8.egenes.txt.gz", SysToID.tsv = "../data/Biomart_export.Hsap.Ptro.orthologs.txt.gz", HumanTsvType = "GTEx")
+EgenesTested.grouped <- AddGroups(EgenesTested, HumanEgeneCount=500)
+
+Chimp.Data.To.Plot <- EgenesTested.grouped %>%
+  inner_join(Overdispersion, by=c("H.gene"="gene")) %>%
+  mutate(eGene=group %in% c("both", "chimp"))
+
+Chimp.Test <- wilcox.test(Chimp.Mean.Adjusted.Dispersion~eGene, data=Chimp.Data.To.Plot)
+Chimp.Test
+
+ggplot(Chimp.Data.To.Plot, aes(x=Chimp.Mean.Adjusted.Dispersion, color=eGene)) +
+  stat_ecdf() +
+  theme_bw()
+
+Human.Data.To.Plot <- EgenesTested.grouped %>%
+  inner_join(Overdispersion, by=c("H.gene"="gene")) %>%
+  mutate(eGene=group %in% c("both", "human"))
+
+Human.Test <- wilcox.test(Human.Mean.Adjusted.Dispersion~eGene, data=Human.Data.To.Plot)
+Human.Test
+
+ggplot(Human.Data.To.Plot, aes(x=Human.Mean.Adjusted.Dispersion, color=eGene)) +
+  stat_ecdf() +
+  theme_bw()
+
+```
+
+So, there is a modest, but very significant trend as the reviewer suspected: eGenes have higher dispersion (or at least, the top eGenes do, since with sufficient power near every gene is an eGene).
+
+Let's save out a figure to show this
+
+```{r}
+Tests <- data.frame(species=c("Chimp", "Human"), P=c(Chimp.Test$p.value, Human.Test$p.value)) %>%
+  mutate(label=paste0("P=", format.pval(P, digits = 2)))
+Tests
+
+PlotToSave <- EgenesTested.grouped %>%
+  inner_join(Overdispersion, by=c("H.gene"="gene")) %>%
+  mutate(Chimp=group %in% c("both", "chimp")) %>%
+  mutate(Human=group %in% c("both", "human")) %>%
+  dplyr::select(Chimp,Human,H.gene, Human.Mean.Adjusted.Dispersion, Chimp.Mean.Adjusted.Dispersion) %>%
+  gather(key="species", value="eGene", Chimp, Human)  %>%
+  gather(key="Dispersion.species", value="Dispersion", Human.Mean.Adjusted.Dispersion, Chimp.Mean.Adjusted.Dispersion) %>%
+  mutate(Dispersion.species=recode(Dispersion.species, Human.Mean.Adjusted.Dispersion="Human", Chimp.Mean.Adjusted.Dispersion="Chimp")) %>%
+  filter(species==Dispersion.species) %>%
+  mutate(eGene=if_else(eGene, "eGene", "non eGene")) %>%
+  ggplot(aes(x=Dispersion)) +
+  stat_ecdf(aes(color=eGene)) +
+  geom_text(
+  data    = Tests,
+  mapping = aes(x = Inf, y = -Inf, label = label),
+  hjust   = 1.1,
+  vjust   = -1
+) +
+  ylab("ecdf") +
+  facet_wrap(~species) +
+  xlim(c(-3,3)) +
+  theme_bw() +
+  theme(legend.position="bottom", legend.title = element_blank())
+PlotToSave
+
+```
+
+Write out the plot
+```{r, eval=F}
+ggsave("../figures/OriginalArt/ResponseToReviewers.Point8_eGenesAndDispersion.pdf", PlotToSave, height=2.5, width=4)
+```
+

@@ -408,7 +408,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-09-10
+<strong>Last updated:</strong> 2020-09-23
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -432,7 +432,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -499,10 +499,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreedbb0255015973c17f763710fc5e6c23978d1930btargetblankdbb0255a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/dbb0255015973c17f763710fc5e6c23978d1930b" target="_blank">dbb0255</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree52f85bbbd3f47b3f687d35fbfff41f8b53035e5btargetblank52f85bba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/52f85bbbd3f47b3f687d35fbfff41f8b53035e5b" target="_blank">52f85bb</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreedbb0255015973c17f763710fc5e6c23978d1930btargetblankdbb0255a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree52f85bbbd3f47b3f687d35fbfff41f8b53035e5btargetblank52f85bba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -510,6 +510,7 @@ Great! You are using Git for version control. Tracking code development and conn
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    WorkingManuscript.zip
@@ -527,12 +528,20 @@ Ignored files:
     Ignored:    output/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/20200907_Response_Point_09-2.Rmd
+    Untracked:  analysis/20200907_Response_Point_02.Rmd
+    Untracked:  analysis/20200907_Response_Point_04.Rmd
+    Untracked:  data/c5.all.v7.1.symbols.gmt
+    Untracked:  data/c5.all.v7.1.symbols.gmt.categories.tsv.gz
+    Untracked:  data/h.all.v7.1.symbols.gmt
 
 Unstaged changes:
     Modified:   analysis/20200907_Response_OriginalComments.Rmd
-    Deleted:    output/CellType.GWAS.Manhattan.png
-    Deleted:    output/CellType.GWAS.QQ.png
+    Modified:   analysis/20200907_Response_Point_06.Rmd
+    Modified:   analysis/20200907_Response_Point_09-2.Rmd
+    Modified:   analysis/20200907_Response_Point_09.Rmd
+    Modified:   analysis/20200907_Response_Point_11.Rmd
+    Modified:   analysis/Final_2_DispersionPlots.Rmd
+    Modified:   analysis_temp/TabulaMuris_analysis2.Rmd
 
 </code></pre>
 <p>
@@ -545,9 +554,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/16b29049b0abd3e554f51f68ff008c54812985ed/analysis/20200907_Response_Point_09-2.Rmd" target="_blank">16b2904</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/16b29049b0abd3e554f51f68ff008c54812985ed/docs/20200907_Response_Point_09-2.html" target="_blank">16b2904</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-10
+</td>
+<td>
+update site
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -563,6 +632,50 @@ There are no past versions. Publish this analysis with <code>wflow_publish()</co
 <p>I checked if eQTL SNPs (top SNPs for GTEX heart left ventricle eGenes (FDR&lt;0.01) ) have generally smaller P-values than a same sized random sample of non eQTL SNPs, using a QQ-plot:</p>
 <p><img src="assets/CellType.GWAS.QQ.png" alt="GWAS_QQ" />.</p>
 <p>My interpretation of this is that eQTLs generally are not driven by cell type QTLs. Another thing I could ask is if the top cell type QTLs (some which may be false positives), are closer to highly dispersed genes compared to lowly dispersed genes.</p>
+<p>Despite no SNPs exceeding standard GWAS significance (P&lt;5E-8) I have taken the 98 most significant loci (lumped by clustering into the best SNP within 250000 of any locus than contains a SNP with FDR (Storey’s Q) less than 0.5) and found the closest gene for which I estimated dispersion (SNPs further than 100kb from any of these genes were discarded). I have done the same for a set of random test SNPs for comparison.</p>
+<p>Let’s plot the dispersion for these closest gene SNPs, with the closest genes to the random control SNPs as a comparison.</p>
+<pre class="r"><code>library(tidyverse)
+
+GWAS.Snps &lt;- read.table(&quot;../output/CellProportionGWAS.RandomControlloci.closestGenes.txt&quot;, sep = &#39; &#39;, col.names = c(&quot;gene&quot;, &quot;dist&quot;))
+Control.Snps &lt;- read.table(&quot;../output/CellProportionGWAS.Testloci.closestGenes.txt&quot;, sep = &#39; &#39;, col.names = c(&quot;gene&quot;, &quot;dist&quot;))
+
+AllClosestGenes &lt;- dplyr::bind_rows(list(CellTypeAssociatedSNPs=GWAS.Snps, RandomTestSNPs=Control.Snps), .id = &#39;source&#39;) %&gt;%
+  mutate(gene=str_remove(gene, &quot;\\.\\d+$&quot;))
+head(AllClosestGenes)</code></pre>
+<pre><code>                  source            gene  dist
+1 CellTypeAssociatedSNPs ENSG00000171960 78877
+2 CellTypeAssociatedSNPs ENSG00000066557 61156
+3 CellTypeAssociatedSNPs ENSG00000138185  8280
+4 CellTypeAssociatedSNPs ENSG00000095587 63564
+5 CellTypeAssociatedSNPs ENSG00000188385 55631
+6 CellTypeAssociatedSNPs ENSG00000175356 65094</code></pre>
+<pre class="r"><code>Dispersion &lt;- read.delim(&#39;../output/OverdispersionEstimatesFromChimp.txt&#39;)
+
+TestResults &lt;-AllClosestGenes %&gt;%
+  left_join(Dispersion, by=&quot;gene&quot;) %&gt;%
+  wilcox.test(Human.Residual~source, data=., alternative=&quot;greater&quot;)
+TestResults</code></pre>
+<pre><code>
+    Wilcoxon rank sum test
+
+data:  Human.Residual by source
+W = 932, p-value = 0.2583
+alternative hypothesis: true location shift is greater than 0</code></pre>
+<pre class="r"><code>lb1 = paste0(&#39;P==&#39;, format.pval(TestResults$p.value, 2))
+
+AllClosestGenes %&gt;%
+  left_join(Dispersion, by=&quot;gene&quot;) %&gt;%
+  ggplot(aes(x=Human.Residual, color=source)) +
+  stat_ecdf() +
+  xlab(&quot;Dispersion (Human)&quot;) +
+  ylab(&quot;ecdf&quot;) +
+  annotate(&quot;text&quot;,x=Inf,y=-Inf, label=lb1, hjust=1.5, vjust=-0.5, parse=TRUE) +
+  scale_color_manual(name=NULL, values=c(&quot;red&quot;, &quot;blue&quot;), labels=c(&quot;Closest genes to loci\nassociated with cell type\n(FDR&lt;0.5, n=40)&quot;, &quot;Closest genes to\nrandom test SNPs&quot;)) +
+  theme_bw() +
+  theme(legend.position=&quot;bottom&quot;)</code></pre>
+<p><img src="figure/20200907_Response_Point_09-2.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>And write out the plot…</p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.GWAS.ClosestGenes.pdf&quot;, height=3, width=3.65)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -585,13 +698,28 @@ locale:
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
+other attached packages:
+[1] forcats_0.4.0   stringr_1.4.0   dplyr_0.8.3     purrr_0.3.3    
+[5] readr_1.3.1     tidyr_1.0.0     tibble_2.1.3    ggplot2_3.2.1  
+[9] tidyverse_1.3.0
+
 loaded via a namespace (and not attached):
- [1] workflowr_1.5.0 Rcpp_1.0.5      rprojroot_1.3-2 digest_0.6.23  
- [5] later_1.0.0     R6_2.4.1        backports_1.1.5 git2r_0.26.1   
- [9] magrittr_1.5    evaluate_0.14   stringi_1.4.3   rlang_0.4.1    
-[13] fs_1.3.1        promises_1.1.0  rmarkdown_1.18  tools_3.6.1    
-[17] stringr_1.4.0   glue_1.3.1      httpuv_1.5.2    xfun_0.11      
-[21] yaml_2.2.0      compiler_3.6.1  htmltools_0.4.0 knitr_1.26     </code></pre>
+ [1] tidyselect_0.2.5 xfun_0.11        haven_2.2.0      lattice_0.20-38 
+ [5] colorspace_1.4-1 vctrs_0.2.0      generics_0.0.2   htmltools_0.4.0 
+ [9] yaml_2.2.0       rlang_0.4.1      later_1.0.0      pillar_1.4.2    
+[13] withr_2.1.2      glue_1.3.1       DBI_1.0.0        dbplyr_1.4.2    
+[17] modelr_0.1.5     readxl_1.3.1     lifecycle_0.1.0  munsell_0.5.0   
+[21] gtable_0.3.0     workflowr_1.5.0  cellranger_1.1.0 rvest_0.3.5     
+[25] evaluate_0.14    labeling_0.3     knitr_1.26       httpuv_1.5.2    
+[29] fansi_0.4.0      broom_0.5.2      Rcpp_1.0.5       promises_1.1.0  
+[33] backports_1.1.5  scales_1.1.0     jsonlite_1.6     farver_2.0.1    
+[37] fs_1.3.1         hms_0.5.2        digest_0.6.23    stringi_1.4.3   
+[41] grid_3.6.1       rprojroot_1.3-2  cli_2.0.0        tools_3.6.1     
+[45] magrittr_1.5     lazyeval_0.2.2   crayon_1.3.4     whisker_0.4     
+[49] pkgconfig_2.0.3  zeallot_0.1.0    xml2_1.2.2       reprex_0.3.0    
+[53] lubridate_1.7.4  rstudioapi_0.10  assertthat_0.2.1 rmarkdown_1.18  
+[57] httr_1.4.1       R6_2.4.1         nlme_3.1-143     git2r_0.26.1    
+[61] compiler_3.6.1  </code></pre>
 </div>
 </div>
 

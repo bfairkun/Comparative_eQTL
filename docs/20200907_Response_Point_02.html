@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>ResponseToReviewer_Point6</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Comparative_eQTL</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">ResponseToReviewer_Point6</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-09-23
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.5.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20190319code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20190319)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20190319code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20190319)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree52f85bbbd3f47b3f687d35fbfff41f8b53035e5btargetblank52f85bba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/52f85bbbd3f47b3f687d35fbfff41f8b53035e5b" target="_blank">52f85bb</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtree52f85bbbd3f47b3f687d35fbfff41f8b53035e5btargetblank52f85bba" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    WorkingManuscript.zip
+    Ignored:    WorkingManuscript/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    big_data/
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    code/snakemake_workflow/.Rhistory
+    Ignored:    data/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    figures/
+    Ignored:    output/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/20200907_Response_Point_02.Rmd
+    Untracked:  analysis/20200907_Response_Point_04.Rmd
+    Untracked:  data/c5.all.v7.1.symbols.gmt
+    Untracked:  data/c5.all.v7.1.symbols.gmt.categories.tsv.gz
+    Untracked:  data/h.all.v7.1.symbols.gmt
+
+Unstaged changes:
+    Modified:   analysis/20200907_Response_OriginalComments.Rmd
+    Modified:   analysis/20200907_Response_Point_06.Rmd
+    Modified:   analysis/20200907_Response_Point_09-2.Rmd
+    Modified:   analysis/20200907_Response_Point_09.Rmd
+    Modified:   analysis/20200907_Response_Point_11.Rmd
+    Modified:   analysis/Final_2_DispersionPlots.Rmd
+    Modified:   analysis_temp/TabulaMuris_analysis2.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="overview" class="section level3">
+<h3>Overview</h3>
+<p>Original reviewer point:</p>
+<blockquote>
+<p>The second test is to correlate the higher coding sequence conservation with lower dispersion. Again, the positive result is not unexpected. There are many indirect and/or confounding factors that may explain the effect. This reviewer, however, understands it is impossible to control them all (also authors have attempted to address some of them in the next few tests). However, here it is better to add exploratory analyses for genes in different functional groups and also give examples of outlier genes that do not follow the rule.</p>
+</blockquote>
+<p>This proposed analysis was difficult for me to come up with a way to enact. One idea is to pick each a set of gene annotation groups (which are often overlapping, complicating the matter), and then perform the dn/ds vs dispersion correlation test for each gene group. The most appropriate gene set annotations I found to use for this purpose is the <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4707969/">MSigDB Hallmark gene collection</a>, which contains 50 gene sets, each with mostly non-overlapping sets of genes no greater than 200 per set.</p>
+<p>Another approach, which I will also enact below, is to perform a standard GSEA analysis using the residual of the genome-wide dn/ds vs dispersion trend. In other words, what gene sets have higher dispersion than you would expect given its dn/ds.</p>
+</div>
+<div id="analysis" class="section level3">
+<h3>Analysis</h3>
+<p>First, load necessary libraries… and read in data</p>
+<pre class="r"><code>library(tidyverse)
+library(knitr)
+library(stats)
+library(&quot;clusterProfiler&quot;)
+library(&quot;org.Hs.eg.db&quot;)
+library(broom)
+library(qvalue)
+library(data.table)
+library(Cairo)
+library(MASS)
+
+#read in table of overdispersion, dispersion, mean expresion estimates
+Dispersion &lt;- read.delim(&#39;../output/OverdispersionEstimatesFromChimp.txt&#39;)
+
+Dispersion$MeanDispersion &lt;- (Dispersion$Chimp.Residual + Dispersion$Human.Residual)/2
+
+#Read in table of dn/ds estimates
+PanMammal.dnds &lt;- read.delim(&quot;../data/Overall_dN_dS.bed&quot;, col.names = c(&quot;chrom&quot;, &#39;start&#39;, &quot;stop&quot;, &quot;gene&quot;, &quot;score&quot;, &quot;strand&quot;, &quot;blockstart&quot;, &quot;blockstop&quot;, &quot;color&quot;, &quot;ensemblprotein&quot;, &quot;dn.ds&quot;))
+
+#Gene name symbols
+Symbols &lt;- read.delim(&quot;../data/HumanGeneIdToHGNC_Symbol.Biomart.txt.gz&quot;, stringsAsFactors = F) %&gt;% dplyr::select(ensembl_gene_id=Gene.stable.ID, hgnc_symbol=HGNC.symbol)
+
+MergedTable &lt;- left_join(Dispersion, Symbols, by=c(&quot;gene&quot;=&quot;ensembl_gene_id&quot;)) %&gt;% 
+  left_join(PanMammal.dnds, by=c(&quot;hgnc_symbol&quot;=&quot;gene&quot;)) %&gt;%
+  dplyr::select(gene, Chimp.Residual, Human.Residual, MeanDispersion, dn.ds) %&gt;%
+  drop_na() %&gt;%
+  filter(dn.ds&gt;0) #drop things that will cause error when taking log.
+
+head(MergedTable) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">gene</th>
+<th align="right">Chimp.Residual</th>
+<th align="right">Human.Residual</th>
+<th align="right">MeanDispersion</th>
+<th align="right">dn.ds</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ENSG00000186891</td>
+<td align="right">2.3121799</td>
+<td align="right">0.0805422</td>
+<td align="right">1.1963611</td>
+<td align="right">0.472922</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000186827</td>
+<td align="right">1.6405781</td>
+<td align="right">1.9529450</td>
+<td align="right">1.7967615</td>
+<td align="right">0.279429</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000078808</td>
+<td align="right">-0.5386575</td>
+<td align="right">-0.8183559</td>
+<td align="right">-0.6785067</td>
+<td align="right">0.076499</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000176022</td>
+<td align="right">-0.2006514</td>
+<td align="right">-0.6565939</td>
+<td align="right">-0.4286227</td>
+<td align="right">0.048958</td>
+</tr>
+<tr class="odd">
+<td align="left">ENSG00000160087</td>
+<td align="right">-0.4256215</td>
+<td align="right">-0.7154168</td>
+<td align="right">-0.5705192</td>
+<td align="right">0.107057</td>
+</tr>
+<tr class="even">
+<td align="left">ENSG00000169972</td>
+<td align="right">-0.4701338</td>
+<td align="right">0.4063494</td>
+<td align="right">-0.0318922</td>
+<td align="right">0.157678</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>GmtFile &lt;- &quot;/Users/benfair/Downloads/c5.all.v7.1.symbols.gmt&quot;
+
+NumFields &lt;- max(count.fields(GmtFile, sep = &#39;\t&#39;))
+HallmarkGeneSets &lt;- read.table(GmtFile, header = FALSE, sep = &quot;\t&quot;, 
+  col.names = c(&quot;GeneSetName&quot;, &quot;link&quot;, paste0(&quot;V&quot;,seq_len(NumFields-2))), fill = TRUE, stringsAsFactors = F, na.strings = &quot;&quot;) %&gt;%
+  dplyr::select(-link) %&gt;%
+  gather(key=&quot;NumGeneInSet&quot;, value=&quot;gene&quot;, -GeneSetName) %&gt;%
+  drop_na() %&gt;%
+  arrange(GeneSetName, NumGeneInSet) %&gt;%
+  dplyr::select(-NumGeneInSet) %&gt;%
+  inner_join(Symbols, by=c(&quot;gene&quot;=&quot;hgnc_symbol&quot;))
+
+head(HallmarkGeneSets) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">GeneSetName</th>
+<th align="left">gene</th>
+<th align="left">ensembl_gene_id</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GO_1_4_ALPHA_OLIGOGLUCAN_PHOSPHORYLASE_ACTIVITY</td>
+<td align="left">TYMP</td>
+<td align="left">ENSG00000025708</td>
+</tr>
+<tr class="even">
+<td align="left">GO_1_4_ALPHA_OLIGOGLUCAN_PHOSPHORYLASE_ACTIVITY</td>
+<td align="left">GDPGP1</td>
+<td align="left">ENSG00000183208</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_1_4_ALPHA_OLIGOGLUCAN_PHOSPHORYLASE_ACTIVITY</td>
+<td align="left">MTAP</td>
+<td align="left">ENSG00000099810</td>
+</tr>
+<tr class="even">
+<td align="left">GO_1_4_ALPHA_OLIGOGLUCAN_PHOSPHORYLASE_ACTIVITY</td>
+<td align="left">PYGB</td>
+<td align="left">ENSG00000100994</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_1_4_ALPHA_OLIGOGLUCAN_PHOSPHORYLASE_ACTIVITY</td>
+<td align="left">PYGL</td>
+<td align="left">ENSG00000100504</td>
+</tr>
+<tr class="even">
+<td align="left">GO_1_4_ALPHA_OLIGOGLUCAN_PHOSPHORYLASE_ACTIVITY</td>
+<td align="left">PYGM</td>
+<td align="left">ENSG00000068976</td>
+</tr>
+</tbody>
+</table>
+<p>Now I will get the dn/ds vs dispersion correlation coefficient and p value for each gene set.</p>
+<pre class="r"><code>Cor.twosidedtest &lt;- HallmarkGeneSets %&gt;%
+  left_join(MergedTable, by=c(&quot;ensembl_gene_id&quot;=&quot;gene&quot;)) %&gt;%
+  drop_na() %&gt;%
+  add_count(GeneSetName) %&gt;%
+  filter(n&gt;=5) %&gt;%
+  group_by(GeneSetName) %&gt;%
+  do(tidy(cor.test(.$dn.ds, .$MeanDispersion, method = &quot;spearman&quot;, exact = T))) %&gt;%
+  filter(p.value&gt;0) #filter out buggy cases because of ties in spearman cor test
+
+Cor.twosidedtest %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">GeneSetName</th>
+<th align="right">estimate</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="left">method</th>
+<th align="left">alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GO_1_4_ALPHA_OLIGOGLUCAN_PHOSPHORYLASE_ACTIVITY</td>
+<td align="right">0.1000000</td>
+<td align="right">18</td>
+<td align="right">0.9500000</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+</tr>
+<tr class="even">
+<td align="left">GO_1_PHOSPHATIDYLINOSITOL_3_KINASE_ACTIVITY</td>
+<td align="right">-0.1000000</td>
+<td align="right">22</td>
+<td align="right">0.9500000</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_1_PHOSPHATIDYLINOSITOL_3_KINASE_REGULATOR_ACTIVITY</td>
+<td align="right">0.0329670</td>
+<td align="right">440</td>
+<td align="right">0.9155316</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+</tr>
+<tr class="even">
+<td align="left">GO_1_PHOSPHATIDYLINOSITOL_BINDING</td>
+<td align="right">0.2142857</td>
+<td align="right">44</td>
+<td align="right">0.6615079</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_14_3_3_PROTEIN_BINDING</td>
+<td align="right">-0.0979021</td>
+<td align="right">314</td>
+<td align="right">0.7662885</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+</tr>
+<tr class="even">
+<td align="left">GO_2_IRON_2_SULFUR_CLUSTER_BINDING</td>
+<td align="right">-0.3901099</td>
+<td align="right">506</td>
+<td align="right">0.1887717</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>hist(Cor.twosidedtest$estimate)</code></pre>
+<p><img src="figure/20200907_Response_Point_02.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>hist(Cor.twosidedtest$p.value)</code></pre>
+<p><img src="figure/20200907_Response_Point_02.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Given how a lot of these tests are not independent (due to overlapping gene sets), I wasn’t sure what to expect in terms of well calibrated P-values. This histogram is a bit comforting. Let’s identify genes at some FDR threshold with Storey’s q-value method, and see what the strongest gene categories that drive this correlation are.</p>
+<pre class="r"><code>Cor.twosidedtest$q &lt;- qvalue(Cor.twosidedtest$p.value)$qvalues
+
+#How many sets FDR&lt;0.1
+(Cor.twosidedtest$q &lt; 0.1 ) %&gt;% table()</code></pre>
+<pre><code>.
+FALSE  TRUE 
+ 6169   614 </code></pre>
+<pre class="r"><code>#Are these significant sets basically just the really big sets with lots of power?
+Cor.twosidedtest &lt;- Cor.twosidedtest %&gt;%
+  mutate(Sig=q&lt;0.1) %&gt;%
+  left_join(
+    HallmarkGeneSets %&gt;% left_join(MergedTable, by=c(&quot;ensembl_gene_id&quot;=&quot;gene&quot;)) %&gt;%
+      drop_na() %&gt;%
+      count(GeneSetName) %&gt;%
+      filter(n&gt;=5),
+    by=&quot;GeneSetName&quot;
+  )
+ggplot(Cor.twosidedtest, aes(x=n, color=Sig)) +
+  geom_histogram() +
+  theme_bw()</code></pre>
+<p><img src="figure/20200907_Response_Point_02.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Ok that looks good. Let’s make a plot in a similar format to my other GO analyses, separated by BP, MF, or CC. To do this I need to read in different files to map which GO terms belong to which of those categories.</p>
+<pre class="r"><code>GO.categories &lt;- read.table(&quot;../data/c5.all.v7.1.symbols.gmt.categories.tsv.gz&quot;, col.names = c(&quot;GeneSetName&quot;, &quot;Category&quot;), sep=&#39;\t&#39;) %&gt;%
+  mutate(Category=gsub(&quot;/Users/benfair/Downloads/c5.(.+?).v7.1.symbols.gmt&quot;,replacement = &quot;\\1&quot;,Category
+  ))
+
+
+GO.Summary.plot &lt;- Cor.twosidedtest %&gt;% 
+  left_join(GO.categories, by=&quot;GeneSetName&quot;) %&gt;%
+  dplyr::select(GeneSetName, SpearmansRho=estimate, p.value, p.adjust=q, setSize=n, ONTOLOGY=Category) %&gt;%
+  mutate(Polarization=sign(SpearmansRho)) %&gt;%
+  filter(!Polarization==0) %&gt;%
+  # filter(str_detect(Description, &#39;DNA&#39;)) %&gt;%
+  # group_by(ONTOLOGY, Polarization) %&gt;%
+  group_by(ONTOLOGY, Polarization) %&gt;%
+  arrange(p.adjust) %&gt;%
+  mutate(rowN=row_number()) %&gt;%
+  # top_n(n = 3, wt = -log(p.adjust)) %&gt;%
+  ungroup() %&gt;%
+  filter(rowN&lt;=3) %&gt;%
+  filter(p.adjust&lt;0.1) %&gt;%
+  mutate(GeneSetName=str_remove(GeneSetName, &quot;^GO_&quot;)) %&gt;%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `bp` = &quot;Biological Process&quot;, `cc` = &quot;Cellular Component&quot;, `mf`=&quot;Molecular Function&quot;)) %&gt;%
+  ggplot(aes(x=SpearmansRho, y=GeneSetName, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = &quot;free&quot;) +
+  scale_colour_viridis_c(trans=&quot;log10&quot;, direction=-1, option=&quot;D&quot;, limits=c(1E-16, 0.1)) +
+  # scale_colour_gradient(low=&quot;red&quot;, high=&quot;black&quot;) +
+  facet_grid(ONTOLOGY~., scales = &quot;free&quot;) +
+  # xlab(&quot;Enrichment\nOverdispersedInHuman&lt;--&gt;OverdispersedInChimp&quot;) +
+  xlab(&quot;Spearman&#39;s \u03C1&quot;) +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse=&quot;\n&quot;)) +
+  labs(color = &quot;Adjusted P-value&quot;) +
+  geom_vline(xintercept = 0, linetype=&quot;dotted&quot;) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+GO.Summary.plot</code></pre>
+<p><img src="figure/20200907_Response_Point_02.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>I am skeptical of the negative associations. Consistent with the story I have been building, the strongest associations between dn.ds and dispersion are in immune related genes.</p>
+<p>Let’s plot that correlation as a scatter plot, along with some randomly chosen category of similar size for comparison</p>
+<pre class="r"><code>#Find gene categories similar in size as comparison
+Cor.twosidedtest %&gt;% 
+  filter(GeneSetName==&quot;GO_REGULATION_OF_IMMUNE_SYSTEM_PROCESS&quot;) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">GeneSetName</th>
+<th align="right">estimate</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="left">method</th>
+<th align="left">alternative</th>
+<th align="right">q</th>
+<th align="left">Sig</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GO_REGULATION_OF_IMMUNE_SYSTEM_PROCESS</td>
+<td align="right">0.3600718</td>
+<td align="right">25295938</td>
+<td align="right">0</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0</td>
+<td align="left">TRUE</td>
+<td align="right">619</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>Cor.twosidedtest %&gt;% 
+  filter(n&gt;579 &amp; n&lt; 649) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">GeneSetName</th>
+<th align="right">estimate</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="left">method</th>
+<th align="left">alternative</th>
+<th align="right">q</th>
+<th align="left">Sig</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GO_ADENYL_NUCLEOTIDE_BINDING</td>
+<td align="right">0.0722987</td>
+<td align="right">42070813</td>
+<td align="right">0.0658743</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.3054643</td>
+<td align="left">FALSE</td>
+<td align="right">648</td>
+</tr>
+<tr class="even">
+<td align="left">GO_CELL_ACTIVATION</td>
+<td align="right">0.2846160</td>
+<td align="right">24115765</td>
+<td align="right">0.0000000</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+<td align="right">587</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_CELL_PROJECTION_ORGANIZATION</td>
+<td align="right">0.0423731</td>
+<td align="right">34130874</td>
+<td align="right">0.3009068</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.6229631</td>
+<td align="left">FALSE</td>
+<td align="right">598</td>
+</tr>
+<tr class="even">
+<td align="left">GO_CELLULAR_MACROMOLECULE_CATABOLIC_PROCESS</td>
+<td align="right">0.1653719</td>
+<td align="right">34617254</td>
+<td align="right">0.0000315</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0012964</td>
+<td align="left">TRUE</td>
+<td align="right">629</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_CHROMOSOME_ORGANIZATION</td>
+<td align="right">0.1225912</td>
+<td align="right">28532078</td>
+<td align="right">0.0031047</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0456120</td>
+<td align="left">TRUE</td>
+<td align="right">580</td>
+</tr>
+<tr class="even">
+<td align="left">GO_ENDOPLASMIC_RETICULUM</td>
+<td align="right">0.1391738</td>
+<td align="right">37963676</td>
+<td align="right">0.0004100</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0094061</td>
+<td align="left">TRUE</td>
+<td align="right">642</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_INTRACELLULAR_PROTEIN_TRANSPORT</td>
+<td align="right">0.1844152</td>
+<td align="right">33345693</td>
+<td align="right">0.0000034</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0002150</td>
+<td align="left">TRUE</td>
+<td align="right">626</td>
+</tr>
+<tr class="even">
+<td align="left">GO_LIPID_METABOLIC_PROCESS</td>
+<td align="right">0.0945334</td>
+<td align="right">39932380</td>
+<td align="right">0.0165768</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.1385821</td>
+<td align="left">FALSE</td>
+<td align="right">642</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_LOCOMOTION</td>
+<td align="right">0.2529728</td>
+<td align="right">29960922</td>
+<td align="right">0.0000000</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+<td align="right">622</td>
+</tr>
+<tr class="even">
+<td align="left">GO_MOLECULAR_FUNCTION_REGULATOR</td>
+<td align="right">0.2613738</td>
+<td align="right">30928615</td>
+<td align="right">0.0000000</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+<td align="right">631</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_NEGATIVE_REGULATION_OF_NUCLEOBASE_CONTAINING_COMPOUND_METABOLIC_PROCESS</td>
+<td align="right">0.0541471</td>
+<td align="right">37752527</td>
+<td align="right">0.1777842</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.5020328</td>
+<td align="left">FALSE</td>
+<td align="right">621</td>
+</tr>
+<tr class="even">
+<td align="left">GO_NEGATIVE_REGULATION_OF_SIGNALING</td>
+<td align="right">0.1903382</td>
+<td align="right">30931822</td>
+<td align="right">0.0000022</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0001482</td>
+<td align="left">TRUE</td>
+<td align="right">612</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_NEUROGENESIS</td>
+<td align="right">0.1063929</td>
+<td align="right">31530649</td>
+<td align="right">0.0093411</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0976614</td>
+<td align="left">TRUE</td>
+<td align="right">596</td>
+</tr>
+<tr class="even">
+<td align="left">GO_ORGANIC_ACID_METABOLIC_PROCESS</td>
+<td align="right">0.0489076</td>
+<td align="right">31897971</td>
+<td align="right">0.2371635</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.5709386</td>
+<td align="left">FALSE</td>
+<td align="right">586</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_PROTEIN_MODIFICATION_BY_SMALL_PROTEIN_CONJUGATION_OR_REMOVAL</td>
+<td align="right">0.1040228</td>
+<td align="right">31773678</td>
+<td align="right">0.0110116</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.1087103</td>
+<td align="left">FALSE</td>
+<td align="right">597</td>
+</tr>
+<tr class="even">
+<td align="left">GO_REGULATION_OF_CELL_CYCLE</td>
+<td align="right">0.1377691</td>
+<td align="right">28622634</td>
+<td align="right">0.0008434</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0171851</td>
+<td align="left">TRUE</td>
+<td align="right">584</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_REGULATION_OF_CELL_POPULATION_PROLIFERATION</td>
+<td align="right">0.2116038</td>
+<td align="right">32544014</td>
+<td align="right">0.0000001</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0000100</td>
+<td align="left">TRUE</td>
+<td align="right">628</td>
+</tr>
+<tr class="even">
+<td align="left">GO_REGULATION_OF_IMMUNE_SYSTEM_PROCESS</td>
+<td align="right">0.3600718</td>
+<td align="right">25295938</td>
+<td align="right">0.0000000</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0000000</td>
+<td align="left">TRUE</td>
+<td align="right">619</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_REGULATION_OF_ORGANELLE_ORGANIZATION</td>
+<td align="right">0.1327102</td>
+<td align="right">29087378</td>
+<td align="right">0.0012930</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0238330</td>
+<td align="left">TRUE</td>
+<td align="right">586</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#Check out top hits ranked by spearman estimate
+Cor.twosidedtest %&gt;%
+  filter(q&lt;0.1) %&gt;%
+  filter(n&gt;=10) %&gt;%
+  arrange(desc(estimate)) %&gt;% head(30) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">GeneSetName</th>
+<th align="right">estimate</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="left">method</th>
+<th align="left">alternative</th>
+<th align="right">q</th>
+<th align="left">Sig</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GO_LEUKOCYTE_TETHERING_OR_ROLLING</td>
+<td align="right">0.8727273</td>
+<td align="right">28</td>
+<td align="right">0.0009490</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0189130</td>
+<td align="left">TRUE</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td align="left">GO_INTEGRIN_ACTIVATION</td>
+<td align="right">0.8666667</td>
+<td align="right">22</td>
+<td align="right">0.0026814</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0410333</td>
+<td align="left">TRUE</td>
+<td align="right">10</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_PHOSPHATIDIC_ACID_BINDING</td>
+<td align="right">0.8666667</td>
+<td align="right">22</td>
+<td align="right">0.0026814</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0410333</td>
+<td align="left">TRUE</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="left">GO_LEUKOCYTE_ADHESION_TO_VASCULAR_ENDOTHELIAL_CELL</td>
+<td align="right">0.8441176</td>
+<td align="right">106</td>
+<td align="right">0.0000193</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0008800</td>
+<td align="left">TRUE</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_PROTEIN_LIPID_COMPLEX_ASSEMBLY</td>
+<td align="right">0.8303030</td>
+<td align="right">28</td>
+<td align="right">0.0055568</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0696243</td>
+<td align="left">TRUE</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="left">GO_POSITIVE_REGULATION_OF_STEROID_METABOLIC_PROCESS</td>
+<td align="right">0.8131868</td>
+<td align="right">68</td>
+<td align="right">0.0012389</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0232379</td>
+<td align="left">TRUE</td>
+<td align="right">13</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_PROTEIN_HETEROTETRAMERIZATION</td>
+<td align="right">0.8090909</td>
+<td align="right">42</td>
+<td align="right">0.0044280</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0593275</td>
+<td align="left">TRUE</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td align="left">GO_POSITIVE_REGULATION_OF_OLIGODENDROCYTE_DIFFERENTIATION</td>
+<td align="right">0.8060606</td>
+<td align="right">32</td>
+<td align="right">0.0082356</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0900905</td>
+<td align="left">TRUE</td>
+<td align="right">10</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_REGULATION_OF_MORPHOGENESIS_OF_A_BRANCHING_STRUCTURE</td>
+<td align="right">0.8060606</td>
+<td align="right">32</td>
+<td align="right">0.0082356</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0900905</td>
+<td align="left">TRUE</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="left">GO_NEGATIVE_REGULATION_OF_BLOOD_CIRCULATION</td>
+<td align="right">0.8021978</td>
+<td align="right">72</td>
+<td align="right">0.0016243</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0279310</td>
+<td align="left">TRUE</td>
+<td align="right">13</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_PROTEIN_LIPID_COMPLEX_SUBUNIT_ORGANIZATION</td>
+<td align="right">0.7982456</td>
+<td align="right">230</td>
+<td align="right">0.0000555</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0019680</td>
+<td align="left">TRUE</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="left">GO_ANTIMICROBIAL_HUMORAL_IMMUNE_RESPONSE_MEDIATED_BY_ANTIMICROBIAL_PEPTIDE</td>
+<td align="right">0.7972028</td>
+<td align="right">58</td>
+<td align="right">0.0031613</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0458355</td>
+<td align="left">TRUE</td>
+<td align="right">12</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_CLATHRIN_COATED_ENDOCYTIC_VESICLE_MEMBRANE</td>
+<td align="right">0.7972028</td>
+<td align="right">58</td>
+<td align="right">0.0031613</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0458355</td>
+<td align="left">TRUE</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">GO_POSITIVE_REGULATION_OF_INTERFERON_BETA_PRODUCTION</td>
+<td align="right">0.7929825</td>
+<td align="right">236</td>
+<td align="right">0.0000711</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0023625</td>
+<td align="left">TRUE</td>
+<td align="right">19</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_AMYLOID_BETA_CLEARANCE</td>
+<td align="right">0.7928571</td>
+<td align="right">116</td>
+<td align="right">0.0006740</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0142340</td>
+<td align="left">TRUE</td>
+<td align="right">15</td>
+</tr>
+<tr class="even">
+<td align="left">GO_POSITIVE_REGULATION_OF_PHOSPHOLIPID_METABOLIC_PROCESS</td>
+<td align="right">0.7909091</td>
+<td align="right">46</td>
+<td align="right">0.0060608</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0734852</td>
+<td align="left">TRUE</td>
+<td align="right">11</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_REGULATION_OF_LYMPHOCYTE_CHEMOTAXIS</td>
+<td align="right">0.7909091</td>
+<td align="right">46</td>
+<td align="right">0.0060608</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0734852</td>
+<td align="left">TRUE</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td align="left">GO_POSITIVE_REGULATION_OF_GLYCOPROTEIN_BIOSYNTHETIC_PROCESS</td>
+<td align="right">0.7818182</td>
+<td align="right">48</td>
+<td align="right">0.0070121</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0799596</td>
+<td align="left">TRUE</td>
+<td align="right">11</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_POSITIVE_REGULATION_OF_GLYCOPROTEIN_METABOLIC_PROCESS</td>
+<td align="right">0.7818182</td>
+<td align="right">48</td>
+<td align="right">0.0070121</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0799596</td>
+<td align="left">TRUE</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td align="left">GO_ACTIVATION_OF_PROTEIN_KINASE_B_ACTIVITY</td>
+<td align="right">0.7735294</td>
+<td align="right">154</td>
+<td align="right">0.0006830</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0143763</td>
+<td align="left">TRUE</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_RESPONSE_TO_CHEMOKINE</td>
+<td align="right">0.7729323</td>
+<td align="right">302</td>
+<td align="right">0.0000964</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0029011</td>
+<td align="left">TRUE</td>
+<td align="right">20</td>
+</tr>
+<tr class="even">
+<td align="left">GO_RESPONSE_TO_INTERFERON_ALPHA</td>
+<td align="right">0.7622378</td>
+<td align="right">68</td>
+<td align="right">0.0058975</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0724690</td>
+<td align="left">TRUE</td>
+<td align="right">12</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_REGULATION_OF_MYELINATION</td>
+<td align="right">0.7558824</td>
+<td align="right">166</td>
+<td align="right">0.0010695</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0209449</td>
+<td align="left">TRUE</td>
+<td align="right">16</td>
+</tr>
+<tr class="even">
+<td align="left">GO_RUFFLE_ASSEMBLY</td>
+<td align="right">0.7529412</td>
+<td align="right">168</td>
+<td align="right">0.0011468</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0222990</td>
+<td align="left">TRUE</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_POSITIVE_REGULATION_OF_RECEPTOR_MEDIATED_ENDOCYTOSIS</td>
+<td align="right">0.7416530</td>
+<td align="right">944</td>
+<td align="right">0.0000116</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0005818</td>
+<td align="left">TRUE</td>
+<td align="right">28</td>
+</tr>
+<tr class="even">
+<td align="left">GO_RESPONSE_TO_INTERFERON_BETA</td>
+<td align="right">0.7362637</td>
+<td align="right">120</td>
+<td align="right">0.0038188</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0523761</td>
+<td align="left">TRUE</td>
+<td align="right">14</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_PORE_COMPLEX</td>
+<td align="right">0.7362637</td>
+<td align="right">96</td>
+<td align="right">0.0057894</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0715548</td>
+<td align="left">TRUE</td>
+<td align="right">13</td>
+</tr>
+<tr class="even">
+<td align="left">GO_POSITIVE_REGULATION_OF_CELL_CYCLE_G1_S_PHASE_TRANSITION</td>
+<td align="right">0.7357143</td>
+<td align="right">148</td>
+<td align="right">0.0025498</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0396516</td>
+<td align="left">TRUE</td>
+<td align="right">15</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_SERINE_TYPE_ENDOPEPTIDASE_INHIBITOR_ACTIVITY</td>
+<td align="right">0.7357143</td>
+<td align="right">148</td>
+<td align="right">0.0025498</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0396516</td>
+<td align="left">TRUE</td>
+<td align="right">15</td>
+</tr>
+<tr class="even">
+<td align="left">GO_REGULATION_OF_PROTEIN_OLIGOMERIZATION</td>
+<td align="right">0.7087912</td>
+<td align="right">106</td>
+<td align="right">0.0088286</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0939976</td>
+<td align="left">TRUE</td>
+<td align="right">13</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>#grep for MHC
+Cor.twosidedtest %&gt;%
+  # filter(q&lt;0.1) %&gt;%
+  filter(str_detect(GeneSetName, &quot;MHC&quot;)) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">GeneSetName</th>
+<th align="right">estimate</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+<th align="left">method</th>
+<th align="left">alternative</th>
+<th align="right">q</th>
+<th align="left">Sig</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">GO_ANTIGEN_PROCESSING_AND_PRESENTATION_OF_EXOGENOUS_PEPTIDE_ANTIGEN_VIA_MHC_CLASS_I</td>
+<td align="right">0.4606229</td>
+<td align="right">8746</td>
+<td align="right">0.0014298</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0254716</td>
+<td align="left">TRUE</td>
+<td align="right">46</td>
+</tr>
+<tr class="even">
+<td align="left">GO_ANTIGEN_PROCESSING_AND_PRESENTATION_OF_PEPTIDE_ANTIGEN_VIA_MHC_CLASS_I</td>
+<td align="right">0.4183149</td>
+<td align="right">18910</td>
+<td align="right">0.0011925</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.0229066</td>
+<td align="left">TRUE</td>
+<td align="right">58</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_ANTIGEN_PROCESSING_AND_PRESENTATION_OF_PEPTIDE_OR_POLYSACCHARIDE_ANTIGEN_VIA_MHC_CLASS_II</td>
+<td align="right">0.2622974</td>
+<td align="right">10468</td>
+<td align="right">0.0855649</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.3471221</td>
+<td align="left">FALSE</td>
+<td align="right">44</td>
+</tr>
+<tr class="even">
+<td align="left">GO_MHC_CLASS_I_PROTEIN_BINDING</td>
+<td align="right">0.8285714</td>
+<td align="right">6</td>
+<td align="right">0.0583333</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.2834249</td>
+<td align="left">FALSE</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_MHC_CLASS_II_BIOSYNTHETIC_PROCESS</td>
+<td align="right">0.1785714</td>
+<td align="right">46</td>
+<td align="right">0.7130952</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.8503662</td>
+<td align="left">FALSE</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">GO_MHC_CLASS_II_PROTEIN_COMPLEX_BINDING</td>
+<td align="right">0.4285714</td>
+<td align="right">32</td>
+<td align="right">0.3535714</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.6581377</td>
+<td align="left">FALSE</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="left">GO_MHC_PROTEIN_BINDING</td>
+<td align="right">0.5181818</td>
+<td align="right">106</td>
+<td align="right">0.1069182</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.3915911</td>
+<td align="left">FALSE</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
+<td align="left">GO_MHC_PROTEIN_COMPLEX_BINDING</td>
+<td align="right">0.1272727</td>
+<td align="right">144</td>
+<td align="right">0.7328868</td>
+<td align="left">Spearman’s rank correlation rho</td>
+<td align="left">two.sided</td>
+<td align="right">0.8641192</td>
+<td align="left">FALSE</td>
+<td align="right">10</td>
+</tr>
+</tbody>
+</table>
+<p>Ok, let’s plot GO_REGULATION_OF_IMMUNE_SYSTEM_PROCESS and GO_ENDOPLASMIC_RETICULUM as illustrative examples.</p>
+<pre class="r"><code>GeneSetsToPlot &lt;- c(&quot;GO_REGULATION_OF_IMMUNE_SYSTEM_PROCESS&quot;, &quot;GO_ORGANIC_ACID_METABOLIC_PROCESS&quot;, &quot;GO_ANTIGEN_PROCESSING_AND_PRESENTATION_OF_EXOGENOUS_PEPTIDE_ANTIGEN_VIA_MHC_CLASS_I&quot;)
+
+Labels &lt;- Cor.twosidedtest %&gt;%
+  filter(GeneSetName %in% GeneSetsToPlot) %&gt;%
+  mutate(label=paste0(
+    &quot;Spearman&#39;s \u03C1 = &quot;, signif(estimate,2), &quot;\n&quot;,
+    &quot;n = &quot;, n, &quot;\n&quot;,
+    &quot;p = &quot;, format.pval(p.value,2))) %&gt;%
+  dplyr::select(GeneSetName, label) %&gt;%
+  mutate(GeneSetNameMod=str_replace_all(str_replace(GeneSetName, &quot;^GO&quot;, &quot;&quot;), pattern = &quot;_&quot;, &quot; &quot;))
+  
+CorScatterPlots &lt;- HallmarkGeneSets %&gt;%
+  left_join(MergedTable, by=c(&quot;ensembl_gene_id&quot;=&quot;gene&quot;)) %&gt;%
+  filter(GeneSetName %in% GeneSetsToPlot) %&gt;%
+  drop_na() %&gt;%
+  mutate(GeneSetNameMod=str_replace_all(str_replace(GeneSetName, &quot;^GO&quot;, &quot;&quot;), pattern = &quot;_&quot;, &quot; &quot;)) %&gt;%
+ggplot(aes(x=dn.ds, y=MeanDispersion)) +
+  geom_point(alpha=0.25) +
+  scale_x_continuous(trans=&quot;log10&quot;, limits=c(.001,2)) +
+  scale_y_continuous(limits=c(-3,3)) +
+  facet_grid(~GeneSetNameMod, labeller = labeller(GeneSetNameMod = label_wrap_gen(width = 25))) +
+  xlab(&quot;dN/dS&quot;) +
+  ylab(&quot;Dispersion&quot;) +
+  geom_text(
+  data    = Labels,
+  mapping = aes(x = 0.001, y = Inf, label = label),
+  hjust   = 0,
+  vjust   = 1.1) +
+  theme_bw()
+CorScatterPlots</code></pre>
+<p><img src="figure/20200907_Response_Point_02.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.dnds.GO.pdf&quot;, plot = CorScatterPlots, device=cairo_pdf, height=3, width=7)</code></pre>
+<p>Ok, now save the relevant plots…</p>
+<pre class="r"><code>ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.dnds.GO.pdf&quot;, plot = CorScatterPlots, device=cairo_pdf, height=3, width=7)
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.GO.summary.pdf&quot;, plot = GO.Summary.plot, device=cairo_pdf, height=4, width=5.5)
+
+GO.test.histogram &lt;- ggplot(Cor.twosidedtest, aes(x=p.value)) +
+  geom_histogram(bins=20) +
+  theme_bw() +
+  ylab(&quot;Number GO categories&quot;) +
+  xlab(&quot;Spearman test P values&quot;)
+ggsave(&quot;../figures/OriginalArt/ResponseToReviewers.GO.hist.pdf&quot;, plot = GO.test.histogram, height=3, width=3)
+write_delim(Cor.twosidedtest, &quot;../figures/OriginalArt/ResponseToReviewers.GO.hist.sorce.tsv&quot;, delim = &#39;\t&#39;)</code></pre>
+<p>Ok, I think I’ve done enough for this approach.</p>
+<p>Now let’s try the second idea: plot a regression fit of MeanDispersion (mean dispersion estimate between human and chimp) vs the log(dn/ds) (log transformation since dn/ds is more normally distributed on a log scale, which seems more natural). Here I am using the robust regression to not be thrown off so much for outlier points. The idea is to ask if certain gene categories have more dispersion than you would expect given their coding conservation.</p>
+<p>EDIT: later I realized this approach isn’t as interesting as I thought, I’m going to make eval=F to build the site quicker, rather than have R evaluate these code blocks and make the plot results for this next section.</p>
+<pre class="r"><code>ggplot(MergedTable, aes(y=MeanDispersion, x=log(dn.ds))) +
+  geom_point() +
+  geom_smooth(method=&quot;rlm&quot;) +
+  theme_bw()
+
+
+fit &lt;- rlm(MeanDispersion~log(dn.ds), data=MergedTable )
+plot(fit)
+
+MergedTable$fitResid &lt;-  resid(fit)
+
+ResidualsFromFit &lt;- MergedTable %&gt;%
+  dplyr::select(gene, fitResid) %&gt;%
+  deframe() %&gt;% sort(decreasing = T)
+
+head(ResidualsFromFit)
+
+gsea.resid&lt;-gseGO(gene=ResidualsFromFit,
+            ont = &quot;ALL&quot;,
+            OrgDb=org.Hs.eg.db,
+            keyType=&#39;ENSEMBL&#39;,
+            nPerm=100000)
+
+
+ResidDispersionContrastPlot &lt;-
+  gsea.resid %&gt;% as.data.frame() %&gt;%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize, NES) %&gt;%
+  mutate(Polarization=sign(enrichmentScore)) %&gt;%
+  # filter(str_detect(Description, &#39;DNA&#39;)) %&gt;%
+  # group_by(ONTOLOGY, Polarization) %&gt;%
+  group_by(ONTOLOGY, Polarization) %&gt;%
+  top_n(n = 3, wt = abs(NES)) %&gt;%
+  ungroup() %&gt;%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `BP` = &quot;Biological Process&quot;, `CC` = &quot;Cellular Component&quot;, `MF`=&quot;Molecular Function&quot;)) %&gt;%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = &quot;free&quot;) +
+  scale_colour_viridis_c(trans=&quot;log10&quot;, limits=c(0.0001, 0.1), direction=-1, option=&quot;D&quot;) +
+  # scale_colour_gradient(low=&quot;red&quot;, high=&quot;black&quot;) +
+  facet_grid(ONTOLOGY~., scales = &quot;free&quot;) +
+  # xlab(&quot;Enrichment\nOverdispersedInHuman&lt;--&gt;OverdispersedInChimp&quot;) +
+  xlab(&quot;Enrichment&quot;) +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse=&quot;\n&quot;)) +
+  labs(color = &quot;Adjusted P-value&quot;) +
+  geom_vline(xintercept = 0, linetype=&quot;dotted&quot;) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+ResidDispersionContrastPlot</code></pre>
+<p>To contrast, let’s do the same thing on the original dispersion estimates</p>
+<pre class="r"><code>MeanDispersion &lt;- MergedTable %&gt;%
+  dplyr::select(gene, MeanDispersion) %&gt;%
+  deframe() %&gt;% sort(decreasing = T)
+
+gsea.meanDispersion&lt;-gseGO(gene=MeanDispersion,
+            ont = &quot;ALL&quot;,
+            OrgDb=org.Hs.eg.db,
+            keyType=&#39;ENSEMBL&#39;,
+            nPerm=100000)
+
+MeanDispersionContrastPlot &lt;-
+  gsea.meanDispersion %&gt;% as.data.frame() %&gt;%
+  dplyr::select(Description, ONTOLOGY, p.adjust,enrichmentScore, setSize, NES) %&gt;%
+  mutate(Polarization=sign(enrichmentScore)) %&gt;%
+  # filter(str_detect(Description, &#39;DNA&#39;)) %&gt;%
+  # group_by(ONTOLOGY, Polarization) %&gt;%
+  group_by(ONTOLOGY, Polarization) %&gt;%
+  top_n(n = 3, wt = abs(NES)) %&gt;%
+  ungroup() %&gt;%
+  mutate(ONTOLOGY=recode(ONTOLOGY, `BP` = &quot;Biological Process&quot;, `CC` = &quot;Cellular Component&quot;, `MF`=&quot;Molecular Function&quot;)) %&gt;%
+  ggplot(aes(x=enrichmentScore, y=Description, color=p.adjust, size=setSize)) +
+  geom_point() +
+  scale_x_continuous(limits=c(-1,1), breaks=c(-1,0,1)) +
+  facet_grid(ONTOLOGY~., scales = &quot;free&quot;) +
+  scale_colour_viridis_c(trans=&quot;log10&quot;, limits=c(0.0001, 0.1), direction=-1, option=&quot;D&quot;) +
+  # scale_colour_gradient(low=&quot;red&quot;, high=&quot;black&quot;) +
+  facet_grid(ONTOLOGY~., scales = &quot;free&quot;) +
+  # xlab(&quot;Enrichment\nOverdispersedInHuman&lt;--&gt;OverdispersedInChimp&quot;) +
+  xlab(&quot;Enrichment&quot;) +
+  scale_y_discrete(labels = function(x) lapply(strwrap(x, width = 35, simplify = FALSE), paste, collapse=&quot;\n&quot;)) +
+  labs(color = &quot;Adjusted P-value&quot;) +
+  geom_vline(xintercept = 0, linetype=&quot;dotted&quot;) +
+  theme_bw() +
+  theme(axis.text.y = element_text(size=6)) + 
+  ylab(NULL)
+MeanDispersionContrastPlot</code></pre>
+<p>I see ontology terms related with things that I think of as housekeeping functions (tRNA processing, ribosome, mitochondria complex, RNA processing) as associated with negative residuals (less dispersion than expected, after regressing out dn/ds effect). I still see more cell type specific terms (angiogenesis, leukocyte migration) associated with higher residuals. This is consistent with dispersion partly being related to cell type heterogeneity (genes with housekeeping functions expressed in all cell types being less dispersed), as an effect independent from the negative selection forces that might keep genetically driven dispersion low.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.1 (2019-07-05)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.5
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] MASS_7.3-51.4          Cairo_1.5-12.2         data.table_1.12.8     
+ [4] qvalue_2.16.0          broom_0.5.2            org.Hs.eg.db_3.8.2    
+ [7] AnnotationDbi_1.46.1   IRanges_2.18.3         S4Vectors_0.22.1      
+[10] Biobase_2.44.0         BiocGenerics_0.30.0    clusterProfiler_3.12.0
+[13] knitr_1.26             forcats_0.4.0          stringr_1.4.0         
+[16] dplyr_0.8.3            purrr_0.3.3            readr_1.3.1           
+[19] tidyr_1.0.0            tibble_2.1.3           ggplot2_3.2.1         
+[22] tidyverse_1.3.0       
+
+loaded via a namespace (and not attached):
+  [1] fgsea_1.10.1        colorspace_1.4-1    ellipsis_0.3.0     
+  [4] ggridges_0.5.1      rprojroot_1.3-2     fs_1.3.1           
+  [7] rstudioapi_0.10     farver_2.0.1        urltools_1.7.3     
+ [10] graphlayouts_0.5.0  ggrepel_0.8.1       bit64_0.9-7        
+ [13] fansi_0.4.0         lubridate_1.7.4     xml2_1.2.2         
+ [16] splines_3.6.1       GOSemSim_2.10.0     polyclip_1.10-0    
+ [19] zeallot_0.1.0       jsonlite_1.6        workflowr_1.5.0    
+ [22] GO.db_3.8.2         dbplyr_1.4.2        ggforce_0.3.1      
+ [25] BiocManager_1.30.10 compiler_3.6.1      httr_1.4.1         
+ [28] rvcheck_0.1.7       backports_1.1.5     assertthat_0.2.1   
+ [31] Matrix_1.2-18       lazyeval_0.2.2      cli_2.0.0          
+ [34] later_1.0.0         tweenr_1.0.1        htmltools_0.4.0    
+ [37] prettyunits_1.0.2   tools_3.6.1         igraph_1.2.4.2     
+ [40] gtable_0.3.0        glue_1.3.1          reshape2_1.4.3     
+ [43] DO.db_2.9           fastmatch_1.1-0     Rcpp_1.0.5         
+ [46] enrichplot_1.4.0    cellranger_1.1.0    vctrs_0.2.0        
+ [49] nlme_3.1-143        ggraph_2.0.0        xfun_0.11          
+ [52] rvest_0.3.5         lifecycle_0.1.0     DOSE_3.10.2        
+ [55] europepmc_0.3       scales_1.1.0        tidygraph_1.1.2    
+ [58] hms_0.5.2           promises_1.1.0      RColorBrewer_1.1-2 
+ [61] yaml_2.2.0          memoise_1.1.0       gridExtra_2.3      
+ [64] UpSetR_1.4.0        triebeard_0.3.0     stringi_1.4.3      
+ [67] RSQLite_2.1.4       highr_0.8           BiocParallel_1.18.1
+ [70] rlang_0.4.1         pkgconfig_2.0.3     evaluate_0.14      
+ [73] lattice_0.20-38     labeling_0.3        cowplot_1.0.0      
+ [76] bit_1.1-14          tidyselect_0.2.5    plyr_1.8.5         
+ [79] magrittr_1.5        R6_2.4.1            generics_0.0.2     
+ [82] DBI_1.0.0           pillar_1.4.2        haven_2.2.0        
+ [85] withr_2.1.2         modelr_0.1.5        crayon_1.3.4       
+ [88] rmarkdown_1.18      viridis_0.5.1       progress_1.2.2     
+ [91] grid_3.6.1          readxl_1.3.1        blob_1.2.0         
+ [94] git2r_0.26.1        reprex_0.3.0        digest_0.6.23      
+ [97] httpuv_1.5.2        gridGraphics_0.4-1  munsell_0.5.0      
+[100] viridisLite_0.3.0   ggplotify_0.0.4    </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
