@@ -314,7 +314,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -323,7 +323,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -332,10 +332,10 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-09-09
+<strong>Last updated:</strong> 2020-10-25
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -351,22 +351,22 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreee3ed68fb4efbef6a3246106c28d37a2bc8efa328targetblanke3ed68fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/e3ed68fb4efbef6a3246106c28d37a2bc8efa328" target="_blank">e3ed68f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreeaae75ef6dd8879e73aac54684d7fdd20628c2d79targetblankaae75efa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/aae75ef6dd8879e73aac54684d7fdd20628c2d79" target="_blank">aae75ef</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreee3ed68fb4efbef6a3246106c28d37a2bc8efa328targetblanke3ed68fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreeaae75ef6dd8879e73aac54684d7fdd20628c2d79targetblankaae75efa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -374,6 +374,7 @@ Great! You are using Git for version control. Tracking code development and conn
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+    Ignored:    .RData
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    WorkingManuscript.zip
@@ -386,12 +387,10 @@ Ignored files:
     Ignored:    code/snakemake_workflow/.DS_Store
     Ignored:    code/snakemake_workflow/.Rhistory
     Ignored:    data/.DS_Store
+    Ignored:    data/FinalSourceData/.DS_Store
     Ignored:    data/PastAnalysesDataToKeep/.DS_Store
     Ignored:    figures/
     Ignored:    output/.DS_Store
-
-Unstaged changes:
-    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -430,6 +429,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/aae75ef6dd8879e73aac54684d7fdd20628c2d79/analysis/index.Rmd" target="_blank">aae75ef</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-10-26
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/7fc5e9c429452ff664bd2a9a33df02ae705f25ca/analysis/index.Rmd" target="_blank">7fc5e9c</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+<td>
+update site, address reviewers
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/7fc5e9c429452ff664bd2a9a33df02ae705f25ca/docs/index.html" target="_blank">7fc5e9c</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-09-09
+</td>
+<td>
+update site, address reviewers
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -947,14 +997,27 @@ Start workflowr project.
 </div>
 </div>
 </div>
-<p>Welcome to my research website.</p>
-<div id="qc" class="section level2">
-<h2>QC</h2>
+<p>This site contains exploratory analysis notebook and R code to make most of the figures for <a href="https://elifesciences.org/articles/59929">DOI: 10.7554/eLife.59929</a>. This site only contains R code (Rmarkdowns), including code to make most all of the figures from the paper. Many of these Rmarkdowns read data included in the <a href="https://github.com/bfairkun/Comparative_eQTL">associated repository</a> in the <code>data</code> and <code>output</code> directories. To run through R code on this site, clone the repository, and run Rmarkdowns from the <code>analysis</code> directory. Besides the figure source data and supplemental tables in the publication, other processed or semi-processed data (eg count tables) is available in the associated repository. Reproducible code for other aspects of this project is in a snakemake pipeline in <code>code</code>. See the <code>code/snakemake_workflow/README</code> for more info on how to run that.</p>
+<div id="abstract" class="section level2">
+<h2>Abstract</h2>
+<p>Inter-individual variation in gene expression has been shown to be heritable and is often associated with differences in disease susceptibility between individuals. Many studies focused on mapping associations between genetic and gene regulatory variation, yet much less attention has been paid to the evolutionary processes that shape the observed differences in gene regulation between individuals in humans or any other primate. To begin addressing this gap, we performed a comparative analysis of gene expression variability and expression quantitative trait loci (eQTLs) in humans and chimpanzees, using gene expression data from primary heart samples. We found that expression variability in both species is often determined by non-genetic sources, such as cell-type heterogeneity. However, we also provide evidence that inter-individual variation in gene regulation can be genetically controlled, and that the degree of such variability is generally conserved in humans and chimpanzees. In particular, we found a significant overlap of orthologous genes associated with eQTLs in both species. We conclude that gene expression variability in humans and chimpanzees often evolves under similar evolutionary pressures.</p>
+</div>
+<div id="raw-data" class="section level2">
+<h2>Raw data</h2>
+<p>Raw data for this project includes post mortem heart-tissues:</p>
+<ul>
+<li>RNA-seq of 10 human and 10 chimp samples <a href="https://www.nature.com/articles/s41598-018-33478-9">Pavlovic et al</a> (<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE110471">GEO accession GSE110471</a>)</li>
+<li>RNA-seq of ~39 human samples (GTEx v7, Heart left ventricle, see Fig1 source data in paper for exact samples, requires dbGaP to access raw data)</li>
+<li>RNA-seq of 29 new chimp samples (<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE151397">GEO accession GSE151397</a>). This GEO entry also contains a count table for all RNA-seq samples analyzed in this project</li>
+<li>Whole genome sequencing of 39 chimp samples (Raw reads at <a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA635393/">SRA accession PRJNA635393</a>, genotype calls vcf at <a href="https://www.ebi.ac.uk/eva/?eva-study=PRJEB39475">EVA accession PRJEB39475</a>).</li>
+</ul>
+<div id="code-for-qc" class="section level3">
+<h3>Code for QC</h3>
 <ul>
 <li><a href="../output/multiqc.html">fastqc</a></li>
 </ul>
-<div id="genotype-data" class="section level3">
-<h3>Genotype data</h3>
+<div id="genotype-data" class="section level4">
+<h4>Genotype data</h4>
 <ul>
 <li><a href="">Genotype call rates</a></li>
 <li><a href="20190321_Check-Kinship-And-PopulationStructure.html">kinship</a></li>
@@ -962,36 +1025,37 @@ Start workflowr project.
 <li><a href="20190326_Admixture.html">Admixture</a></li>
 </ul>
 </div>
-<div id="expression-data" class="section level3">
-<h3>Expression data</h3>
+<div id="expression-data" class="section level4">
+<h4>Expression data</h4>
 <ul>
 <li><a href="20190325_MergingRNASeqLanes.html">Check that RNA-seq data segregates by biological sample over sequencing flow cell</a></li>
 <li><a href="20190320_Check-RNAseq-PCs.html">Checking RNA-seq data for covariates</a></li>
 <li><a href="20190429_RNASeqSTAR_quantifications.html">STAR Aligner vs kallisto pseudoaligner for gene quantification</a></li>
 </ul>
 </div>
-<div id="prepare-data-for-eqtl-testing" class="section level3">
-<h3>Prepare data for eQTL testing</h3>
+<div id="prepare-data-for-eqtl-testing" class="section level4">
+<h4>Prepare data for eQTL testing</h4>
 <ul>
 <li><a href="20190327_MakeFamPhenotypeFile.html">Make phenotype table for testing</a></li>
 <li><a href="20190327_MakeCovariateFiles.html">Make covariate table for testing</a></li>
 </ul>
 </div>
 </div>
-<div id="exploration" class="section level2">
-<h2>Exploration</h2>
-<div id="association-testing-with-various-models" class="section level3">
-<h3>Association testing with various models</h3>
+<div id="code-for-results-and-exploration" class="section level3">
+<h3>Code for results and exploration</h3>
+<div id="association-testing-with-various-models" class="section level4">
+<h4>Association testing with various models</h4>
 <ul>
 <li><a href="20190412_Check_eQTLs.html">first iteration</a>: description: lmm with KING-robust GRM thresholded at 0, and 3 genotype PCs</li>
 <li><a href="20190421_RegressOutRNASeqPCs.html">Check residuals after regressing out some covariates</a></li>
 <li><a href="20190424_Check_eQTLs.html">second iteration</a>: description: lm with 5 genotype PCs (PCs 4 and 5 takes into account some first hand relatedness) and more stringent genotype filtering. Also, outlier sample MD_And dropped from analysis</li>
 <li><a href="20190428_Check_eQTLs.html">Third iteration</a></li>
 <li><a href="20190502_Check_eQTLs.html">fourth iteration</a>: description, lmm with 4 PCs and 3 Genotype PCs, used STAR RNA-seq CPM for less outliers. Fixed big bug that was permuting samples, resulting in no true hits in previous iterations. Here I used standardization and qqnorm.</li>
+<li>Final iteration: see paper for methods details. In short, I used lmm with kinship matrix (implented in MatrixEQTL) with 10 expression PCs as covariates. QQ-plots of permutation control and real samples indicates some eQTLs and well calibrated P-values.</li>
 </ul>
 </div>
-<div id="conservation-and-gogsea-analysis" class="section level3">
-<h3>Conservation and GO/GSEA analysis</h3>
+<div id="conservation-and-gogsea-analysis" class="section level4">
+<h4>Conservation and GO/GSEA analysis</h4>
 <ul>
 <li><a href="20190521_eQTL_CrossSpeciesEnrichment.html">GO analysis, FDR=0.1</a> overlap enrichment analysis of eGenes across humans and chumps, and gene ontology analysis of eGenes based on eGene classification defined at FDR=0.1 threshold. Also, a set of similar analyses using GSEA methodology, which is based on relative ranking of eGenes between species.</li>
 <li><a href="20190606_eGene_Conservation.html">Conservation analysis, FDR=0.1</a> analysis of conservation of coding sequence (percent identity and dN/dS) based on eGene classification defined at FDR=0.1</li>
@@ -1003,14 +1067,14 @@ Start workflowr project.
 <li><a href="20190930_OverdispersionEstimates_HBV_excluded.html">Different model of gene variance character</a> using advice from Abhishek. But this time leaving out the virus challenged chimps</li>
 </ul>
 </div>
-<div id="power-analysis-for-inter-species-differential-expression" class="section level3">
-<h3>Power analysis for inter-species differential expression</h3>
+<div id="power-analysis-for-inter-species-differential-expression" class="section level4">
+<h4>Power analysis for inter-species differential expression</h4>
 <ul>
 <li><a href="20190613_PowerAnalysis.html">PowerAnalysisFromOrinalDataset</a> DE gene analysis based on subsampling ~39 chimp samples &amp; 50 human samples (mostly GTEx)… Note that there are some outlier samples that I want to purge in later iterations of this analysis.</li>
 </ul>
 </div>
-<div id="differential-contacts" class="section level3">
-<h3>Differential contacts</h3>
+<div id="differential-contacts" class="section level4">
+<h4>Differential contacts</h4>
 <ul>
 <li>Do differential DNA contacts between species explain differences in eGene character between species.</li>
 <li><a href="20190627_DiffContactsEgenes.html">First crude analysis</a> In this analysis I asked whether the there is a correlation between the rank difference in eGenes between species, and the difference in the sum of contacts in each species’ cis-window for each gene</li>
@@ -1019,23 +1083,24 @@ Start workflowr project.
 <li><a href="20190708_DiffContactsEgenes_CisWindowControlled.html">After controlling for cis-window-size</a></li>
 </ul>
 </div>
-<div id="shared-polymorphic-loci" class="section level3">
-<h3>Shared polymorphic loci</h3>
+<div id="shared-polymorphic-loci" class="section level4">
+<h4>Shared polymorphic loci</h4>
 <ul>
 <li><a href="20190708_SpeciesSharedPolymorphisms_InitialQQPlot.html">QQ Plot of species shared polymorphisms</a> Of all the shared polymorphic loci (putative targets of balancing selection), do they have inflated cis-eQTL P-values compared to a random set of snp-gene tests.</li>
 </ul>
 </div>
 </div>
-<div id="final-figures" class="section level2">
-<h2>Final figures</h2>
+<div id="code-for-final-figures-and-analysis" class="section level3">
+<h3>Code for final figures and analysis</h3>
 <ul>
 <li>todo… haven’t build these markdowns yet.</li>
 </ul>
 </div>
+</div>
 <div id="reviewer-comments" class="section level2">
 <h2>Reviewer comments</h2>
 <ul>
-<li>See <a href="20200907_Response_OriginalComments.html">reviewer comments</a></li>
+<li>See <a href="20200907_Response_OriginalComments.html">reviewer comments</a> and associated analyses to address.</li>
 </ul>
 </div>
 

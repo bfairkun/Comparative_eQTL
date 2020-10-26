@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -22,6 +22,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -69,9 +71,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -85,7 +85,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -190,8 +189,6 @@ $(document).ready(function () {
 });
 </script>
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
 
 <style type="text/css">
@@ -236,6 +233,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -248,20 +246,17 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -289,7 +284,13 @@ $(document).ready(function () {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/bfairkun/Comparative_eQTL">
+    <span class="fa fa-github"></span>
+     
+    Source code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -322,7 +323,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#report"> Report <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -331,21 +332,21 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-03-19
+<strong>Last updated:</strong> 2020-10-25
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
-<strong>Knit directory:</strong> <code>Comparative_eQTL/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+<strong>Knit directory:</strong> <code>Comparative_eQTL/analysis/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
 </p>
 <p>
 This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
-  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.2.0). The <em>Report</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.5.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
 </p>
 <hr>
 </div>
-<div id="report" class="tab-pane fade">
+<div id="checks" class="tab-pane fade">
 <div id="workflowr-checks" class="panel-group">
 <div class="panel panel-default">
 <div class="panel-heading">
@@ -362,16 +363,35 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongb1207ee"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> b1207ee </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreeaae75ef6dd8879e73aac54684d7fdd20628c2d79targetblankaae75efa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bfairkun/Comparative_eQTL/tree/aae75ef6dd8879e73aac54684d7fdd20628c2d79" target="_blank">aae75ef</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongb1207ee" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombfairkunComparativeeQTLtreeaae75ef6dd8879e73aac54684d7fdd20628c2d79targetblankaae75efa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
-working directory clean
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    WorkingManuscript.zip
+    Ignored:    WorkingManuscript/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/.Rhistory
+    Ignored:    analysis_temp/.DS_Store
+    Ignored:    big_data/
+    Ignored:    code/.DS_Store
+    Ignored:    code/snakemake_workflow/.DS_Store
+    Ignored:    code/snakemake_workflow/.Rhistory
+    Ignored:    data/.DS_Store
+    Ignored:    data/FinalSourceData/.DS_Store
+    Ignored:    data/PastAnalysesDataToKeep/.DS_Store
+    Ignored:    figures/
+    Ignored:    output/.DS_Store
+
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
@@ -414,7 +434,41 @@ Message
 Rmd
 </td>
 <td>
-b1207ee
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/aae75ef6dd8879e73aac54684d7fdd20628c2d79/analysis/about.Rmd" target="_blank">aae75ef</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2020-10-26
+</td>
+<td>
+update site
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bfairkun/Comparative_eQTL/5b477a35615ae185890e9a1c136f147b97a1b789/docs/about.html" target="_blank">5b477a3</a>
+</td>
+<td>
+Benjmain Fair
+</td>
+<td>
+2019-03-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bfairkun/Comparative_eQTL/blob/b1207ee02c0e7532688dcf3a46d924aa61259917/analysis/about.Rmd" target="_blank">b1207ee</a>
 </td>
 <td>
 Benjmain Fair
@@ -433,7 +487,11 @@ Start workflowr project.
 </div>
 </div>
 </div>
-<p>Describe your project.</p>
+<p>This site contains exploratory analysis notebook and R code to make most of the figures for <a href="https://elifesciences.org/articles/59929">DOI: 10.7554/eLife.59929</a></p>
+<div id="abstract" class="section level2">
+<h2>Abstract</h2>
+<p>Inter-individual variation in gene expression has been shown to be heritable and is often associated with differences in disease susceptibility between individuals. Many studies focused on mapping associations between genetic and gene regulatory variation, yet much less attention has been paid to the evolutionary processes that shape the observed differences in gene regulation between individuals in humans or any other primate. To begin addressing this gap, we performed a comparative analysis of gene expression variability and expression quantitative trait loci (eQTLs) in humans and chimpanzees, using gene expression data from primary heart samples. We found that expression variability in both species is often determined by non-genetic sources, such as cell-type heterogeneity. However, we also provide evidence that inter-individual variation in gene regulation can be genetically controlled, and that the degree of such variability is generally conserved in humans and chimpanzees. In particular, we found a significant overlap of orthologous genes associated with eQTLs in both species. We conclude that gene expression variability in humans and chimpanzees often evolves under similar evolutionary pressures.</p>
+</div>
 
 
 <!-- Adjust MathJax settings so that all math formulae are shown using
@@ -464,6 +522,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
